@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'login_screen.dart';
-import '../common/language_selector.dart';
+import '../login/login_screen.dart';
+import '../../common/language_selector.dart';
+import '../../common/custom_button.dart';
+import 'user_information/start_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -99,25 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ),
               ),
-              Positioned(
-                top: 50,
-                right: 20,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      color: Colors.black,
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ),
+              // Bỏ nút X, chạm vào overlay/ảnh sẽ đóng dialog
             ],
           ),
         );
@@ -257,85 +241,125 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 opacity: _fadeAnimation,
                 child: SlideTransition(
                   position: _slideAnimation,
-                  child: Container(
-                    width: double.infinity,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF9C27B0), Color(0xFF673AB7)],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF9C27B0).withOpacity(0.3),
-                          blurRadius: 15,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(28),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          height: 56,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF9C27B0), Color(0xFF673AB7)],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                              borderRadius: BorderRadius.circular(28),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF9C27B0,
+                                  ).withOpacity(0.3),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 12),
-                            Text(
-                              _selectedLanguage == Language.vi
-                                  ? 'Bắt đầu ngay'
-                                  : 'Get started',
-                              style: GoogleFonts.inter(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(28),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const StartScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      _selectedLanguage == Language.vi
+                                          ? 'Bắt đầu ngay'
+                                          : 'Get started',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    AnimatedBuilder(
+                                      animation: _arrowAnimation,
+                                      builder: (context, child) {
+                                        return Transform.translate(
+                                          offset: Offset(
+                                            _arrowAnimation.value * 8,
+                                            0,
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.white.withOpacity(
+                                                  0.8,
+                                                ),
+                                                size: 14,
+                                              ),
+                                              const SizedBox(width: 2),
+                                              Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.white.withOpacity(
+                                                  0.6,
+                                                ),
+                                                size: 14,
+                                              ),
+                                              const SizedBox(width: 2),
+                                              Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.white.withOpacity(
+                                                  0.4,
+                                                ),
+                                                size: 14,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            AnimatedBuilder(
-                              animation: _arrowAnimation,
-                              builder: (context, child) {
-                                return Transform.translate(
-                                  offset: Offset(_arrowAnimation.value * 8, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.white.withOpacity(0.8),
-                                        size: 14,
-                                      ),
-                                      const SizedBox(width: 2),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.white.withOpacity(0.6),
-                                        size: 14,
-                                      ),
-                                      const SizedBox(width: 2),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.white.withOpacity(0.4),
-                                        size: 14,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 14),
+                      Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          child: CustomButton(
+                            text: 'Đăng nhập',
+                            backgroundColor: const Color(0xFF1F2A37),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                              );
+                            },
+                            height: 56,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

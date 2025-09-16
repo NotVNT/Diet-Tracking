@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import '../common/app_colors.dart';
-import '../common/app_styles.dart';
-import '../common/custom_input_field.dart';
-import '../common/custom_button.dart';
-import '../common/gradient_background.dart';
+import '../../common/app_colors.dart';
+import '../../common/app_styles.dart';
+import '../../common/custom_input_field.dart';
+import '../../common/custom_button.dart';
+import '../../common/gradient_background.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
