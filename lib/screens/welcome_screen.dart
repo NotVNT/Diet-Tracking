@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login_screen.dart';
+import '../common/language_selector.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -18,6 +19,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   late AnimationController _arrowAnimationController;
   late Animation<double> _arrowAnimation;
   int _currentImageIndex = 0;
+  Language _selectedLanguage = Language.vi;
 
   final List<String> _images = [
     'assets/welcome_screen/flexitarian-diet-foods_OCES.jpg',
@@ -134,12 +136,23 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
+              LanguageSelector(
+                selected: _selectedLanguage,
+                onChanged: (lang) {
+                  setState(() {
+                    _selectedLanguage = lang;
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: SlideTransition(
                   position: _slideAnimation,
                   child: Text(
-                    'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!',
+                    _selectedLanguage == Language.vi
+                        ? 'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!'
+                        : 'Start tracking your\ndiet plan today!',
                     style: GoogleFonts.inter(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -155,7 +168,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 child: SlideTransition(
                   position: _slideAnimation,
                   child: Text(
-                    'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.',
+                    _selectedLanguage == Language.vi
+                        ? 'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.'
+                        : 'Track your daily diet with\npersonalized meal plans and\nsmart recommendations.',
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       color: Colors.grey[600],
@@ -275,21 +290,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.analytics_outlined,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
                             const SizedBox(width: 12),
                             Text(
-                              'Bắt đầu theo dõi',
+                              _selectedLanguage == Language.vi
+                                  ? 'Bắt đầu ngay'
+                                  : 'Get started',
                               style: GoogleFonts.inter(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

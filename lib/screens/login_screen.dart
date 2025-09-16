@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen>
                       position: _slideAnimation,
                       child: CustomInputField(
                         label: 'Email hoặc Số Điện Thoại',
-                        hint: '',
+                        hint: 'Nhập Email hoặc Số Điện Thoại',
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         isFocused: _isEmailFocused,
@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 20),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -181,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen>
                             child: Text(
                               'HOẶC đăng nhập bằng',
                               style: AppStyles.bodyMedium.copyWith(
-                                color: AppColors.grey500,
+                                color: const Color.fromARGB(255, 51, 50, 50),
                               ),
                             ),
                           ),

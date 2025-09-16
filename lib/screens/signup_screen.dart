@@ -161,612 +161,375 @@ class _SignupScreenState extends State<SignupScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      body: GradientBackground(
+        child: SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Text(
-                      'Tạo tài khoản',
-                      style: GoogleFonts.inter(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        height: 1.2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: Text('Tạo tài khoản', style: AppStyles.heading1),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Họ và tên
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: CustomInputField(
+                        label: 'Họ và tên',
+                        hint: 'Nhập họ và tên của bạn',
+                        controller: _fullNameController,
+                        isFocused: _isFullNameFocused,
+                        onTap: () {
+                          setState(() {
+                            _isFullNameFocused = true;
+                            _isPhoneFocused = false;
+                            _isEmailFocused = false;
+                            _isPasswordFocused = false;
+                            _isConfirmPasswordFocused = false;
+                          });
+                        },
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 40),
+                  const SizedBox(height: 24),
 
-                // Họ và tên
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Họ và tên',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _isFullNameFocused
-                                  ? const Color(0xFF9C27B0)
-                                  : Colors.grey[300]!,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextField(
-                            controller: _fullNameController,
-                            onTap: () {
-                              setState(() {
-                                _isFullNameFocused = true;
-                                _isPhoneFocused = false;
-                                _isEmailFocused = false;
-                                _isPasswordFocused = false;
-                              });
-                            },
-                            style: GoogleFonts.inter(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'Nhập họ và tên của bạn',
-                              hintStyle: GoogleFonts.inter(
-                                color: Colors.grey[500],
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
+                  // Số điện thoại
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: CustomInputField(
+                        label: 'Số điện thoại',
+                        hint: 'Nhập số điện thoại',
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        isFocused: _isPhoneFocused,
+                        onTap: () {
+                          setState(() {
+                            _isPhoneFocused = true;
+                            _isFullNameFocused = false;
+                            _isEmailFocused = false;
+                            _isPasswordFocused = false;
+                            _isConfirmPasswordFocused = false;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Ngày sinh
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Ngày sinh', style: AppStyles.labelMedium),
+                          const SizedBox(height: AppStyles.spacingS),
+                          GestureDetector(
+                            onTap: () => _selectDate(context),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
                                 vertical: 16,
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Số điện thoại
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Số điện thoại',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _isPhoneFocused
-                                  ? const Color(0xFF9C27B0)
-                                  : Colors.grey[300]!,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextField(
-                            controller: _phoneController,
-                            onTap: () {
-                              setState(() {
-                                _isPhoneFocused = true;
-                                _isFullNameFocused = false;
-                                _isEmailFocused = false;
-                                _isPasswordFocused = false;
-                              });
-                            },
-                            style: GoogleFonts.inter(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'Nhập số điện thoại',
-                              hintStyle: GoogleFonts.inter(
-                                color: Colors.grey[500],
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 16,
-                              ),
-                            ),
-                            keyboardType: TextInputType.phone,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Ngày sinh
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ngày sinh',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        GestureDetector(
-                          onTap: () => _selectDate(context),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey[300]!,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_today,
-                                  color: Colors.grey[500],
-                                  size: 20,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                border: Border.all(
+                                  color: AppColors.grey300,
+                                  width: 1.5,
                                 ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  _selectedDate != null
-                                      ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                                      : 'Chọn ngày sinh',
-                                  style: GoogleFonts.inter(
-                                    color: _selectedDate != null
-                                        ? Colors.black
-                                        : Colors.grey[500],
-                                    fontSize: 16,
+                                borderRadius: BorderRadius.circular(
+                                  AppStyles.radiusL,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.shadowLight,
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 5),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today,
+                                    color: AppColors.grey500,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    _selectedDate != null
+                                        ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                                        : 'Chọn ngày sinh',
+                                    style: AppStyles.bodyMedium.copyWith(
+                                      color: _selectedDate != null
+                                          ? AppColors.black
+                                          : AppColors.grey500,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                // Email
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Email',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _isEmailFocused
-                                  ? const Color(0xFF9C27B0)
-                                  : Colors.grey[300]!,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextField(
-                            controller: _emailController,
-                            onTap: () {
-                              setState(() {
-                                _isEmailFocused = true;
-                                _isFullNameFocused = false;
-                                _isPhoneFocused = false;
-                                _isPasswordFocused = false;
-                              });
-                            },
-                            style: GoogleFonts.inter(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'example@gmail.com',
-                              hintStyle: GoogleFonts.inter(
-                                color: Colors.grey[500],
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 16,
-                              ),
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-                        ),
-                      ],
+                  // Email
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: CustomInputField(
+                        label: 'Email',
+                        hint: 'example@gmail.com',
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        isFocused: _isEmailFocused,
+                        onTap: () {
+                          setState(() {
+                            _isEmailFocused = true;
+                            _isFullNameFocused = false;
+                            _isPhoneFocused = false;
+                            _isPasswordFocused = false;
+                            _isConfirmPasswordFocused = false;
+                          });
+                        },
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                // Mật khẩu
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Mật khẩu',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                  // Mật khẩu
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: CustomInputField(
+                        label: 'Mật khẩu',
+                        hint: '••••••••',
+                        controller: _passwordController,
+                        obscureText: !_isPasswordVisible,
+                        isFocused: _isPasswordFocused,
+                        onTap: () {
+                          setState(() {
+                            _isPasswordFocused = true;
+                            _isFullNameFocused = false;
+                            _isPhoneFocused = false;
+                            _isEmailFocused = false;
+                            _isConfirmPasswordFocused = false;
+                          });
+                        },
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: AppColors.grey600,
+                            size: 20,
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _isPasswordFocused
-                                  ? const Color(0xFF9C27B0)
-                                  : Colors.grey[300]!,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextField(
-                            controller: _passwordController,
-                            onTap: () {
-                              setState(() {
-                                _isPasswordFocused = true;
-                                _isFullNameFocused = false;
-                                _isPhoneFocused = false;
-                                _isEmailFocused = false;
-                              });
-                            },
-                            obscureText: !_isPasswordVisible,
-                            style: GoogleFonts.inter(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: '••••••••',
-                              hintStyle: GoogleFonts.inter(
-                                color: Colors.grey[500],
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 16,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                  color: Colors.grey[600],
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Nhập lại mật khẩu
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Nhập lại mật khẩu',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _isConfirmPasswordFocused
-                                  ? const Color(0xFF9C27B0)
-                                  : Colors.grey[300]!,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextField(
-                            controller: _confirmPasswordController,
-                            onTap: () {
-                              setState(() {
-                                _isConfirmPasswordFocused = true;
-                                _isFullNameFocused = false;
-                                _isPhoneFocused = false;
-                                _isEmailFocused = false;
-                                _isPasswordFocused = false;
-                              });
-                            },
-                            obscureText: !_isConfirmPasswordVisible,
-                            style: GoogleFonts.inter(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: '••••••••',
-                              hintStyle: GoogleFonts.inter(
-                                color: Colors.grey[500],
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 16,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isConfirmPasswordVisible
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                  color: Colors.grey[600],
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isConfirmPasswordVisible =
-                                        !_isConfirmPasswordVisible;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Checkbox đồng ý điều khoản
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
+                          onPressed: () {
                             setState(() {
-                              _isTermsAccepted = !_isTermsAccepted;
+                              _isPasswordVisible = !_isPasswordVisible;
                             });
                           },
-                          child: Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: _isTermsAccepted
-                                  ? const Color(0xFF9C27B0)
-                                  : Colors.transparent,
-                              border: Border.all(
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Nhập lại mật khẩu
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: CustomInputField(
+                        label: 'Nhập lại mật khẩu',
+                        hint: '••••••••',
+                        controller: _confirmPasswordController,
+                        obscureText: !_isConfirmPasswordVisible,
+                        isFocused: _isConfirmPasswordFocused,
+                        onTap: () {
+                          setState(() {
+                            _isConfirmPasswordFocused = true;
+                            _isFullNameFocused = false;
+                            _isPhoneFocused = false;
+                            _isEmailFocused = false;
+                            _isPasswordFocused = false;
+                          });
+                        },
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isConfirmPasswordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: AppColors.grey600,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isConfirmPasswordVisible =
+                                  !_isConfirmPasswordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Điều khoản
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isTermsAccepted = !_isTermsAccepted;
+                              });
+                            },
+                            child: Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
                                 color: _isTermsAccepted
-                                    ? const Color(0xFF9C27B0)
-                                    : Colors.grey[400]!,
-                                width: 2,
+                                    ? AppColors.primary
+                                    : Colors.transparent,
+                                border: Border.all(
+                                  color: _isTermsAccepted
+                                      ? AppColors.primary
+                                      : AppColors.grey400,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(4),
                               ),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: _isTermsAccepted
-                                ? const Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                    size: 14,
-                                  )
-                                : null,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Tôi đồng ý với ',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: 'Điều khoản sử dụng',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color: const Color(0xFF9C27B0),
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      // TODO: Show terms and conditions
-                                    },
-                                ),
-                                TextSpan(
-                                  text: ' và ',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: 'Chính sách bảo mật',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color: const Color(0xFF9C27B0),
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      // TODO: Show privacy policy
-                                    },
-                                ),
-                              ],
+                              child: _isTermsAccepted
+                                  ? const Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 14,
+                                    )
+                                  : null,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // Nút Đăng ký
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        onPressed: _isTermsAccepted
-                            ? () {
-                                // TODO: Handle signup
-                                _handleSignup();
-                              }
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _isTermsAccepted
-                              ? const Color(0xFF9C27B0)
-                              : Colors.grey[300],
-                          foregroundColor: _isTermsAccepted
-                              ? Colors.white
-                              : Colors.grey[500],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          'Đăng ký',
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-
-                // Link đăng nhập
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Center(
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Đã có tài khoản? ',
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'Đăng nhập',
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                color: const Color(0xFF9C27B0),
-                                fontWeight: FontWeight.w600,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const LoginScreen(),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Tôi đồng ý với ',
+                                    style: AppStyles.bodyMedium.copyWith(
+                                      color: AppColors.grey600,
                                     ),
-                                  );
-                                },
+                                  ),
+                                  TextSpan(
+                                    text: 'Điều khoản sử dụng',
+                                    style: AppStyles.linkText.copyWith(
+                                      color: AppColors.primary,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {},
+                                  ),
+                                  TextSpan(
+                                    text: ' và ',
+                                    style: AppStyles.bodyMedium.copyWith(
+                                      color: AppColors.grey600,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Chính sách bảo mật',
+                                    style: AppStyles.linkText.copyWith(
+                                      color: AppColors.primary,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {},
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Nút Đăng ký
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: CustomButton(
+                        text: 'Đăng ký',
+                        onPressed: _isTermsAccepted ? _handleSignup : null,
+                        isEnabled: _isTermsAccepted,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+
+                  // Link đăng nhập
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: Center(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Đã có tài khoản? ',
+                                style: AppStyles.bodyMedium.copyWith(
+                                  color: AppColors.grey600,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'Đăng nhập',
+                                style: AppStyles.linkText.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen(),
+                                      ),
+                                    );
+                                  },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 40),
-              ],
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
           ),
         ),
