@@ -129,15 +129,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 },
               ),
               const SizedBox(height: 12),
-              LanguageSelector(
-                selected: _selectedLanguage,
-                onChanged: (lang) {
-                  setState(() {
-                    _selectedLanguage = lang;
-                  });
-                },
-              ),
-              const SizedBox(height: 12),
+
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: SlideTransition(
