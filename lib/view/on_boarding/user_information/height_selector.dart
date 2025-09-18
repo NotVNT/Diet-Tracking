@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:diet_tracking_project/view/on_boarding/user_information/height_selector.dart';
+import 'package:diet_tracking_project/view/on_boarding/user_information/weight_selector.dart';
 
-class AgeSelector extends StatefulWidget {
+class HeightSelector extends StatefulWidget {
   final dynamic selectedGender;
-  const AgeSelector({super.key, this.selectedGender});
+  const HeightSelector({super.key, this.selectedGender});
 
   @override
-  State<AgeSelector> createState() => _AgeSelectorState();
+  State<HeightSelector> createState() => _HeightSelectorState();
 }
 
-class _AgeSelectorState extends State<AgeSelector> {
+class _HeightSelectorState extends State<HeightSelector> {
   Color get _bg => const Color(0xFFFDF0D7);
   Color get _accent => const Color(0xFF1F2A37);
   Color get _title => const Color(0xFF2D3A4A);
   Color get _progress => const Color(0xFFF2C94C);
 
-  FixedExtentScrollController scrollController = FixedExtentScrollController(
-    initialItem: 18, // mặc định 30 tuổi khi base = 12
-  );
+  // Chiều cao từ 120cm đến 220cm
+  static const int _minHeight = 120;
+  static const int _maxHeight = 220;
+  static const int _defaultHeight = 170;
 
-  int get currentAge => 12 + scrollController.selectedItem;
+  late final FixedExtentScrollController scrollController =
+      FixedExtentScrollController(initialItem: _defaultHeight - _minHeight);
+
+  int get currentHeightCm => _minHeight + scrollController.selectedItem;
 
   @override
   void dispose() {
@@ -42,7 +46,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: LinearProgressIndicator(
-                  value: 0.6,
+                  value: 0.8,
                   minHeight: 10,
                   backgroundColor: Colors.white,
                   valueColor: AlwaysStoppedAnimation<Color>(_progress),
@@ -50,7 +54,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Tuổi',
+                'CHIỀU CAO',
                 style: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
@@ -59,7 +63,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Bạn bao nhiêu tuổi?',
+                'Bạn cao bao nhiêu?',
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
@@ -79,10 +83,10 @@ class _AgeSelectorState extends State<AgeSelector> {
                         perspective: 0.002,
                         onSelectedItemChanged: (_) => setState(() {}),
                         childDelegate: ListWheelChildBuilderDelegate(
-                          childCount: 69, // 12..80
+                          childCount: (_maxHeight - _minHeight) + 1,
                           builder: (context, index) {
-                            final age = 12 + index;
-                            final isCurrent = age == currentAge;
+                            final height = _minHeight + index;
+                            final isCurrent = height == currentHeightCm;
                             return AnimatedOpacity(
                               duration: const Duration(milliseconds: 150),
                               opacity: isCurrent ? 1 : 0.35,
@@ -110,11 +114,20 @@ class _AgeSelectorState extends State<AgeSelector> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      '$age',
+                                      '$height',
                                       style: GoogleFonts.inter(
                                         fontSize: 36,
                                         fontWeight: FontWeight.w800,
                                         color: _accent,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'cm',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: _accent.withOpacity(0.9),
                                       ),
                                     ),
                                   ],
@@ -186,9 +199,7 @@ class _AgeSelectorState extends State<AgeSelector> {
                         onPressed: () async {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => HeightSelector(
-                                selectedGender: widget.selectedGender,
-                              ),
+                              builder: (_) => const WeightSelector(),
                             ),
                           );
                         },

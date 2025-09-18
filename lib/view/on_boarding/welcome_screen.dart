@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../login/login_screen.dart';
 import '../../common/language_selector.dart';
 import '../../common/custom_button.dart';
-import 'user_information/start_screen.dart';
+import 'started_view/started_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});

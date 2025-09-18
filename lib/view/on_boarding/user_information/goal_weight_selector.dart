@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:diet_tracking_project/view/on_boarding/user_information/height_selector.dart';
+import 'package:diet_tracking_project/view/on_boarding/user_information/interface_confirmation.dart';
 
-class AgeSelector extends StatefulWidget {
-  final dynamic selectedGender;
-  const AgeSelector({super.key, this.selectedGender});
+class GoalWeightSelector extends StatefulWidget {
+  final int? currentWeightKg;
+  const GoalWeightSelector({super.key, this.currentWeightKg});
 
   @override
-  State<AgeSelector> createState() => _AgeSelectorState();
+  State<GoalWeightSelector> createState() => _GoalWeightSelectorState();
 }
 
-class _AgeSelectorState extends State<AgeSelector> {
+class _GoalWeightSelectorState extends State<GoalWeightSelector> {
   Color get _bg => const Color(0xFFFDF0D7);
   Color get _accent => const Color(0xFF1F2A37);
   Color get _title => const Color(0xFF2D3A4A);
   Color get _progress => const Color(0xFFF2C94C);
 
-  FixedExtentScrollController scrollController = FixedExtentScrollController(
-    initialItem: 18, // mặc định 30 tuổi khi base = 12
-  );
+  static const int _minWeight = 30;
+  static const int _maxWeight = 200;
 
-  int get currentAge => 12 + scrollController.selectedItem;
+  late final int _defaultWeight = widget.currentWeightKg != null
+      ? widget.currentWeightKg!.clamp(_minWeight, _maxWeight)
+      : 65;
+
+  late final FixedExtentScrollController scrollController =
+      FixedExtentScrollController(initialItem: _defaultWeight - _minWeight);
+
+  int get currentGoalWeightKg => _minWeight + scrollController.selectedItem;
 
   @override
   void dispose() {
@@ -42,7 +48,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: LinearProgressIndicator(
-                  value: 0.6,
+                  value: 1.0,
                   minHeight: 10,
                   backgroundColor: Colors.white,
                   valueColor: AlwaysStoppedAnimation<Color>(_progress),
@@ -50,7 +56,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Tuổi',
+                'Cân nặng mục tiêu',
                 style: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
@@ -59,7 +65,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Bạn bao nhiêu tuổi?',
+                'Bạn muốn đạt cân nặng bao nhiêu?',
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
@@ -79,10 +85,10 @@ class _AgeSelectorState extends State<AgeSelector> {
                         perspective: 0.002,
                         onSelectedItemChanged: (_) => setState(() {}),
                         childDelegate: ListWheelChildBuilderDelegate(
-                          childCount: 69, // 12..80
+                          childCount: (_maxWeight - _minWeight) + 1,
                           builder: (context, index) {
-                            final age = 12 + index;
-                            final isCurrent = age == currentAge;
+                            final weight = _minWeight + index;
+                            final isCurrent = weight == currentGoalWeightKg;
                             return AnimatedOpacity(
                               duration: const Duration(milliseconds: 150),
                               opacity: isCurrent ? 1 : 0.35,
@@ -110,11 +116,20 @@ class _AgeSelectorState extends State<AgeSelector> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      '$age',
+                                      '$weight',
                                       style: GoogleFonts.inter(
                                         fontSize: 36,
                                         fontWeight: FontWeight.w800,
                                         color: _accent,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'kg',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: _accent.withOpacity(0.9),
                                       ),
                                     ),
                                   ],
@@ -122,17 +137,6 @@ class _AgeSelectorState extends State<AgeSelector> {
                               ),
                             );
                           },
-                        ),
-                      ),
-                      Positioned(
-                        right: 28,
-                        child: Transform.rotate(
-                          angle: 3.14159,
-                          child: Icon(
-                            Icons.play_arrow_rounded,
-                            size: 44,
-                            color: _accent.withOpacity(0.9),
-                          ),
                         ),
                       ),
                     ],
@@ -186,14 +190,15 @@ class _AgeSelectorState extends State<AgeSelector> {
                         onPressed: () async {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => HeightSelector(
-                                selectedGender: widget.selectedGender,
+                              builder: (_) => InterfaceConfirmation(
+                                currentWeightKg: widget.currentWeightKg,
+                                goalWeightKg: currentGoalWeightKg,
                               ),
                             ),
                           );
                         },
                         child: Text(
-                          'Tiếp theo',
+                          'Xong',
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 16,
