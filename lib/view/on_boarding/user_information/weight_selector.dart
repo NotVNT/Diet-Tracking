@@ -1,32 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'height_selector.dart';
+import 'medical_allergy_screen.dart';
 
-class AgeSelector extends StatefulWidget {
-  final dynamic selectedGender;
-  const AgeSelector({super.key, this.selectedGender});
+class WeightSelector extends StatefulWidget {
+  final int age;
+  final int heightCm;
+  const WeightSelector({super.key, required this.age, required this.heightCm});
 
   @override
-  State<AgeSelector> createState() => _AgeSelectorState();
+  State<WeightSelector> createState() => _WeightSelectorState();
 }
 
-class _AgeSelectorState extends State<AgeSelector> {
+class _WeightSelectorState extends State<WeightSelector> {
   Color get _bg => const Color(0xFFFDF0D7);
   Color get _accent => const Color(0xFF1F2A37);
   Color get _title => const Color(0xFF2D3A4A);
   Color get _progress => const Color(0xFFF2C94C);
 
-  FixedExtentScrollController scrollController = FixedExtentScrollController(
-    initialItem: 18, // mặc định 30 tuổi khi base = 12
-  );
-
-  int get currentAge => 12 + scrollController.selectedItem;
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
+  double _weight = 65;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +33,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: LinearProgressIndicator(
-                  value: 0.6,
+                  value: 0.8,
                   minHeight: 10,
                   backgroundColor: Colors.white,
                   valueColor: AlwaysStoppedAnimation<Color>(_progress),
@@ -50,7 +41,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Tuổi',
+                'Cân nặng',
                 style: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
@@ -59,7 +50,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Bạn bao nhiêu tuổi?',
+                'Cân nặng hiện tại của bạn là bao nhiêu? (kg)',
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
@@ -69,71 +60,42 @@ class _AgeSelectorState extends State<AgeSelector> {
               const SizedBox(height: 24),
               Expanded(
                 child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      ListWheelScrollView.useDelegate(
-                        controller: scrollController,
-                        physics: const FixedExtentScrollPhysics(),
-                        itemExtent: 64,
-                        perspective: 0.002,
-                        onSelectedItemChanged: (_) => setState(() {}),
-                        childDelegate: ListWheelChildBuilderDelegate(
-                          childCount: 69, // 12..80
-                          builder: (context, index) {
-                            final age = 12 + index;
-                            final isCurrent = age == currentAge;
-                            return AnimatedOpacity(
-                              duration: const Duration(milliseconds: 150),
-                              opacity: isCurrent ? 1 : 0.35,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 10,
-                                ),
-                                decoration: isCurrent
-                                    ? BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(14),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.08,
-                                            ),
-                                            blurRadius: 18,
-                                            offset: const Offset(0, 6),
-                                          ),
-                                        ],
-                                      )
-                                    : null,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '$age',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.w800,
-                                        color: _accent,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 18,
                         ),
-                      ),
-                      Positioned(
-                        right: 28,
-                        child: Transform.rotate(
-                          angle: 3.14159,
-                          child: Icon(
-                            Icons.play_arrow_rounded,
-                            size: 44,
-                            color: _accent.withOpacity(0.9),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 18,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          '${_weight.toStringAsFixed(1)} kg',
+                          style: GoogleFonts.inter(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w800,
+                            color: _accent,
                           ),
                         ),
+                      ),
+                      const SizedBox(height: 24),
+                      Slider(
+                        value: _weight,
+                        min: 30,
+                        max: 180,
+                        divisions: 150,
+                        activeColor: _accent,
+                        onChanged: (v) => setState(() => _weight = v),
                       ),
                     ],
                   ),
@@ -187,8 +149,11 @@ class _AgeSelectorState extends State<AgeSelector> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  HeightSelector(age: currentAge),
+                              builder: (context) => MedicalAllergyScreen(
+                                age: widget.age,
+                                heightCm: widget.heightCm,
+                                weightKg: _weight,
+                              ),
                             ),
                           );
                         },

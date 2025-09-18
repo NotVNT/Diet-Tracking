@@ -6,6 +6,10 @@ import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import 'signup_screen.dart';
+import '../../services/authentication_service.dart';
+import '../../services/firestore_service.dart';
+import '../on_boarding/user_information/start_screen.dart';
+import 'holding_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -157,8 +161,85 @@ class _LoginScreenState extends State<LoginScreen>
                       position: _slideAnimation,
                       child: CustomButton(
                         text: 'Đăng nhập',
-                        onPressed: () {
-                          // TODO: Handle login
+                        onPressed: () async {
+                          final String email = _emailController.text.trim();
+                          final String password = _passwordController.text;
+                          if (email.isEmpty || password.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Vui lòng nhập email và mật khẩu',
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                          try {
+                            await AuthenticationService().signIn(
+                              email,
+                              password,
+                            );
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+
+                              // Kiểm tra trạng thái onboarding
+                              final currentUser =
+                                  AuthenticationService().currentUser;
+                              if (currentUser != null) {
+                                try {
+                                  final userData = await FirestoreService()
+                                      .getUser(currentUser.uid);
+                                  if (userData != null &&
+                                      userData['isOnboardingCompleted'] ==
+                                          true) {
+                                    // Đã hoàn thành onboarding, chuyển tới Holding
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const HoldingScreen(),
+                                      ),
+                                    );
+                                  } else {
+                                    // Chưa hoàn thành onboarding, chuyển tới StartScreen
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const StartScreen(),
+                                      ),
+                                    );
+                                  }
+                                } catch (e) {
+                                  print(
+                                    'Lỗi kiểm tra trạng thái onboarding: $e',
+                                  );
+                                  // Mặc định chuyển tới StartScreen nếu có lỗi
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const StartScreen(),
+                                    ),
+                                  );
+                                }
+                              }
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Đăng nhập thất bại: $e'),
+                                ),
+                              );
+                            }
+                          }
                         },
                       ),
                     ),

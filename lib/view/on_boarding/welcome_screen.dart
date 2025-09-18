@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../login/login_screen.dart';
 import '../../common/language_selector.dart';
-import '../../common/custom_button.dart';
-import 'user_information/start_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -275,7 +273,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const StartScreen(),
+                                      builder: (context) => const LoginScreen(),
                                     ),
                                   );
                                 },
@@ -337,26 +335,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      Align(
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.85,
-                          child: CustomButton(
-                            text: 'Đăng nhập',
-                            backgroundColor: const Color(0xFF1F2A37),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                              );
-                            },
-                            height: 56,
                           ),
                         ),
                       ),
