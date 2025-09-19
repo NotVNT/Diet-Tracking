@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'weight_selector.dart';
+import 'package:diet_tracking_project/view/on_boarding/user_information/weight_selector.dart';
 
 class HeightSelector extends StatefulWidget {
   final int age;
-  const HeightSelector({super.key, required this.age});
+  final dynamic selectedGender;
+  const HeightSelector({super.key, required this.age, this.selectedGender});
 
   @override
   State<HeightSelector> createState() => _HeightSelectorState();
@@ -16,7 +17,21 @@ class _HeightSelectorState extends State<HeightSelector> {
   Color get _title => const Color(0xFF2D3A4A);
   Color get _progress => const Color(0xFFF2C94C);
 
-  double _height = 170;
+  // Chiều cao từ 120cm đến 220cm
+  static const int _minHeight = 120;
+  static const int _maxHeight = 220;
+  static const int _defaultHeight = 170;
+
+  late final FixedExtentScrollController scrollController =
+      FixedExtentScrollController(initialItem: _defaultHeight - _minHeight);
+
+  int get currentHeightCm => _minHeight + scrollController.selectedItem;
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,42 +74,80 @@ class _HeightSelectorState extends State<HeightSelector> {
               const SizedBox(height: 24),
               Expanded(
                 child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 18,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
-                              blurRadius: 18,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          '${_height.toStringAsFixed(0)} cm',
-                          style: GoogleFonts.inter(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w800,
-                            color: _accent,
-                          ),
+                      ListWheelScrollView.useDelegate(
+                        controller: scrollController,
+                        physics: const FixedExtentScrollPhysics(),
+                        itemExtent: 64,
+                        perspective: 0.002,
+                        onSelectedItemChanged: (_) => setState(() {}),
+                        childDelegate: ListWheelChildBuilderDelegate(
+                          childCount: (_maxHeight - _minHeight) + 1,
+                          builder: (context, index) {
+                            final height = _minHeight + index;
+                            final isCurrent = height == currentHeightCm;
+                            return AnimatedOpacity(
+                              duration: const Duration(milliseconds: 150),
+                              opacity: isCurrent ? 1 : 0.35,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 10,
+                                ),
+                                decoration: isCurrent
+                                    ? BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(14),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.08,
+                                            ),
+                                            blurRadius: 18,
+                                            offset: const Offset(0, 6),
+                                          ),
+                                        ],
+                                      )
+                                    : null,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '$height',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 36,
+                                        fontWeight: FontWeight.w800,
+                                        color: _accent,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'cm',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: _accent.withOpacity(0.9),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      Slider(
-                        value: _height,
-                        min: 120,
-                        max: 220,
-                        divisions: 100,
-                        activeColor: _accent,
-                        onChanged: (v) => setState(() => _height = v),
+                      Positioned(
+                        right: 28,
+                        child: Transform.rotate(
+                          angle: 3.14159,
+                          child: Icon(
+                            Icons.play_arrow_rounded,
+                            size: 44,
+                            color: _accent.withOpacity(0.9),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -144,13 +197,13 @@ class _HeightSelectorState extends State<HeightSelector> {
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
+                        onPressed: () async {
+                          await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => WeightSelector(
+                              builder: (_) => WeightSelector(
                                 age: widget.age,
-                                heightCm: _height.round(),
+                                selectedGender: widget.selectedGender,
+                                heightCm: currentHeightCm,
                               ),
                             ),
                           );

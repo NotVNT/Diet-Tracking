@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'medical_allergy_screen.dart';
+import 'package:diet_tracking_project/view/on_boarding/user_information/goal_weight_selector.dart';
 
 class WeightSelector extends StatefulWidget {
-  final int age;
-  final int heightCm;
-  const WeightSelector({super.key, required this.age, required this.heightCm});
+  const WeightSelector({super.key});
 
   @override
   State<WeightSelector> createState() => _WeightSelectorState();
@@ -17,7 +15,20 @@ class _WeightSelectorState extends State<WeightSelector> {
   Color get _title => const Color(0xFF2D3A4A);
   Color get _progress => const Color(0xFFF2C94C);
 
-  double _weight = 65;
+  static const int _minWeight = 30;
+  static const int _maxWeight = 200;
+  static const int _defaultWeight = 70;
+
+  late final FixedExtentScrollController scrollController =
+      FixedExtentScrollController(initialItem: _defaultWeight - _minWeight);
+
+  int get currentWeightKg => _minWeight + scrollController.selectedItem;
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +44,7 @@ class _WeightSelectorState extends State<WeightSelector> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: LinearProgressIndicator(
-                  value: 0.8,
+                  value: 1.0,
                   minHeight: 10,
                   backgroundColor: Colors.white,
                   valueColor: AlwaysStoppedAnimation<Color>(_progress),
@@ -50,7 +61,7 @@ class _WeightSelectorState extends State<WeightSelector> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Cân nặng hiện tại của bạn là bao nhiêu? (kg)',
+                'Cân nặng hiện tại của bạn là gì?',
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
@@ -60,42 +71,80 @@ class _WeightSelectorState extends State<WeightSelector> {
               const SizedBox(height: 24),
               Expanded(
                 child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 18,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
-                              blurRadius: 18,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          '${_weight.toStringAsFixed(1)} kg',
-                          style: GoogleFonts.inter(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w800,
-                            color: _accent,
-                          ),
+                      ListWheelScrollView.useDelegate(
+                        controller: scrollController,
+                        physics: const FixedExtentScrollPhysics(),
+                        itemExtent: 64,
+                        perspective: 0.002,
+                        onSelectedItemChanged: (_) => setState(() {}),
+                        childDelegate: ListWheelChildBuilderDelegate(
+                          childCount: (_maxWeight - _minWeight) + 1,
+                          builder: (context, index) {
+                            final weight = _minWeight + index;
+                            final isCurrent = weight == currentWeightKg;
+                            return AnimatedOpacity(
+                              duration: const Duration(milliseconds: 150),
+                              opacity: isCurrent ? 1 : 0.35,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 10,
+                                ),
+                                decoration: isCurrent
+                                    ? BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(14),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.08,
+                                            ),
+                                            blurRadius: 18,
+                                            offset: const Offset(0, 6),
+                                          ),
+                                        ],
+                                      )
+                                    : null,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '$weight',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 36,
+                                        fontWeight: FontWeight.w800,
+                                        color: _accent,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'kg',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: _accent.withOpacity(0.9),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      Slider(
-                        value: _weight,
-                        min: 30,
-                        max: 180,
-                        divisions: 150,
-                        activeColor: _accent,
-                        onChanged: (v) => setState(() => _weight = v),
+                      Positioned(
+                        right: 28,
+                        child: Transform.rotate(
+                          angle: 3.14159,
+                          child: Icon(
+                            Icons.play_arrow_rounded,
+                            size: 44,
+                            color: _accent.withOpacity(0.9),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -145,14 +194,11 @@ class _WeightSelectorState extends State<WeightSelector> {
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
+                        onPressed: () async {
+                          await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => MedicalAllergyScreen(
-                                age: widget.age,
-                                heightCm: widget.heightCm,
-                                weightKg: _weight,
+                              builder: (_) => GoalWeightSelector(
+                                currentWeightKg: currentWeightKg,
                               ),
                             ),
                           );
