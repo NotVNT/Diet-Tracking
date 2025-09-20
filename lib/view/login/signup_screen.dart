@@ -6,6 +6,7 @@ import '../../common/app_styles.dart';
 import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
+import '../../database/auth_service.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -20,6 +21,8 @@ class _SignupScreenState extends State<SignupScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+
+  final AuthService _authService = AuthService();
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -99,45 +102,6 @@ class _SignupScreenState extends State<SignupScreen>
     }
   }
 
-  void _handleSignup() {
-    // Validate all fields
-    if (_fullNameController.text.trim().isEmpty) {
-      _showErrorSnackBar('Vui lòng nhập họ và tên');
-      return;
-    }
-    if (_phoneController.text.trim().isEmpty) {
-      _showErrorSnackBar('Vui lòng nhập số điện thoại');
-      return;
-    }
-    if (_selectedDate == null) {
-      _showErrorSnackBar('Vui lòng chọn ngày sinh');
-      return;
-    }
-    if (_emailController.text.trim().isEmpty) {
-      _showErrorSnackBar('Vui lòng nhập email');
-      return;
-    }
-    if (_passwordController.text.trim().isEmpty) {
-      _showErrorSnackBar('Vui lòng nhập mật khẩu');
-      return;
-    }
-    if (_confirmPasswordController.text.trim().isEmpty) {
-      _showErrorSnackBar('Vui lòng nhập lại mật khẩu');
-      return;
-    }
-    if (_passwordController.text != _confirmPasswordController.text) {
-      _showErrorSnackBar('Mật khẩu không khớp');
-      return;
-    }
-    if (!_isTermsAccepted) {
-      _showErrorSnackBar('Vui lòng đồng ý với điều khoản sử dụng');
-      return;
-    }
-
-    // TODO: Implement actual signup logic
-    _showSuccessSnackBar('Đăng ký thành công!');
-  }
-
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -156,6 +120,135 @@ class _SignupScreenState extends State<SignupScreen>
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+  /// Xử lý đăng ký user
+  Future<void> _handleSignup() async {
+    // Validation
+    if (!_validateInputs()) {
+      return;
+    }
+
+    // Test kết nối Firebase trước
+    print('🔍 Testing Firebase connection...');
+    final connectionOk = await _authService.testFirebaseConnection();
+    if (!connectionOk) {
+      _showErrorSnackBar(
+        'Không thể kết nối Firebase. Vui lòng kiểm tra kết nối mạng.',
+      );
+      return;
+    }
+
+    // Hiển thị loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      // Kiểm tra email đã tồn tại chưa
+      final isEmailInUse = await _authService.isEmailAlreadyInUse(
+        _emailController.text.trim(),
+      );
+
+      if (isEmailInUse) {
+        Navigator.of(context).pop(); // Đóng loading dialog
+        _showErrorSnackBar(
+          'Email này đã được sử dụng. Vui lòng chọn email khác.',
+        );
+        return;
+      }
+
+      // Thực hiện đăng ký
+      final user = await _authService.signUpWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        fullName: _fullNameController.text.trim(),
+        phone: _phoneController.text.trim(),
+        birthDate: _selectedDate!,
+      );
+
+      if (user != null) {
+        Navigator.of(context).pop(); // Đóng loading dialog
+
+        // Gửi email xác thực
+        await _authService.sendEmailVerification();
+
+        _showSuccessSnackBar(
+          'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.',
+        );
+
+        // Chuyển về màn hình đăng nhập
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      } else {
+        Navigator.of(context).pop(); // Đóng loading dialog
+        _showErrorSnackBar('Đăng ký thất bại. Vui lòng thử lại.');
+      }
+    } catch (e) {
+      Navigator.of(context).pop(); // Đóng loading dialog
+      _showErrorSnackBar(e.toString());
+    }
+  }
+
+  /// Validation các trường input
+  bool _validateInputs() {
+    if (_fullNameController.text.trim().isEmpty) {
+      _showErrorSnackBar('Vui lòng nhập họ và tên.');
+      return false;
+    }
+
+    if (_phoneController.text.trim().isEmpty) {
+      _showErrorSnackBar('Vui lòng nhập số điện thoại.');
+      return false;
+    }
+
+    if (_selectedDate == null) {
+      _showErrorSnackBar('Vui lòng chọn ngày sinh.');
+      return false;
+    }
+
+    if (_emailController.text.trim().isEmpty) {
+      _showErrorSnackBar('Vui lòng nhập email.');
+      return false;
+    }
+
+    // Kiểm tra format email
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(_emailController.text.trim())) {
+      _showErrorSnackBar('Email không hợp lệ.');
+      return false;
+    }
+
+    if (_passwordController.text.isEmpty) {
+      _showErrorSnackBar('Vui lòng nhập mật khẩu.');
+      return false;
+    }
+
+    if (_passwordController.text.length < 6) {
+      _showErrorSnackBar('Mật khẩu phải có ít nhất 6 ký tự.');
+      return false;
+    }
+
+    if (_confirmPasswordController.text.isEmpty) {
+      _showErrorSnackBar('Vui lòng nhập lại mật khẩu.');
+      return false;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showErrorSnackBar('Mật khẩu xác nhận không khớp.');
+      return false;
+    }
+
+    if (!_isTermsAccepted) {
+      _showErrorSnackBar('Vui lòng đồng ý với điều khoản sử dụng.');
+      return false;
+    }
+
+    return true;
   }
 
   @override

@@ -1,7 +1,11 @@
-// User domain model moved to a single place for onboarding and app-wide use.
-// You can extend this as more onboarding steps are added.
-
+/// User domain model for diet tracking application
+/// Contains user profile information and preferences
 class User {
+  final String? uid;
+  final String? email;
+  final String? fullName;
+  final String? phone;
+  final DateTime? birthDate;
   final GenderType? gender;
   final int? age;
   final double? heightCm;
@@ -10,6 +14,11 @@ class User {
   final GoalType? goal;
 
   const User({
+    this.uid,
+    this.email,
+    this.fullName,
+    this.phone,
+    this.birthDate,
     this.gender,
     this.age,
     this.heightCm,
@@ -18,7 +27,13 @@ class User {
     this.goal,
   });
 
+  /// Creates a copy of this user with updated fields
   User copyWith({
+    String? uid,
+    String? email,
+    String? fullName,
+    String? phone,
+    DateTime? birthDate,
     GenderType? gender,
     int? age,
     double? heightCm,
@@ -27,6 +42,11 @@ class User {
     GoalType? goal,
   }) {
     return User(
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      fullName: fullName ?? this.fullName,
+      phone: phone ?? this.phone,
+      birthDate: birthDate ?? this.birthDate,
       gender: gender ?? this.gender,
       age: age ?? this.age,
       heightCm: heightCm ?? this.heightCm,
@@ -36,8 +56,14 @@ class User {
     );
   }
 
+  /// Converts user to JSON for Firestore storage
   Map<String, dynamic> toJson() {
     return {
+      'uid': uid,
+      'email': email,
+      'fullName': fullName,
+      'phone': phone,
+      'birthDate': birthDate?.millisecondsSinceEpoch,
       'gender': gender?.name,
       'age': age,
       'heightCm': heightCm,
@@ -47,8 +73,16 @@ class User {
     };
   }
 
+  /// Creates user from JSON data
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      uid: json['uid'] as String?,
+      email: json['email'] as String?,
+      fullName: json['fullName'] as String?,
+      phone: json['phone'] as String?,
+      birthDate: json['birthDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json['birthDate'] as int)
+          : null,
       gender: _tryParseGender(json['gender'] as String?),
       age: json['age'] as int?,
       heightCm: (json['heightCm'] as num?)?.toDouble(),

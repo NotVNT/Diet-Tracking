@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796521627908",
+    "project_id": "diet-tracking-f365a",
+    "storage_bucket": "diet-tracking-f365a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796521627908:android:a00cd78cd184273fbb9051",
+        "android_client_info": {
+          "package_name": "com.example.diet_tracking_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGEbzq-F_OAMxn7I2mxrbaXOkmrXpOzgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

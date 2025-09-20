@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../common/app_colors.dart';
 import '../../common/app_styles.dart';
 import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
+import '../../database/auth_service.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
+  final AuthService _authService = AuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
@@ -55,6 +58,75 @@ class _LoginScreenState extends State<LoginScreen>
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    if (_emailController.text.trim().isEmpty) {
+      _showErrorSnackBar('Vui lòng nhập email');
+      return;
+    }
+    if (_passwordController.text.trim().isEmpty) {
+      _showErrorSnackBar('Vui lòng nhập mật khẩu');
+      return;
+    }
+
+    try {
+      _showLoadingDialog();
+
+      final user = await _authService.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      _hideLoadingDialog();
+
+      if (user != null) {
+        print('✅ Login successful in UI');
+        _showSuccessSnackBar('Đăng nhập thành công!');
+        // TODO: Navigate to main screen
+      } else {
+        print('❌ Login failed in UI');
+        _showErrorSnackBar(
+          'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.',
+        );
+      }
+    } catch (e) {
+      print('❌ Exception in login: $e');
+      _hideLoadingDialog();
+      _showErrorSnackBar('Đã xảy ra lỗi không xác định: $e');
+    }
+  }
+
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  void _hideLoadingDialog() {
+    Navigator.of(context).pop();
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: GoogleFonts.inter(color: Colors.white)),
+        backgroundColor: Colors.red[600],
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: GoogleFonts.inter(color: Colors.white)),
+        backgroundColor: Colors.green[600],
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -157,9 +229,7 @@ class _LoginScreenState extends State<LoginScreen>
                       position: _slideAnimation,
                       child: CustomButton(
                         text: 'Đăng nhập',
-                        onPressed: () {
-                          // TODO: Handle login
-                        },
+                        onPressed: _handleLogin,
                       ),
                     ),
                   ),
