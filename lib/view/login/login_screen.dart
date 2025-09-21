@@ -7,6 +7,7 @@ import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
+import '../main_navigation/main_navigation_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -83,7 +84,11 @@ class _LoginScreenState extends State<LoginScreen>
       if (user != null) {
         print('✅ Login successful in UI');
         _showSuccessSnackBar('Đăng nhập thành công!');
-        // TODO: Navigate to main screen
+        // Navigate to main screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+        );
       } else {
         print('❌ Login failed in UI');
         _showErrorSnackBar(
