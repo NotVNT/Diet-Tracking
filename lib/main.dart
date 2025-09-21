@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'database/firebase_options.dart';
 import 'view/on_boarding/welcome_screen.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
