@@ -8,8 +8,7 @@ import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
 import '../main_navigation/main_navigation_screen.dart';
-
-
+import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -91,7 +90,6 @@ class _LoginScreenState extends State<LoginScreen>
           context,
           MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
         );
-
       } else {
         print('❌ Login failed in UI');
         _showErrorSnackBar(
