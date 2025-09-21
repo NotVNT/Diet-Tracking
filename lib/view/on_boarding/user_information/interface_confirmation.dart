@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../main_navigation/main_navigation_screen.dart';
 
 class InterfaceConfirmation extends StatelessWidget {
   final int? currentWeightKg;
@@ -162,7 +163,15 @@ class InterfaceConfirmation extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop(true);
+                          // Navigate to main screen after completing onboarding
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const MainNavigationScreen(),
+                            ),
+                            (route) => false,
+                          );
                         },
                         child: Text(
                           'Tiếp theo',
