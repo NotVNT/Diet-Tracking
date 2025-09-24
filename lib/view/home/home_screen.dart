@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 /// Data model for chat messages
 class ChatMessage {
@@ -30,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const Color _inputBackgroundColor = Color(0xFF2D2D2D);
   static const double _borderRadius = 20.0;
   static const double _smallBorderRadius = 12.0;
-  static const Duration _botResponseDelay = Duration(seconds: 1);
+  // static const Duration _botResponseDelay = Duration(seconds: 1);
 
   // Controllers and state
   final TextEditingController _messageController = TextEditingController();
@@ -394,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Sends a message and simulates bot response
-  void _sendMessage(String text) {
+  void _sendMessage(String text) async {
     setState(() {
       _messages.add(
         ChatMessage(text: text, isUser: true, timestamp: DateTime.now()),
@@ -403,26 +405,57 @@ class _HomeScreenState extends State<HomeScreen> {
       _showOptions = false;
     });
 
-    _simulateBotResponse(text);
+    final botReply = await fetchGeminiReply((text));
+
+    if (mounted) {
+      setState(() {
+        _messages.add(
+          ChatMessage(text: botReply, isUser: false, timestamp: DateTime.now()),
+        );
+      });
+    }
+  }
+
+  Future<String> fetchGeminiReply(String prompt) async {
+    final url = Uri.parse('http://127.0.0.1:8000/chat');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "age": 18,
+        "height": 171,
+        "weight": 65,
+        "disease": "thừa cân",
+        "allergy": "sữa",
+        "goal": "giảm cân",
+        "prompt": prompt,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['reply'] ?? 'Không có phản hồi từ AI';
+    } else {
+      return 'Lỗi kết nối API';
+    }
   }
 
   /// Simulates bot response after a delay
-  void _simulateBotResponse(String userMessage) {
-    Future.delayed(_botResponseDelay, () {
-      if (mounted) {
-        setState(() {
-          _messages.add(
-            ChatMessage(
-              text:
-                  'Tôi đã nhận được tin nhắn của bạn: "$userMessage". Tôi sẽ giúp bạn với chế độ ăn kiêng!',
-              isUser: false,
-              timestamp: DateTime.now(),
-            ),
-          );
-        });
-      }
-    });
-  }
+  // void _simulateBotResponse(String userMessage) {
+  //   Future.delayed(_botResponseDelay, () {
+  //     if (mounted) {
+  //       setState(() {
+  //         _messages.add(
+  //           ChatMessage(
+  //             text:
+  //                 'Tôi đã nhận được tin nhắn của bạn: "$userMessage". Tôi sẽ giúp bạn với chế độ ăn kiêng!',
+  //             isUser: false,
+  //             timestamp: DateTime.now(),
+  //           ),
+  //         );
+  //       });
+  //     }
+  //   });
+  // }
 
   /// Handles option tap and generates appropriate response
   void _handleOptionTap(String option) {
