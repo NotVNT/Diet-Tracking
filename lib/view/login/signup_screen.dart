@@ -7,10 +7,13 @@ import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
+import '../../database/guest_sync_service.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  final AuthService? authService;
+  final GuestSyncService? guestSyncService;
+  const SignupScreen({super.key, this.authService, this.guestSyncService});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -22,7 +25,8 @@ class _SignupScreenState extends State<SignupScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  final AuthService _authService = AuthService();
+  late final AuthService _authService;
+  late final GuestSyncService _guestSync;
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -44,6 +48,8 @@ class _SignupScreenState extends State<SignupScreen>
   @override
   void initState() {
     super.initState();
+    _authService = widget.authService ?? AuthService();
+    _guestSync = widget.guestSyncService ?? GuestSyncService();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -174,6 +180,11 @@ class _SignupScreenState extends State<SignupScreen>
 
         // Gửi email xác thực
         await _authService.sendEmailVerification();
+
+        // Đồng bộ dữ liệu khách vào hồ sơ user mới
+        try {
+          await _guestSync.syncGuestToUser(user.uid);
+        } catch (_) {}
 
         _showSuccessSnackBar(
           'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.',

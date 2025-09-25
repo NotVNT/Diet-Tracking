@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'age_selector.dart';
+import '../../../database/local_storage_service.dart';
 
 class GenderSelector extends StatefulWidget {
   const GenderSelector({super.key});
@@ -13,6 +14,7 @@ enum Gender { male, female }
 
 class _GenderSelectorState extends State<GenderSelector> {
   Gender? _selected = Gender.male;
+  final LocalStorageService _local = LocalStorageService();
 
   Color get _bg => const Color(0xFFFDF0D7);
   Color get _card => Colors.white;
@@ -136,7 +138,13 @@ class _GenderSelectorState extends State<GenderSelector> {
                                 borderRadius: BorderRadius.circular(18),
                               ),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
+                              // Lưu tạm giới tính
+                              await _local.saveGuestData(
+                                gender: _selected == Gender.male
+                                    ? 'male'
+                                    : 'female',
+                              );
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -7,7 +7,10 @@ class FirestoreService {
   static const String _testCollection = 'test';
 
   // Firebase instance
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  FirestoreService({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Lấy instance của Firestore
   FirebaseFirestore get firestore => _firestore;

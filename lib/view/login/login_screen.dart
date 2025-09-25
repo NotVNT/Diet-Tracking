@@ -7,11 +7,16 @@ import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
+import '../../database/guest_sync_service.dart';
 import '../home/home_view.dart';
+import '../on_boarding/started_view/started_screen.dart' as started_onboarding;
+import '../../model/user.dart' as app_user;
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final AuthService? authService;
+  final GuestSyncService? guestSyncService;
+  const LoginScreen({super.key, this.authService, this.guestSyncService});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -23,7 +28,8 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  final AuthService _authService = AuthService();
+  late final AuthService _authService;
+  late final GuestSyncService _guestSync;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
@@ -33,6 +39,8 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
+    _authService = widget.authService ?? AuthService();
+    _guestSync = widget.guestSyncService ?? GuestSyncService();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -85,11 +93,36 @@ class _LoginScreenState extends State<LoginScreen>
         print('✅ Login successful in UI');
         _showSuccessSnackBar('Đăng nhập thành công!');
 
-        // Navigate to main screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeView()),
-        );
+        // Đồng bộ dữ liệu khách vào user trước khi quyết định điều hướng
+        try {
+          await _guestSync.syncGuestToUser(user.uid);
+        } catch (e) {
+          print('⚠️ Guest sync failed: $e');
+        }
+
+        // Kiểm tra hồ sơ đã đủ thông tin cơ bản chưa
+        final app_user.User? profile = await _authService.getUserData(user.uid);
+        final bool needsOnboarding =
+            profile == null ||
+            (profile.goals == null || profile.goals!.isEmpty) ||
+            profile.heightCm == null ||
+            profile.weightKg == null ||
+            profile.age == null ||
+            profile.gender == null;
+
+        if (needsOnboarding) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const started_onboarding.StartScreen(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeView()),
+          );
+        }
       } else {
         print('❌ Login failed in UI');
         _showErrorSnackBar(

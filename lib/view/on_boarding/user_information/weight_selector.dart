@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/goal_weight_selector.dart';
+import '../../../database/local_storage_service.dart';
 
 class WeightSelector extends StatefulWidget {
   const WeightSelector({super.key});
@@ -23,6 +24,8 @@ class _WeightSelectorState extends State<WeightSelector> {
       FixedExtentScrollController(initialItem: _defaultWeight - _minWeight);
 
   int get currentWeightKg => _minWeight + scrollController.selectedItem;
+
+  final LocalStorageService _local = LocalStorageService();
 
   @override
   void dispose() {
@@ -195,6 +198,10 @@ class _WeightSelectorState extends State<WeightSelector> {
                           ),
                         ),
                         onPressed: () async {
+                          // Lưu tạm cân nặng
+                          await _local.saveGuestData(
+                            weightKg: currentWeightKg.toDouble(),
+                          );
                           await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => GoalWeightSelector(

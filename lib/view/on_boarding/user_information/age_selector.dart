@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/height_selector.dart';
+import '../../../database/local_storage_service.dart';
 
 class AgeSelector extends StatefulWidget {
   final dynamic selectedGender;
@@ -19,6 +20,7 @@ class _AgeSelectorState extends State<AgeSelector> {
   FixedExtentScrollController scrollController = FixedExtentScrollController(
     initialItem: 18, // mặc định 30 tuổi khi base = 12
   );
+  final LocalStorageService _local = LocalStorageService();
 
   int get currentAge => 12 + scrollController.selectedItem;
 
@@ -184,6 +186,8 @@ class _AgeSelectorState extends State<AgeSelector> {
                           ),
                         ),
                         onPressed: () async {
+                          // Lưu tạm tuổi
+                          await _local.saveGuestData(age: currentAge);
                           await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => HeightSelector(

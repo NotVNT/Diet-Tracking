@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../login/login_screen.dart';
 
 import '../../model/user.dart' as app_user;
 import '../../database/auth_service.dart';
@@ -33,6 +34,7 @@ class _ProfileViewState extends State<ProfileView> {
     final fb_auth.User? current = _authService.currentUser;
     if (current == null) {
       setState(() {
+        _appUser = null; // clear cached profile when signed out
         _loading = false;
       });
       return;
@@ -184,18 +186,34 @@ class _ProfileViewState extends State<ProfileView> {
             const SizedBox(height: 8),
             _MenuCard(
               children: [
-                _MenuItem(
-                  icon: Icons.logout,
-                  label: 'Đăng xuất',
-                  isDanger: true,
-                  onTap: () async {
-                    await _authService.signOut();
-                    if (!mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đã đăng xuất')),
-                    );
-                  },
-                ),
+                if (fbUser != null)
+                  _MenuItem(
+                    icon: Icons.logout,
+                    label: 'Đăng xuất',
+                    isDanger: true,
+                    onTap: () async {
+                      await _authService.signOut();
+                      if (!mounted) return;
+                      // Reload lại trạng thái màn hình ngay lập tức
+                      await _loadUser();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Đã đăng xuất')),
+                      );
+                    },
+                  )
+                else
+                  _MenuItem(
+                    icon: Icons.login,
+                    label: 'Đăng nhập',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                  ),
               ],
             ),
           ],

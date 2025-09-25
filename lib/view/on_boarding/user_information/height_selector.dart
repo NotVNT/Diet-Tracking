@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/weight_selector.dart';
+import '../../../database/local_storage_service.dart';
 
 class HeightSelector extends StatefulWidget {
   final dynamic selectedGender;
@@ -25,6 +26,8 @@ class _HeightSelectorState extends State<HeightSelector> {
       FixedExtentScrollController(initialItem: _defaultHeight - _minHeight);
 
   int get currentHeightCm => _minHeight + scrollController.selectedItem;
+
+  final LocalStorageService _local = LocalStorageService();
 
   @override
   void dispose() {
@@ -197,6 +200,10 @@ class _HeightSelectorState extends State<HeightSelector> {
                           ),
                         ),
                         onPressed: () async {
+                          // Lưu tạm chiều cao
+                          await _local.saveGuestData(
+                            heightCm: currentHeightCm.toDouble(),
+                          );
                           await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => const WeightSelector(),

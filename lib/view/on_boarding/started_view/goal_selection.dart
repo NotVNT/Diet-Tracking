@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'weight_goal_screen.dart';
+import '../../../database/local_storage_service.dart';
+import '../../../database/auth_service.dart';
 
 class GoalSelection extends StatefulWidget {
   const GoalSelection({super.key});
@@ -16,6 +18,8 @@ class _GoalSelectionState extends State<GoalSelection> {
   Color get _primary => const Color(0xFFFF7A00);
 
   final Set<int> _selectedIndices = <int>{};
+  final LocalStorageService _local = LocalStorageService();
+  final AuthService _auth = AuthService();
 
   final List<_GoalItem> _goals = const [
     _GoalItem(icon: '🔥', title: 'Giảm cân'),
@@ -145,10 +149,25 @@ class _GoalSelectionState extends State<GoalSelection> {
                 child: ElevatedButton(
                   onPressed: _selectedIndices.isEmpty
                       ? null
-                      : () {
+                      : () async {
                           final selectedTitles = _selectedIndices
                               .map((i) => _goals[i].title)
                               .toList(growable: false);
+
+                          // Nếu đã đăng nhập: lưu trực tiếp danh sách mục tiêu; ngược lại: lưu tạm trên máy
+                          final uid = _auth.currentUser?.uid;
+                          if (uid != null) {
+                            try {
+                              await _auth.updateUserData(uid, {
+                                'goal': selectedTitles,
+                              });
+                            } catch (_) {}
+                          } else {
+                            await _local.saveGuestData(
+                              goal: selectedTitles.join(', '),
+                            );
+                          }
+
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => WeightGoalScreen(
