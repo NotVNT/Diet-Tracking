@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:math';
 
 /// Data model for chat messages
 class ChatMessage {
@@ -43,43 +44,30 @@ class _HomeScreenState extends State<HomeScreen> {
       timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
     ),
   ];
-  bool _showOptions = false;
+  bool _showOptions = false; //flag để đánh dấu bật tắt UI cho option
+
+  //Hiện ra 3 ô input để người dùng nhập vào nếu người dụng chọn ô "gợi ý món ăn"
+  bool _showFileInputs = false;
+  final TextEditingController _fileController1 = TextEditingController();
+  final TextEditingController _fileController2 = TextEditingController();
+  final TextEditingController _fileController3 = TextEditingController();
 
   // Option configurations
   static const List<Map<String, dynamic>> _menuOptions = [
-    {
-      'icon': Icons.attach_file,
-      'title': 'Add photos & files',
-      'color': Colors.white,
-    },
-    {
-      'icon': Icons.cloud_upload,
-      'title': 'Add from Google Drive',
-      'color': Color(0xFF4285F4),
-    },
-    {'icon': Icons.image, 'title': 'Create image', 'color': Colors.white},
-    {
-      'icon': Icons.lightbulb_outline,
-      'title': 'Think longer',
-      'color': Colors.white,
-    },
-    {'icon': Icons.search, 'title': 'Deep research', 'color': Colors.white},
-    {
-      'icon': Icons.menu_book,
-      'title': 'Study and learn',
-      'color': Colors.white,
-    },
-    {
-      'icon': Icons.more_horiz,
-      'title': 'More',
-      'color': Colors.white,
-      'hasArrow': true,
-    },
+    {'icon': Icons.attach_file, 'title': 'gợi ý món ăn', 'color': Colors.white},
+    // {
+    //   'icon': Icons.cloud_upload,
+    //   'title': 'Add from Google Drive',
+    //   'color': Color(0xFF4285F4),
+    // },
   ];
 
   @override
   void dispose() {
     _messageController.dispose();
+    _fileController1.dispose();
+    _fileController2.dispose();
+    _fileController3.dispose();
     super.dispose();
   }
 
@@ -92,10 +80,120 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _buildMessagesArea(),
           if (_showOptions) _buildOptionsPopup(),
+          _buildFileInputs(),
           _buildInputArea(),
         ],
       ),
     );
+  }
+
+  ///UI cho 3 ô textField
+  Widget _buildFileInputs() {
+    if (!_showFileInputs) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: _fileController1,
+            decoration: const InputDecoration(
+              hintText: 'Nhập nguyên liệu món ăn đang có sẵn',
+              filled: true,
+              fillColor: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _fileController2,
+            decoration: const InputDecoration(
+              hintText: 'Nhâp chi phí mong muốn cho bữa ăn',
+              filled: true,
+              fillColor: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _fileController3,
+            decoration: const InputDecoration(
+              hintText:
+                  'Bữa sáng, Bữa trưa, Bữa tối, Bữa ăn nhẹ, Thực đơn cả ngày',
+              filled: true,
+              fillColor: Colors.white,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final data1 = _fileController1.text;
+              final data2 = "Với chi phí là: ${_fileController2.text}k";
+              final data3 = _fileController3.text;
+
+              final List<String> pretextsBegin = [
+                'Với nguyên liệu có sẵn như: ',
+                'Hãy tạo món ăn với nguyên liệu có sẵn như sau: ',
+                'Với nguyên liệu bao gồm: ',
+                'Từ các nguyên liệu có sẵn: ',
+              ];
+
+              final List<String> pretextsMid = [
+                "Tạo ra món ăn phù hợp với tôi, ",
+                "Đề xuất món ăn phù hợp từ các nguyên liệu trên, ",
+                "Hãy nghĩ ra một món ăn sử dụng toàn bộ nguyên liệu sau, ",
+                "Lên thực đơn món ăn phù hợp với tôi, ",
+              ];
+
+              final List<String> pretextsEnd = [
+                "cho tôi xem công thức đầy đủ. ",
+                "hiện công thức đầy đủ của món ăn. ",
+                "cho xem công thức nấu ăn đầy đủ. ",
+                "cho biết công thức đầy đủ của món ăn. ",
+              ];
+
+              final random = Random();
+
+              final randomPreTextBegin =
+                  pretextsBegin[random.nextInt(pretextsBegin.length)];
+              final randomPreTextMid =
+                  pretextsMid[random.nextInt(pretextsMid.length)];
+              final randomPreTextEnd =
+                  pretextsEnd[random.nextInt(pretextsEnd.length)];
+              setState(() {
+                _messages.add(
+                  ChatMessage(
+                    text:
+                        '$randomPreTextBegin $data1. $randomPreTextMid $randomPreTextEnd $data2 cho $data3',
+                    isUser: true,
+                    timestamp: DateTime.now(),
+                  ),
+                );
+                _showFileInputs = false;
+                _fileController1.clear();
+                _fileController2.clear();
+                _fileController3.clear();
+              });
+            },
+            child: const Text("Submit"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //Bật UI khi người dùng chọn nút option
+  void _handleOptionTap(String option) {
+    if (option == 'gợi ý món ăn') {
+      setState(() {
+        _showFileInputs = true;
+      });
+      return;
+    }
+
+    final response = _getOptionResponse(option);
+    setState(() {
+      _messages.add(
+        ChatMessage(text: response, isUser: false, timestamp: DateTime.now()),
+      );
+    });
   }
 
   /// Builds the app bar with title and settings button
@@ -458,33 +556,22 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   /// Handles option tap and generates appropriate response
-  void _handleOptionTap(String option) {
-    final response = _getOptionResponse(option);
 
-    setState(() {
-      _messages.add(
-        ChatMessage(text: response, isUser: false, timestamp: DateTime.now()),
-      );
-    });
-  }
+  // void _handleOptionTap(String option) {
+  //   final response = _getOptionResponse(option);
+
+  //   setState(() {
+  //     _messages.add(
+  //       ChatMessage(text: response, isUser: false, timestamp: DateTime.now()),
+  //     );
+  //   });
+  // }
 
   /// Returns appropriate response for each option
   String _getOptionResponse(String option) {
     switch (option) {
-      case 'Add photos & files':
-        return 'Bạn có thể thêm ảnh món ăn để tôi phân tích dinh dưỡng!';
       case 'Add from Google Drive':
         return 'Kết nối Google Drive để lưu trữ kế hoạch ăn kiêng của bạn!';
-      case 'Create image':
-        return 'Tôi có thể tạo hình ảnh minh họa cho kế hoạch ăn kiêng!';
-      case 'Think longer':
-        return 'Tôi sẽ suy nghĩ kỹ hơn về vấn đề của bạn...';
-      case 'Deep research':
-        return 'Tôi sẽ nghiên cứu sâu về chủ đề dinh dưỡng này!';
-      case 'Study and learn':
-        return 'Hãy cùng học về dinh dưỡng và sức khỏe!';
-      case 'More':
-        return 'Có thêm nhiều tùy chọn khác cho bạn!';
       default:
         return 'Tôi không hiểu tùy chọn này.';
     }

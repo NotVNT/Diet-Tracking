@@ -66,6 +66,7 @@ def violates_rules(disease, allergy, user_prompt):
         for item in FORBIDDEN_BY_ALLERGY[allergy]:
             if item.lower() in user_prompt.lower():
                 return f"Không thể đề xuất món ăn có '{item}' vì bạn dị ứng với {allergy}"
+##rule-based##
             
 def filter_output(disease, allergy, model_reply):
     forbidden_words = []
