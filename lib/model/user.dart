@@ -12,6 +12,7 @@ class User {
   final double? weightKg;
   final ActivityLevel? activityLevel;
   final GoalType? goal;
+  final String? avatarUrl;
 
   const User({
     this.uid,
@@ -25,6 +26,7 @@ class User {
     this.weightKg,
     this.activityLevel,
     this.goal,
+    this.avatarUrl,
   });
 
   /// Creates a copy of this user with updated fields
@@ -40,6 +42,7 @@ class User {
     double? weightKg,
     ActivityLevel? activityLevel,
     GoalType? goal,
+    String? avatarUrl,
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -53,6 +56,7 @@ class User {
       weightKg: weightKg ?? this.weightKg,
       activityLevel: activityLevel ?? this.activityLevel,
       goal: goal ?? this.goal,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 
@@ -70,6 +74,7 @@ class User {
       'weightKg': weightKg,
       'activityLevel': activityLevel?.name,
       'goal': goal?.name,
+      'avatarUrl': avatarUrl,
     };
   }
 
@@ -89,6 +94,7 @@ class User {
       weightKg: (json['weightKg'] as num?)?.toDouble(),
       activityLevel: _tryParseActivity(json['activityLevel'] as String?),
       goal: _tryParseGoal(json['goal'] as String?),
+      avatarUrl: json['avatarUrl'] as String?,
     );
   }
 }

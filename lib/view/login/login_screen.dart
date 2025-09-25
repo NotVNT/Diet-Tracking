@@ -7,7 +7,7 @@ import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
-import '../main_navigation/main_navigation_screen.dart';
+import '../home/home_view.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen>
         // Navigate to main screen
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+          MaterialPageRoute(builder: (context) => const HomeView()),
         );
       } else {
         print('❌ Login failed in UI');

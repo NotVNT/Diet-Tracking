@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../main_navigation/main_navigation_screen.dart';
+import '../../home/home_view.dart';
 
 class InterfaceConfirmation extends StatelessWidget {
   final int? currentWeightKg;
@@ -163,12 +163,11 @@ class InterfaceConfirmation extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          // Navigate to main screen after completing onboarding
+                          // Navigate to home screen after completing onboarding
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const MainNavigationScreen(),
+                              builder: (context) => const HomeView(),
                             ),
                             (route) => false,
                           );

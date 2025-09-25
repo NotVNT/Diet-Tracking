@@ -16,15 +16,15 @@ class ChatMessage {
   });
 }
 
-/// Home screen with chatbox interface for diet tracking assistance
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+/// Chat bot screen with chatbox interface for diet tracking assistance
+class ChatBotView extends StatefulWidget {
+  const ChatBotView({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ChatBotView> createState() => _ChatBotViewState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ChatBotViewState extends State<ChatBotView> {
   // Constants
   static const Color _primaryColor = Color(0xFF4CAF50);
   static const Color _backgroundColor = Color(0xFF1A1A1A);
@@ -356,17 +356,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Handles message submission from text field
   void _onMessageSubmitted(String text) {
-    if (text.trim().isNotEmpty) {
-      _sendMessage(text.trim());
+    final trimmed = text.trim();
+    if (trimmed.isEmpty) return;
+    if (_hasLineBreak(trimmed)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tin nhắn không được chứa xuống dòng.')),
+      );
+      return;
     }
+    _sendMessage(trimmed);
   }
 
   /// Handles send button press
   void _onSendPressed() {
     final text = _messageController.text.trim();
-    if (text.isNotEmpty) {
-      _sendMessage(text);
+    if (text.isEmpty) return;
+    if (_hasLineBreak(text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tin nhắn không được chứa xuống dòng.')),
+      );
+      return;
     }
+    _sendMessage(text);
   }
 
   /// Handles option selection from popup menu
@@ -393,6 +404,12 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       return '${timestamp.day}/${timestamp.month}';
     }
+  }
+
+  /// Checks if the input contains any line break characters
+  bool _hasLineBreak(String value) {
+    // Handles \n, \r, and Windows-style \r\n
+    return value.contains('\n') || value.contains('\r');
   }
 
   /// Sends a message and simulates bot response
