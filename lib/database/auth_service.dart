@@ -30,7 +30,7 @@ class AuthService {
     required String password,
     required String fullName,
     required String phone,
-    required DateTime birthDate,
+    DateTime? birthDate,
   }) async {
     try {
       // Tạo user trong Firebase Auth

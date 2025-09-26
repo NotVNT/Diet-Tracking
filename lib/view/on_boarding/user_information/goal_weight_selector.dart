@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:diet_tracking_project/view/home/home_view.dart';
+import 'interface_confirmation.dart';
 
 class GoalWeightSelector extends StatefulWidget {
   final int? currentWeightKg;
@@ -188,14 +188,16 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                           ),
                         ),
                         onPressed: () async {
-                          // Sau khi chọn cân nặng mục tiêu xong: vào thẳng Trang chủ
+                          // Sau khi chọn cân nặng mục tiêu xong: vào interface_confirmation
                           if (!mounted) return;
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const HomeView(),
+                              builder: (context) => InterfaceConfirmation(
+                                currentWeightKg: widget.currentWeightKg,
+                                goalWeightKg: currentGoalWeightKg,
+                              ),
                             ),
-                            (route) => false,
                           );
                         },
                         child: Text(

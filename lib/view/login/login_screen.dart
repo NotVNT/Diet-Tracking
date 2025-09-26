@@ -331,32 +331,21 @@ class _LoginScreenState extends State<LoginScreen>
                     child: SlideTransition(
                       position: _slideAnimation,
                       child: Center(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Chưa có tài khoản? ',
-                                style: AppStyles.bodyMedium.copyWith(
-                                  color: AppColors.grey600,
-                                ),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const started_onboarding.StartScreen(),
                               ),
-                              TextSpan(
-                                text: 'Đăng ký',
-                                style: AppStyles.linkText.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SignupScreen(),
-                                      ),
-                                    );
-                                  },
-                              ),
-                            ],
+                            );
+                          },
+                          child: Text(
+                            'Tôi chưa có tài khoản',
+                            style: AppStyles.linkText.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
