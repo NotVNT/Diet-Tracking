@@ -1,17 +1,21 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Lưu trữ cục bộ thông tin người dùng chưa đăng nhập
-/// Bao gồm: mục tiêu (goal), chiều cao, cân nặng, tuổi, giới tính
+/// Service để quản lý dữ liệu tạm thời của người dùng guest
+/// Lưu trữ thông tin onboarding trước khi đăng ký tài khoản chính thức
 class LocalStorageService {
+  // Private keys cho SharedPreferences
   static const String _keyGoal = 'guest_goal';
   static const String _keyHeight = 'guest_height_cm';
   static const String _keyWeight = 'guest_weight_kg';
   static const String _keyAge = 'guest_age';
   static const String _keyGender = 'guest_gender';
 
+  /// Lazy initialization của SharedPreferences
   Future<SharedPreferences> get _prefs async =>
       await SharedPreferences.getInstance();
 
+  /// Lưu dữ liệu guest vào local storage
+  /// Chỉ lưu các trường được cung cấp (không null)
   Future<void> saveGuestData({
     String? goal,
     double? heightCm,
@@ -20,6 +24,8 @@ class LocalStorageService {
     String? gender,
   }) async {
     final prefs = await _prefs;
+
+    // Lưu từng trường nếu có giá trị
     if (goal != null) await prefs.setString(_keyGoal, goal);
     if (heightCm != null) await prefs.setDouble(_keyHeight, heightCm);
     if (weightKg != null) await prefs.setDouble(_keyWeight, weightKg);
@@ -27,6 +33,8 @@ class LocalStorageService {
     if (gender != null) await prefs.setString(_keyGender, gender);
   }
 
+  /// Đọc tất cả dữ liệu guest từ local storage
+  /// Trả về Map với các key tương ứng với từng trường dữ liệu
   Future<Map<String, dynamic>> readGuestData() async {
     final prefs = await _prefs;
     return {
@@ -38,6 +46,8 @@ class LocalStorageService {
     };
   }
 
+  /// Kiểm tra xem có dữ liệu guest nào được lưu không
+  /// Trả về true nếu có ít nhất một trường dữ liệu
   Future<bool> hasGuestData() async {
     final prefs = await _prefs;
     return prefs.containsKey(_keyGoal) ||
@@ -47,8 +57,12 @@ class LocalStorageService {
         prefs.containsKey(_keyGender);
   }
 
+  /// Xóa tất cả dữ liệu guest khỏi local storage
+  /// Được gọi sau khi đồng bộ thành công với tài khoản chính thức
   Future<void> clearGuestData() async {
     final prefs = await _prefs;
+
+    // Xóa từng key một cách tuần tự
     await prefs.remove(_keyGoal);
     await prefs.remove(_keyHeight);
     await prefs.remove(_keyWeight);

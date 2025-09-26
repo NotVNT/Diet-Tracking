@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../login/login_screen.dart';
+import '../on_boarding/welcome_screen.dart';
 
 import '../../model/user.dart' as app_user;
 import '../../database/auth_service.dart';
@@ -194,8 +195,16 @@ class _ProfileViewState extends State<ProfileView> {
                     onTap: () async {
                       await _authService.signOut();
                       if (!mounted) return;
-                      // Reload lại trạng thái màn hình ngay lập tức
-                      await _loadUser();
+
+                      // Chuyển về màn hình Welcome Screen
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WelcomeScreen(),
+                        ),
+                        (route) => false, // Xóa tất cả các route trước đó
+                      );
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Đã đăng xuất')),
                       );

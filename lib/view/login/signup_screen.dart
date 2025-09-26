@@ -13,7 +13,13 @@ import 'login_screen.dart';
 class SignupScreen extends StatefulWidget {
   final AuthService? authService;
   final GuestSyncService? guestSyncService;
-  const SignupScreen({super.key, this.authService, this.guestSyncService});
+  final Map<String, dynamic>? preSelectedData;
+  const SignupScreen({
+    super.key,
+    this.authService,
+    this.guestSyncService,
+    this.preSelectedData,
+  });
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -44,11 +50,18 @@ class _SignupScreenState extends State<SignupScreen>
   bool _isConfirmPasswordFocused = false;
   bool _isTermsAccepted = false;
 
+  // Dữ liệu từ on_boarding
+  Map<String, dynamic> _onboardingData = {};
+
   @override
   void initState() {
     super.initState();
     _authService = widget.authService ?? AuthService();
     _guestSync = widget.guestSyncService ?? GuestSyncService();
+
+    // Lấy dữ liệu từ on_boarding
+    _onboardingData = widget.preSelectedData ?? {};
+    print('🔍 Onboarding data received: $_onboardingData');
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -138,12 +151,29 @@ class _SignupScreenState extends State<SignupScreen>
         return;
       }
 
-      // Thực hiện đăng ký
-      final user = await _authService.signUpWithEmailAndPassword(
+      // Thực hiện đăng ký với dữ liệu on_boarding
+      print('🔍 Processing onboarding data: $_onboardingData');
+      final user = await _authService.signUpWithOnboardingData(
         email: _emailController.text.trim(),
         password: _passwordController.text,
         fullName: _fullNameController.text.trim(),
         phone: _phoneController.text.trim(),
+        goals: _onboardingData['goal'] != null
+            ? (_onboardingData['goal'] is String
+                  ? (_onboardingData['goal'] as String)
+                        .split(', ')
+                        .where((e) => e.toString().isNotEmpty)
+                        .toList()
+                  : List<String>.from(_onboardingData['goal']))
+            : null,
+        gender: _onboardingData['gender'] as String?,
+        heightCm: _onboardingData['heightCm'] != null
+            ? (_onboardingData['heightCm'] as num).toDouble()
+            : null,
+        weightKg: _onboardingData['weightKg'] != null
+            ? (_onboardingData['weightKg'] as num).toDouble()
+            : null,
+        age: _onboardingData['age'] as int?,
       );
 
       if (user != null) {

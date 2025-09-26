@@ -8,6 +8,7 @@ import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
 import '../../database/guest_sync_service.dart';
+import '../../database/local_storage_service.dart';
 import '../home/home_view.dart';
 import '../on_boarding/started_view/started_screen.dart' as started_onboarding;
 import '../../model/user.dart' as app_user;
@@ -30,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   late final AuthService _authService;
   late final GuestSyncService _guestSync;
+  final LocalStorageService _localStorage = LocalStorageService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
@@ -164,6 +166,47 @@ class _LoginScreenState extends State<LoginScreen>
         content: Text(message, style: GoogleFonts.inter(color: Colors.white)),
         backgroundColor: Colors.green[600],
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  /// Xử lý khi người dùng bấm "Tôi chưa có tài khoản"
+  /// Kiểm tra nếu là guest user thì chuyển thẳng đến đăng ký
+  /// Ngược lại chuyển đến onboarding
+  Future<void> _handleNoAccountTap() async {
+    final hasGuestData = await _localStorage.hasGuestData();
+
+    if (!mounted) return;
+
+    if (hasGuestData) {
+      await _navigateToSignupWithGuestData();
+    } else {
+      await _navigateToOnboarding();
+    }
+  }
+
+  /// Chuyển đến trang đăng ký với dữ liệu guest
+  Future<void> _navigateToSignupWithGuestData() async {
+    final guestData = await _localStorage.readGuestData();
+
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignupScreen(preSelectedData: guestData),
+      ),
+    );
+  }
+
+  /// Chuyển đến trang onboarding cho user mới
+  Future<void> _navigateToOnboarding() async {
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const started_onboarding.StartScreen(),
       ),
     );
   }
@@ -332,15 +375,7 @@ class _LoginScreenState extends State<LoginScreen>
                       position: _slideAnimation,
                       child: Center(
                         child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const started_onboarding.StartScreen(),
-                              ),
-                            );
-                          },
+                          onPressed: _handleNoAccountTap,
                           child: Text(
                             'Tôi chưa có tài khoản',
                             style: AppStyles.linkText.copyWith(
