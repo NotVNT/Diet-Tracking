@@ -5,7 +5,9 @@ import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
 
 class GoalSelection extends StatefulWidget {
-  const GoalSelection({super.key});
+  final LocalStorageService? localStorageService;
+  final AuthService? authService;
+  const GoalSelection({super.key, this.localStorageService, this.authService});
 
   @override
   State<GoalSelection> createState() => _GoalSelectionState();
@@ -18,8 +20,8 @@ class _GoalSelectionState extends State<GoalSelection> {
   Color get _primary => const Color(0xFFFF7A00);
 
   final Set<int> _selectedIndices = <int>{};
-  final LocalStorageService _local = LocalStorageService();
-  final AuthService _auth = AuthService();
+  late LocalStorageService _local;
+  late AuthService _auth;
 
   final List<_GoalItem> _goals = const [
     _GoalItem(icon: '🔥', title: 'Giảm cân'),
@@ -34,6 +36,8 @@ class _GoalSelectionState extends State<GoalSelection> {
 
   @override
   Widget build(BuildContext context) {
+    _local = widget.localStorageService ?? LocalStorageService();
+    _auth = widget.authService ?? AuthService();
     return Scaffold(
       backgroundColor: _bg,
       body: SafeArea(

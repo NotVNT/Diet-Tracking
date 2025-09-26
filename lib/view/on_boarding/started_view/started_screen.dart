@@ -4,7 +4,8 @@ import '../../../common/language_selector.dart';
 import 'goal_selection.dart';
 
 class StartScreen extends StatelessWidget {
-  const StartScreen({super.key});
+  final WidgetBuilder? goalSelectionBuilder;
+  const StartScreen({super.key, this.goalSelectionBuilder});
 
   Color get _bg => const Color(0xFFA7E4C0); // xanh nhạt giống ảnh
   Color get _accent => const Color(0xFF1F2A37); // chữ đậm
@@ -95,7 +96,9 @@ class StartScreen extends StatelessWidget {
                         onPressed: () async {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => const GoalSelection(),
+                              builder:
+                                  goalSelectionBuilder ??
+                                  (_) => const GoalSelection(),
                             ),
                           );
                         },
