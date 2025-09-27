@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/goal_weight_selector.dart';
 import '../../../database/local_storage_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class WeightSelector extends StatefulWidget {
   const WeightSelector({super.key});
@@ -55,7 +56,7 @@ class _WeightSelectorState extends State<WeightSelector> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Cân nặng',
+                AppLocalizations.of(context)?.weight ?? 'Cân nặng',
                 style: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
@@ -64,7 +65,8 @@ class _WeightSelectorState extends State<WeightSelector> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Cân nặng hiện tại của bạn là gì?',
+                AppLocalizations.of(context)?.whatIsYourWeight ??
+                    'Cân nặng hiện tại của bạn là gì?',
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
@@ -211,7 +213,7 @@ class _WeightSelectorState extends State<WeightSelector> {
                           );
                         },
                         child: Text(
-                          'Tiếp theo',
+                          AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 16,

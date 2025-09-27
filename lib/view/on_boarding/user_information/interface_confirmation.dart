@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../login/signup_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../home/home_view.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Màn hình xác nhận hoàn thành onboarding
 /// Cho phép người dùng chọn tiếp tục với Guest hoặc đăng ký tài khoản
@@ -30,25 +31,28 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   Color get _titleColor => const Color(0xFF2D3A4A);
 
   // UI Text
-  String get _headlineText => 'Bạn sẽ làm được!';
+  String _getHeadlineText(BuildContext context) =>
+      AppLocalizations.of(context)?.youCanDoIt ?? 'Bạn sẽ làm được!';
 
   /// Tạo thông điệp động dựa trên mục tiêu cân nặng
-  String _buildMotivationalMessage() {
+  String _buildMotivationalMessage(BuildContext context) {
     if (widget.currentWeightKg != null && widget.goalWeightKg != null) {
       final weightDifference = (widget.currentWeightKg! - widget.goalWeightKg!)
           .abs();
 
       if (weightDifference == 0) {
-        return 'Duy trì cân nặng hiện tại là một lựa chọn lành mạnh';
+        return AppLocalizations.of(context)?.maintainCurrentWeightIsHealthy ??
+            'Duy trì cân nặng hiện tại là một lựa chọn lành mạnh';
       }
 
       final isWeightLoss = widget.goalWeightKg! < widget.currentWeightKg!;
       return isWeightLoss
-          ? 'Giảm $weightDifference kg là mục tiêu thách thức nhưng hoàn toàn khả thi'
-          : 'Tăng $weightDifference kg sẽ giúp bạn đạt trạng thái cân bằng tốt hơn';
+          ? '${AppLocalizations.of(context)?.loseWeightGoalPrefix ?? 'Giảm'} $weightDifference kg ${AppLocalizations.of(context)?.loseWeightGoalSuffix ?? 'là mục tiêu thách thức nhưng hoàn toàn khả thi'}'
+          : '${AppLocalizations.of(context)?.gainWeightGoalPrefix ?? 'Tăng'} $weightDifference kg ${AppLocalizations.of(context)?.gainWeightGoalSuffix ?? 'sẽ giúp bạn đạt trạng thái cân bằng tốt hơn'}';
     }
 
-    return 'Đặt mục tiêu rõ ràng giúp bạn tiến gần hơn mỗi ngày';
+    return AppLocalizations.of(context)?.setClearGoalsMessage ??
+        'Đặt mục tiêu rõ ràng giúp bạn tiến gần hơn mỗi ngày';
   }
 
   /// Chuyển đến màn hình đăng ký với dữ liệu onboarding đã có
@@ -67,8 +71,8 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
   /// Chuyển đến trang chủ với tư cách guest user
   /// Lưu thông tin cân nặng vào local storage trước khi chuyển
-  Future<void> _navigateAsGuest() async {
-    await _saveGuestWeightData();
+  Future<void> _navigateAsGuest(BuildContext context) async {
+    await _saveGuestWeightData(context);
 
     if (!mounted) return;
 
@@ -80,10 +84,11 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   }
 
   /// Lưu thông tin cân nặng vào local storage cho guest
-  Future<void> _saveGuestWeightData() async {
+  Future<void> _saveGuestWeightData(BuildContext context) async {
     await _localStorage.saveGuestData(
       weightKg: widget.currentWeightKg?.toDouble(),
-      goal: 'Cân nặng mục tiêu: ${widget.goalWeightKg}kg',
+      goal:
+          '${AppLocalizations.of(context)?.goalWeightPrefix ?? 'Cân nặng mục tiêu'}: ${widget.goalWeightKg}kg',
     );
   }
 
@@ -136,7 +141,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            _headlineText,
+            _getHeadlineText(context),
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(
               fontSize: 28,
@@ -146,7 +151,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
           ),
           const SizedBox(height: 10),
           Text(
-            _buildMotivationalMessage(),
+            _buildMotivationalMessage(context),
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(
               fontSize: 18,
@@ -187,7 +192,8 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         const SizedBox(width: 12),
         Expanded(
           child: Text(
-            'người dùng ghi nhận tiến bộ rõ rệt sau 4 tuần theo kế hoạch',
+            AppLocalizations.of(context)?.userProgressMessage ??
+                'người dùng ghi nhận tiến bộ rõ rệt sau 4 tuần theo kế hoạch',
             style: GoogleFonts.inter(
               fontSize: 18,
               height: 1.6,
@@ -224,9 +230,9 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
             side: BorderSide(color: _accentColor.withOpacity(0.2), width: 1),
           ),
         ),
-        onPressed: _navigateAsGuest,
+        onPressed: () => _navigateAsGuest(context),
         child: Text(
-          'Tiếp tục với Guest',
+          AppLocalizations.of(context)?.continueAsGuest ?? 'Tiếp tục với Guest',
           style: GoogleFonts.inter(
             color: _accentColor,
             fontSize: 16,
@@ -252,7 +258,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         ),
         onPressed: _navigateToSignup,
         child: Text(
-          'Đăng Ký Tài Khoản',
+          AppLocalizations.of(context)?.signUpAccount ?? 'Đăng Ký Tài Khoản',
           style: GoogleFonts.inter(
             color: Colors.white,
             fontSize: 16,

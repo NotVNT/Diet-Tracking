@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'interface_confirmation.dart';
+import '../../../l10n/app_localizations.dart';
 
 class GoalWeightSelector extends StatefulWidget {
   final int? currentWeightKg;
@@ -56,7 +57,7 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Cân nặng mục tiêu',
+                AppLocalizations.of(context)?.goalWeight ?? 'Cân nặng mục tiêu',
                 style: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
@@ -65,7 +66,8 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Bạn muốn đạt cân nặng bao nhiêu?',
+                AppLocalizations.of(context)?.whatIsYourGoalWeight ??
+                    'Bạn muốn đạt cân nặng bao nhiêu?',
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
@@ -201,7 +203,7 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                           );
                         },
                         child: Text(
-                          'Xong',
+                          AppLocalizations.of(context)?.done ?? 'Xong',
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 16,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'long_term_results_screen.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DietReasonScreen extends StatefulWidget {
   final List<String> selectedMainGoals;
@@ -24,15 +25,15 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
   final Set<int> _selectedIndices = <int>{};
 
   final List<_ReasonItem> _reasons = const [
-    _ReasonItem(icon: '📱', title: 'Tìm kiếm kế hoạch ăn phù hợp'),
-    _ReasonItem(icon: '🧠', title: 'Muốn xây thói quen tốt'),
-    _ReasonItem(icon: '🕒', title: 'Thiếu thời gian nấu ăn'),
-    _ReasonItem(icon: '💼', title: 'Cải thiện hiệu suất làm việc'),
-    _ReasonItem(icon: '😴', title: 'Ngủ không ngon'),
-    _ReasonItem(icon: '❤️', title: 'Quan tâm sức khỏe tim mạch'),
-    _ReasonItem(icon: '🧪', title: 'Chỉ số sức khỏe chưa tốt'),
-    _ReasonItem(icon: '💸', title: 'Muốn tối ưu chi phí bữa ăn'),
-    _ReasonItem(icon: '✍️', title: 'Khác'),
+    _ReasonItem(icon: '📱', title: 'findSuitableMealPlan'),
+    _ReasonItem(icon: '🧠', title: 'wantToBuildGoodHabits'),
+    _ReasonItem(icon: '🕒', title: 'lackTimeToCook'),
+    _ReasonItem(icon: '💼', title: 'improveWorkPerformance'),
+    _ReasonItem(icon: '😴', title: 'poorSleep'),
+    _ReasonItem(icon: '❤️', title: 'careAboutHeartHealth'),
+    _ReasonItem(icon: '🧪', title: 'poorHealthIndicators'),
+    _ReasonItem(icon: '💸', title: 'optimizeMealCosts'),
+    _ReasonItem(icon: '✍️', title: 'other'),
   ];
 
   @override
@@ -108,7 +109,7 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
                       );
                     },
                     child: Text(
-                      'Bỏ qua',
+                      AppLocalizations.of(context)?.skip ?? 'Bỏ qua',
                       style: GoogleFonts.inter(
                         color: _muted,
                         fontSize: 16,
@@ -124,7 +125,8 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Điều gì đã đưa bạn đến với chúng tôi?',
+                  AppLocalizations.of(context)?.whatBroughtYouToUs ??
+                      'Điều gì đã đưa bạn đến với chúng tôi?',
                   style: GoogleFonts.inter(
                     fontSize: 26,
                     fontWeight: FontWeight.w800,
@@ -155,7 +157,12 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
                       ? null
                       : () {
                           final reasons = _selectedIndices
-                              .map((i) => _reasons[i].title)
+                              .map(
+                                (i) => _getLocalizedDietReasonTitle(
+                                  context,
+                                  _reasons[i].title,
+                                ),
+                              )
                               .toList(growable: false);
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -177,7 +184,7 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
                     ),
                   ),
                   child: Text(
-                    'Tiếp theo',
+                    AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 16,
@@ -237,7 +244,7 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
             const SizedBox(width: 14),
             Expanded(
               child: Text(
-                item.title,
+                _getLocalizedDietReasonTitle(context, item.title),
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -272,6 +279,38 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
         ),
       ),
     );
+  }
+
+  String _getLocalizedDietReasonTitle(BuildContext context, String key) {
+    switch (key) {
+      case 'findSuitableMealPlan':
+        return AppLocalizations.of(context)?.findSuitableMealPlan ??
+            'Tìm kiếm kế hoạch ăn phù hợp';
+      case 'wantToBuildGoodHabits':
+        return AppLocalizations.of(context)?.wantToBuildGoodHabits ??
+            'Muốn xây thói quen tốt';
+      case 'lackTimeToCook':
+        return AppLocalizations.of(context)?.lackTimeToCook ??
+            'Thiếu thời gian nấu ăn';
+      case 'improveWorkPerformance':
+        return AppLocalizations.of(context)?.improveWorkPerformance ??
+            'Cải thiện hiệu suất làm việc';
+      case 'poorSleep':
+        return AppLocalizations.of(context)?.poorSleep ?? 'Ngủ không ngon';
+      case 'careAboutHeartHealth':
+        return AppLocalizations.of(context)?.careAboutHeartHealth ??
+            'Quan tâm sức khỏe tim mạch';
+      case 'poorHealthIndicators':
+        return AppLocalizations.of(context)?.poorHealthIndicators ??
+            'Chỉ số sức khỏe chưa tốt';
+      case 'optimizeMealCosts':
+        return AppLocalizations.of(context)?.optimizeMealCosts ??
+            'Muốn tối ưu chi phí bữa ăn';
+      case 'other':
+        return AppLocalizations.of(context)?.other ?? 'Khác';
+      default:
+        return key;
+    }
   }
 }
 

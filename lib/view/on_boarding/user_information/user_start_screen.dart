@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../common/custom_button.dart';
+import '../../../l10n/app_localizations.dart';
 import 'gender_selector.dart';
 
 class StartScreen extends StatelessWidget {
@@ -28,7 +29,8 @@ class StartScreen extends StatelessWidget {
               // Chừa khoảng trống lớn phía trên như ảnh
               SizedBox(height: size.height * 0.15),
               Text(
-                'Hãy cho chúng tôi biết về bản thân bạn',
+                AppLocalizations.of(context)?.tellUsAboutYourself ??
+                    'Hãy cho chúng tôi biết về bản thân bạn',
                 style: GoogleFonts.inter(
                   fontSize: titleFontSize,
                   height: 1.05,
@@ -38,9 +40,10 @@ class StartScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho '
-                'bạn dựa trên các chi tiết như tuổi và cân nặng'
-                'hiện tại của bạn.',
+                AppLocalizations.of(context)?.weWillCreatePersonalizedPlan ??
+                    'Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho '
+                        'bạn dựa trên các chi tiết như tuổi và cân nặng'
+                        'hiện tại của bạn.',
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   height: 1.6,
@@ -81,7 +84,7 @@ class StartScreen extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: CustomButton(
-                      text: 'Bắt đầu',
+                      text: AppLocalizations.of(context)?.start ?? 'Bắt đầu',
                       backgroundColor: _buttonColor,
                       onPressed: () {
                         Navigator.push(

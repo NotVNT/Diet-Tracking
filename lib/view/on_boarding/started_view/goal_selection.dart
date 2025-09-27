@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'weight_goal_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class GoalSelection extends StatefulWidget {
   const GoalSelection({super.key});
@@ -22,14 +23,14 @@ class _GoalSelectionState extends State<GoalSelection> {
   final AuthService _auth = AuthService();
 
   final List<_GoalItem> _goals = const [
-    _GoalItem(icon: '🔥', title: 'Giảm cân'),
-    _GoalItem(icon: '⚖️', title: 'Duy trì cân nặng'),
-    _GoalItem(icon: '🍽️', title: 'Tăng cân'),
-    _GoalItem(icon: '💪', title: 'Tăng cơ'),
-    _GoalItem(icon: '🏃', title: 'Cải thiện thể lực'),
-    _GoalItem(icon: '🥗', title: 'Ăn uống lành mạnh'),
-    _GoalItem(icon: '🧘', title: 'Giảm stress'),
-    _GoalItem(icon: '🔥', title: 'Giảm mỡ bụng'),
+    _GoalItem(icon: '🔥', title: 'loseWeight'),
+    _GoalItem(icon: '⚖️', title: 'maintainWeight'),
+    _GoalItem(icon: '🍽️', title: 'gainWeight'),
+    _GoalItem(icon: '💪', title: 'buildMuscle'),
+    _GoalItem(icon: '🏃', title: 'improveFitness'),
+    _GoalItem(icon: '🥗', title: 'eatHealthy'),
+    _GoalItem(icon: '🧘', title: 'reduceStress'),
+    _GoalItem(icon: '🔥', title: 'loseBellyFat'),
   ];
 
   @override
@@ -104,7 +105,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                       );
                     },
                     child: Text(
-                      'Bỏ qua',
+                      AppLocalizations.of(context)?.skip ?? 'Bỏ qua',
                       style: GoogleFonts.inter(
                         color: _muted,
                         fontSize: 16,
@@ -120,7 +121,8 @@ class _GoalSelectionState extends State<GoalSelection> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Mục tiêu chính của bạn là gì?',
+                  AppLocalizations.of(context)?.whatIsYourMainGoal ??
+                      'Mục tiêu chính của bạn là gì?',
                   style: GoogleFonts.inter(
                     fontSize: 26,
                     fontWeight: FontWeight.w800,
@@ -151,7 +153,12 @@ class _GoalSelectionState extends State<GoalSelection> {
                       ? null
                       : () async {
                           final selectedTitles = _selectedIndices
-                              .map((i) => _goals[i].title)
+                              .map(
+                                (i) => _getLocalizedTitle(
+                                  context,
+                                  _goals[i].title,
+                                ),
+                              )
                               .toList(growable: false);
 
                           // Nếu đã đăng nhập: lưu trực tiếp danh sách mục tiêu; ngược lại: lưu tạm trên máy
@@ -185,7 +192,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                     ),
                   ),
                   child: Text(
-                    'Tiếp theo',
+                    AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 16,
@@ -245,7 +252,7 @@ class _GoalSelectionState extends State<GoalSelection> {
             const SizedBox(width: 14),
             Expanded(
               child: Text(
-                item.title,
+                _getLocalizedTitle(context, item.title),
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -280,6 +287,31 @@ class _GoalSelectionState extends State<GoalSelection> {
         ),
       ),
     );
+  }
+
+  String _getLocalizedTitle(BuildContext context, String key) {
+    switch (key) {
+      case 'loseWeight':
+        return AppLocalizations.of(context)?.loseWeight ?? 'Giảm cân';
+      case 'maintainWeight':
+        return AppLocalizations.of(context)?.maintainWeight ??
+            'Duy trì cân nặng';
+      case 'gainWeight':
+        return AppLocalizations.of(context)?.gainWeight ?? 'Tăng cân';
+      case 'buildMuscle':
+        return AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
+      case 'improveFitness':
+        return AppLocalizations.of(context)?.improveFitness ??
+            'Cải thiện thể lực';
+      case 'eatHealthy':
+        return AppLocalizations.of(context)?.eatHealthy ?? 'Ăn uống lành mạnh';
+      case 'reduceStress':
+        return AppLocalizations.of(context)?.reduceStress ?? 'Giảm stress';
+      case 'loseBellyFat':
+        return AppLocalizations.of(context)?.loseBellyFat ?? 'Giảm mỡ bụng';
+      default:
+        return key;
+    }
   }
 }
 
