@@ -5,12 +5,9 @@ import '../../../common/language_selector.dart';
 import '../../../services/language_service.dart';
 import 'goal_selection.dart';
 
-
-class StartScreen extends StatelessWidget {
+class StartScreen extends StatefulWidget {
   final WidgetBuilder? goalSelectionBuilder;
   const StartScreen({super.key, this.goalSelectionBuilder});
-
-
 
   @override
   State<StartScreen> createState() => _StartScreenState();
@@ -132,7 +129,7 @@ class _StartScreenState extends State<StartScreen> {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder:
-                                  goalSelectionBuilder ??
+                                  widget.goalSelectionBuilder ??
                                   (_) => const GoalSelection(),
                             ),
                           );
