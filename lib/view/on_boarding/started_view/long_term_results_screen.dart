@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../user_information/user_start_screen.dart';
+import '../../../l10n/app_localizations.dart';
 
 class LongTermResultsScreen extends StatelessWidget {
   final List<String> selectedMainGoals;
@@ -62,7 +63,8 @@ class LongTermResultsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 28),
               Text(
-                'Chúng tôi mang đến cho bạn hiệu quả tốt nhất',
+                AppLocalizations.of(context)?.weBringYouBestResults ??
+                    'Chúng tôi mang đến cho bạn hiệu quả tốt nhất',
                 textAlign: TextAlign.left,
                 style: GoogleFonts.inter(
                   fontSize: 28,
@@ -73,7 +75,8 @@ class LongTermResultsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               Text(
-                'Lộ trình cá nhân hóa dựa trên mục tiêu và thói quen của bạn. Bắt đầu ngay để thấy sự thay đổi bền vững.',
+                AppLocalizations.of(context)?.personalizedPathwayBasedOnGoals ??
+                    'Lộ trình cá nhân hóa dựa trên mục tiêu và thói quen của bạn. Bắt đầu ngay để thấy sự thay đổi bền vững.',
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   height: 1.6,
@@ -106,7 +109,7 @@ class LongTermResultsScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Tiếp theo',
+                    AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 16,

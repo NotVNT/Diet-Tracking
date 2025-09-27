@@ -9,6 +9,7 @@ class LocalStorageService {
   static const String _keyWeight = 'guest_weight_kg';
   static const String _keyAge = 'guest_age';
   static const String _keyGender = 'guest_gender';
+  static const String _keyLanguage = 'selected_language';
 
   /// Lazy initialization của SharedPreferences
   Future<SharedPreferences> get _prefs async =>
@@ -22,6 +23,7 @@ class LocalStorageService {
     double? weightKg,
     int? age,
     String? gender,
+    String? language,
   }) async {
     final prefs = await _prefs;
 
@@ -31,6 +33,7 @@ class LocalStorageService {
     if (weightKg != null) await prefs.setDouble(_keyWeight, weightKg);
     if (age != null) await prefs.setInt(_keyAge, age);
     if (gender != null) await prefs.setString(_keyGender, gender);
+    if (language != null) await prefs.setString(_keyLanguage, language);
   }
 
   /// Đọc tất cả dữ liệu guest từ local storage
@@ -43,6 +46,7 @@ class LocalStorageService {
       'weightKg': prefs.getDouble(_keyWeight),
       'age': prefs.getInt(_keyAge),
       'gender': prefs.getString(_keyGender),
+      'language': prefs.getString(_keyLanguage),
     };
   }
 
@@ -54,7 +58,8 @@ class LocalStorageService {
         prefs.containsKey(_keyHeight) ||
         prefs.containsKey(_keyWeight) ||
         prefs.containsKey(_keyAge) ||
-        prefs.containsKey(_keyGender);
+        prefs.containsKey(_keyGender) ||
+        prefs.containsKey(_keyLanguage);
   }
 
   /// Xóa tất cả dữ liệu guest khỏi local storage
@@ -68,5 +73,6 @@ class LocalStorageService {
     await prefs.remove(_keyWeight);
     await prefs.remove(_keyAge);
     await prefs.remove(_keyGender);
+    await prefs.remove(_keyLanguage);
   }
 }

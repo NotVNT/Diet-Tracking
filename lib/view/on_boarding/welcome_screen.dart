@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../login/login_screen.dart';
 import '../../common/language_selector.dart';
 import '../../common/custom_button.dart';
+import '../../services/language_service.dart';
+import '../../l10n/app_localizations.dart';
 import 'started_view/started_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -22,7 +24,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   late AnimationController _arrowAnimationController;
   late Animation<double> _arrowAnimation;
   int _currentImageIndex = 0;
-  Language _selectedLanguage = Language.vi;
 
   final List<String> _images = [
     'assets/welcome_screen/flexitarian-diet-foods_OCES.jpg',
@@ -69,6 +70,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     Future.delayed(const Duration(milliseconds: 2000), () {
       _arrowAnimationController.repeat(reverse: true);
     });
+  }
+
+  Future<void> _onLanguageChanged(Language language) async {
+    await LanguageService.changeLanguage(language);
   }
 
   @override
@@ -122,12 +127,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             children: [
               const SizedBox(height: 30),
               LanguageSelector(
-                selected: _selectedLanguage,
-                onChanged: (lang) {
-                  setState(() {
-                    _selectedLanguage = lang;
-                  });
-                },
+                selected: LanguageService.currentLanguage,
+                onChanged: _onLanguageChanged,
               ),
               const SizedBox(height: 12),
 
@@ -136,9 +137,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 child: SlideTransition(
                   position: _slideAnimation,
                   child: Text(
-                    _selectedLanguage == Language.vi
-                        ? 'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!'
-                        : 'Start tracking your\ndiet plan today!',
+                    AppLocalizations.of(context)?.startTrackingToday ??
+                        'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!',
                     style: GoogleFonts.inter(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -154,9 +154,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 child: SlideTransition(
                   position: _slideAnimation,
                   child: Text(
-                    _selectedLanguage == Language.vi
-                        ? 'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.'
-                        : 'Track your daily diet with\npersonalized meal plans and\nsmart recommendations.',
+                    AppLocalizations.of(context)?.trackDailyDiet ??
+                        'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.',
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       color: Colors.grey[600],
@@ -285,9 +284,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   children: [
                                     const SizedBox(width: 12),
                                     Text(
-                                      _selectedLanguage == Language.vi
-                                          ? 'Bắt đầu ngay'
-                                          : 'Get started',
+                                      AppLocalizations.of(
+                                            context,
+                                          )?.getStarted ??
+                                          'Bắt đầu ngay',
                                       style: GoogleFonts.inter(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -347,7 +347,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.85,
                           child: CustomButton(
-                            text: 'Đăng nhập',
+                            text:
+                                AppLocalizations.of(context)?.login ??
+                                'Đăng nhập',
                             backgroundColor: const Color(0xFF1F2A37),
                             onPressed: () {
                               Navigator.push(

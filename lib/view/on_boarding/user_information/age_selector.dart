@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/height_selector.dart';
 import '../../../database/local_storage_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AgeSelector extends StatefulWidget {
   final dynamic selectedGender;
@@ -52,7 +53,7 @@ class _AgeSelectorState extends State<AgeSelector> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Tuổi',
+                AppLocalizations.of(context)?.age ?? 'Tuổi',
                 style: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
@@ -61,7 +62,8 @@ class _AgeSelectorState extends State<AgeSelector> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Bạn bao nhiêu tuổi?',
+                AppLocalizations.of(context)?.howOldAreYou ??
+                    'Bạn bao nhiêu tuổi?',
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
@@ -197,7 +199,7 @@ class _AgeSelectorState extends State<AgeSelector> {
                           );
                         },
                         child: Text(
-                          'Tiếp theo',
+                          AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 16,
