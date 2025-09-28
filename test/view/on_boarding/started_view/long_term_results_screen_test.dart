@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:diet_tracking_project/view/on_boarding/started_view/long_term_results_screen.dart';
-import 'package:diet_tracking_project/view/on_boarding/started_view/started_screen.dart';
 
 void main() {
   group('LongTermResultsScreen', () {

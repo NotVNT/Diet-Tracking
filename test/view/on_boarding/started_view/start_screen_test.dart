@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:diet_tracking_project/view/on_boarding/started_view/started_screen.dart';
-import 'package:diet_tracking_project/view/on_boarding/started_view/goal_selection.dart';
 import 'package:diet_tracking_project/common/language_selector.dart';
 
 void main() {

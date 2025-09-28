@@ -4,8 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:diet_tracking_project/view/profile/profile_view.dart';
-import 'package:diet_tracking_project/view/on_boarding/welcome_screen.dart';
-import 'package:diet_tracking_project/view/login/login_screen.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
 
 class _AuthMock extends Mock implements AuthService {}
