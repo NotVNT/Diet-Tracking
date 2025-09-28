@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'age_selector.dart';
+import '../../../database/local_storage_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class GenderSelector extends StatefulWidget {
   const GenderSelector({super.key});
@@ -13,6 +15,7 @@ enum Gender { male, female }
 
 class _GenderSelectorState extends State<GenderSelector> {
   Gender? _selected = Gender.male;
+  final LocalStorageService _local = LocalStorageService();
 
   Color get _bg => const Color(0xFFFDF0D7);
   Color get _card => Colors.white;
@@ -55,7 +58,7 @@ class _GenderSelectorState extends State<GenderSelector> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Giới tính',
+                    AppLocalizations.of(context)?.gender ?? 'Giới tính',
                     style: GoogleFonts.inter(
                       fontSize: 32,
                       fontWeight: FontWeight.w800,
@@ -64,7 +67,8 @@ class _GenderSelectorState extends State<GenderSelector> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.',
+                    AppLocalizations.of(context)?.weWillUseThisInfo ??
+                        'Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.',
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       height: 1.6,
@@ -73,7 +77,7 @@ class _GenderSelectorState extends State<GenderSelector> {
                   ),
                   const SizedBox(height: 28),
                   _GenderOption(
-                    title: 'Nam',
+                    title: AppLocalizations.of(context)?.male ?? 'Nam',
                     asset: 'assets/gender/male.png',
                     selected: _selected == Gender.male,
                     onTap: () => setState(() => _selected = Gender.male),
@@ -83,7 +87,7 @@ class _GenderSelectorState extends State<GenderSelector> {
                   ),
                   const SizedBox(height: 16),
                   _GenderOption(
-                    title: 'Nữ',
+                    title: AppLocalizations.of(context)?.female ?? 'Nữ',
                     asset: 'assets/gender/female.png',
                     selected: _selected == Gender.female,
                     onTap: () => setState(() => _selected = Gender.female),
@@ -136,7 +140,13 @@ class _GenderSelectorState extends State<GenderSelector> {
                                 borderRadius: BorderRadius.circular(18),
                               ),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
+                              // Lưu tạm giới tính
+                              await _local.saveGuestData(
+                                gender: _selected == Gender.male
+                                    ? 'male'
+                                    : 'female',
+                              );
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -146,7 +156,8 @@ class _GenderSelectorState extends State<GenderSelector> {
                               );
                             },
                             child: Text(
-                              'Tiếp tục',
+                              AppLocalizations.of(context)?.continueButton ??
+                                  'Tiếp tục',
                               style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontSize: 16,

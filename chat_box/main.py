@@ -11,7 +11,11 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
+<<<<<<< HEAD
 model = genai.GenerativeModel('gemini-2.5-flash-lite')
+=======
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
+>>>>>>> 13e46bf04d0846f51afaae0e3c9ec351590fd763
 app = FastAPI()
 
 app.add_middleware(
@@ -66,7 +70,10 @@ def violates_rules(disease, allergy, user_prompt):
         for item in FORBIDDEN_BY_ALLERGY[allergy]:
             if item.lower() in user_prompt.lower():
                 return f"Không thể đề xuất món ăn có '{item}' vì bạn dị ứng với {allergy}"
+<<<<<<< HEAD
 ##rule-based##
+=======
+>>>>>>> 13e46bf04d0846f51afaae0e3c9ec351590fd763
             
 def filter_output(disease, allergy, model_reply):
     forbidden_words = []

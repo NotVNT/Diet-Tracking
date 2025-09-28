@@ -11,7 +11,8 @@ class User {
   final double? heightCm;
   final double? weightKg;
   final ActivityLevel? activityLevel;
-  final GoalType? goal;
+  final List<String>? goals;
+  final String? avatarUrl;
 
   const User({
     this.uid,
@@ -24,7 +25,8 @@ class User {
     this.heightCm,
     this.weightKg,
     this.activityLevel,
-    this.goal,
+    this.goals,
+    this.avatarUrl,
   });
 
   /// Creates a copy of this user with updated fields
@@ -39,7 +41,8 @@ class User {
     double? heightCm,
     double? weightKg,
     ActivityLevel? activityLevel,
-    GoalType? goal,
+    List<String>? goals,
+    String? avatarUrl,
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -52,7 +55,8 @@ class User {
       heightCm: heightCm ?? this.heightCm,
       weightKg: weightKg ?? this.weightKg,
       activityLevel: activityLevel ?? this.activityLevel,
-      goal: goal ?? this.goal,
+      goals: goals ?? this.goals,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 
@@ -69,7 +73,8 @@ class User {
       'heightCm': heightCm,
       'weightKg': weightKg,
       'activityLevel': activityLevel?.name,
-      'goal': goal?.name,
+      'goal': goals,
+      'avatarUrl': avatarUrl,
     };
   }
 
@@ -88,7 +93,8 @@ class User {
       heightCm: (json['heightCm'] as num?)?.toDouble(),
       weightKg: (json['weightKg'] as num?)?.toDouble(),
       activityLevel: _tryParseActivity(json['activityLevel'] as String?),
-      goal: _tryParseGoal(json['goal'] as String?),
+      goals: _parseGoals(json['goal']),
+      avatarUrl: json['avatarUrl'] as String?,
     );
   }
 }
@@ -116,11 +122,20 @@ ActivityLevel? _tryParseActivity(String? value) {
   }
 }
 
-GoalType? _tryParseGoal(String? value) {
+List<String>? _parseGoals(dynamic value) {
   if (value == null) return null;
-  try {
-    return GoalType.values.firstWhere((e) => e.name == value);
-  } catch (_) {
-    return null;
+  if (value is List) {
+    return value.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();
   }
+  if (value is String) {
+    final parts = value
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+    return parts.isEmpty ? null : parts;
+  }
+  // Fallback: store single toString
+  final s = value.toString();
+  return s.isEmpty ? null : [s];
 }

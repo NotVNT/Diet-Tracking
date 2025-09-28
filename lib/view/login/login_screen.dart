@@ -7,11 +7,17 @@ import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
-import '../main_navigation/main_navigation_screen.dart';
+import '../../database/guest_sync_service.dart';
+import '../../database/local_storage_service.dart';
+import '../home/home_view.dart';
+import '../on_boarding/started_view/started_screen.dart' as started_onboarding;
+import '../../model/user.dart' as app_user;
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final AuthService? authService;
+  final GuestSyncService? guestSyncService;
+  const LoginScreen({super.key, this.authService, this.guestSyncService});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -23,7 +29,9 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  final AuthService _authService = AuthService();
+  late final AuthService _authService;
+  late final GuestSyncService _guestSync;
+  final LocalStorageService _localStorage = LocalStorageService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
@@ -33,6 +41,8 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
+    _authService = widget.authService ?? AuthService();
+    _guestSync = widget.guestSyncService ?? GuestSyncService();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -85,11 +95,36 @@ class _LoginScreenState extends State<LoginScreen>
         print('✅ Login successful in UI');
         _showSuccessSnackBar('Đăng nhập thành công!');
 
-        // Navigate to main screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
-        );
+        // Đồng bộ dữ liệu khách vào user trước khi quyết định điều hướng
+        try {
+          await _guestSync.syncGuestToUser(user.uid);
+        } catch (e) {
+          print('⚠️ Guest sync failed: $e');
+        }
+
+        // Kiểm tra hồ sơ đã đủ thông tin cơ bản chưa
+        final app_user.User? profile = await _authService.getUserData(user.uid);
+        final bool needsOnboarding =
+            profile == null ||
+            (profile.goals == null || profile.goals!.isEmpty) ||
+            profile.heightCm == null ||
+            profile.weightKg == null ||
+            profile.age == null ||
+            profile.gender == null;
+
+        if (needsOnboarding) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const started_onboarding.StartScreen(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeView()),
+          );
+        }
       } else {
         print('❌ Login failed in UI');
         _showErrorSnackBar(
@@ -131,6 +166,47 @@ class _LoginScreenState extends State<LoginScreen>
         content: Text(message, style: GoogleFonts.inter(color: Colors.white)),
         backgroundColor: Colors.green[600],
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  /// Xử lý khi người dùng bấm "Tôi chưa có tài khoản"
+  /// Kiểm tra nếu là guest user thì chuyển thẳng đến đăng ký
+  /// Ngược lại chuyển đến onboarding
+  Future<void> _handleNoAccountTap() async {
+    final hasGuestData = await _localStorage.hasGuestData();
+
+    if (!mounted) return;
+
+    if (hasGuestData) {
+      await _navigateToSignupWithGuestData();
+    } else {
+      await _navigateToOnboarding();
+    }
+  }
+
+  /// Chuyển đến trang đăng ký với dữ liệu guest
+  Future<void> _navigateToSignupWithGuestData() async {
+    final guestData = await _localStorage.readGuestData();
+
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignupScreen(preSelectedData: guestData),
+      ),
+    );
+  }
+
+  /// Chuyển đến trang onboarding cho user mới
+  Future<void> _navigateToOnboarding() async {
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const started_onboarding.StartScreen(),
       ),
     );
   }
@@ -298,32 +374,13 @@ class _LoginScreenState extends State<LoginScreen>
                     child: SlideTransition(
                       position: _slideAnimation,
                       child: Center(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Chưa có tài khoản? ',
-                                style: AppStyles.bodyMedium.copyWith(
-                                  color: AppColors.grey600,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Đăng ký',
-                                style: AppStyles.linkText.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SignupScreen(),
-                                      ),
-                                    );
-                                  },
-                              ),
-                            ],
+                        child: TextButton(
+                          onPressed: _handleNoAccountTap,
+                          child: Text(
+                            'Tôi chưa có tài khoản',
+                            style: AppStyles.linkText.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),

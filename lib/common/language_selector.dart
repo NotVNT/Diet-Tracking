@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../l10n/app_localizations.dart';
 
 /// Supported languages (extendable later)
 enum Language { vi, en }
@@ -98,7 +99,8 @@ class LanguageSelector extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Chọn ngôn ngữ của bạn',
+                        AppLocalizations.of(context)?.chooseYourLanguage ??
+                            'Chọn ngôn ngữ của bạn',
                         style: GoogleFonts.inter(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
@@ -202,6 +204,10 @@ class LanguageSelector extends StatelessWidget {
                             Navigator.of(context).pop();
                             if (tempSelection != selected) {
                               onChanged(tempSelection);
+                              _showLanguageChangeSuccess(
+                                context,
+                                tempSelection,
+                              );
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -212,7 +218,7 @@ class LanguageSelector extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            'Áp dụng',
+                            AppLocalizations.of(context)?.apply ?? 'Áp dụng',
                             style: GoogleFonts.inter(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -228,6 +234,50 @@ class LanguageSelector extends StatelessWidget {
           },
         );
       },
+    );
+  }
+
+  void _showLanguageChangeSuccess(BuildContext context, Language newLanguage) {
+    // Get the success message based on the new language
+    String message;
+    switch (newLanguage) {
+      case Language.vi:
+        message =
+            AppLocalizations.of(context)?.languageChangedToVietnamese ??
+            'Đã chuyển sang tiếng Việt';
+        break;
+      case Language.en:
+        message =
+            AppLocalizations.of(context)?.languageChangedToEnglish ??
+            'Language changed to English';
+        break;
+    }
+
+    // Show a snackbar with success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                message,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xFF4CAF50),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        margin: const EdgeInsets.all(16),
+      ),
     );
   }
 }

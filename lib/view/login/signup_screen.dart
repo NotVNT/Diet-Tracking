@@ -7,10 +7,19 @@ import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
+import '../../database/guest_sync_service.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  final AuthService? authService;
+  final GuestSyncService? guestSyncService;
+  final Map<String, dynamic>? preSelectedData;
+  const SignupScreen({
+    super.key,
+    this.authService,
+    this.guestSyncService,
+    this.preSelectedData,
+  });
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -22,7 +31,8 @@ class _SignupScreenState extends State<SignupScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  final AuthService _authService = AuthService();
+  late final AuthService _authService;
+  late final GuestSyncService _guestSync;
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -39,11 +49,19 @@ class _SignupScreenState extends State<SignupScreen>
   bool _isPasswordFocused = false;
   bool _isConfirmPasswordFocused = false;
   bool _isTermsAccepted = false;
-  DateTime? _selectedDate;
+
+  // Dữ liệu từ on_boarding
+  Map<String, dynamic> _onboardingData = {};
 
   @override
   void initState() {
     super.initState();
+    _authService = widget.authService ?? AuthService();
+    _guestSync = widget.guestSyncService ?? GuestSyncService();
+
+    // Lấy dữ liệu từ on_boarding
+    _onboardingData = widget.preSelectedData ?? {};
+    print('🔍 Onboarding data received: $_onboardingData');
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -73,33 +91,6 @@ class _SignupScreenState extends State<SignupScreen>
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now().subtract(const Duration(days: 365 * 20)),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF9C27B0),
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
   }
 
   void _showErrorSnackBar(String message) {
@@ -160,13 +151,29 @@ class _SignupScreenState extends State<SignupScreen>
         return;
       }
 
-      // Thực hiện đăng ký
-      final user = await _authService.signUpWithEmailAndPassword(
+      // Thực hiện đăng ký với dữ liệu on_boarding
+      print('🔍 Processing onboarding data: $_onboardingData');
+      final user = await _authService.signUpWithOnboardingData(
         email: _emailController.text.trim(),
         password: _passwordController.text,
         fullName: _fullNameController.text.trim(),
         phone: _phoneController.text.trim(),
-        birthDate: _selectedDate!,
+        goals: _onboardingData['goal'] != null
+            ? (_onboardingData['goal'] is String
+                  ? (_onboardingData['goal'] as String)
+                        .split(', ')
+                        .where((e) => e.toString().isNotEmpty)
+                        .toList()
+                  : List<String>.from(_onboardingData['goal']))
+            : null,
+        gender: _onboardingData['gender'] as String?,
+        heightCm: _onboardingData['heightCm'] != null
+            ? (_onboardingData['heightCm'] as num).toDouble()
+            : null,
+        weightKg: _onboardingData['weightKg'] != null
+            ? (_onboardingData['weightKg'] as num).toDouble()
+            : null,
+        age: _onboardingData['age'] as int?,
       );
 
       if (user != null) {
@@ -174,6 +181,11 @@ class _SignupScreenState extends State<SignupScreen>
 
         // Gửi email xác thực
         await _authService.sendEmailVerification();
+
+        // Đồng bộ dữ liệu khách vào hồ sơ user mới
+        try {
+          await _guestSync.syncGuestToUser(user.uid);
+        } catch (_) {}
 
         _showSuccessSnackBar(
           'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.',
@@ -203,11 +215,6 @@ class _SignupScreenState extends State<SignupScreen>
 
     if (_phoneController.text.trim().isEmpty) {
       _showErrorSnackBar('Vui lòng nhập số điện thoại.');
-      return false;
-    }
-
-    if (_selectedDate == null) {
-      _showErrorSnackBar('Vui lòng chọn ngày sinh.');
       return false;
     }
 
@@ -316,68 +323,6 @@ class _SignupScreenState extends State<SignupScreen>
                             _isConfirmPasswordFocused = false;
                           });
                         },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Ngày sinh
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: SlideTransition(
-                      position: _slideAnimation,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Ngày sinh', style: AppStyles.labelMedium),
-                          const SizedBox(height: AppStyles.spacingS),
-                          GestureDetector(
-                            onTap: () => _selectDate(context),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 16,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                border: Border.all(
-                                  color: AppColors.grey300,
-                                  width: 1.5,
-                                ),
-                                borderRadius: BorderRadius.circular(
-                                  AppStyles.radiusL,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.shadowLight,
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.calendar_today,
-                                    color: AppColors.grey500,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    _selectedDate != null
-                                        ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                                        : 'Chọn ngày sinh',
-                                    style: AppStyles.bodyMedium.copyWith(
-                                      color: _selectedDate != null
-                                          ? AppColors.black
-                                          : AppColors.grey500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),

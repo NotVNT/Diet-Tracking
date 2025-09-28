@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/user.dart' as app_user;
 import 'exceptions.dart';
+import 'local_storage_service.dart';
 
 /// Service để quản lý authentication và Firestore database
 class AuthService {
@@ -10,8 +11,12 @@ class AuthService {
   static const String _testCollection = 'test';
 
   // Firebase instances
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+
+  AuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
+    : _auth = auth ?? FirebaseAuth.instance,
+      _firestore = firestore ?? FirebaseFirestore.instance;
 
   // Get current user
   User? get currentUser => _auth.currentUser;
@@ -26,7 +31,7 @@ class AuthService {
     required String password,
     required String fullName,
     required String phone,
-    required DateTime birthDate,
+    DateTime? birthDate,
   }) async {
     try {
       // Tạo user trong Firebase Auth
@@ -85,6 +90,13 @@ class AuthService {
   /// Đăng xuất
   Future<void> signOut() async {
     await _auth.signOut();
+    // Xóa dữ liệu guest khi đăng xuất
+    try {
+      final LocalStorageService localStorage = LocalStorageService();
+      await localStorage.clearGuestData();
+    } catch (e) {
+      print('⚠️ Error clearing guest data: $e');
+    }
   }
 
   /// Lấy thông tin user từ Firestore
@@ -110,6 +122,75 @@ class AuthService {
       await _firestore.collection(_usersCollection).doc(uid).update(data);
     } catch (e) {
       throw FirestoreException('Không thể cập nhật thông tin user: $e');
+    }
+  }
+
+  /// Đăng ký user mới với dữ liệu on_boarding
+  Future<User?> signUpWithOnboardingData({
+    required String email,
+    required String password,
+    required String fullName,
+    required String phone,
+    DateTime? birthDate,
+    List<String>? goals,
+    String? gender,
+    double? heightCm,
+    double? weightKg,
+    int? age,
+  }) async {
+    try {
+      // Tạo user trong Firebase Auth
+      final UserCredential result = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final User? user = result.user;
+
+      if (user != null) {
+        // Cập nhật display name
+        await user.updateDisplayName(fullName);
+
+        // Tạo user object với dữ liệu on_boarding
+        final app_user.User userData = app_user.User(
+          uid: user.uid,
+          email: email,
+          fullName: fullName,
+          phone: phone,
+          birthDate: birthDate,
+          goals: goals,
+          gender: _parseGender(gender),
+          heightCm: heightCm,
+          weightKg: weightKg,
+          age: age,
+        );
+
+        // Lưu thông tin user vào Firestore
+        await _saveUserToFirestore(user.uid, userData);
+
+        return user;
+      }
+
+      return null;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(_handleAuthException(e), e.code);
+    } catch (e) {
+      throw AuthException('Đã xảy ra lỗi không mong muốn: $e');
+    }
+  }
+
+  /// Parse gender string to GenderType enum
+  app_user.GenderType? _parseGender(String? gender) {
+    if (gender == null) return null;
+    switch (gender.toLowerCase()) {
+      case 'male':
+        return app_user.GenderType.male;
+      case 'female':
+        return app_user.GenderType.female;
+      case 'other':
+        return app_user.GenderType.other;
+      default:
+        return null;
     }
   }
 

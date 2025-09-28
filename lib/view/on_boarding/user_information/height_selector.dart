@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/weight_selector.dart';
+import '../../../database/local_storage_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class HeightSelector extends StatefulWidget {
   final dynamic selectedGender;
@@ -25,6 +27,8 @@ class _HeightSelectorState extends State<HeightSelector> {
       FixedExtentScrollController(initialItem: _defaultHeight - _minHeight);
 
   int get currentHeightCm => _minHeight + scrollController.selectedItem;
+
+  final LocalStorageService _local = LocalStorageService();
 
   @override
   void dispose() {
@@ -54,7 +58,7 @@ class _HeightSelectorState extends State<HeightSelector> {
               ),
               const SizedBox(height: 24),
               Text(
-                'CHIỀU CAO',
+                AppLocalizations.of(context)?.height ?? 'CHIỀU CAO',
                 style: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
@@ -63,7 +67,8 @@ class _HeightSelectorState extends State<HeightSelector> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Bạn cao bao nhiêu?',
+                AppLocalizations.of(context)?.whatIsYourHeight ??
+                    'Bạn cao bao nhiêu?',
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
@@ -197,6 +202,10 @@ class _HeightSelectorState extends State<HeightSelector> {
                           ),
                         ),
                         onPressed: () async {
+                          // Lưu tạm chiều cao
+                          await _local.saveGuestData(
+                            heightCm: currentHeightCm.toDouble(),
+                          );
                           await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => const WeightSelector(),
@@ -204,7 +213,7 @@ class _HeightSelectorState extends State<HeightSelector> {
                           );
                         },
                         child: Text(
-                          'Tiếp theo',
+                          AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 16,

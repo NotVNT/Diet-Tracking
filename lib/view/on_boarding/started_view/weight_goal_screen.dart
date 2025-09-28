@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'diet_reason_screen.dart';
+import '../../../l10n/app_localizations.dart';
 
 class WeightGoalScreen extends StatefulWidget {
   final List<String> selectedMainGoals;
@@ -18,19 +19,25 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
 
   final Set<int> _selectedIndices = <int>{};
 
-  late final String _title = widget.selectedMainGoals.contains('Giảm cân')
-      ? 'Tại sao bạn muốn giảm cân?'
-      : 'Tại sao bạn chọn mục tiêu này?';
+  String _getTitle(BuildContext context) {
+    return widget.selectedMainGoals.contains(
+          AppLocalizations.of(context)?.loseWeight ?? 'Giảm cân',
+        )
+        ? AppLocalizations.of(context)?.whyDoYouWantToLoseWeight ??
+              'Tại sao bạn muốn giảm cân?'
+        : AppLocalizations.of(context)?.whyDidYouChooseThisGoal ??
+              'Tại sao bạn chọn mục tiêu này?';
+  }
 
   final List<_ReasonItem> _reasons = const [
-    _ReasonItem(icon: '❤️', title: 'Cải thiện sức khỏe'),
-    _ReasonItem(icon: '🌟', title: 'Tăng tự tin'),
-    _ReasonItem(icon: '👖', title: 'Mặc vừa quần áo'),
-    _ReasonItem(icon: '⚡', title: 'Nhiều năng lượng hơn'),
-    _ReasonItem(icon: '📅', title: 'Chuẩn bị cho một sự kiện'),
-    _ReasonItem(icon: '🔥', title: 'Giảm mỡ nội tạng'),
-    _ReasonItem(icon: '🏃', title: 'Cải thiện thể lực'),
-    _ReasonItem(icon: '✍️', title: 'Khác'),
+    _ReasonItem(icon: '❤️', title: 'improveHealth'),
+    _ReasonItem(icon: '🌟', title: 'increaseConfidence'),
+    _ReasonItem(icon: '👖', title: 'fitIntoClothes'),
+    _ReasonItem(icon: '⚡', title: 'moreEnergy'),
+    _ReasonItem(icon: '📅', title: 'prepareForEvent'),
+    _ReasonItem(icon: '🔥', title: 'reduceVisceralFat'),
+    _ReasonItem(icon: '🏃', title: 'improvePhysicalFitness'),
+    _ReasonItem(icon: '✍️', title: 'other'),
   ];
 
   @override
@@ -106,7 +113,7 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
                       );
                     },
                     child: Text(
-                      'Bỏ qua',
+                      AppLocalizations.of(context)?.skip ?? 'Bỏ qua',
                       style: GoogleFonts.inter(
                         color: _muted,
                         fontSize: 16,
@@ -122,7 +129,7 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  _title,
+                  _getTitle(context),
                   style: GoogleFonts.inter(
                     fontSize: 26,
                     fontWeight: FontWeight.w800,
@@ -153,7 +160,12 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
                       ? null
                       : () {
                           final reasons = _selectedIndices
-                              .map((i) => _reasons[i].title)
+                              .map(
+                                (i) => _getLocalizedReasonTitle(
+                                  context,
+                                  _reasons[i].title,
+                                ),
+                              )
                               .toList(growable: false);
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -173,7 +185,7 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
                     ),
                   ),
                   child: Text(
-                    'Tiếp theo',
+                    AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 16,
@@ -233,7 +245,7 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
             const SizedBox(width: 14),
             Expanded(
               child: Text(
-                item.title,
+                _getLocalizedReasonTitle(context, item.title),
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -268,6 +280,36 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
         ),
       ),
     );
+  }
+
+  String _getLocalizedReasonTitle(BuildContext context, String key) {
+    switch (key) {
+      case 'improveHealth':
+        return AppLocalizations.of(context)?.improveHealth ??
+            'Cải thiện sức khỏe';
+      case 'increaseConfidence':
+        return AppLocalizations.of(context)?.increaseConfidence ??
+            'Tăng tự tin';
+      case 'fitIntoClothes':
+        return AppLocalizations.of(context)?.fitIntoClothes ??
+            'Mặc vừa quần áo';
+      case 'moreEnergy':
+        return AppLocalizations.of(context)?.moreEnergy ??
+            'Nhiều năng lượng hơn';
+      case 'prepareForEvent':
+        return AppLocalizations.of(context)?.prepareForEvent ??
+            'Chuẩn bị cho một sự kiện';
+      case 'reduceVisceralFat':
+        return AppLocalizations.of(context)?.reduceVisceralFat ??
+            'Giảm mỡ nội tạng';
+      case 'improvePhysicalFitness':
+        return AppLocalizations.of(context)?.improvePhysicalFitness ??
+            'Cải thiện thể lực';
+      case 'other':
+        return AppLocalizations.of(context)?.other ?? 'Khác';
+      default:
+        return key;
+    }
   }
 }
 
