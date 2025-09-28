@@ -11,14 +11,16 @@ import '../../model/user.dart' as app_user;
 import '../../database/auth_service.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({super.key});
+  final AuthService? authService;
+
+  const ProfileView({super.key, this.authService});
 
   @override
   State<ProfileView> createState() => _ProfileViewState();
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  final AuthService _authService = AuthService();
+  late final AuthService _authService;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
 
@@ -28,6 +30,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
+    _authService = widget.authService ?? AuthService();
     _loadUser();
   }
 

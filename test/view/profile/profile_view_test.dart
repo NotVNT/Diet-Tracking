@@ -1,27 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 
 import 'package:diet_tracking_project/view/profile/profile_view.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
 
-class _AuthMock extends Mock implements AuthService {}
+import 'profile_view_test.mocks.dart';
 
+@GenerateMocks([AuthService])
 void main() {
   group('ProfileView', () {
-    testWidgets('Hiển thị nút Đăng nhập khi chưa đăng nhập', (tester) async {
-      // Bỏ qua: ProfileView khởi tạo AuthService (Firebase) trong State, khó mock nhanh.
-    }, skip: true);
+    late MockAuthService mockAuthService;
 
-    testWidgets('Đăng xuất điều hướng về WelcomeScreen', (tester) async {
-      SharedPreferences.setMockInitialValues({});
-      // Dùng HomeView để chứa ProfileView nếu cần; ở đây push trực tiếp
-      await tester.pumpWidget(const MaterialApp(home: ProfileView()));
+    setUp(() {
+      mockAuthService = MockAuthService();
+    });
 
-      // Giả lập trạng thái đã đăng nhập bằng cách mở menu có nút Đăng xuất?
-      // Vì ProfileView tự quyết định hiển thị theo _authService.currentUser, khó mock trực tiếp.
-      // Test này chỉ kiểm tra luồng onTap "Đăng nhập" ở trên (đã pass).
-    }, skip: true);
+    test('ProfileView có thể được tạo với AuthService', () {
+      // Arrange & Act
+      final profileView = ProfileView(authService: mockAuthService);
+
+      // Assert
+      expect(profileView, isNotNull);
+      expect(profileView.authService, equals(mockAuthService));
+    });
+
+    test('ProfileView có thể được tạo mà không cần AuthService', () {
+      // Arrange & Act
+      final profileView = const ProfileView();
+
+      // Assert
+      expect(profileView, isNotNull);
+      expect(profileView.authService, isNull);
+    });
+
+    test('ProfileView có key được set đúng', () {
+      // Arrange
+      const key = Key('test_key');
+
+      // Act
+      final profileView = ProfileView(key: key, authService: mockAuthService);
+
+      // Assert
+      expect(profileView.key, equals(key));
+    });
+
+    test('ProfileView có widget type đúng', () {
+      // Arrange
+      final profileView = ProfileView(authService: mockAuthService);
+
+      // Assert
+      expect(profileView, isA<StatefulWidget>());
+    });
   });
 }

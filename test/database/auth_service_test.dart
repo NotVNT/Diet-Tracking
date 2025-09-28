@@ -1,13 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:mockito/mockito.dart';
+
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:diet_tracking_project/database/exceptions.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
-
-class _MockUserCredential extends Mock implements UserCredential {}
 
 // class _MockUser extends Mock implements User {}
 // Dùng MockUser từ firebase_auth_mocks thay cho mock fb.User

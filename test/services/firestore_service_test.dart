@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:diet_tracking_project/database/firestore_service.dart';
+import 'package:diet_tracking_project/services/firestore_service.dart';
 
 void main() {
   group('FirestoreService', () {
