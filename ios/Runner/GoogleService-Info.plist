@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>796521627908-clvot9phvamldosai3mbnratudapl0t1.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.796521627908-clvot9phvamldosai3mbnratudapl0t1</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>796521627908-gd5mqcvnm713v73k3g5uk5gkrb3enmg8.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCZD_r-J2mTT1rmYXb2Gz8zun_OdEaczSU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>796521627908</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.dietTrackingProject</string>
+	<key>PROJECT_ID</key>
+	<string>diet-tracking-f365a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>diet-tracking-f365a.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:796521627908:ios:6b24c3343afbc2e1bb9051</string>
+</dict>
+</plist>

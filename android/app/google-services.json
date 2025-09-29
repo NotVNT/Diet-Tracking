@@ -12,7 +12,20 @@
           "package_name": "com.example.diet_tracking_project"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "796521627908-gd5mqcvnm713v73k3g5uk5gkrb3enmg8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.diet_tracking_project",
+            "certificate_hash": "5e1f564f27f34843ede974fae3001fa7c09ef113"
+          }
+        },
+        {
+          "client_id": "796521627908-oeuc3itmj5r3vql80dera44iqke9m1tq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDGEbzq-F_OAMxn7I2mxrbaXOkmrXpOzgg"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "796521627908-oeuc3itmj5r3vql80dera44iqke9m1tq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "796521627908-clvot9phvamldosai3mbnratudapl0t1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.dietTrackingProject"
+              }
+            }
+          ]
         }
       }
     }

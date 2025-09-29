@@ -9,6 +9,7 @@ import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
 import '../../database/guest_sync_service.dart';
 import '../../database/local_storage_service.dart';
+import '../../services/google_auth_service.dart';
 import '../home/home_view.dart';
 import '../on_boarding/started_view/started_screen.dart' as started_onboarding;
 import '../../model/user.dart' as app_user;
@@ -31,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   late final AuthService _authService;
   late final GuestSyncService _guestSync;
+  late final GoogleAuthService _googleAuthService;
   final LocalStorageService _localStorage = LocalStorageService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -43,6 +45,7 @@ class _LoginScreenState extends State<LoginScreen>
     super.initState();
     _authService = widget.authService ?? AuthService();
     _guestSync = widget.guestSyncService ?? GuestSyncService();
+    _googleAuthService = GoogleAuthService();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -168,6 +171,56 @@ class _LoginScreenState extends State<LoginScreen>
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+  Future<void> _handleGoogleLogin() async {
+    try {
+      _showLoadingDialog();
+
+      final user = await _googleAuthService.signInWithGoogle();
+
+      _hideLoadingDialog();
+
+      if (user != null) {
+        _showSuccessSnackBar('Đăng nhập Google thành công!');
+
+        try {
+          await _guestSync.syncGuestToUser(user.uid);
+        } catch (e) {
+          print('⚠️ Guest sync failed (Google): $e');
+        }
+
+        final app_user.User? profile = await _authService.getUserData(user.uid);
+        final bool needsOnboarding =
+            profile == null ||
+            (profile.goals == null || profile.goals!.isEmpty) ||
+            profile.heightCm == null ||
+            profile.weightKg == null ||
+            profile.age == null ||
+            profile.gender == null;
+
+        if (needsOnboarding) {
+          if (!mounted) return;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const started_onboarding.StartScreen(),
+            ),
+          );
+        } else {
+          if (!mounted) return;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeView()),
+          );
+        }
+      } else {
+        _showErrorSnackBar('Đăng nhập Google đã bị hủy.');
+      }
+    } catch (e) {
+      _hideLoadingDialog();
+      _showErrorSnackBar('Đăng nhập Google thất bại: $e');
+    }
   }
 
   /// Xử lý khi người dùng bấm "Tôi chưa có tài khoản"
@@ -354,9 +407,7 @@ class _LoginScreenState extends State<LoginScreen>
                       position: _slideAnimation,
                       child: CustomButton(
                         text: 'Tiếp tục với Google',
-                        onPressed: () {
-                          // TODO: Handle Google login
-                        },
+                        onPressed: _handleGoogleLogin,
                         backgroundColor: AppColors.white,
                         textColor: AppColors.black,
                         icon: Image.asset(
