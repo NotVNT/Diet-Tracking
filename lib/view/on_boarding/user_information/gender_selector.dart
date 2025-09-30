@@ -157,7 +157,7 @@ class _GenderSelectorState extends State<GenderSelector> {
                             },
                             child: Text(
                               AppLocalizations.of(context)?.continueButton ??
-                                  'Tiếp tục',
+                                  'Tiếp theo',
                               style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontSize: 16,

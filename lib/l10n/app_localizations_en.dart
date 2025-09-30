@@ -12,7 +12,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get defineYourGoal => 'Define your goal';
 
   @override
-  String get weWillBuild => 'We\'ll build a tailored plan to keep you motivated and help you reach your goals.';
+  String get weWillBuild =>
+      'We\'ll build a tailored plan to keep you motivated and help you reach your goals.';
 
   @override
   String get getStartedNow => 'Get started!';
@@ -24,7 +25,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startTrackingToday => 'Start tracking your\ndiet plan today!';
 
   @override
-  String get trackDailyDiet => 'Track your daily diet with\npersonalized meal plans and\nsmart recommendations.';
+  String get trackDailyDiet =>
+      'Track your daily diet with\npersonalized meal plans and\nsmart recommendations.';
 
   @override
   String get getStarted => 'Get started';
@@ -39,7 +41,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tellUsAboutYourself => 'Tell us about yourself';
 
   @override
-  String get weWillCreatePersonalizedPlan => 'We\'ll create a personalized plan for you based on details like your age and current weight.';
+  String get weWillCreatePersonalizedPlan =>
+      'We\'ll create a personalized plan for you based on details like your age and current weight.';
 
   @override
   String get start => 'Start';
@@ -48,7 +51,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gender => 'Gender';
 
   @override
-  String get weWillUseThisInfo => 'We\'ll use this information to calculate your daily energy needs.';
+  String get weWillUseThisInfo =>
+      'We\'ll use this information to calculate your daily energy needs.';
 
   @override
   String get male => 'Male';
@@ -159,7 +163,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weBringYouBestResults => 'We bring you the best results';
 
   @override
-  String get personalizedPathwayBasedOnGoals => 'Personalized pathway based on your goals and habits. Start now to see sustainable change.';
+  String get personalizedPathwayBasedOnGoals =>
+      'Personalized pathway based on your goals and habits. Start now to see sustainable change.';
 
   @override
   String get height => 'Height';
@@ -186,13 +191,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youCanDoIt => 'You can do it!';
 
   @override
-  String get maintainCurrentWeightIsHealthy => 'Maintaining your current weight is a healthy choice';
+  String get maintainCurrentWeightIsHealthy =>
+      'Maintaining your current weight is a healthy choice';
 
   @override
   String get loseWeightGoalPrefix => 'Losing';
 
   @override
-  String get loseWeightGoalSuffix => 'kg is a challenging but completely achievable goal';
+  String get loseWeightGoalSuffix =>
+      'kg is a challenging but completely achievable goal';
 
   @override
   String get gainWeightGoalPrefix => 'Gaining';
@@ -201,13 +208,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gainWeightGoalSuffix => 'kg will help you achieve better balance';
 
   @override
-  String get setClearGoalsMessage => 'Setting clear goals helps you get closer every day';
+  String get setClearGoalsMessage =>
+      'Setting clear goals helps you get closer every day';
 
   @override
   String get goalWeightPrefix => 'Goal weight';
 
   @override
-  String get userProgressMessage => 'users report clear progress after 4 weeks on the plan';
+  String get userProgressMessage =>
+      'users report clear progress after 4 weeks on the plan';
 
   @override
   String get continueAsGuest => 'Continue as Guest';
@@ -226,4 +235,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageChangedToEnglish => 'Language changed to English';
+
+  @override
+  String get bmiCurrentTitle => 'Your current BMI';
+
+  @override
+  String get bmiEnterHeightToCalculate => 'Enter height to calculate BMI.';
+
+  @override
+  String get bmiUnderweight => 'You are underweight.';
+
+  @override
+  String get bmiNormal => 'You have a normal weight.';
+
+  @override
+  String get bmiOverweight => 'You are overweight.';
+
+  @override
+  String get bmiObese => 'You should lose weight to protect your health.';
 }
