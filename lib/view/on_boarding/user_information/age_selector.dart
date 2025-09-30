@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:diet_tracking_project/view/on_boarding/user_information/height_selector.dart';
+import 'package:diet_tracking_project/view/on_boarding/user_information/health_info_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -192,9 +192,7 @@ class _AgeSelectorState extends State<AgeSelector> {
                           await _local.saveGuestData(age: currentAge);
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => HeightSelector(
-                                selectedGender: widget.selectedGender,
-                              ),
+                              builder: (_) => const HealthInfoScreen(),
                             ),
                           );
                         },

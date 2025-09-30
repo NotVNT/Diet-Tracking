@@ -32,6 +32,13 @@ class AppStyles {
     height: 1.4,
   );
 
+  static TextStyle get bodySmall => GoogleFonts.inter(
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+    color: AppColors.grey600,
+    height: 1.4,
+  );
+
   static TextStyle get labelMedium => GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w500,
