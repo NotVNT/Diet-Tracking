@@ -16,11 +16,11 @@ void main() {
     // Toggle options
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
-    expect(find.text('Add photos & files'), findsOneWidget);
+    expect(find.text('gợi ý món ăn'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.close));
     await tester.pump();
-    expect(find.text('Add photos & files'), findsNothing);
+    expect(find.text('gợi ý món ăn'), findsNothing);
   });
 
   testWidgets('ChatBotView chặn xuống dòng: không gửi tin nhắn', (

@@ -11,7 +11,9 @@ class WeightUtils {
   /// Round to a desired step (e.g. 0.5 kg)
   static double roundToStep(double value, double step) {
     final scaled = value / step;
-    return (scaled.roundToDouble()) * step;
+    // Add a tiny, sign-aware epsilon to mitigate floating-point artifacts
+    final adjusted = scaled + (scaled >= 0 ? 1e-9 : -1e-9);
+    return adjusted.roundToDouble() * step;
   }
 
   /// Calculate BMI from kg and height cm
