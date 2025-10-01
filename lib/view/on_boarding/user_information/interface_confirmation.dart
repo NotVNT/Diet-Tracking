@@ -208,7 +208,12 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
   /// Xây dựng các nút hành động chính
   Widget _buildActionButtons() {
-    final currentUser = FirebaseAuth.instance.currentUser;
+    User? currentUser;
+    try {
+      currentUser = FirebaseAuth.instance.currentUser;
+    } catch (_) {
+      currentUser = null;
+    }
     final bool isGoogle =
         currentUser?.providerData.any((p) => p.providerId == 'google.com') ==
         true;

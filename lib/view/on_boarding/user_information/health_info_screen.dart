@@ -10,7 +10,13 @@ import '../../../widget/health/health_card_widget.dart';
 import 'height_selector.dart';
 
 class HealthInfoScreen extends StatefulWidget {
-  const HealthInfoScreen({super.key});
+  final AuthService? authService;
+  final LocalStorageService? localStorageService;
+  const HealthInfoScreen({
+    super.key,
+    this.authService,
+    this.localStorageService,
+  });
 
   @override
   State<HealthInfoScreen> createState() => _HealthInfoScreenState();
@@ -22,13 +28,13 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
   final List<String> _diseases = <String>[];
   final List<String> _allergies = <String>[];
   late final LocalStorageService _local;
-  late final AuthService _auth;
+  AuthService? _auth;
 
   @override
   void initState() {
     super.initState();
-    _local = LocalStorageService();
-    _auth = AuthService();
+    _local = widget.localStorageService ?? LocalStorageService();
+    _auth = widget.authService; // tránh khởi tạo Firebase khi test
   }
 
   @override
@@ -159,13 +165,13 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                       text: AppLocalizations.of(context)?.next ?? 'Tiếp tục',
                       backgroundColor: const Color(0xFF1F2A37),
                       onPressed: () async {
-                        final uid = _auth.currentUser?.uid;
+                        final uid = _auth?.currentUser?.uid;
                         final bool hasAny =
                             _diseases.isNotEmpty || _allergies.isNotEmpty;
 
                         if (uid != null) {
                           if (hasAny) {
-                            await _auth.updateUserData(uid, {
+                            await _auth!.updateUserData(uid, {
                               if (_diseases.isNotEmpty)
                                 'bodyInfo.medicalConditions': _diseases,
                               if (_allergies.isNotEmpty)

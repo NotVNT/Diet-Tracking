@@ -13,7 +13,14 @@ import '../../../database/local_storage_service.dart';
 
 class GoalWeightSelector extends StatefulWidget {
   final int currentWeightKg;
-  const GoalWeightSelector({super.key, required this.currentWeightKg});
+  final AuthService? authService;
+  final LocalStorageService? localStorageService;
+  const GoalWeightSelector({
+    super.key,
+    required this.currentWeightKg,
+    this.authService,
+    this.localStorageService,
+  });
 
   @override
   State<GoalWeightSelector> createState() => _GoalWeightSelectorState();
@@ -32,13 +39,15 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
   bool _isKg = true;
   late double _goalWeightKg;
   late final TextEditingController _controller;
-  final LocalStorageService _local = LocalStorageService();
-  final AuthService _auth = AuthService();
+  late final LocalStorageService _local;
+  AuthService? _auth;
   double? _heightCm;
 
   @override
   void initState() {
     super.initState();
+    _local = widget.localStorageService ?? LocalStorageService();
+    _auth = widget.authService;
     _goalWeightKg = widget.currentWeightKg.toDouble();
     _controller = TextEditingController(text: _goalWeightKg.toStringAsFixed(1));
     _loadHeightForBmi();
@@ -231,9 +240,9 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                           ),
                         ),
                         onPressed: () async {
-                          final uid = _auth.currentUser?.uid;
+                          final uid = _auth?.currentUser?.uid;
                           if (uid != null) {
-                            await _auth.updateUserData(uid, {
+                            await _auth!.updateUserData(uid, {
                               'bodyInfo.goalWeightKg': _goalWeightKg,
                               'bodyInfo.weightKg': widget.currentWeightKg
                                   .toDouble(),

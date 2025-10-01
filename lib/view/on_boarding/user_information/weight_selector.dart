@@ -11,7 +11,8 @@ import 'package:diet_tracking_project/widget/weight/weight_responsive_design.dar
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
 class WeightSelector extends StatefulWidget {
-  const WeightSelector({super.key});
+  final AuthService? authService;
+  const WeightSelector({super.key, this.authService});
 
   @override
   State<WeightSelector> createState() => _WeightSelectorState();
@@ -28,7 +29,7 @@ class _WeightSelectorState extends State<WeightSelector> {
   static const double _maxWeightKg = 240.0;
 
   final LocalStorageService _local = LocalStorageService();
-  final AuthService _auth = AuthService();
+  AuthService? _auth;
 
   // State
   bool _isKg = true;
@@ -41,6 +42,7 @@ class _WeightSelectorState extends State<WeightSelector> {
     super.initState();
     _loadHeightForBmi();
     _controller = TextEditingController(text: _weightKg.toStringAsFixed(1));
+    _auth = widget.authService; // dùng injected để tránh Firebase trong test
   }
 
   Future<void> _loadHeightForBmi() async {
@@ -241,9 +243,9 @@ class _WeightSelectorState extends State<WeightSelector> {
                           ),
                         ),
                         onPressed: () async {
-                          final uid = _auth.currentUser?.uid;
+                          final uid = _auth?.currentUser?.uid;
                           if (uid != null) {
-                            await _auth.updateUserData(uid, {
+                            await _auth!.updateUserData(uid, {
                               'bodyInfo.weightKg': _weightKg,
                             });
                           } else {

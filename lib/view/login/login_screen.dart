@@ -18,7 +18,15 @@ import 'signup_screen.dart';
 class LoginScreen extends StatefulWidget {
   final AuthService? authService;
   final GuestSyncService? guestSyncService;
-  const LoginScreen({super.key, this.authService, this.guestSyncService});
+  final GoogleAuthService? googleAuthService;
+  final Future<void> Function(String email)? onSendPasswordReset;
+  const LoginScreen({
+    super.key,
+    this.authService,
+    this.guestSyncService,
+    this.googleAuthService,
+    this.onSendPasswordReset,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -30,9 +38,9 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  late final AuthService _authService;
-  late final GuestSyncService _guestSync;
-  late final GoogleAuthService _googleAuthService;
+  AuthService? _authService;
+  GuestSyncService? _guestSync;
+  GoogleAuthService? _googleAuthService;
   final LocalStorageService _localStorage = LocalStorageService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -43,9 +51,10 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
-    _authService = widget.authService ?? AuthService();
-    _guestSync = widget.guestSyncService ?? GuestSyncService();
-    _googleAuthService = GoogleAuthService();
+    _authService = widget.authService; // tránh khởi tạo thật trong test
+    _guestSync = widget.guestSyncService; // tránh khởi tạo thật trong test
+    // Không khởi tạo GoogleAuthService mặc định trong test để tránh Firebase init
+    _googleAuthService = widget.googleAuthService;
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -87,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       _showLoadingDialog();
 
-      final user = await _authService.signInWithEmailAndPassword(
+      final user = await _authService!.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -100,13 +109,15 @@ class _LoginScreenState extends State<LoginScreen>
 
         // Đồng bộ dữ liệu khách vào user trước khi quyết định điều hướng
         try {
-          await _guestSync.syncGuestToUser(user.uid);
+          await _guestSync?.syncGuestToUser(user.uid);
         } catch (e) {
           print('⚠️ Guest sync failed: $e');
         }
 
         // Kiểm tra hồ sơ đã đủ thông tin cơ bản chưa
-        final app_user.User? profile = await _authService.getUserData(user.uid);
+        final app_user.User? profile = await _authService!.getUserData(
+          user.uid,
+        );
         final bool needsOnboarding =
             profile == null ||
             (profile.goals == null || profile.goals!.isEmpty) ||
@@ -176,8 +187,8 @@ class _LoginScreenState extends State<LoginScreen>
   Future<void> _handleGoogleLogin() async {
     try {
       _showLoadingDialog();
-
-      final user = await _googleAuthService.signInWithGoogle();
+      _googleAuthService ??= GoogleAuthService();
+      final user = await _googleAuthService!.signInWithGoogle();
 
       _hideLoadingDialog();
 
@@ -185,12 +196,14 @@ class _LoginScreenState extends State<LoginScreen>
         _showSuccessSnackBar('Đăng nhập Google thành công!');
 
         try {
-          await _guestSync.syncGuestToUser(user.uid);
+          await _guestSync?.syncGuestToUser(user.uid);
         } catch (e) {
           print('⚠️ Guest sync failed (Google): $e');
         }
 
-        final app_user.User? profile = await _authService.getUserData(user.uid);
+        final app_user.User? profile = await _authService!.getUserData(
+          user.uid,
+        );
         final bool needsOnboarding =
             profile == null ||
             (profile.goals == null || profile.goals!.isEmpty) ||
@@ -346,8 +359,31 @@ class _LoginScreenState extends State<LoginScreen>
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {
-                            // TODO: Navigate to forgot password
+                          onPressed: () async {
+                            final email = _emailController.text.trim();
+                            if (email.isEmpty) {
+                              _showErrorSnackBar('Vui lòng nhập email trước.');
+                              return;
+                            }
+                            try {
+                              _showLoadingDialog();
+                              if (widget.onSendPasswordReset != null) {
+                                await widget.onSendPasswordReset!(email);
+                              } else {
+                                await _authService?.sendPasswordResetEmail(
+                                  email,
+                                );
+                              }
+                              _hideLoadingDialog();
+                              _showSuccessSnackBar(
+                                'Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.',
+                              );
+                            } catch (e) {
+                              _hideLoadingDialog();
+                              _showErrorSnackBar(
+                                'Không thể gửi email đặt lại mật khẩu: $e',
+                              );
+                            }
                           },
                           child: Text(
                             'Quên mật khẩu?',

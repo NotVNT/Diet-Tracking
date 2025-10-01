@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:diet_tracking_project/view/on_boarding/user_information/height_selector.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/weight_selector.dart';
+import 'package:diet_tracking_project/database/auth_service.dart';
 
 void main() {
   group('HeightSelector', () {
@@ -18,11 +19,14 @@ void main() {
       });
 
       SharedPreferences.setMockInitialValues({});
-      await tester.pumpWidget(const MaterialApp(home: HeightSelector()));
+      await tester.pumpWidget(
+        MaterialApp(home: HeightSelector(authService: null)),
+      );
 
       // Tránh phụ thuộc vào chuỗi theo ngôn ngữ, chỉ cần tìm nút hành động chính
-      expect(find.byType(ElevatedButton), findsOneWidget);
-      await tester.tap(find.byType(ElevatedButton));
+      // Button dùng Custom styles; tìm theo text 'Next'
+      expect(find.text('Next'), findsOneWidget);
+      await tester.tap(find.text('Next'));
       await tester.pumpAndSettle();
       expect(find.byType(WeightSelector), findsOneWidget);
     });

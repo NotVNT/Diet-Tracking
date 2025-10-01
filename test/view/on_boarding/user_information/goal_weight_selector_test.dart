@@ -3,6 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:diet_tracking_project/view/on_boarding/user_information/goal_weight_selector.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/interface_confirmation.dart';
+import 'package:diet_tracking_project/database/auth_service.dart';
+import 'package:diet_tracking_project/database/local_storage_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('GoalWeightSelector', () {
@@ -15,13 +18,20 @@ void main() {
         tester.view.resetDevicePixelRatio();
       });
 
+      SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(
-        const MaterialApp(home: GoalWeightSelector(currentWeightKg: 70)),
+        MaterialApp(
+          home: GoalWeightSelector(
+            currentWeightKg: 70,
+            authService: null,
+            localStorageService: LocalStorageService(),
+          ),
+        ),
       );
 
       // Không phụ thuộc chuỗi theo ngôn ngữ; bấm nút hành động chính
-      expect(find.byType(ElevatedButton), findsOneWidget);
-      await tester.tap(find.byType(ElevatedButton));
+      expect(find.text('Xong'), findsOneWidget);
+      await tester.tap(find.text('Xong'));
       await tester.pumpAndSettle();
       expect(find.byType(InterfaceConfirmation), findsOneWidget);
     });
