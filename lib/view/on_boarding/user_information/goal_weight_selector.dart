@@ -1,157 +1,195 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:diet_tracking_project/widget/weight/unit_toggle.dart';
+import 'package:diet_tracking_project/widget/weight/weight_display.dart';
+import 'package:diet_tracking_project/widget/weight/weight_ruler.dart';
+import 'package:diet_tracking_project/widget/weight/weight_responsive_design.dart';
+import 'package:diet_tracking_project/widget/weight/bmi_card.dart';
+import '../../../database/local_storage_service.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'interface_confirmation.dart';
-import '../../../l10n/app_localizations.dart';
 
 class GoalWeightSelector extends StatefulWidget {
-  final int? currentWeightKg;
-  const GoalWeightSelector({super.key, this.currentWeightKg});
+  final int currentWeightKg;
+  const GoalWeightSelector({super.key, required this.currentWeightKg});
 
   @override
   State<GoalWeightSelector> createState() => _GoalWeightSelectorState();
 }
 
 class _GoalWeightSelectorState extends State<GoalWeightSelector> {
-  Color get _bg => const Color(0xFFFDF0D7);
-  Color get _accent => const Color(0xFF1F2A37);
-  Color get _title => const Color(0xFF2D3A4A);
-  Color get _progress => const Color(0xFFF2C94C);
+  Color get _pageBg =>
+      const Color(0xFFF8F7FF); // match weight screen background
+  Color get _titleColor => const Color(0xFF111827);
+  Color get _subtitleColor => const Color(0xFF6B7280);
+  Color get _accent => const Color(0xFF1F2A37); // dark navy like weight screen
 
-  static const int _minWeight = 30;
-  static const int _maxWeight = 200;
+  static const double _minWeightKg = 20.0;
+  static const double _maxWeightKg = 240.0;
 
-  late final int _defaultWeight = widget.currentWeightKg != null
-      ? widget.currentWeightKg!.clamp(_minWeight, _maxWeight)
-      : 65;
+  bool _isKg = true;
+  late double _goalWeightKg;
+  late final TextEditingController _controller;
+  final LocalStorageService _local = LocalStorageService();
+  double? _heightCm;
 
-  late final FixedExtentScrollController scrollController =
-      FixedExtentScrollController(initialItem: _defaultWeight - _minWeight);
+  @override
+  void initState() {
+    super.initState();
+    _goalWeightKg = widget.currentWeightKg.toDouble();
+    _controller = TextEditingController(text: _goalWeightKg.toStringAsFixed(1));
+    _loadHeightForBmi();
+  }
 
-  int get currentGoalWeightKg => _minWeight + scrollController.selectedItem;
+  Future<void> _loadHeightForBmi() async {
+    final data = await _local.readGuestData();
+    setState(() {
+      _heightCm = (data['heightCm'] as double?);
+    });
+  }
 
   @override
   void dispose() {
-    scrollController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final r = WeightResponsive.of(context);
+    final displayedValue = _isKg ? _goalWeightKg : _goalWeightKg * 2.2046226218;
+    final valueText = displayedValue.toStringAsFixed(1);
+    final bmi = _computeBmi(_goalWeightKg, _heightCm);
+    final bmiText = _bmiDescription(context, bmi);
+
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: _pageBg,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: r.space(20)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: LinearProgressIndicator(
-                  value: 1.0,
-                  minHeight: 10,
-                  backgroundColor: Colors.white,
-                  valueColor: AlwaysStoppedAnimation<Color>(_progress),
-                ),
-              ),
-              const SizedBox(height: 24),
+              SizedBox(height: r.space(12)),
+              // Titles (keep static text as requested)
               Text(
-                AppLocalizations.of(context)?.goalWeight ?? 'Cân nặng mục tiêu',
+                AppLocalizations.of(context)?.goalWeight ?? 'Goal Weight',
                 style: GoogleFonts.inter(
-                  fontSize: 32,
+                  fontSize: r.font(24),
                   fontWeight: FontWeight.w800,
-                  color: _title,
+                  color: _titleColor,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: r.space(6)),
               Text(
                 AppLocalizations.of(context)?.whatIsYourGoalWeight ??
-                    'Bạn muốn đạt cân nặng bao nhiêu?',
+                    'What weight do you want to achieve?',
                 style: GoogleFonts.inter(
-                  fontSize: 18,
-                  height: 1.6,
-                  color: _title.withOpacity(0.8),
+                  fontSize: r.font(16),
+                  height: 1.5,
+                  color: _subtitleColor,
                 ),
               ),
-              const SizedBox(height: 24),
-              Expanded(
-                child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ListWheelScrollView.useDelegate(
-                        controller: scrollController,
-                        physics: const FixedExtentScrollPhysics(),
-                        itemExtent: 64,
-                        perspective: 0.002,
-                        onSelectedItemChanged: (_) => setState(() {}),
-                        childDelegate: ListWheelChildBuilderDelegate(
-                          childCount: (_maxWeight - _minWeight) + 1,
-                          builder: (context, index) {
-                            final weight = _minWeight + index;
-                            final isCurrent = weight == currentGoalWeightKg;
-                            return AnimatedOpacity(
-                              duration: const Duration(milliseconds: 150),
-                              opacity: isCurrent ? 1 : 0.35,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 10,
-                                ),
-                                decoration: isCurrent
-                                    ? BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(14),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.08,
-                                            ),
-                                            blurRadius: 18,
-                                            offset: const Offset(0, 6),
-                                          ),
-                                        ],
-                                      )
-                                    : null,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '$weight',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.w800,
-                                        color: _accent,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'kg',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                        color: _accent.withOpacity(0.9),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+              SizedBox(height: r.space(16)),
+              Center(
+                child: UnitToggle(
+                  isKg: _isKg,
+                  onChanged: (v) {
+                    setState(() {
+                      _isKg = v;
+                      final displayed = _isKg
+                          ? _goalWeightKg
+                          : _goalWeightKg * 2.2046226218;
+                      _controller.text = displayed.toStringAsFixed(1);
+                    });
+                  },
+                ),
+              ),
+              SizedBox(height: r.space(14)),
+              Center(
+                child: WeightDisplay(
+                  valueText: valueText,
+                  unit: _isKg ? 'kg' : 'lb',
+                ),
+              ),
+              SizedBox(height: r.space(8)),
+              Center(
+                child: SizedBox(
+                  width: 160,
+                  child: TextField(
+                    controller: _controller,
+                    textAlign: TextAlign.center,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    style: GoogleFonts.inter(
+                      fontSize: r.font(16),
+                      fontWeight: FontWeight.w600,
+                      color: _titleColor,
+                    ),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: r.space(8),
+                        horizontal: r.space(10),
                       ),
-                    ],
+                      suffixText: _isKg ? 'kg' : 'lb',
+                      suffixStyle: GoogleFonts.inter(
+                        fontSize: r.font(14),
+                        color: _subtitleColor,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(r.radius(10)),
+                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(r.radius(10)),
+                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(r.radius(10)),
+                        borderSide: BorderSide(color: _accent),
+                      ),
+                    ),
+                    onChanged: (txt) {
+                      final parsed = double.tryParse(txt.replaceAll(',', '.'));
+                      if (parsed == null) return;
+                      setState(() {
+                        final newKg = _isKg ? parsed : parsed / 2.2046226218;
+                        _goalWeightKg = newKg.clamp(_minWeightKg, _maxWeightKg);
+                      });
+                    },
                   ),
                 ),
               ),
+              SizedBox(height: r.space(8)),
+              WeightRuler(
+                min: _minWeightKg,
+                max: _maxWeightKg,
+                value: _goalWeightKg,
+                isKg: _isKg,
+                accent: _accent,
+                onChanged: (v) => setState(() {
+                  _goalWeightKg = v;
+                  final displayed = _isKg
+                      ? _goalWeightKg
+                      : _goalWeightKg * 2.2046226218;
+                  _controller.text = displayed.toStringAsFixed(1);
+                }),
+              ),
+              SizedBox(height: r.space(10)),
+              BmiCard(bmi: bmi, description: bmiText),
+              const Spacer(),
               Row(
                 children: [
                   Container(
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: _bg,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
@@ -189,15 +227,12 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        onPressed: () async {
-                          // Sau khi chọn cân nặng mục tiêu xong: vào interface_confirmation
-                          if (!mounted) return;
-                          Navigator.push(
-                            context,
+                        onPressed: () {
+                          Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => InterfaceConfirmation(
+                              builder: (_) => InterfaceConfirmation(
                                 currentWeightKg: widget.currentWeightKg,
-                                goalWeightKg: currentGoalWeightKg,
+                                goalWeightKg: _goalWeightKg.round(),
                               ),
                             ),
                           );
@@ -215,11 +250,34 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: r.space(16)),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+double _computeBmi(double weightKg, double? heightCm) {
+  if (heightCm == null || heightCm <= 0) return 0;
+  final h = heightCm / 100.0;
+  return weightKg / (h * h);
+}
+
+String _bmiDescription(BuildContext context, double bmi) {
+  final l10n = AppLocalizations.of(context);
+  if (bmi == 0) {
+    return l10n?.bmiEnterHeightToCalculate ?? 'Hãy nhập chiều cao để tính BMI.';
+  }
+  if (bmi < 18.5) {
+    return l10n?.bmiUnderweight ?? 'Bạn đang thiếu cân.';
+  }
+  if (bmi < 25) {
+    return l10n?.bmiNormal ?? 'Bạn có cân nặng bình thường.';
+  }
+  if (bmi < 30) {
+    return l10n?.bmiOverweight ?? 'Bạn đang thừa cân.';
+  }
+  return l10n?.bmiObese ?? 'Bạn cần giảm cân nghiêm túc để bảo vệ sức khỏe';
 }

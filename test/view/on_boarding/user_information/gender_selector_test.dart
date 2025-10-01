@@ -8,18 +8,25 @@ import 'package:diet_tracking_project/view/on_boarding/user_information/age_sele
 void main() {
   group('GenderSelector', () {
     testWidgets('Render và đổi lựa chọn', (tester) async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      tester.view.physicalSize = const Size(1080, 1920);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const MaterialApp(home: GenderSelector()));
 
-      expect(find.text('Giới tính'), findsOneWidget);
-      expect(find.text('Nam'), findsOneWidget);
-      expect(find.text('Nữ'), findsOneWidget);
+      // Tránh phụ thuộc văn bản theo ngôn ngữ
+      expect(find.byType(ElevatedButton), findsOneWidget);
 
       await tester.tap(find.text('Nữ'));
       await tester.pump();
 
-      // Nút Tiếp tục khả dụng và điều hướng
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Tiếp tục'));
+      // Nút hành động chính điều hướng
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
       expect(find.byType(AgeSelector), findsOneWidget);
     });
