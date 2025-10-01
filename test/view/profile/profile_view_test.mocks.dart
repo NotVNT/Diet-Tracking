@@ -103,15 +103,19 @@ class MockAuthService extends _i1.Mock implements _i2.AuthService {
 
   @override
   _i3.Future<_i4.User?> signUpWithOnboardingData({
-    required String? email,
-    required String? password,
-    required String? fullName,
-    required String? phone,
+    required String email,
+    required String password,
+    required String fullName,
+    required String phone,
     DateTime? birthDate,
     List<String>? goals,
     String? gender,
     double? heightCm,
     double? weightKg,
+    double? goalHeightCm,
+    String? health,
+    List<String>? medicalConditions,
+    List<String>? allergies,
     int? age,
   }) =>
       (super.noSuchMethod(
@@ -125,6 +129,10 @@ class MockAuthService extends _i1.Mock implements _i2.AuthService {
               #gender: gender,
               #heightCm: heightCm,
               #weightKg: weightKg,
+              #goalHeightCm: goalHeightCm,
+              #health: health,
+              #medicalConditions: medicalConditions,
+              #allergies: allergies,
               #age: age,
             }),
             returnValue: _i3.Future<_i4.User?>.value(),

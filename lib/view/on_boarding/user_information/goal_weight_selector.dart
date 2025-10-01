@@ -8,6 +8,8 @@ import 'package:diet_tracking_project/widget/weight/bmi_card.dart';
 import '../../../database/local_storage_service.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'interface_confirmation.dart';
+import '../../../database/auth_service.dart';
+import '../../../database/local_storage_service.dart';
 
 class GoalWeightSelector extends StatefulWidget {
   final int currentWeightKg;
@@ -31,6 +33,7 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
   late double _goalWeightKg;
   late final TextEditingController _controller;
   final LocalStorageService _local = LocalStorageService();
+  final AuthService _auth = AuthService();
   double? _heightCm;
 
   @override
@@ -227,7 +230,20 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          final uid = _auth.currentUser?.uid;
+                          if (uid != null) {
+                            await _auth.updateUserData(uid, {
+                              'bodyInfo.goalWeightKg': _goalWeightKg,
+                              'bodyInfo.weightKg': widget.currentWeightKg
+                                  .toDouble(),
+                            });
+                          } else {
+                            await _local.saveGuestData(
+                              weightKg: widget.currentWeightKg.toDouble(),
+                              goalWeightKg: _goalWeightKg,
+                            );
+                          }
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => InterfaceConfirmation(

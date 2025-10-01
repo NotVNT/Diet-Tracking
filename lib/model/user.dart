@@ -1,3 +1,5 @@
+import 'body_info_model.dart';
+
 /// User domain model for diet tracking application
 /// Contains user profile information and preferences
 class User {
@@ -8,8 +10,7 @@ class User {
   final DateTime? birthDate;
   final GenderType? gender;
   final int? age;
-  final double? heightCm;
-  final double? weightKg;
+  final BodyInfoModel? bodyInfo;
   final ActivityLevel? activityLevel;
   final List<String>? goals;
   final String? avatarUrl;
@@ -22,8 +23,7 @@ class User {
     this.birthDate,
     this.gender,
     this.age,
-    this.heightCm,
-    this.weightKg,
+    this.bodyInfo,
     this.activityLevel,
     this.goals,
     this.avatarUrl,
@@ -38,8 +38,7 @@ class User {
     DateTime? birthDate,
     GenderType? gender,
     int? age,
-    double? heightCm,
-    double? weightKg,
+    BodyInfoModel? bodyInfo,
     ActivityLevel? activityLevel,
     List<String>? goals,
     String? avatarUrl,
@@ -52,8 +51,7 @@ class User {
       birthDate: birthDate ?? this.birthDate,
       gender: gender ?? this.gender,
       age: age ?? this.age,
-      heightCm: heightCm ?? this.heightCm,
-      weightKg: weightKg ?? this.weightKg,
+      bodyInfo: bodyInfo ?? this.bodyInfo,
       activityLevel: activityLevel ?? this.activityLevel,
       goals: goals ?? this.goals,
       avatarUrl: avatarUrl ?? this.avatarUrl,
@@ -70,8 +68,7 @@ class User {
       'birthDate': birthDate?.millisecondsSinceEpoch,
       'gender': gender?.name,
       'age': age,
-      'heightCm': heightCm,
-      'weightKg': weightKg,
+      'bodyInfo': bodyInfo?.toJson(),
       'activityLevel': activityLevel?.name,
       'goal': goals,
       'avatarUrl': avatarUrl,
@@ -90,10 +87,11 @@ class User {
           : null,
       gender: _tryParseGender(json['gender'] as String?),
       age: json['age'] as int?,
-      heightCm: (json['heightCm'] as num?)?.toDouble(),
-      weightKg: (json['weightKg'] as num?)?.toDouble(),
+      bodyInfo: json['bodyInfo'] != null
+          ? BodyInfoModel.fromJson(json['bodyInfo'] as Map<String, dynamic>)
+          : null,
       activityLevel: _tryParseActivity(json['activityLevel'] as String?),
-      goals: _parseGoals(json['goal']),
+      goals: _parseStringList(json['goal']),
       avatarUrl: json['avatarUrl'] as String?,
     );
   }
@@ -122,7 +120,7 @@ ActivityLevel? _tryParseActivity(String? value) {
   }
 }
 
-List<String>? _parseGoals(dynamic value) {
+List<String>? _parseStringList(dynamic value) {
   if (value == null) return null;
   if (value is List) {
     return value.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();

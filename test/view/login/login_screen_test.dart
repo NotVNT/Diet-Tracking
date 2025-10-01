@@ -8,6 +8,7 @@ import 'package:diet_tracking_project/view/login/login_screen.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
 import 'package:diet_tracking_project/database/guest_sync_service.dart';
 import 'package:diet_tracking_project/model/user.dart' as app_user;
+import 'package:diet_tracking_project/model/body_info_model.dart';
 
 class _AuthMock extends Mock implements AuthService {}
 
@@ -132,8 +133,7 @@ void main() {
         ..profileToReturn = const app_user.User(
           uid: 'uid-2',
           goals: ['loseWeight'],
-          heightCm: 170,
-          weightKg: 60,
+          bodyInfo: BodyInfoModel(heightCm: 170, weightKg: 60),
           age: 25,
           gender: app_user.GenderType.male,
         );

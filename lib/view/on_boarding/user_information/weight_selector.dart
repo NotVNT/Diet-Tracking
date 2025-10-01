@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/goal_weight_selector.dart';
 import '../../../database/local_storage_service.dart';
+import '../../../database/auth_service.dart';
 import 'package:diet_tracking_project/widget/weight/unit_toggle.dart';
 import 'package:diet_tracking_project/widget/weight/weight_display.dart';
 import 'package:diet_tracking_project/widget/weight/weight_ruler.dart';
@@ -27,6 +28,7 @@ class _WeightSelectorState extends State<WeightSelector> {
   static const double _maxWeightKg = 240.0;
 
   final LocalStorageService _local = LocalStorageService();
+  final AuthService _auth = AuthService();
 
   // State
   bool _isKg = true;
@@ -239,7 +241,14 @@ class _WeightSelectorState extends State<WeightSelector> {
                           ),
                         ),
                         onPressed: () async {
-                          await _local.saveGuestData(weightKg: _weightKg);
+                          final uid = _auth.currentUser?.uid;
+                          if (uid != null) {
+                            await _auth.updateUserData(uid, {
+                              'bodyInfo.weightKg': _weightKg,
+                            });
+                          } else {
+                            await _local.saveGuestData(weightKg: _weightKg);
+                          }
                           await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => GoalWeightSelector(

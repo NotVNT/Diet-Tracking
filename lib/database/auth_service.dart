@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/user.dart' as app_user;
+import '../model/body_info_model.dart';
 import 'exceptions.dart';
 import 'local_storage_service.dart';
 
@@ -136,6 +137,10 @@ class AuthService {
     String? gender,
     double? heightCm,
     double? weightKg,
+    double? goalWeightKg,
+    String? health,
+    List<String>? medicalConditions,
+    List<String>? allergies,
     int? age,
   }) async {
     try {
@@ -151,6 +156,14 @@ class AuthService {
         // Cập nhật display name
         await user.updateDisplayName(fullName);
 
+        // Tạo body info object
+        final BodyInfoModel bodyInfo = BodyInfoModel(
+          heightCm: heightCm,
+          weightKg: weightKg,
+          goalWeightKg: goalWeightKg,
+          health: _parseHealth(health),
+        );
+
         // Tạo user object với dữ liệu on_boarding
         final app_user.User userData = app_user.User(
           uid: user.uid,
@@ -160,8 +173,10 @@ class AuthService {
           birthDate: birthDate,
           goals: goals,
           gender: _parseGender(gender),
-          heightCm: heightCm,
-          weightKg: weightKg,
+          bodyInfo: bodyInfo.copyWith(
+            medicalConditions: medicalConditions,
+            allergies: allergies,
+          ),
           age: age,
         );
 
@@ -267,5 +282,15 @@ class AuthService {
         .collection(_usersCollection)
         .doc(uid)
         .set(userData.toJson());
+  }
+
+  /// Parse health status from string
+  HealthStatus? _parseHealth(String? health) {
+    if (health == null) return null;
+    try {
+      return HealthStatus.values.firstWhere((e) => e.name == health);
+    } catch (_) {
+      return HealthStatus.unknown;
+    }
   }
 }

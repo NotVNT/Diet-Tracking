@@ -10,6 +10,8 @@ class HealthCardWidget extends StatelessWidget {
   final Widget trailingButton;
   final IconData emptyIcon;
   final String emptyText;
+  final List<String> items;
+  final void Function(int index)? onRemoveItem;
 
   const HealthCardWidget({
     super.key,
@@ -20,6 +22,8 @@ class HealthCardWidget extends StatelessWidget {
     required this.trailingButton,
     required this.emptyIcon,
     required this.emptyText,
+    this.items = const [],
+    this.onRemoveItem,
   });
 
   @override
@@ -62,27 +66,42 @@ class HealthCardWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: AppColors.grey50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.grey200),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+          if (items.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                color: AppColors.grey50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.grey200),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(emptyIcon, color: AppColors.grey400),
+                  const SizedBox(height: 6),
+                  Text(
+                    emptyText,
+                    style: AppStyles.bodySmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            )
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
-                Icon(emptyIcon, color: AppColors.grey400),
-                const SizedBox(height: 6),
-                Text(
-                  emptyText,
-                  style: AppStyles.bodySmall,
-                  textAlign: TextAlign.center,
-                ),
+                for (int i = 0; i < items.length; i++)
+                  _RemovableChip(
+                    label: items[i],
+                    onRemoved: onRemoveItem == null
+                        ? null
+                        : () => onRemoveItem!(i),
+                  ),
               ],
             ),
-          ),
         ],
       ),
     );
@@ -111,6 +130,22 @@ class _IndexBadge extends StatelessWidget {
           fontSize: 12,
         ),
       ),
+    );
+  }
+}
+
+class _RemovableChip extends StatelessWidget {
+  final String label;
+  final VoidCallback? onRemoved;
+  const _RemovableChip({required this.label, this.onRemoved});
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      label: Text(label, style: AppStyles.bodySmall),
+      onDeleted: onRemoved,
+      deleteIcon: onRemoved == null ? null : const Icon(Icons.close, size: 16),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

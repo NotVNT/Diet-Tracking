@@ -173,6 +173,9 @@ class _SignupScreenState extends State<SignupScreen>
         weightKg: _onboardingData['weightKg'] != null
             ? (_onboardingData['weightKg'] as num).toDouble()
             : null,
+        goalWeightKg: _onboardingData['goalWeightKg'] != null
+            ? (_onboardingData['goalWeightKg'] as num).toDouble()
+            : null,
         age: _onboardingData['age'] as int?,
       );
 

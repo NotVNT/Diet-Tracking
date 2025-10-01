@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../login/signup_screen.dart';
 import '../../../database/local_storage_service.dart';
@@ -207,6 +208,15 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
   /// Xây dựng các nút hành động chính
   Widget _buildActionButtons() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final bool isGoogle =
+        currentUser?.providerData.any((p) => p.providerId == 'google.com') ==
+        true;
+
+    if (isGoogle) {
+      return _buildContinueToHomeButton();
+    }
+
     return Column(
       children: [
         _buildGuestButton(),
@@ -259,6 +269,38 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         onPressed: _navigateToSignup,
         child: Text(
           AppLocalizations.of(context)?.signUpAccount ?? 'Đăng Ký Tài Khoản',
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Nút Tiếp tục dành cho trường hợp đăng nhập bằng Google
+  Widget _buildContinueToHomeButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 64,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _accentColor,
+          elevation: 6,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+        ),
+        onPressed: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeView()),
+            (route) => false,
+          );
+        },
+        child: Text(
+          AppLocalizations.of(context)?.continueButton ?? 'Tiếp tục',
           style: GoogleFonts.inter(
             color: Colors.white,
             fontSize: 16,

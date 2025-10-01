@@ -110,8 +110,8 @@ class _LoginScreenState extends State<LoginScreen>
         final bool needsOnboarding =
             profile == null ||
             (profile.goals == null || profile.goals!.isEmpty) ||
-            profile.heightCm == null ||
-            profile.weightKg == null ||
+            profile.bodyInfo?.heightCm == null ||
+            profile.bodyInfo?.weightKg == null ||
             profile.age == null ||
             profile.gender == null;
 
@@ -194,8 +194,8 @@ class _LoginScreenState extends State<LoginScreen>
         final bool needsOnboarding =
             profile == null ||
             (profile.goals == null || profile.goals!.isEmpty) ||
-            profile.heightCm == null ||
-            profile.weightKg == null ||
+            profile.bodyInfo?.heightCm == null ||
+            profile.bodyInfo?.weightKg == null ||
             profile.age == null ||
             profile.gender == null;
 

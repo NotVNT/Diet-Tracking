@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../database/local_storage_service.dart';
+import '../../../database/auth_service.dart';
 import '../../../common/app_styles.dart';
 import '../../../common/custom_button.dart';
 import '../../../l10n/app_localizations.dart';
@@ -17,6 +19,17 @@ class HealthInfoScreen extends StatefulWidget {
 class _HealthInfoScreenState extends State<HealthInfoScreen> {
   final TextEditingController _diseaseCtrl = TextEditingController();
   final TextEditingController _allergyCtrl = TextEditingController();
+  final List<String> _diseases = <String>[];
+  final List<String> _allergies = <String>[];
+  late final LocalStorageService _local;
+  late final AuthService _auth;
+
+  @override
+  void initState() {
+    super.initState();
+    _local = LocalStorageService();
+    _auth = AuthService();
+  }
 
   @override
   void dispose() {
@@ -62,10 +75,23 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                   controller: _diseaseCtrl,
                   hintText: 'Ví dụ: Tiểu đường, Cao huyết áp, Hen suyễn,...',
                 ),
-                trailingButton: AddButton(onPressed: () {}),
+                trailingButton: AddButton(
+                  onPressed: () {
+                    final text = _diseaseCtrl.text.trim();
+                    if (text.isEmpty) return;
+                    setState(() {
+                      if (!_diseases.contains(text)) {
+                        _diseases.add(text);
+                      }
+                      _diseaseCtrl.clear();
+                    });
+                  },
+                ),
                 emptyIcon: Icons.favorite_border,
                 emptyText:
                     'Chưa có bệnh lý nào được thêm. Nếu không có, bạn có thể bỏ qua phần này.',
+                items: _diseases,
+                onRemoveItem: (i) => setState(() => _diseases.removeAt(i)),
               ),
               const SizedBox(height: 14),
 
@@ -79,10 +105,23 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                   controller: _allergyCtrl,
                   hintText: 'Ví dụ: Hải sản, Đậu phộng, Sữa, Trứng...',
                 ),
-                trailingButton: AddButton(onPressed: () {}),
+                trailingButton: AddButton(
+                  onPressed: () {
+                    final text = _allergyCtrl.text.trim();
+                    if (text.isEmpty) return;
+                    setState(() {
+                      if (!_allergies.contains(text)) {
+                        _allergies.add(text);
+                      }
+                      _allergyCtrl.clear();
+                    });
+                  },
+                ),
                 emptyIcon: Icons.info_outline,
                 emptyText:
                     'Chưa có dị ứng thực phẩm nào được thêm. Nếu không có, bạn có thể bỏ qua phần này.',
+                items: _allergies,
+                onRemoveItem: (i) => setState(() => _allergies.removeAt(i)),
               ),
 
               const SizedBox(height: 16),
@@ -119,7 +158,32 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                     child: CustomButton(
                       text: AppLocalizations.of(context)?.next ?? 'Tiếp tục',
                       backgroundColor: const Color(0xFF1F2A37),
-                      onPressed: () {
+                      onPressed: () async {
+                        final uid = _auth.currentUser?.uid;
+                        final bool hasAny =
+                            _diseases.isNotEmpty || _allergies.isNotEmpty;
+
+                        if (uid != null) {
+                          if (hasAny) {
+                            await _auth.updateUserData(uid, {
+                              if (_diseases.isNotEmpty)
+                                'bodyInfo.medicalConditions': _diseases,
+                              if (_allergies.isNotEmpty)
+                                'bodyInfo.allergies': _allergies,
+                            });
+                          }
+                        } else {
+                          if (hasAny) {
+                            await _local.saveGuestData(
+                              medicalConditions: _diseases.isEmpty
+                                  ? null
+                                  : _diseases,
+                              allergies: _allergies.isEmpty ? null : _allergies,
+                            );
+                          }
+                        }
+
+                        if (!mounted) return;
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => const HeightSelector(),
