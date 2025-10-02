@@ -66,8 +66,7 @@ class GoogleAuthService {
       final String? email = userInfoOverride?['email'] ?? firebaseUser?.email;
       final String? displayName =
           userInfoOverride?['displayName'] ?? firebaseUser?.displayName;
-      final String? photoURL =
-          userInfoOverride?['photoURL'] ?? firebaseUser?.photoURL;
+      // Avatar URL is ignored; not persisted
 
       if (uid != null) {
         // Tạo/Lưu document người dùng nếu có uid
@@ -75,7 +74,6 @@ class GoogleAuthService {
           uid: uid,
           email: email,
           fullName: displayName,
-          avatarUrl: photoURL,
         );
       }
 
@@ -125,26 +123,12 @@ class GoogleAuthService {
 
   // Helpers
 
-  Future<void> _ensureUserDocument(fb_auth.User user) async {
-    final docRef = _firestore.collection(_usersCollection).doc(user.uid);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) return;
-
-    final app_user.User userData = app_user.User(
-      uid: user.uid,
-      email: user.email,
-      fullName: user.displayName,
-      avatarUrl: user.photoURL,
-    );
-
-    await docRef.set(userData.toJson());
-  }
+  // Removed unused helper that persisted avatar
 
   Future<void> _ensureUserDocumentWithFields({
     required String uid,
     String? email,
     String? fullName,
-    String? avatarUrl,
   }) async {
     final docRef = _firestore.collection(_usersCollection).doc(uid);
     final snapshot = await docRef.get();
@@ -154,7 +138,6 @@ class GoogleAuthService {
       uid: uid,
       email: email,
       fullName: fullName,
-      avatarUrl: avatarUrl,
     );
     await docRef.set(userData.toJson());
   }

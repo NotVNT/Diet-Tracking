@@ -13,27 +13,14 @@ class GuestSyncService {
     final data = await _local.readGuestData();
     final Map<String, dynamic> update = {};
 
-    if (data['goal'] != null && (data['goal'] as String).isNotEmpty) {
-      // goal lưu tạm dạng chuỗi, chuyển thành List<String> khi đẩy lên Firestore
-      final parts = (data['goal'] as String)
-          .split(',')
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty)
-          .toList();
-      update['goal'] = parts.isEmpty ? null : parts;
-    }
-
     // Tạo BodyInfoModel từ dữ liệu guest
     final bodyInfo = BodyInfoModel(
       heightCm: data['heightCm'] as double?,
       weightKg: data['weightKg'] as double?,
-      health: _parseHealth(data['health'] as String?),
     );
 
     // Chỉ thêm bodyInfo nếu có ít nhất một thuộc tính không null
-    if (bodyInfo.heightCm != null ||
-        bodyInfo.weightKg != null ||
-        bodyInfo.health != null) {
+    if (bodyInfo.heightCm != null || bodyInfo.weightKg != null) {
       update['bodyInfo'] = bodyInfo.toJson();
     }
 
@@ -80,15 +67,5 @@ class GuestSyncService {
 
     await _auth.updateUserData(uid, update);
     await _local.clearGuestData();
-  }
-
-  /// Parse health status from string
-  HealthStatus? _parseHealth(String? health) {
-    if (health == null) return null;
-    try {
-      return HealthStatus.values.firstWhere((e) => e.name == health);
-    } catch (_) {
-      return HealthStatus.unknown;
-    }
   }
 }

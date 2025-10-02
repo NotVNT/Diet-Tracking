@@ -61,7 +61,6 @@ void main() {
       expect(doc.exists, isTrue);
       expect(doc.data()!['email'], 'u1@example.com');
       expect(doc.data()!['fullName'], 'User One');
-      expect(doc.data()!['avatarUrl'], 'https://example.com/a.png');
     });
 
     test('signInWithGoogle trả về null khi user = null', () async {

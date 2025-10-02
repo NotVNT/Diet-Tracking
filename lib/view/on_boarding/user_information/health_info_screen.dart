@@ -30,6 +30,17 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
   late final LocalStorageService _local;
   AuthService? _auth;
 
+  // Chuẩn hóa danh sách: trim, loại bỏ rỗng, bỏ trùng; trả về null nếu trống
+  List<String>? _sanitize(List<String>? values) {
+    if (values == null) return null;
+    final cleaned = values
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toSet()
+        .toList();
+    return cleaned.isEmpty ? null : cleaned;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -171,20 +182,20 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
 
                         if (uid != null) {
                           if (hasAny) {
+                            final sanitizedDiseases = _sanitize(_diseases);
+                            final sanitizedAllergies = _sanitize(_allergies);
                             await _auth!.updateUserData(uid, {
-                              if (_diseases.isNotEmpty)
-                                'bodyInfo.medicalConditions': _diseases,
-                              if (_allergies.isNotEmpty)
-                                'bodyInfo.allergies': _allergies,
+                              if (sanitizedDiseases != null)
+                                'bodyInfo.medicalConditions': sanitizedDiseases,
+                              if (sanitizedAllergies != null)
+                                'bodyInfo.allergies': sanitizedAllergies,
                             });
                           }
                         } else {
                           if (hasAny) {
                             await _local.saveGuestData(
-                              medicalConditions: _diseases.isEmpty
-                                  ? null
-                                  : _diseases,
-                              allergies: _allergies.isEmpty ? null : _allergies,
+                              medicalConditions: _sanitize(_diseases),
+                              allergies: _sanitize(_allergies),
                             );
                           }
                         }

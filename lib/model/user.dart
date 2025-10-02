@@ -7,26 +7,19 @@ class User {
   final String? email;
   final String? fullName;
   final String? phone;
-  final DateTime? birthDate;
   final GenderType? gender;
   final int? age;
   final BodyInfoModel? bodyInfo;
-  final ActivityLevel? activityLevel;
-  final List<String>? goals;
-  final String? avatarUrl;
+  // Removed avatarUrl from Firestore persistence
 
   const User({
     this.uid,
     this.email,
     this.fullName,
     this.phone,
-    this.birthDate,
     this.gender,
     this.age,
     this.bodyInfo,
-    this.activityLevel,
-    this.goals,
-    this.avatarUrl,
   });
 
   /// Creates a copy of this user with updated fields
@@ -35,26 +28,18 @@ class User {
     String? email,
     String? fullName,
     String? phone,
-    DateTime? birthDate,
     GenderType? gender,
     int? age,
     BodyInfoModel? bodyInfo,
-    ActivityLevel? activityLevel,
-    List<String>? goals,
-    String? avatarUrl,
   }) {
     return User(
       uid: uid ?? this.uid,
       email: email ?? this.email,
       fullName: fullName ?? this.fullName,
       phone: phone ?? this.phone,
-      birthDate: birthDate ?? this.birthDate,
       gender: gender ?? this.gender,
       age: age ?? this.age,
       bodyInfo: bodyInfo ?? this.bodyInfo,
-      activityLevel: activityLevel ?? this.activityLevel,
-      goals: goals ?? this.goals,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 
@@ -65,13 +50,9 @@ class User {
       'email': email,
       'fullName': fullName,
       'phone': phone,
-      'birthDate': birthDate?.millisecondsSinceEpoch,
       'gender': gender?.name,
       'age': age,
       'bodyInfo': bodyInfo?.toJson(),
-      'activityLevel': activityLevel?.name,
-      'goal': goals,
-      'avatarUrl': avatarUrl,
     };
   }
 
@@ -82,17 +63,11 @@ class User {
       email: json['email'] as String?,
       fullName: json['fullName'] as String?,
       phone: json['phone'] as String?,
-      birthDate: json['birthDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(json['birthDate'] as int)
-          : null,
       gender: _tryParseGender(json['gender'] as String?),
       age: json['age'] as int?,
       bodyInfo: json['bodyInfo'] != null
           ? BodyInfoModel.fromJson(json['bodyInfo'] as Map<String, dynamic>)
           : null,
-      activityLevel: _tryParseActivity(json['activityLevel'] as String?),
-      goals: _parseStringList(json['goal']),
-      avatarUrl: json['avatarUrl'] as String?,
     );
   }
 }
@@ -111,29 +86,6 @@ GenderType? _tryParseGender(String? value) {
   );
 }
 
-ActivityLevel? _tryParseActivity(String? value) {
-  if (value == null) return null;
-  try {
-    return ActivityLevel.values.firstWhere((e) => e.name == value);
-  } catch (_) {
-    return null;
-  }
-}
+// Removed parsing activity level since it's no longer stored
 
-List<String>? _parseStringList(dynamic value) {
-  if (value == null) return null;
-  if (value is List) {
-    return value.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();
-  }
-  if (value is String) {
-    final parts = value
-        .split(',')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
-    return parts.isEmpty ? null : parts;
-  }
-  // Fallback: store single toString
-  final s = value.toString();
-  return s.isEmpty ? null : [s];
-}
+// Removed parseStringList helper for goals (no longer stored)

@@ -51,8 +51,10 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
-    _authService = widget.authService; // tránh khởi tạo thật trong test
-    _guestSync = widget.guestSyncService; // tránh khởi tạo thật trong test
+    // Tránh khởi tạo dịch vụ phụ thuộc Firebase trong initState để không
+    // ép Firebase.initializeApp() khi chạy test widget
+    _authService = widget.authService;
+    _guestSync = widget.guestSyncService;
     // Không khởi tạo GoogleAuthService mặc định trong test để tránh Firebase init
     _googleAuthService = widget.googleAuthService;
     _animationController = AnimationController(
@@ -96,6 +98,10 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       _showLoadingDialog();
 
+      // Khởi tạo lười để chỉ tạo khi thực sự cần đăng nhập
+      _authService ??= widget.authService ?? AuthService();
+      _guestSync ??= widget.guestSyncService ?? GuestSyncService();
+
       final user = await _authService!.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
@@ -120,11 +126,10 @@ class _LoginScreenState extends State<LoginScreen>
         );
         final bool needsOnboarding =
             profile == null ||
-            (profile.goals == null || profile.goals!.isEmpty) ||
             profile.bodyInfo?.heightCm == null ||
             profile.bodyInfo?.weightKg == null ||
-            profile.age == null ||
-            profile.gender == null;
+            profile.gender == null ||
+            profile.age == null;
 
         if (needsOnboarding) {
           Navigator.pushReplacement(
@@ -188,6 +193,9 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       _showLoadingDialog();
       _googleAuthService ??= GoogleAuthService();
+      // Cần _authService để lấy user profile sau khi đăng nhập Google
+      _authService ??= widget.authService ?? AuthService();
+      _guestSync ??= widget.guestSyncService ?? GuestSyncService();
       final user = await _googleAuthService!.signInWithGoogle();
 
       _hideLoadingDialog();
@@ -206,11 +214,10 @@ class _LoginScreenState extends State<LoginScreen>
         );
         final bool needsOnboarding =
             profile == null ||
-            (profile.goals == null || profile.goals!.isEmpty) ||
             profile.bodyInfo?.heightCm == null ||
             profile.bodyInfo?.weightKg == null ||
-            profile.age == null ||
-            profile.gender == null;
+            profile.gender == null ||
+            profile.age == null;
 
         if (needsOnboarding) {
           if (!mounted) return;

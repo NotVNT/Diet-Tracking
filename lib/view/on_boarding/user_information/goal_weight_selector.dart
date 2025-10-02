@@ -9,7 +9,6 @@ import '../../../database/local_storage_service.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'interface_confirmation.dart';
 import '../../../database/auth_service.dart';
-import '../../../database/local_storage_service.dart';
 
 class GoalWeightSelector extends StatefulWidget {
   final int currentWeightKg;

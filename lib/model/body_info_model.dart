@@ -42,7 +42,6 @@ class BodyInfoModel {
       'heightCm': heightCm,
       'weightKg': weightKg,
       'goalWeightKg': goalWeightKg,
-      'health': health?.name,
       'medicalConditions': medicalConditions,
       'allergies': allergies,
     };

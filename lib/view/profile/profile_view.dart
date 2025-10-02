@@ -75,13 +75,9 @@ class _ProfileViewState extends State<ProfileView> {
       final String path = 'avatars/${current.uid}.jpg';
       final Reference ref = _storage.ref().child(path);
       await ref.putFile(File(picked.path));
-      final String url = await ref.getDownloadURL();
-
-      await _authService.updateUserData(current.uid, {'avatarUrl': url});
-
-      setState(() {
-        _appUser = (_appUser ?? const app_user.User()).copyWith(avatarUrl: url);
-      });
+      await ref.getDownloadURL();
+      // Avatar is no longer persisted to Firestore; you can store locally if needed
+      setState(() {});
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -100,7 +96,7 @@ class _ProfileViewState extends State<ProfileView> {
     final String displayName =
         _appUser?.fullName ?? fbUser?.displayName ?? 'Người dùng';
     final String email = _appUser?.email ?? fbUser?.email ?? '';
-    final String? avatarUrl = _appUser?.avatarUrl;
+    // no persisted avatar URL
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
@@ -120,9 +116,7 @@ class _ProfileViewState extends State<ProfileView> {
                 CircleAvatar(
                   radius: 54,
                   backgroundColor: Colors.white,
-                  backgroundImage: avatarUrl != null
-                      ? NetworkImage(avatarUrl)
-                      : AssetImage(_defaultAvatarAsset()) as ImageProvider,
+                  backgroundImage: AssetImage(_defaultAvatarAsset()),
                 ),
                 Positioned(
                   bottom: 4,

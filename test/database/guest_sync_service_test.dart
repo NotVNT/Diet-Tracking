@@ -18,16 +18,13 @@ class _GuestSyncServiceForTest {
     final data = await local.readGuestData();
     final Map<String, dynamic> update = {};
 
-    if (data['goal'] != null && (data['goal'] as String).isNotEmpty) {
-      final parts = (data['goal'] as String)
-          .split(',')
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty)
-          .toList();
-      update['goal'] = parts.isEmpty ? null : parts;
+    // Phù hợp với GuestSyncService hiện tại: gói height/weight vào bodyInfo
+    final Map<String, dynamic> bodyInfo = {};
+    if (data['heightCm'] != null) bodyInfo['heightCm'] = data['heightCm'];
+    if (data['weightKg'] != null) bodyInfo['weightKg'] = data['weightKg'];
+    if (bodyInfo.isNotEmpty) {
+      update['bodyInfo'] = bodyInfo;
     }
-    if (data['heightCm'] != null) update['heightCm'] = data['heightCm'];
-    if (data['weightKg'] != null) update['weightKg'] = data['weightKg'];
     if (data['age'] != null) update['age'] = data['age'];
     if (data['gender'] != null && (data['gender'] as String).isNotEmpty) {
       update['gender'] = data['gender'];
@@ -91,9 +88,7 @@ void main() {
 
       expect(auth.lastUid, 'uid-1');
       expect(auth.lastData, {
-        'goal': ['lose', 'gain'],
-        'heightCm': 170.0,
-        'weightKg': 65.0,
+        'bodyInfo': {'heightCm': 170.0, 'weightKg': 65.0},
         'age': 25,
         'gender': 'male',
       });

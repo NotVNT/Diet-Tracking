@@ -158,14 +158,6 @@ class _SignupScreenState extends State<SignupScreen>
         password: _passwordController.text,
         fullName: _fullNameController.text.trim(),
         phone: _phoneController.text.trim(),
-        goals: _onboardingData['goal'] != null
-            ? (_onboardingData['goal'] is String
-                  ? (_onboardingData['goal'] as String)
-                        .split(', ')
-                        .where((e) => e.toString().isNotEmpty)
-                        .toList()
-                  : List<String>.from(_onboardingData['goal']))
-            : null,
         gender: _onboardingData['gender'] as String?,
         heightCm: _onboardingData['heightCm'] != null
             ? (_onboardingData['heightCm'] as num).toDouble()
@@ -176,7 +168,6 @@ class _SignupScreenState extends State<SignupScreen>
         goalWeightKg: _onboardingData['goalWeightKg'] != null
             ? (_onboardingData['goalWeightKg'] as num).toDouble()
             : null,
-        age: _onboardingData['age'] as int?,
       );
 
       if (user != null) {

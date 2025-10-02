@@ -132,7 +132,6 @@ void main() {
         ..userToReturn = MockUser(uid: 'uid-2')
         ..profileToReturn = const app_user.User(
           uid: 'uid-2',
-          goals: ['loseWeight'],
           bodyInfo: BodyInfoModel(heightCm: 170, weightKg: 60),
           age: 25,
           gender: app_user.GenderType.male,

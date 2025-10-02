@@ -13,25 +13,25 @@ void main() {
     test('saveGuestData và readGuestData hoạt động đúng', () async {
       final svc = LocalStorageService();
       await svc.saveGuestData(
-        goal: 'loseWeight',
         heightCm: 172.5,
         weightKg: 68.2,
         age: 26,
         gender: 'male',
+        language: 'en',
       );
 
       final data = await svc.readGuestData();
-      expect(data['goal'], 'loseWeight');
       expect(data['heightCm'], 172.5);
       expect(data['weightKg'], 68.2);
       expect(data['age'], 26);
       expect(data['gender'], 'male');
+      expect(data['language'], 'en');
     });
 
     test('hasGuestData trả về true khi có ít nhất một trường', () async {
       final svc = LocalStorageService();
       expect(await svc.hasGuestData(), false);
-      await svc.saveGuestData(goal: 'maintain');
+      await svc.saveGuestData(age: 21);
       expect(await svc.hasGuestData(), true);
     });
 

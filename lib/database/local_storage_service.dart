@@ -4,12 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Lưu trữ thông tin onboarding trước khi đăng ký tài khoản chính thức
 class LocalStorageService {
   // Private keys cho SharedPreferences
+  // Kept for backward-compatible clearing; not used for writes
   static const String _keyGoal = 'guest_goal';
   static const String _keyHeight = 'guest_height_cm';
   static const String _keyWeight = 'guest_weight_kg';
   static const String _keyGoalWeight = 'guest_goal_weight_kg';
-  static const String _keyGoalHeight = 'guest_goal_height_cm';
-  static const String _keyHealth = 'guest_health';
+  // Removed: goal height and health keys are no longer used or referenced
   static const String _keyAge = 'guest_age';
   static const String _keyGender = 'guest_gender';
   static const String _keyLanguage = 'selected_language';
@@ -38,14 +38,12 @@ class LocalStorageService {
     final prefs = await _prefs;
 
     // Lưu từng trường nếu có giá trị
-    if (goal != null) await prefs.setString(_keyGoal, goal);
+    // Do not store goal to local storage anymore
     if (heightCm != null) await prefs.setDouble(_keyHeight, heightCm);
     if (weightKg != null) await prefs.setDouble(_keyWeight, weightKg);
     if (goalWeightKg != null)
       await prefs.setDouble(_keyGoalWeight, goalWeightKg);
-    if (goalHeightCm != null)
-      await prefs.setDouble(_keyGoalHeight, goalHeightCm);
-    if (health != null) await prefs.setString(_keyHealth, health);
+    // Do not store goalHeightCm and health anymore
     if (medicalConditions != null && medicalConditions.isNotEmpty) {
       await prefs.setStringList(_keyMedical, medicalConditions);
     }
@@ -62,12 +60,11 @@ class LocalStorageService {
   Future<Map<String, dynamic>> readGuestData() async {
     final prefs = await _prefs;
     return {
-      'goal': prefs.getString(_keyGoal),
+      // 'goal' no longer stored
       'heightCm': prefs.getDouble(_keyHeight),
       'weightKg': prefs.getDouble(_keyWeight),
       'goalWeightKg': prefs.getDouble(_keyGoalWeight),
-      'goalHeightCm': prefs.getDouble(_keyGoalHeight),
-      'health': prefs.getString(_keyHealth),
+      // 'goalHeightCm' and 'health' no longer stored
       'medicalConditions': prefs.getStringList(_keyMedical),
       'allergies': prefs.getStringList(_keyAllergies),
       'age': prefs.getInt(_keyAge),
@@ -80,12 +77,10 @@ class LocalStorageService {
   /// Trả về true nếu có ít nhất một trường dữ liệu
   Future<bool> hasGuestData() async {
     final prefs = await _prefs;
-    return prefs.containsKey(_keyGoal) ||
-        prefs.containsKey(_keyHeight) ||
+    return prefs.containsKey(_keyHeight) ||
         prefs.containsKey(_keyWeight) ||
         prefs.containsKey(_keyGoalWeight) ||
-        prefs.containsKey(_keyGoalHeight) ||
-        prefs.containsKey(_keyHealth) ||
+        // no longer checks for goalHeight and health
         prefs.containsKey(_keyMedical) ||
         prefs.containsKey(_keyAllergies) ||
         prefs.containsKey(_keyAge) ||
@@ -103,8 +98,7 @@ class LocalStorageService {
     await prefs.remove(_keyHeight);
     await prefs.remove(_keyWeight);
     await prefs.remove(_keyGoalWeight);
-    await prefs.remove(_keyGoalHeight);
-    await prefs.remove(_keyHealth);
+    // No longer storing goalHeight and health
     await prefs.remove(_keyMedical);
     await prefs.remove(_keyAllergies);
     await prefs.remove(_keyAge);

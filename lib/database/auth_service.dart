@@ -32,7 +32,6 @@ class AuthService {
     required String password,
     required String fullName,
     required String phone,
-    DateTime? birthDate,
   }) async {
     try {
       // Tạo user trong Firebase Auth
@@ -53,7 +52,6 @@ class AuthService {
           email: email,
           fullName: fullName,
           phone: phone,
-          birthDate: birthDate,
         );
 
         // Lưu thông tin user vào Firestore
@@ -132,13 +130,10 @@ class AuthService {
     required String password,
     required String fullName,
     required String phone,
-    DateTime? birthDate,
-    List<String>? goals,
     String? gender,
     double? heightCm,
     double? weightKg,
     double? goalWeightKg,
-    String? health,
     List<String>? medicalConditions,
     List<String>? allergies,
     int? age,
@@ -161,7 +156,6 @@ class AuthService {
           heightCm: heightCm,
           weightKg: weightKg,
           goalWeightKg: goalWeightKg,
-          health: _parseHealth(health),
         );
 
         // Tạo user object với dữ liệu on_boarding
@@ -170,8 +164,6 @@ class AuthService {
           email: email,
           fullName: fullName,
           phone: phone,
-          birthDate: birthDate,
-          goals: goals,
           gender: _parseGender(gender),
           bodyInfo: bodyInfo.copyWith(
             medicalConditions: medicalConditions,
@@ -284,13 +276,5 @@ class AuthService {
         .set(userData.toJson());
   }
 
-  /// Parse health status from string
-  HealthStatus? _parseHealth(String? health) {
-    if (health == null) return null;
-    try {
-      return HealthStatus.values.firstWhere((e) => e.name == health);
-    } catch (_) {
-      return HealthStatus.unknown;
-    }
-  }
+  // Removed parsing health since we no longer store health in Firestore
 }

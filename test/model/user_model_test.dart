@@ -4,19 +4,15 @@ import 'package:diet_tracking_project/model/body_info_model.dart';
 
 void main() {
   group('User model', () {
-    test('toJson và fromJson giữ nguyên dữ liệu', () {
+    test('toJson và fromJson giữ nguyên dữ liệu (các trường đang hỗ trợ)', () {
       final user = User(
         uid: 'u1',
         email: 'a@a.com',
         fullName: 'A',
         phone: '0123',
-        birthDate: DateTime(2000, 1, 2),
         gender: GenderType.male,
         age: 24,
-        bodyInfo: BodyInfoModel(heightCm: 170.5, weightKg: 65.2),
-        activityLevel: ActivityLevel.moderate,
-        goals: ['loseWeight', 'gainMuscle'],
-        avatarUrl: 'http://x/y.png',
+        bodyInfo: const BodyInfoModel(heightCm: 170.5, weightKg: 65.2),
       );
       final json = user.toJson();
       final parsed = User.fromJson(json);
@@ -25,28 +21,20 @@ void main() {
       expect(parsed.email, 'a@a.com');
       expect(parsed.fullName, 'A');
       expect(parsed.phone, '0123');
-      expect(parsed.birthDate, user.birthDate);
       expect(parsed.gender, GenderType.male);
       expect(parsed.age, 24);
       expect(parsed.bodyInfo?.heightCm, 170.5);
       expect(parsed.bodyInfo?.weightKg, 65.2);
-      expect(parsed.activityLevel, ActivityLevel.moderate);
-      expect(parsed.goals, ['loseWeight', 'gainMuscle']);
-      expect(parsed.avatarUrl, 'http://x/y.png');
     });
 
-    test('fromJson parse chuỗi goals và null-safe', () {
+    test('fromJson null-safe và parse gender/bodyInfo hợp lệ', () {
       final parsed = User.fromJson({
         'uid': 'u2',
-        'goal': 'a, b , c',
         'gender': 'female',
-        'activityLevel': 'active',
         'bodyInfo': {'heightCm': 160, 'weightKg': 50},
       });
       expect(parsed.uid, 'u2');
-      expect(parsed.goals, ['a', 'b', 'c']);
       expect(parsed.gender, GenderType.female);
-      expect(parsed.activityLevel, ActivityLevel.active);
       expect(parsed.bodyInfo?.heightCm, 160.0);
       expect(parsed.bodyInfo?.weightKg, 50.0);
     });
@@ -55,7 +43,7 @@ void main() {
       final user = User(uid: 'u1', fullName: 'A');
       final updated = user.copyWith(
         fullName: 'B',
-        bodyInfo: BodyInfoModel(heightCm: 180),
+        bodyInfo: const BodyInfoModel(heightCm: 180),
       );
       expect(updated.uid, 'u1');
       expect(updated.fullName, 'B');
