@@ -59,6 +59,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   /// Chuyển đến màn hình đăng ký với dữ liệu onboarding đã có
   Future<void> _navigateToSignup() async {
     final guestData = await _localStorage.readGuestData();
+    print('🔍 Interface confirmation: Guest data = $guestData');
 
     if (!mounted) return;
 

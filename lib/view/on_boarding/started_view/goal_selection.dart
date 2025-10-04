@@ -165,7 +165,12 @@ class _GoalSelectionState extends State<GoalSelection> {
                               )
                               .toList(growable: false);
 
-                          // Nếu đã đăng nhập: lưu trực tiếp danh sách mục tiêu; ngược lại: lưu tạm trên máy
+                          // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
+                          final goalString = selectedTitles.join(', ');
+                          print('🔍 Saving goal to localStorage: $goalString');
+                          await _local.saveGuestData(goal: goalString);
+
+                          // Nếu đã đăng nhập: cũng lưu trực tiếp vào Firestore
                           final uid = _auth.currentUser?.uid;
                           if (uid != null) {
                             try {
@@ -173,10 +178,6 @@ class _GoalSelectionState extends State<GoalSelection> {
                                 'goal': selectedTitles,
                               });
                             } catch (_) {}
-                          } else {
-                            await _local.saveGuestData(
-                              goal: selectedTitles.join(', '),
-                            );
                           }
 
                           Navigator.of(context).push(

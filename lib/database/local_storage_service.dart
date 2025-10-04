@@ -38,7 +38,10 @@ class LocalStorageService {
     final prefs = await _prefs;
 
     // Lưu từng trường nếu có giá trị
-    // Do not store goal to local storage anymore
+    if (goal != null) {
+      print('🔍 LocalStorageService: Saving goal = $goal');
+      await prefs.setString(_keyGoal, goal);
+    }
     if (heightCm != null) await prefs.setDouble(_keyHeight, heightCm);
     if (weightKg != null) await prefs.setDouble(_keyWeight, weightKg);
     if (goalWeightKg != null)
@@ -59,8 +62,10 @@ class LocalStorageService {
   /// Trả về Map với các key tương ứng với từng trường dữ liệu
   Future<Map<String, dynamic>> readGuestData() async {
     final prefs = await _prefs;
+    final goal = prefs.getString(_keyGoal);
+    print('🔍 LocalStorageService: Reading goal = $goal');
     return {
-      // 'goal' no longer stored
+      'goal': goal,
       'heightCm': prefs.getDouble(_keyHeight),
       'weightKg': prefs.getDouble(_keyWeight),
       'goalWeightKg': prefs.getDouble(_keyGoalWeight),
@@ -77,7 +82,8 @@ class LocalStorageService {
   /// Trả về true nếu có ít nhất một trường dữ liệu
   Future<bool> hasGuestData() async {
     final prefs = await _prefs;
-    return prefs.containsKey(_keyHeight) ||
+    return prefs.containsKey(_keyGoal) ||
+        prefs.containsKey(_keyHeight) ||
         prefs.containsKey(_keyWeight) ||
         prefs.containsKey(_keyGoalWeight) ||
         // no longer checks for goalHeight and health

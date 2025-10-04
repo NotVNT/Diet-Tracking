@@ -137,6 +137,7 @@ class AuthService {
     List<String>? medicalConditions,
     List<String>? allergies,
     int? age,
+    String? goal,
   }) async {
     try {
       // Tạo user trong Firebase Auth
@@ -170,6 +171,7 @@ class AuthService {
             allergies: allergies,
           ),
           age: age,
+          goal: goal,
         );
 
         // Lưu thông tin user vào Firestore

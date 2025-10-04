@@ -10,6 +10,7 @@ class User {
   final GenderType? gender;
   final int? age;
   final BodyInfoModel? bodyInfo;
+  final String? goal;
   // Removed avatarUrl from Firestore persistence
 
   const User({
@@ -20,6 +21,7 @@ class User {
     this.gender,
     this.age,
     this.bodyInfo,
+    this.goal,
   });
 
   /// Creates a copy of this user with updated fields
@@ -31,6 +33,7 @@ class User {
     GenderType? gender,
     int? age,
     BodyInfoModel? bodyInfo,
+    String? goal,
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -40,6 +43,7 @@ class User {
       gender: gender ?? this.gender,
       age: age ?? this.age,
       bodyInfo: bodyInfo ?? this.bodyInfo,
+      goal: goal ?? this.goal,
     );
   }
 
@@ -53,6 +57,7 @@ class User {
       'gender': gender?.name,
       'age': age,
       'bodyInfo': bodyInfo?.toJson(),
+      'goal': goal,
     };
   }
 
@@ -68,6 +73,7 @@ class User {
       bodyInfo: json['bodyInfo'] != null
           ? BodyInfoModel.fromJson(json['bodyInfo'] as Map<String, dynamic>)
           : null,
+      goal: json['goal'] as String?,
     );
   }
 }
@@ -75,8 +81,6 @@ class User {
 enum GenderType { male, female, other }
 
 enum ActivityLevel { sedentary, light, moderate, active, veryActive }
-
-enum GoalType { loseWeight, maintain, gainWeight }
 
 GenderType? _tryParseGender(String? value) {
   if (value == null) return null;
