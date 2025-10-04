@@ -132,14 +132,19 @@ class GoogleAuthService {
   }) async {
     final docRef = _firestore.collection(_usersCollection).doc(uid);
     final snapshot = await docRef.get();
-    if (snapshot.exists) return;
+    if (snapshot.exists) {
+      print('🔍 GoogleAuthService: User document already exists');
+      return;
+    }
 
+    print('🔍 GoogleAuthService: Creating new user document for uid: $uid');
     final app_user.User userData = app_user.User(
       uid: uid,
       email: email,
       fullName: fullName,
     );
     await docRef.set(userData.toJson());
+    print('🔍 GoogleAuthService: User document created successfully');
   }
 
   String _mapAuthError(fb_auth.FirebaseAuthException e) {

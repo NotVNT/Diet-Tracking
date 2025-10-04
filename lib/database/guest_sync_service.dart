@@ -8,9 +8,13 @@ class GuestSyncService {
 
   Future<void> syncGuestToUser(String uid) async {
     final hasData = await _local.hasGuestData();
-    if (!hasData) return;
+    if (!hasData) {
+      print('🔍 GuestSyncService: No guest data found');
+      return;
+    }
 
     final data = await _local.readGuestData();
+    print('🔍 GuestSyncService: Syncing guest data = $data');
     final Map<String, dynamic> update = {};
 
     // Tạo BodyInfoModel từ dữ liệu guest
@@ -29,6 +33,9 @@ class GuestSyncService {
     }
     if (data['gender'] != null && (data['gender'] as String).isNotEmpty) {
       update['gender'] = data['gender'];
+    }
+    if (data['goal'] != null && (data['goal'] as String).isNotEmpty) {
+      update['goal'] = data['goal'];
     }
 
     // Đồng bộ bệnh lý và dị ứng nếu có
@@ -61,10 +68,12 @@ class GuestSyncService {
     }
 
     if (update.isEmpty) {
+      print('🔍 GuestSyncService: No data to sync');
       await _local.clearGuestData();
       return;
     }
 
+    print('🔍 GuestSyncService: Updating user with data = $update');
     await _auth.updateUserData(uid, update);
     await _local.clearGuestData();
   }

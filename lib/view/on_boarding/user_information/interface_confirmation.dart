@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../login/signup_screen.dart';
 import '../../../database/local_storage_service.dart';
+import '../../../database/auth_service.dart';
 import '../../home/home_view.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -25,6 +26,7 @@ class InterfaceConfirmation extends StatefulWidget {
 class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   // Dependencies
   final LocalStorageService _localStorage = LocalStorageService();
+  final AuthService _authService = AuthService();
 
   // UI Colors
   Color get _backgroundColor => const Color(0xFFFDF0D7);
@@ -298,12 +300,38 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
             borderRadius: BorderRadius.circular(18),
           ),
         ),
-        onPressed: () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeView()),
-            (route) => false,
+        onPressed: () async {
+          // Hiển thị loading dialog
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) =>
+                const Center(child: CircularProgressIndicator()),
           );
+
+          try {
+            // Lưu thông tin từ localStorage lên Firestore trước khi chuyển trang
+            await _saveOnboardingDataToFirestore();
+
+            if (!mounted) return;
+            Navigator.of(context).pop(); // Đóng loading dialog
+
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeView()),
+              (route) => false,
+            );
+          } catch (e) {
+            if (!mounted) return;
+            Navigator.of(context).pop(); // Đóng loading dialog
+            print('🔍 InterfaceConfirmation: Error in continue button: $e');
+            // Vẫn chuyển trang ngay cả khi có lỗi
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeView()),
+              (route) => false,
+            );
+          }
         },
         child: Text(
           AppLocalizations.of(context)?.continueButton ?? 'Tiếp tục',
@@ -345,5 +373,67 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         ),
       ),
     );
+  }
+
+  /// Lưu thông tin onboarding từ localStorage lên Firestore
+  Future<void> _saveOnboardingDataToFirestore() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print('🔍 InterfaceConfirmation: No current user found');
+        return;
+      }
+
+      final hasData = await _localStorage.hasGuestData();
+      if (!hasData) {
+        print('🔍 InterfaceConfirmation: No guest data found');
+        return;
+      }
+
+      final data = await _localStorage.readGuestData();
+      print(
+        '🔍 InterfaceConfirmation: Saving onboarding data to Firestore = $data',
+      );
+
+      final Map<String, dynamic> update = {};
+
+      // Tạo BodyInfoModel từ dữ liệu guest
+      final bodyInfo = {
+        if (data['heightCm'] != null) 'heightCm': data['heightCm'],
+        if (data['weightKg'] != null) 'weightKg': data['weightKg'],
+        if (data['goalWeightKg'] != null) 'goalWeightKg': data['goalWeightKg'],
+        if (data['medicalConditions'] != null)
+          'medicalConditions': data['medicalConditions'],
+        if (data['allergies'] != null) 'allergies': data['allergies'],
+      };
+
+      if (bodyInfo.isNotEmpty) {
+        update['bodyInfo'] = bodyInfo;
+      }
+
+      if (data['age'] != null) {
+        update['age'] = data['age'];
+      }
+      if (data['gender'] != null && (data['gender'] as String).isNotEmpty) {
+        update['gender'] = data['gender'];
+      }
+      if (data['goal'] != null && (data['goal'] as String).isNotEmpty) {
+        update['goal'] = data['goal'];
+      }
+
+      if (update.isEmpty) {
+        print('🔍 InterfaceConfirmation: No data to save');
+        return;
+      }
+
+      print('🔍 InterfaceConfirmation: Updating user with data = $update');
+      await _authService.updateUserData(user.uid, update);
+
+      // Xóa dữ liệu guest sau khi lưu thành công
+      await _localStorage.clearGuestData();
+      print('🔍 InterfaceConfirmation: Onboarding data saved successfully');
+    } catch (e) {
+      print('🔍 InterfaceConfirmation: Error saving onboarding data: $e');
+    }
   }
 }
