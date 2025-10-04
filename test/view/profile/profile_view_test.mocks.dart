@@ -117,6 +117,7 @@ class MockAuthService extends _i1.Mock implements _i2.AuthService {
     List<String>? medicalConditions,
     List<String>? allergies,
     int? age,
+    String? goal,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#signUpWithOnboardingData, [], {
@@ -134,6 +135,7 @@ class MockAuthService extends _i1.Mock implements _i2.AuthService {
               #medicalConditions: medicalConditions,
               #allergies: allergies,
               #age: age,
+              #goal: goal,
             }),
             returnValue: _i3.Future<_i4.User?>.value(),
           )
