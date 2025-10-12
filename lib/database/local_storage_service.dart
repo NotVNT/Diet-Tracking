@@ -111,4 +111,37 @@ class LocalStorageService {
     await prefs.remove(_keyGender);
     await prefs.remove(_keyLanguage);
   }
+
+  /// Generic method to save any data with a key
+  Future<void> saveData(String key, dynamic data) async {
+    final prefs = await _prefs;
+
+    if (data is String) {
+      await prefs.setString(key, data);
+    } else if (data is int) {
+      await prefs.setInt(key, data);
+    } else if (data is double) {
+      await prefs.setDouble(key, data);
+    } else if (data is bool) {
+      await prefs.setBool(key, data);
+    } else if (data is List<String>) {
+      await prefs.setStringList(key, data);
+    } else {
+      // For complex objects, convert to JSON string
+      final jsonString = data.toString();
+      await prefs.setString(key, jsonString);
+    }
+  }
+
+  /// Generic method to get any data by key
+  Future<dynamic> getData(String key) async {
+    final prefs = await _prefs;
+    return prefs.get(key);
+  }
+
+  /// Remove data by key
+  Future<void> removeData(String key) async {
+    final prefs = await _prefs;
+    await prefs.remove(key);
+  }
 }

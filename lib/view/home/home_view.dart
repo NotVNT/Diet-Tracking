@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'chat_bot_view_home/presentation/pages/chat_bot_page.dart';
 import '../profile/profile_view.dart';
+import 'record_view_home/record_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -15,7 +16,7 @@ class _HomeViewState extends State<HomeView> {
   // Pages: 0 Trang chủ, 1 Ghi nhận, 2 Chat bot, 3 Hồ sơ
   final List<Widget> _pages = [
     const _HomePage(),
-    const _RecordPage(),
+    const RecordView(),
     const ChatBotPage(),
     const ProfileView(),
   ];
@@ -63,16 +64,6 @@ class _HomePage extends StatelessWidget {
   }
 }
 
-class _RecordPage extends StatelessWidget {
-  const _RecordPage();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Ghi nhận')),
-      body: const Center(child: Text('Trang ghi nhận (đang phát triển)')),
-    );
-  }
-}
 
 // Profile page provided by ProfileView in ../profile/profile_view.dart

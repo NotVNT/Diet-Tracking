@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../domain/entities/chat_message_entity.dart';
+import '../../../record_view_home/presentation/cubit/record_cubit.dart';
+
+// Helper class for food suggestion data
+class FoodSuggestion {
+  final String foodName;
+  final double calories;
+
+  FoodSuggestion({required this.foodName, required this.calories});
+}
 
 /// Widget for displaying chat message bubbles
 class ChatMessageBubble extends StatelessWidget {
@@ -56,6 +66,8 @@ class ChatMessageBubble extends StatelessWidget {
 
   /// Builds the message content with text and timestamp
   Widget _buildMessageContent() {
+    final foodSuggestion = _extractFoodSuggestion(message.text);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -80,10 +92,14 @@ class ChatMessageBubble extends StatelessWidget {
           Text(
             _formatTime(message.timestamp),
             style: GoogleFonts.inter(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               fontSize: 12,
             ),
           ),
+          if (!message.isUser && foodSuggestion != null) ...[
+            const SizedBox(height: 8),
+            _buildAddToRecordsButton(foodSuggestion),
+          ],
         ],
       ),
     );
@@ -103,5 +119,55 @@ class ChatMessageBubble extends StatelessWidget {
     } else {
       return '${timestamp.day}/${timestamp.month}';
     }
+  }
+
+  // Extracts food suggestion from message text
+  FoodSuggestion? _extractFoodSuggestion(String text) {
+    final foodNameRegex = RegExp(r'Món ăn đề xuất: (.*)');
+    final caloriesRegex = RegExp(r'-Calo: Khoảng (\d+) - (\d+) kcal');
+
+    final foodNameMatch = foodNameRegex.firstMatch(text);
+    final caloriesMatch = caloriesRegex.firstMatch(text);
+
+    if (foodNameMatch != null && caloriesMatch != null) {
+      final foodName = foodNameMatch.group(1)!.trim();
+      final minCalories = double.parse(caloriesMatch.group(1)!);
+      final maxCalories = double.parse(caloriesMatch.group(2)!);
+      final avgCalories = (minCalories + maxCalories) / 2;
+
+      return FoodSuggestion(foodName: foodName, calories: avgCalories);
+    }
+
+    return null;
+  }
+
+  // Builds the "Add to records" button
+  Widget _buildAddToRecordsButton(FoodSuggestion suggestion) {
+    return Builder(builder: (context) {
+      return ElevatedButton(
+        onPressed: () {
+          context.read<RecordCubit>().saveFoodRecord(
+                suggestion.foodName,
+                suggestion.calories,
+              );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đã thêm "${suggestion.foodName}" vào danh sách'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _primaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: const Text(
+          'Thêm vào danh sách',
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    });
   }
 }
