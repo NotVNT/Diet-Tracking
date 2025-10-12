@@ -15,7 +15,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 #---mode_database_config---#
 # pc = Pinecone(api_key=PINECONE_API_KEY)
-genai.configure(api_key=GEMINI_API_KEY)
+genai.configure(api_key="AIzaSyDic7CyKachNcLmKR3VhFINtQb5hK9L03A")
 model_gemini = genai.GenerativeModel('gemini-2.5-flash-lite')
 # model_llm = SentenceTransformer('all-MiniLM-L12-v2')
 #---model_database_config---#

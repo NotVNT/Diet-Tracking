@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'chat_bot_view.dart';
+import 'chat_bot_view_home/presentation/pages/chat_bot_page.dart';
 import '../profile/profile_view.dart';
 
 class HomeView extends StatefulWidget {
@@ -16,7 +16,7 @@ class _HomeViewState extends State<HomeView> {
   final List<Widget> _pages = [
     const _HomePage(),
     const _RecordPage(),
-    const ChatBotView(),
+    const ChatBotPage(),
     const ProfileView(),
   ];
 

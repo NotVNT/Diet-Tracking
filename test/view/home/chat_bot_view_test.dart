@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:diet_tracking_project/view/home/chat_bot_view.dart';
+import 'package:diet_tracking_project/view/home/chat_bot_view_home/presentation/pages/chat_bot_page.dart';
 
 void main() {
-  testWidgets('ChatBotView hiển thị tin nhắn mặc định và toggle options', (
+  testWidgets('ChatBotPage hiển thị tin nhắn mặc định và toggle options', (
     tester,
   ) async {
-    await tester.pumpWidget(const MaterialApp(home: ChatBotView()));
+    await tester.pumpWidget(const MaterialApp(home: ChatBotPage()));
 
     // Có title
     expect(find.text('Diet Assistant'), findsOneWidget);
@@ -23,10 +23,10 @@ void main() {
     expect(find.text('gợi ý món ăn'), findsNothing);
   });
 
-  testWidgets('ChatBotView chặn xuống dòng: không gửi tin nhắn', (
+  testWidgets('ChatBotPage chặn xuống dòng: không gửi tin nhắn', (
     tester,
   ) async {
-    await tester.pumpWidget(const MaterialApp(home: ChatBotView()));
+    await tester.pumpWidget(const MaterialApp(home: ChatBotPage()));
 
     // Nhập message có xuống dòng -> snackbar
     await tester.enterText(find.byType(TextField), 'hello\nworld');

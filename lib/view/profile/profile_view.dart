@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../login/login_screen.dart';
 import '../on_boarding/welcome_screen.dart';
+import '../home/chat_bot_view_home/presentation/providers/chat_provider_factory.dart';
 
 import '../../model/user.dart' as app_user;
 import '../../database/auth_service.dart';
@@ -191,6 +192,10 @@ class _ProfileViewState extends State<ProfileView> {
                     isDanger: true,
                     onTap: () async {
                       await _authService.signOut();
+
+                      // Clear chat history when logging out
+                      ChatProviderFactory.dispose();
+
                       if (!mounted) return;
 
                       // Chuyển về màn hình Welcome Screen
