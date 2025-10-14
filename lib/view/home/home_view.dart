@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'chat_bot_view_home/presentation/pages/chat_bot_page.dart';
 import '../profile/profile_view.dart';
 import 'record_view_home/record_view.dart';
+import 'record_view_home/di/record_di.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -17,7 +19,11 @@ class _HomeViewState extends State<HomeView> {
   final List<Widget> _pages = [
     const _HomePage(),
     const RecordView(),
-    const ChatBotPage(),
+    // Provide RecordCubit for ChatBotPage so the "Thêm vào danh sách" button can access it
+    BlocProvider(
+      create: (_) => RecordDI.getRecordCubit(),
+      child: const ChatBotPage(),
+    ),
     const ProfileView(),
   ];
 
@@ -63,7 +69,5 @@ class _HomePage extends StatelessWidget {
     );
   }
 }
-
-
 
 // Profile page provided by ProfileView in ../profile/profile_view.dart

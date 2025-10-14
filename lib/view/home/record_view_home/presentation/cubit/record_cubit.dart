@@ -15,10 +15,20 @@ class RecordCubit extends Cubit<RecordState> {
     this._deleteFoodRecordUseCase,
   ) : super(RecordInitial());
 
-  Future<void> saveFoodRecord(String foodName, double calories) async {
+  Future<void> saveFoodRecord(
+    String foodName,
+    double calories, {
+    String? reason,
+    String? nutritionDetails,
+  }) async {
     try {
       emit(RecordLoading());
-      await _saveFoodRecordUseCase.call(foodName, calories);
+      await _saveFoodRecordUseCase.call(
+        foodName,
+        calories,
+        reason: reason,
+        nutritionDetails: nutritionDetails,
+      );
       emit(const RecordSuccess('Món ăn đã được ghi nhận thành công!'));
       // Tự động load lại danh sách sau khi lưu
       await loadFoodRecords();

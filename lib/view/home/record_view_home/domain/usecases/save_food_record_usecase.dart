@@ -6,12 +6,19 @@ class SaveFoodRecordUseCase {
 
   SaveFoodRecordUseCase(this._repository);
 
-  Future<void> call(String foodName, double calories) async {
+  Future<void> call(
+    String foodName,
+    double calories, {
+    String? reason,
+    String? nutritionDetails,
+  }) async {
     final foodRecord = FoodRecordEntity(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       foodName: foodName,
       calories: calories,
       date: DateTime.now(),
+      reason: reason,
+      nutritionDetails: nutritionDetails,
     );
 
     await _repository.saveFoodRecord(foodRecord);

@@ -6,14 +6,18 @@ class FoodRecordModel extends FoodRecordEntity {
     required super.foodName,
     required super.calories,
     required super.date,
+    super.reason,
+    super.nutritionDetails,
   });
 
   factory FoodRecordModel.fromJson(Map<String, dynamic> json) {
     return FoodRecordModel(
       id: json['id'],
       foodName: json['foodName'],
-      calories: json['calories'].toDouble(),
+      calories: (json['calories'] as num).toDouble(),
       date: DateTime.parse(json['date']),
+      reason: json['reason'],
+      nutritionDetails: json['nutritionDetails'],
     );
   }
 
@@ -23,6 +27,8 @@ class FoodRecordModel extends FoodRecordEntity {
       'foodName': foodName,
       'calories': calories,
       'date': date.toIso8601String(),
+      if (reason != null) 'reason': reason,
+      if (nutritionDetails != null) 'nutritionDetails': nutritionDetails,
     };
   }
 
@@ -32,6 +38,8 @@ class FoodRecordModel extends FoodRecordEntity {
       foodName: entity.foodName,
       calories: entity.calories,
       date: entity.date,
+      reason: entity.reason,
+      nutritionDetails: entity.nutritionDetails,
     );
   }
 }

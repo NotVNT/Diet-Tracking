@@ -8,8 +8,15 @@ import '../../../record_view_home/presentation/cubit/record_cubit.dart';
 class FoodSuggestion {
   final String foodName;
   final double calories;
+  final String? reason; // Lý do chọn
+  final String? nutritionDetails; // Khối "Thông tin dinh dưỡng"
 
-  FoodSuggestion({required this.foodName, required this.calories});
+  FoodSuggestion({
+    required this.foodName,
+    required this.calories,
+    this.reason,
+    this.nutritionDetails,
+  });
 }
 
 /// Widget for displaying chat message bubbles
@@ -19,10 +26,7 @@ class ChatMessageBubble extends StatelessWidget {
   static const Color _messageBubbleColor = Color(0xFF2D2D2D);
   static const double _borderRadius = 20.0;
 
-  const ChatMessageBubble({
-    super.key,
-    required this.message,
-  });
+  const ChatMessageBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,7 @@ class ChatMessageBubble extends StatelessWidget {
 
   /// Builds the message content with text and timestamp
   Widget _buildMessageContent() {
-    final foodSuggestion = _extractFoodSuggestion(message.text);
+    final suggestions = _extractFoodSuggestions(message.text);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -96,9 +100,9 @@ class ChatMessageBubble extends StatelessWidget {
               fontSize: 12,
             ),
           ),
-          if (!message.isUser && foodSuggestion != null) ...[
+          if (!message.isUser && suggestions.isNotEmpty) ...[
             const SizedBox(height: 8),
-            _buildAddToRecordsButton(foodSuggestion),
+            _buildAddToRecordsActions(suggestions),
           ],
         ],
       ),
@@ -121,53 +125,358 @@ class ChatMessageBubble extends StatelessWidget {
     }
   }
 
-  // Extracts food suggestion from message text
-  FoodSuggestion? _extractFoodSuggestion(String text) {
-    final foodNameRegex = RegExp(r'Món ăn đề xuất: (.*)');
-    final caloriesRegex = RegExp(r'-Calo: Khoảng (\d+) - (\d+) kcal');
+  // Extract a single suggestion from a text block (used by multi-parser)
+  FoodSuggestion? _extractOneSuggestion(String text) {
+    final nameRegexes = <RegExp>[
+      RegExp(r'Món ăn đề xuất[:：]?\s*(.+)', caseSensitive: false),
+      RegExp(r'Món ăn gợi ý[:：]?\s*(.+)', caseSensitive: false),
+      RegExp(r'Tên món[:：]?\s*(.+)', caseSensitive: false),
+    ];
 
-    final foodNameMatch = foodNameRegex.firstMatch(text);
-    final caloriesMatch = caloriesRegex.firstMatch(text);
+    final calorieRegexes = <RegExp>[
+      RegExp(
+        r'-?\s*Calo[:：]?\s*[~≈]?(\d+)\s*[-–]\s*(\d+)\s*kcal',
+        caseSensitive: false,
+      ),
+      RegExp(
+        r'-?\s*Calo[:：]?\s*Khoảng\s*(\d+)\s*-\s*(\d+)\s*kcal',
+        caseSensitive: false,
+      ),
+    ];
 
-    if (foodNameMatch != null && caloriesMatch != null) {
-      final foodName = foodNameMatch.group(1)!.trim();
-      final minCalories = double.parse(caloriesMatch.group(1)!);
-      final maxCalories = double.parse(caloriesMatch.group(2)!);
-      final avgCalories = (minCalories + maxCalories) / 2;
-
-      return FoodSuggestion(foodName: foodName, calories: avgCalories);
+    RegExpMatch? nameMatch;
+    for (final rx in nameRegexes) {
+      nameMatch = rx.firstMatch(text);
+      if (nameMatch != null) break;
     }
 
-    return null;
+    RegExpMatch? calMatch;
+    for (final rx in calorieRegexes) {
+      calMatch = rx.firstMatch(text);
+      if (calMatch != null) break;
+    }
+
+    double avgCalories = 0;
+    if (calMatch != null) {
+      final minCalories = double.tryParse(calMatch.group(1) ?? '') ?? 0;
+      final maxCalories = double.tryParse(calMatch.group(2) ?? '') ?? 0;
+      avgCalories = (minCalories > 0 && maxCalories > 0)
+          ? (minCalories + maxCalories) / 2
+          : (minCalories > 0 ? minCalories : maxCalories);
+    }
+
+    String foodName;
+    if (nameMatch != null) {
+      foodName = (nameMatch.group(1) ?? '').trim();
+    } else {
+      final lines = text
+          .split('\n')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+
+      // 1) Tìm đúng dòng tên món: sau cụm "Món ăn đề xuất:" hoặc "Món ăn gợi ý:"
+      final lineNameRegexes = <RegExp>[
+        RegExp(r'^\**\s*Món ăn đề xuất[:：]?\s*(.+)', caseSensitive: false),
+        RegExp(r'^\**\s*Món ăn gợi ý[:：]?\s*(.+)', caseSensitive: false),
+      ];
+      String? foundFromLine;
+      for (final l in lines) {
+        for (final rx in lineNameRegexes) {
+          final m = rx.firstMatch(l);
+          if (m != null) {
+            foundFromLine = (m.group(1) ?? '').trim();
+            break;
+          }
+        }
+        if (foundFromLine != null) break;
+      }
+
+      if (foundFromLine != null && foundFromLine.isNotEmpty) {
+        foodName = foundFromLine;
+      } else {
+        // 2) Nếu chưa bắt được, lấy dòng có vẻ là tên trước phần thông tin dinh dưỡng
+        final idxNutrition = lines.indexWhere(
+          (l) =>
+              l.toLowerCase().contains('thông tin dinh dưỡng') ||
+              l.toLowerCase().contains('calo'),
+        );
+
+        List<String> candidates;
+        if (idxNutrition > 0) {
+          candidates = lines.sublist(0, idxNutrition);
+        } else {
+          candidates = List.from(lines);
+        }
+        // Loại bỏ các dòng không phải tên món
+        final ignored = <String>[
+          'thông tin dinh dưỡng',
+          'lý do chọn',
+          'ly do chon',
+          'protein',
+          'carb',
+          'fat',
+        ];
+        foodName = candidates.firstWhere((l) {
+          final lower = l.toLowerCase();
+          final hasIgnored = ignored.any((ig) => lower.contains(ig));
+          final looksBullet = lower.startsWith('-') || lower.startsWith('*');
+          return !hasIgnored && !looksBullet && lower.length > 2;
+        }, orElse: () => (lines.isNotEmpty ? lines.first : 'Món gợi ý'));
+      }
+
+      if (foodName.length > 80) {
+        foodName = foodName.substring(0, 80);
+      }
+    }
+
+    return FoodSuggestion(foodName: foodName, calories: avgCalories);
   }
 
-  // Builds the "Add to records" button
-  Widget _buildAddToRecordsButton(FoodSuggestion suggestion) {
-    return Builder(builder: (context) {
-      return ElevatedButton(
-        onPressed: () {
-          context.read<RecordCubit>().saveFoodRecord(
-                suggestion.foodName,
-                suggestion.calories,
-              );
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Đã thêm "${suggestion.foodName}" vào danh sách'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+  // Extract multiple suggestions strictly by "Món ăn đề xuất|gợi ý: <tên>" blocks
+  List<FoodSuggestion> _extractFoodSuggestions(String text) {
+    final lower = text.toLowerCase();
+    final hasSuggestKeyword =
+        lower.contains('món ăn đề xuất') || lower.contains('món ăn gợi ý');
+    if (!hasSuggestKeyword) return [];
+
+    final nameRx = RegExp(
+      r'(Món ăn (?:đề xuất|gợi ý)[:：]?\s*)(.+)',
+      caseSensitive: false,
+    );
+
+    final matches = nameRx.allMatches(text).toList();
+    if (matches.isEmpty) return [];
+
+    final suggestions = <FoodSuggestion>[];
+
+    for (var i = 0; i < matches.length; i++) {
+      final m = matches[i];
+      final name = (m.group(2) ?? '').trim();
+      if (name.isEmpty) continue;
+
+      // Lấy đoạn text từ sau tên đến trước tên tiếp theo để tìm calo
+      final start = m.end;
+      final end = i + 1 < matches.length ? matches[i + 1].start : text.length;
+      final slice = text.substring(start, end);
+
+      final caloRxList = <RegExp>[
+        RegExp(
+          r'Calo[:：]?\s*[~≈]?(\d+)\s*[-–]\s*(\d+)\s*kcal',
+          caseSensitive: false,
         ),
-        child: const Text(
-          'Thêm vào danh sách',
-          style: TextStyle(color: Colors.white),
+        RegExp(
+          r'Calo[:：]?\s*Khoảng\s*(\d+)\s*-\s*(\d+)\s*kcal',
+          caseSensitive: false,
         ),
+        RegExp(r'Calo[:：]?\s*(\d+)\s*kcal', caseSensitive: false),
+      ];
+      double calories = 0;
+      for (final rx in caloRxList) {
+        final cm = rx.firstMatch(slice);
+        if (cm != null) {
+          final c1 = double.tryParse(cm.group(1) ?? '') ?? 0;
+          final c2 =
+              double.tryParse(
+                (cm.groupCount >= 2 ? cm.group(2) : null) ?? '',
+              ) ??
+              0;
+          calories = (c1 > 0 && c2 > 0) ? (c1 + c2) / 2 : (c1 > 0 ? c1 : c2);
+          break;
+        }
+      }
+
+      // Tách lý do và thông tin dinh dưỡng bằng regex linh hoạt (hỗ trợ **...** và xuống dòng)
+      String? reason;
+      String? nutrition;
+      final reasonMatch = RegExp(
+        r'\*\*\s*Lý do chọn\s*[:：]?\s*\*\*\s*([\s\S]*?)(?:\n\s*\*\*|\$)',
+        caseSensitive: false,
+      ).firstMatch(slice);
+      if (reasonMatch != null) {
+        reason = reasonMatch.group(1)?.trim();
+      }
+      RegExp _nutriRx1 = RegExp(
+        r'(?:\*\*)?\s*Thông tin dinh dưỡng(?:\s*\([^)]*\))?\s*(?:\*\*)?\s*[:：]?\s*([\s\S]*)',
+        caseSensitive: false,
       );
-    });
+      RegExp _nutriRx2 = RegExp(
+        r'(?:\*\*)?\s*Th\w*ng tin dinh d\w*(?:\s*\([^)]*\))?\s*(?:\*\*)?\s*[:：]?\s*([\s\S]*)',
+        caseSensitive: false,
+      );
+      final nutritionMatch =
+          _nutriRx1.firstMatch(slice) ?? _nutriRx2.firstMatch(slice);
+      if (nutritionMatch != null) {
+        nutrition = nutritionMatch.group(1)?.trim();
+      }
+      // Làm sạch ký tự ngôi sao trong nội dung dinh dưỡng, bỏ các dòng chỉ có sao
+      if (nutrition != null) {
+        final cleanedLines = nutrition!
+            .split('\n')
+            .map((l) => l.replaceAll('⭐', '').trimRight())
+            .where((l) => l.trim().isNotEmpty)
+            .toList();
+        nutrition = cleanedLines.join('\n');
+      }
+      // Fallback: nếu chưa bắt được, tách theo dòng sau tiêu đề và gom các dòng bullet
+      if (nutrition == null || nutrition!.trim().isEmpty) {
+        final lines = slice.split('\n');
+        bool inSection = false;
+        final buff = <String>[];
+        for (final raw in lines) {
+          final l = raw.trimRight();
+          final lower = l.toLowerCase();
+          if (!inSection && lower.contains('thông tin dinh dưỡng')) {
+            inSection = true;
+            continue;
+          }
+          if (!inSection) continue;
+          // Dừng khi gặp header mới hoặc dòng toàn '**'
+          if (l.startsWith('**')) break;
+          if (l.trim().isEmpty) continue;
+          // Fallback 2: gom các dòng bullet thường gặp nếu vẫn chưa có
+          if (nutrition == null || nutrition.trim().isEmpty) {
+            final lines = slice.split('\n');
+            bool afterHeader = false;
+            final buff = <String>[];
+            for (final raw in lines) {
+              final l = raw.trimRight();
+              final lower = l.toLowerCase();
+              if (!afterHeader && lower.contains('thông tin dinh dưỡng')) {
+                afterHeader = true;
+                continue;
+              }
+              if (!afterHeader) continue;
+              if (l.startsWith('**') || l.startsWith('⭐'))
+                break; // kết thúc block
+              if (l.trim().isEmpty) continue;
+              final isBullet =
+                  l.trimLeft().startsWith('-') ||
+                  l.trimLeft().startsWith('•') ||
+                  lower.contains('kcal') ||
+                  lower.contains('protein') ||
+                  lower.contains('carb') ||
+                  lower.contains('fat');
+              if (isBullet) buff.add(l);
+            }
+            if (buff.isNotEmpty) nutrition = buff.join('\n');
+          }
+
+          buff.add(l);
+        }
+        if (buff.isNotEmpty) {
+          nutrition = buff.join('\n');
+        }
+      }
+
+      // Chỉ thêm theo tên món; không thêm các block “Lý do chọn”, “Thông tin dinh dưỡng” vào tên
+      final cleanedName = name.replaceAll(RegExp(r'\*\*'), '').trim();
+      final ignoreLower = cleanedName.toLowerCase();
+      if (ignoreLower.contains('thông tin dinh dưỡng') ||
+          ignoreLower.contains('lý do chọn')) {
+        continue;
+      }
+
+      final exists = suggestions.any(
+        (e) => e.foodName.toLowerCase() == cleanedName.toLowerCase(),
+      );
+      if (!exists) {
+        suggestions.add(
+          FoodSuggestion(
+            foodName: cleanedName,
+            calories: calories,
+            reason: reason,
+            nutritionDetails: nutrition,
+          ),
+        );
+      }
+    }
+
+    return suggestions;
+  }
+
+  // Build actions for multiple suggestions: per-item save + save all
+  Widget _buildAddToRecordsActions(List<FoodSuggestion> suggestions) {
+    return Builder(
+      builder: (context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (suggestions.length > 1)
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      for (final s in suggestions) {
+                        await context.read<RecordCubit>().saveFoodRecord(
+                          s.foodName,
+                          s.calories,
+                          nutritionDetails: s.nutritionDetails,
+                        );
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Đã thêm ${suggestions.length} món vào danh sách',
+                          ),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.playlist_add,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                    label: const Text(
+                      'Lưu tất cả',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: suggestions.map((s) {
+                final label = s.foodName.length > 18
+                    ? '${s.foodName.substring(0, 18)}…'
+                    : s.foodName;
+                return OutlinedButton(
+                  onPressed: () async {
+                    await context.read<RecordCubit>().saveFoodRecord(
+                      s.foodName,
+                      s.calories,
+                      nutritionDetails: s.nutritionDetails,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Đã thêm "${s.foodName}" vào danh sách'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: _primaryColor),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text('Lưu: $label'),
+                );
+              }).toList(),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

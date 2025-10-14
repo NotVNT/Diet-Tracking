@@ -14,27 +14,19 @@ class FoodRecordList extends StatelessWidget {
     return BlocBuilder<RecordCubit, RecordState>(
       builder: (context, state) {
         if (state is RecordLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
-        
+
         if (state is RecordError) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: Colors.red[300],
-                ),
+                Icon(Icons.error_outline, size: 48, color: Colors.red[300]),
                 const SizedBox(height: 16),
                 Text(
                   state.message,
-                  style: AppStyles.bodyMedium.copyWith(
-                    color: Colors.red[600],
-                  ),
+                  style: AppStyles.bodyMedium.copyWith(color: Colors.red[600]),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -48,7 +40,7 @@ class FoodRecordList extends StatelessWidget {
             ),
           );
         }
-        
+
         if (state is RecordListLoaded) {
           if (state.records.isEmpty) {
             return Center(
@@ -79,7 +71,7 @@ class FoodRecordList extends StatelessWidget {
               ),
             );
           }
-          
+
           return ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -87,7 +79,7 @@ class FoodRecordList extends StatelessWidget {
             itemBuilder: (context, index) {
               final record = state.records[index];
               final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
-              
+
               return Card(
                 margin: const EdgeInsets.only(bottom: 8),
                 elevation: 2,
@@ -95,18 +87,79 @@ class FoodRecordList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ListTile(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
+                      ),
+                      builder: (ctx) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.restaurant,
+                                      color: Colors.black87,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        record.foodName,
+                                        style: AppStyles.heading2.copyWith(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  '${record.calories.toStringAsFixed(0)} calories',
+                                  style: AppStyles.bodyMedium.copyWith(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                if ((record.nutritionDetails ?? '')
+                                    .trim()
+                                    .isNotEmpty) ...[
+                                  Text(
+                                    'Thông tin dinh dưỡng',
+                                    style: AppStyles.heading2.copyWith(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    record.nutritionDetails!.trim(),
+                                    style: AppStyles.bodyMedium,
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                   leading: CircleAvatar(
                     backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                    child: Icon(
-                      Icons.restaurant,
-                      color: AppColors.primary,
-                    ),
+                    child: Icon(Icons.restaurant, color: AppColors.primary),
                   ),
                   title: Text(
                     record.foodName,
-                    style: AppStyles.heading2.copyWith(
-                      fontSize: 16,
-                    ),
+                    style: AppStyles.heading2.copyWith(fontSize: 16),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,19 +180,58 @@ class FoodRecordList extends StatelessWidget {
                       ),
                     ],
                   ),
-                  trailing: Icon(
-                    Icons.check_circle,
-                    color: Colors.green[400],
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.green[400]),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        tooltip: 'Xoá món ăn',
+                        icon: Icon(Icons.close_rounded, color: Colors.red[400]),
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (ctx) {
+                              return AlertDialog(
+                                title: const Text('Xoá món ăn?'),
+                                content: Text(
+                                  'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(false),
+                                    child: const Text('Huỷ'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(true),
+                                    child: const Text(
+                                      'Xoá',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          if (confirm == true && (record.id != null)) {
+                            context.read<RecordCubit>().deleteFoodRecord(
+                              record.id!,
+                            );
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
               );
             },
           );
         }
-        
-        return const Center(
-          child: Text('Đang khởi tạo...'),
-        );
+
+        return const Center(child: Text('Đang khởi tạo...'));
       },
     );
   }
