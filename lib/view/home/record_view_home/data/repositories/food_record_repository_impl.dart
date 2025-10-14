@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../domain/entities/food_record_entity.dart';
 import '../../domain/repositories/food_record_repository.dart';
 import '../models/food_record_model.dart';
@@ -7,8 +10,12 @@ import '../../../../../database/local_storage_service.dart';
 
 class FoodRecordRepositoryImpl implements FoodRecordRepository {
   final LocalStorageService _localStorageService;
+  final FirebaseFirestore _firestore;
 
-  FoodRecordRepositoryImpl(this._localStorageService);
+  FoodRecordRepositoryImpl(
+    this._localStorageService, {
+    FirebaseFirestore? firestore,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance;
 
   static const _key = 'food_records';
 
@@ -30,6 +37,18 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
     return <dynamic>[];
   }
 
+  Future<void> _saveToFirestore(FoodRecordModel model) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return; // chưa đăng nhập thì bỏ qua Firestore
+    final uid = user.uid;
+    final docRef = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('food_records')
+        .doc(model.id);
+    await docRef.set(model.toJson(), SetOptions(merge: true));
+  }
+
   @override
   Future<void> saveFoodRecord(FoodRecordEntity foodRecord) async {
     final model = FoodRecordModel.fromEntity(foodRecord);
@@ -49,6 +68,13 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
         .toList();
 
     await _localStorageService.saveData(_key, jsonList);
+
+    // Save to Firestore in parallel (best-effort)
+    try {
+      await _saveToFirestore(model);
+    } catch (_) {
+      // Không chặn luồng nếu Firestore lỗi
+    }
   }
 
   @override
@@ -74,5 +100,17 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
         .toList();
 
     await _localStorageService.saveData(_key, jsonList);
+
+    // Xóa trên Firestore nếu có đăng nhập
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('food_records')
+          .doc(id)
+          .delete()
+          .catchError((_) {});
+    }
   }
 }
