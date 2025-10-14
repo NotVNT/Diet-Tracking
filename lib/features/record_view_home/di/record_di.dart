@@ -1,4 +1,4 @@
-import '../../../../database/local_storage_service.dart';
+import '../../../database/local_storage_service.dart';
 import '../data/repositories/food_record_repository_impl.dart';
 import '../domain/repositories/food_record_repository.dart';
 import '../domain/usecases/get_food_records_usecase.dart';

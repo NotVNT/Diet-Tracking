@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../../../../common/app_colors.dart';
-import '../../../../../common/app_styles.dart';
+import '../../../../common/app_colors.dart';
+import '../../../../common/app_styles.dart';
 import '../cubit/record_cubit.dart';
 import '../cubit/record_state.dart';
 

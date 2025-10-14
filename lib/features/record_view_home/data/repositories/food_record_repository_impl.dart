@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/entities/food_record_entity.dart';
 import '../../domain/repositories/food_record_repository.dart';
 import '../models/food_record_model.dart';
-import '../../../../../database/local_storage_service.dart';
+import '../../../../database/local_storage_service.dart';
 
 class FoodRecordRepositoryImpl implements FoodRecordRepository {
   final LocalStorageService _localStorageService;

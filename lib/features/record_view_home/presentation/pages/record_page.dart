@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../common/app_colors.dart';
-import '../../../../../common/app_styles.dart';
-import '../../../../../common/custom_app_bar.dart';
-import '../../../../../common/gradient_background.dart';
+import '../../../../common/app_colors.dart';
+import '../../../../common/app_styles.dart';
+import '../../../../common/custom_app_bar.dart';
+import '../../../../common/gradient_background.dart';
+import '../../di/record_di.dart';
 import '../cubit/record_cubit.dart';
 import '../widgets/food_record_list.dart';
 
-class RecordPage extends StatefulWidget {
-  const RecordPage({Key? key}) : super(key: key);
-
-  @override
-  State<RecordPage> createState() => _RecordPageState();
-}
-
-class _RecordPageState extends State<RecordPage> {
-  @override
-  void initState() {
-    super.initState();
-    // Load danh sách món ăn khi khởi tạo
-    context.read<RecordCubit>().loadFoodRecords();
-  }
+class RecordPage extends StatelessWidget {
+  const RecordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider<RecordCubit>(
+      create: (context) => RecordDI.getRecordCubit()..loadFoodRecords(),
+      child: Scaffold(
       body: GradientBackground(
         child: Column(
           children: [
@@ -66,6 +57,7 @@ class _RecordPageState extends State<RecordPage> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

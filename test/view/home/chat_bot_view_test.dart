@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:diet_tracking_project/view/home/chat_bot_view_home/presentation/pages/chat_bot_page.dart';
+import 'package:diet_tracking_project/features/chat_bot_view_home/presentation/pages/chat_bot_page.dart';
 
 void main() {
   testWidgets('ChatBotPage hiển thị tin nhắn mặc định và toggle options', (

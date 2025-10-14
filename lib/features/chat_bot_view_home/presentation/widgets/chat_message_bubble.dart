@@ -125,113 +125,7 @@ class ChatMessageBubble extends StatelessWidget {
     }
   }
 
-  // Extract a single suggestion from a text block (used by multi-parser)
-  FoodSuggestion? _extractOneSuggestion(String text) {
-    final nameRegexes = <RegExp>[
-      RegExp(r'Món ăn đề xuất[:：]?\s*(.+)', caseSensitive: false),
-      RegExp(r'Món ăn gợi ý[:：]?\s*(.+)', caseSensitive: false),
-      RegExp(r'Tên món[:：]?\s*(.+)', caseSensitive: false),
-    ];
 
-    final calorieRegexes = <RegExp>[
-      RegExp(
-        r'-?\s*Calo[:：]?\s*[~≈]?(\d+)\s*[-–]\s*(\d+)\s*kcal',
-        caseSensitive: false,
-      ),
-      RegExp(
-        r'-?\s*Calo[:：]?\s*Khoảng\s*(\d+)\s*-\s*(\d+)\s*kcal',
-        caseSensitive: false,
-      ),
-    ];
-
-    RegExpMatch? nameMatch;
-    for (final rx in nameRegexes) {
-      nameMatch = rx.firstMatch(text);
-      if (nameMatch != null) break;
-    }
-
-    RegExpMatch? calMatch;
-    for (final rx in calorieRegexes) {
-      calMatch = rx.firstMatch(text);
-      if (calMatch != null) break;
-    }
-
-    double avgCalories = 0;
-    if (calMatch != null) {
-      final minCalories = double.tryParse(calMatch.group(1) ?? '') ?? 0;
-      final maxCalories = double.tryParse(calMatch.group(2) ?? '') ?? 0;
-      avgCalories = (minCalories > 0 && maxCalories > 0)
-          ? (minCalories + maxCalories) / 2
-          : (minCalories > 0 ? minCalories : maxCalories);
-    }
-
-    String foodName;
-    if (nameMatch != null) {
-      foodName = (nameMatch.group(1) ?? '').trim();
-    } else {
-      final lines = text
-          .split('\n')
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty)
-          .toList();
-
-      // 1) Tìm đúng dòng tên món: sau cụm "Món ăn đề xuất:" hoặc "Món ăn gợi ý:"
-      final lineNameRegexes = <RegExp>[
-        RegExp(r'^\**\s*Món ăn đề xuất[:：]?\s*(.+)', caseSensitive: false),
-        RegExp(r'^\**\s*Món ăn gợi ý[:：]?\s*(.+)', caseSensitive: false),
-      ];
-      String? foundFromLine;
-      for (final l in lines) {
-        for (final rx in lineNameRegexes) {
-          final m = rx.firstMatch(l);
-          if (m != null) {
-            foundFromLine = (m.group(1) ?? '').trim();
-            break;
-          }
-        }
-        if (foundFromLine != null) break;
-      }
-
-      if (foundFromLine != null && foundFromLine.isNotEmpty) {
-        foodName = foundFromLine;
-      } else {
-        // 2) Nếu chưa bắt được, lấy dòng có vẻ là tên trước phần thông tin dinh dưỡng
-        final idxNutrition = lines.indexWhere(
-          (l) =>
-              l.toLowerCase().contains('thông tin dinh dưỡng') ||
-              l.toLowerCase().contains('calo'),
-        );
-
-        List<String> candidates;
-        if (idxNutrition > 0) {
-          candidates = lines.sublist(0, idxNutrition);
-        } else {
-          candidates = List.from(lines);
-        }
-        // Loại bỏ các dòng không phải tên món
-        final ignored = <String>[
-          'thông tin dinh dưỡng',
-          'lý do chọn',
-          'ly do chon',
-          'protein',
-          'carb',
-          'fat',
-        ];
-        foodName = candidates.firstWhere((l) {
-          final lower = l.toLowerCase();
-          final hasIgnored = ignored.any((ig) => lower.contains(ig));
-          final looksBullet = lower.startsWith('-') || lower.startsWith('*');
-          return !hasIgnored && !looksBullet && lower.length > 2;
-        }, orElse: () => (lines.isNotEmpty ? lines.first : 'Món gợi ý'));
-      }
-
-      if (foodName.length > 80) {
-        foodName = foodName.substring(0, 80);
-      }
-    }
-
-    return FoodSuggestion(foodName: foodName, calories: avgCalories);
-  }
 
   // Extract multiple suggestions strictly by "Món ăn đề xuất|gợi ý: <tên>" blocks
   List<FoodSuggestion> _extractFoodSuggestions(String text) {
@@ -311,7 +205,7 @@ class ChatMessageBubble extends StatelessWidget {
       }
       // Làm sạch ký tự ngôi sao trong nội dung dinh dưỡng, bỏ các dòng chỉ có sao
       if (nutrition != null) {
-        final cleanedLines = nutrition!
+        final cleanedLines = nutrition
             .split('\n')
             .map((l) => l.replaceAll('⭐', '').trimRight())
             .where((l) => l.trim().isNotEmpty)
@@ -319,7 +213,7 @@ class ChatMessageBubble extends StatelessWidget {
         nutrition = cleanedLines.join('\n');
       }
       // Fallback: nếu chưa bắt được, tách theo dòng sau tiêu đề và gom các dòng bullet
-      if (nutrition == null || nutrition!.trim().isEmpty) {
+      if (nutrition == null || nutrition.trim().isEmpty) {
         final lines = slice.split('\n');
         bool inSection = false;
         final buff = <String>[];
