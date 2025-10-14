@@ -6,6 +6,7 @@ import '../widgets/chat_message_bubble.dart';
 import '../widgets/chat_input_area.dart';
 import '../widgets/chat_options_popup.dart';
 import '../widgets/food_suggestion_inputs.dart';
+import '../widgets/chat_settings_menu.dart';
 
 /// Main chat bot page with clean architecture
 class ChatBotPage extends StatefulWidget {
@@ -87,9 +88,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: const Icon(Icons.more_vert, color: Colors.white),
-          onPressed: _onSettingsPressed,
+        ChatSettingsMenu(
+          onCreateNewChat: _onCreateNewChat,
+          onChatHistory: _onChatHistory,
+          onSettings: _onSettings,
         ),
       ],
     );
@@ -121,9 +123,22 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   // Event Handlers
 
-  /// Handles settings button press
-  void _onSettingsPressed() {
-    // TODO: Show settings menu
+  /// Handles create new chat action
+  void _onCreateNewChat() async {
+    await _chatProvider.createNewChatSession();
+    _showSnackBar('Đã tạo cuộc trò chuyện mới');
+  }
+
+  /// Handles chat history action
+  void _onChatHistory() {
+    // TODO: Implement chat history view
+    _showSnackBar('Tính năng lịch sử chat sẽ được thêm sau');
+  }
+
+  /// Handles settings action
+  void _onSettings() {
+    // TODO: Implement settings page
+    _showSnackBar('Tính năng cài đặt sẽ được thêm sau');
   }
 
   /// Handles option selection

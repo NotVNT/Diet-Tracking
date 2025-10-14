@@ -1,46 +1,56 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/chat_message_entity.dart';
+import '../../domain/entities/chat_session_entity.dart';
 import '../../domain/usecases/send_message_usecase.dart';
 import '../../domain/usecases/validate_message_usecase.dart';
 import '../../domain/usecases/generate_food_suggestion_usecase.dart';
+import '../../domain/usecases/create_new_chat_session_usecase.dart';
+import '../../domain/repositories/chat_session_repository.dart';
 
-/// Provider for chat functionality
+/// Provider for chat functionality with session management
 class ChatProvider extends ChangeNotifier {
   final SendMessageUseCase _sendMessageUseCase;
   final ValidateMessageUseCase _validateMessageUseCase;
   final GenerateFoodSuggestionUseCase _generateFoodSuggestionUseCase;
+  final CreateNewChatSessionUseCase _createNewChatSessionUseCase;
+  final ChatSessionRepository _chatSessionRepository;
 
   ChatProvider(
     this._sendMessageUseCase,
     this._validateMessageUseCase,
     this._generateFoodSuggestionUseCase,
+    this._createNewChatSessionUseCase,
+    this._chatSessionRepository,
   ) {
     _initializeChat();
   }
 
   // State
-  final List<ChatMessageEntity> _messages = [];
+  ChatSessionEntity? _currentSession;
   bool _showOptions = false;
   bool _showFileInputs = false;
   bool _isLoading = false;
 
   // Getters
-  List<ChatMessageEntity> get messages => List.unmodifiable(_messages);
+  List<ChatMessageEntity> get messages => _currentSession?.messages ?? [];
   bool get showOptions => _showOptions;
   bool get showFileInputs => _showFileInputs;
   bool get isLoading => _isLoading;
+  ChatSessionEntity? get currentSession => _currentSession;
+  String get currentSessionTitle => _currentSession?.title ?? 'Cuộc trò chuyện mới';
 
-  void _initializeChat() {
-    // Only add welcome message if no messages exist (first time initialization)
-    if (_messages.isEmpty) {
-      _messages.add(
-        ChatMessageEntity(
-          text: 'Xin chào! Tôi có thể giúp gì cho bạn hôm nay?',
-          isUser: false,
-          timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
-        ),
-      );
+  void _initializeChat() async {
+    // Try to load current session or create a new one
+    final currentSessionId = await _chatSessionRepository.getCurrentSessionId();
+
+    if (currentSessionId != null) {
+      _currentSession = await _chatSessionRepository.getSessionById(currentSessionId);
     }
+
+    // If no current session exists, create a new one
+    _currentSession ??= await _createNewChatSessionUseCase.execute();
+
+    notifyListeners();
   }
 
   /// Toggle options popup
@@ -133,8 +143,17 @@ class ChatProvider extends ChangeNotifier {
     return await sendMessage(prompt);
   }
 
-  void _addMessage(ChatMessageEntity message) {
-    _messages.add(message);
+  void _addMessage(ChatMessageEntity message) async {
+    if (_currentSession != null) {
+      _currentSession = _currentSession!.addMessage(message);
+      await _chatSessionRepository.saveSession(_currentSession!);
+      notifyListeners();
+    }
+  }
+
+  /// Create a new chat session
+  Future<void> createNewChatSession() async {
+    _currentSession = await _createNewChatSessionUseCase.execute();
     notifyListeners();
   }
 
