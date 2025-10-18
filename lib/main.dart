@@ -6,7 +6,7 @@ import 'services/language_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'database/firebase_options.dart';
-import 'view/on_boarding/welcome_screen.dart';
+import 'view/splash/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +59,7 @@ class _DietTrackingAppState extends State<DietTrackingApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFF5722)),
         useMaterial3: true,
       ),
-      home: const WelcomeScreen(),
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         AppLocalizations.delegate,

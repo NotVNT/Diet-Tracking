@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+ SplashScreen configuration: remove the default app icon splash -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <!-- Background color while the app initializes -->
+        <item name="android:windowSplashScreenBackground">@android:color/white</item>
+        <!-- Use a 1x1 transparent drawable as the splash icon to effectively hide it -->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/transparent</item>
+        <!-- No animation / show instantly -->
+        <item name="android:windowSplashScreenAnimationDuration">0</item>
+        <!-- Ensure no icon background color shows up -->
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+    </style>
+
+    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+    </style>
+</resources>
+

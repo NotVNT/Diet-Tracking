@@ -1,0 +1,117 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import '../../view/on_boarding/welcome_screen.dart';
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _fadeIn;
+  double _progress = 0.0; // 0..1
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
+
+    // Tăng tiến độ từ từ đến 100% rồi vào app
+    const tick = Duration(milliseconds: 20); // ~2s đến 100%
+    const step = 0.01; // 1% mỗi tick
+    _timer = Timer.periodic(tick, (t) {
+      if (!mounted) return;
+      setState(() {
+        _progress += step;
+        if (_progress >= 1.0) {
+          _progress = 1.0;
+          t.cancel();
+          _goToHome();
+        }
+      });
+    });
+  }
+
+  void _goToHome() {
+    if (!mounted) return;
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const WelcomeScreen()));
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
+      body: SafeArea(
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeIn,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Ảnh load
+                  Flexible(
+                    child: Image.asset(
+                      'assets/logo/load_image.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  // Thanh loading có tiến độ tăng dần
+                  SizedBox(
+                    height: 10,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: LinearProgressIndicator(
+                        minHeight: 10,
+                        value: _progress, // 0..1
+                        backgroundColor: theme.colorScheme.primary.withValues(
+                          alpha: 0.15,
+                        ),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Dòng chữ thông báo kèm %
+                  Text(
+                    'Đang tải... ${(_progress * 100).toInt()}%',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
