@@ -9,6 +9,17 @@ import '../cubit/record_state.dart';
 class FoodRecordList extends StatelessWidget {
   const FoodRecordList({Key? key}) : super(key: key);
 
+  /// Formats calories display - shows "~" for chatbot suggestions, exact for manual entries
+  String _formatCalories(record) {
+    final calories = record.calories.toStringAsFixed(0);
+    // If record has nutritionDetails, it came from chatbot suggestion (approximate)
+    if (record.nutritionDetails != null && record.nutritionDetails!.trim().isNotEmpty) {
+      return '~$calories';
+    }
+    // Otherwise it's a manual entry (exact)
+    return calories;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RecordCubit, RecordState>(
@@ -123,7 +134,7 @@ class FoodRecordList extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  '${record.calories.toStringAsFixed(0)} calories',
+                                  '${_formatCalories(record)} calories',
                                   style: AppStyles.bodyMedium.copyWith(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.w600,
@@ -165,7 +176,7 @@ class FoodRecordList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${record.calories.toStringAsFixed(0)} calories',
+                        '${_formatCalories(record)} calories',
                         style: AppStyles.bodyMedium.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w600,
