@@ -194,12 +194,13 @@ class _ChatBotPageState extends State<ChatBotPage> {
   void _sendMessage(String text, ChatProvider chatProvider) async {
     if (text.trim().isEmpty) return;
 
+    // Clear textfield immediately to prevent stuck text
+    _messageController.clear();
+
     final error = await chatProvider.sendMessage(text);
     if (error != null) {
       _showSnackBar(error);
     }
-
-    _messageController.clear();
   }
 
   /// Shows snackbar with message

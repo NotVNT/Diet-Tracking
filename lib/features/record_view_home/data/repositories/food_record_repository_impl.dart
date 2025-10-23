@@ -77,17 +77,102 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
     }
   }
 
+  Future<List<FoodRecordModel>> _getFromFirestore() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return []; // chưa đăng nhập thì trả về empty
+
+    try {
+      final uid = user.uid;
+      final querySnapshot = await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('food_records')
+          .orderBy('date', descending: true) // sắp xếp theo thời gian mới nhất
+          .get();
+
+      return querySnapshot.docs
+          .map((doc) => FoodRecordModel.fromJson({
+                ...doc.data(),
+                'id': doc.id, // đảm bảo có id
+              }))
+          .toList();
+    } catch (e) {
+      // Log error without using print in production
+      // Consider using a proper logging framework
+      return [];
+    }
+  }
+
   @override
   Future<List<FoodRecordEntity>> getFoodRecords() async {
+    // Lấy dữ liệu từ Firebase trước
+    final firestoreRecords = await _getFromFirestore();
+
+    // Nếu có dữ liệu từ Firebase, đồng bộ với local storage
+    if (firestoreRecords.isNotEmpty) {
+      // Lấy dữ liệu local hiện tại
+      final localData = await _localStorageService.getData(_key);
+      final localList = _coerceToJsonList(localData);
+      final localRecords = localList
+          .whereType<Map>()
+          .map((json) => FoodRecordModel.fromJson(Map<String, dynamic>.from(json)))
+          .toList();
+
+      // Tạo map để merge dữ liệu (ưu tiên Firebase)
+      final Map<String, FoodRecordModel> mergedRecords = {};
+
+      // Thêm local records trước
+      for (final record in localRecords) {
+        if (record.id != null) {
+          mergedRecords[record.id!] = record;
+        }
+      }
+
+      // Override với Firebase records (ưu tiên Firebase)
+      for (final record in firestoreRecords) {
+        if (record.id != null) {
+          mergedRecords[record.id!] = record;
+        }
+      }
+
+      // Lưu dữ liệu đã merge vào local storage
+      final jsonList = mergedRecords.values
+          .map((record) => record.toJson())
+          .toList();
+      await _localStorageService.saveData(_key, jsonList);
+
+      // Trả về danh sách đã sắp xếp theo thời gian
+      final sortedRecords = mergedRecords.values.toList();
+      sortedRecords.sort((a, b) => b.date.compareTo(a.date));
+      return sortedRecords;
+    }
+
+    // Nếu không có dữ liệu từ Firebase, lấy từ local storage
     final data = await _localStorageService.getData(_key);
     final list = _coerceToJsonList(data);
-    return list
-        .where((e) => e is Map)
+    final localRecords = list
+        .whereType<Map>()
         .map(
           (json) =>
-              FoodRecordModel.fromJson(Map<String, dynamic>.from(json as Map)),
+              FoodRecordModel.fromJson(Map<String, dynamic>.from(json)),
         )
         .toList();
+
+    // Sắp xếp theo thời gian mới nhất
+    localRecords.sort((a, b) => b.date.compareTo(a.date));
+    return localRecords;
+  }
+
+  /// Đồng bộ dữ liệu từ Firebase về local storage
+  @override
+  Future<void> syncWithFirestore() async {
+    final firestoreRecords = await _getFromFirestore();
+    if (firestoreRecords.isNotEmpty) {
+      final jsonList = firestoreRecords
+          .map((record) => record.toJson())
+          .toList();
+      await _localStorageService.saveData(_key, jsonList);
+    }
   }
 
   @override

@@ -2,17 +2,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/save_food_record_usecase.dart';
 import '../../domain/usecases/get_food_records_usecase.dart';
 import '../../domain/usecases/delete_food_record_usecase.dart';
+import '../../domain/usecases/sync_food_records_usecase.dart';
 import 'record_state.dart';
 
 class RecordCubit extends Cubit<RecordState> {
   final SaveFoodRecordUseCase _saveFoodRecordUseCase;
   final GetFoodRecordsUseCase _getFoodRecordsUseCase;
   final DeleteFoodRecordUseCase _deleteFoodRecordUseCase;
+  final SyncFoodRecordsUseCase _syncFoodRecordsUseCase;
 
   RecordCubit(
     this._saveFoodRecordUseCase,
     this._getFoodRecordsUseCase,
     this._deleteFoodRecordUseCase,
+    this._syncFoodRecordsUseCase,
   ) : super(RecordInitial());
 
   Future<void> saveFoodRecord(
@@ -40,6 +43,8 @@ class RecordCubit extends Cubit<RecordState> {
   Future<void> loadFoodRecords() async {
     try {
       emit(RecordLoading());
+      // Đồng bộ dữ liệu từ Firebase trước khi load
+      await _syncFoodRecordsUseCase.call();
       final records = await _getFoodRecordsUseCase.call();
       emit(RecordListLoaded(records));
     } catch (e) {

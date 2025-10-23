@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../domain/entities/chat_message_entity.dart';
 import '../../domain/entities/chat_session_entity.dart';
@@ -143,11 +144,24 @@ class ChatProvider extends ChangeNotifier {
     return await sendMessage(prompt);
   }
 
-  void _addMessage(ChatMessageEntity message) async {
+  void _addMessage(ChatMessageEntity message) {
     if (_currentSession != null) {
       _currentSession = _currentSession!.addMessage(message);
-      await _chatSessionRepository.saveSession(_currentSession!);
+      // Update UI immediately
       notifyListeners();
+
+      // Save to storage asynchronously without blocking UI
+      _saveSessionAsync(_currentSession!);
+    }
+  }
+
+  /// Save session asynchronously without blocking UI
+  void _saveSessionAsync(ChatSessionEntity session) async {
+    try {
+      await _chatSessionRepository.saveSession(session);
+    } catch (e) {
+      // Handle save error silently or log it
+      debugPrint('Error saving session: $e');
     }
   }
 
