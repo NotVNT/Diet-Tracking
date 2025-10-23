@@ -1,6 +1,6 @@
 import '../../domain/entities/user_data_entity.dart';
 
-/// Data model for user data with Firebase document parsing
+/// Data model for user data with Firebase document parsing (STRICT schema)
 class UserDataModel extends UserDataEntity {
   const UserDataModel({
     required super.age,
@@ -11,19 +11,118 @@ class UserDataModel extends UserDataEntity {
     required super.goal,
   });
 
-  /// Creates UserDataModel from Firebase document data
+  /// Creates UserDataModel from Firebase document data (STRICT)
+  /// Firestore document MUST follow this schema exactly:
+  /// {
+  ///   "age": int,
+  ///   "goal": string,
+  ///   "bodyInfo": {
+  ///     "heightCm": int,
+  ///     "weightKg": int,
+  ///     "medicalConditions": List&lt;String&gt;,
+  ///     "allergies": List&lt;String&gt;
+  ///   }
+  /// }
   factory UserDataModel.fromFirebaseData(Map<String, dynamic> userData) {
-    final bodyInfo = userData["bodyInfo"] as Map<String, dynamic>? ?? {};
-    final diseaseList = bodyInfo["medicalConditions"] as List<dynamic>? ?? [];
-    final allergyList = bodyInfo["allergies"] as List<dynamic>? ?? [];
+    T requireType<T>(Object? value, String field) {
+      if (value is T) return value;
+      throw FormatException(
+        'Invalid type for "$field". Expected $T, got ${value.runtimeType}',
+      );
+    }
+
+    // age
+    final num ageNum = requireType<num>(userData['age'], 'age');
+    final int age = ageNum.toInt();
+
+    // goal
+    final String goal = (requireType<String>(userData['goal'], 'goal')).trim();
+    if (goal.isEmpty) {
+      throw FormatException('Field "goal" must be a non-empty string');
+    }
+
+    // bodyInfo
+    final Map<String, dynamic> bodyInfo = requireType<Map<String, dynamic>>(
+      userData['bodyInfo'],
+      'bodyInfo',
+    );
+
+    // heightCm, weightKg
+    final num heightNum = requireType<num>(
+      bodyInfo['heightCm'],
+      'bodyInfo.heightCm',
+    );
+    final num weightNum = requireType<num>(
+      bodyInfo['weightKg'],
+      'bodyInfo.weightKg',
+    );
+    final double height = heightNum.toDouble();
+    final double weight = weightNum.toDouble();
+
+    // medicalConditions (allow null -> empty list)
+    final dynamic medDyn = bodyInfo['medicalConditions'];
+    final List<String> medicalConditions;
+    if (medDyn == null) {
+      medicalConditions = <String>[];
+    } else if (medDyn is List) {
+      if (!medDyn.every((e) => e is String)) {
+        throw FormatException(
+          'All items in bodyInfo.medicalConditions must be String',
+        );
+      }
+      medicalConditions = medDyn
+          .cast<String>()
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+    } else {
+      throw FormatException(
+        'Invalid type for "bodyInfo.medicalConditions". Expected List<String> or null, got ${medDyn.runtimeType}',
+      );
+    }
+
+    // allergies (allow null -> empty list)
+    final dynamic allergyDyn = bodyInfo['allergies'];
+    final List<String> allergies;
+    if (allergyDyn == null) {
+      allergies = <String>[];
+    } else if (allergyDyn is List) {
+      if (!allergyDyn.every((e) => e is String)) {
+        throw FormatException('All items in bodyInfo.allergies must be String');
+      }
+      allergies = allergyDyn
+          .cast<String>()
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+    } else {
+      throw FormatException(
+        'Invalid type for "bodyInfo.allergies". Expected List<String> or null, got ${allergyDyn.runtimeType}',
+      );
+    }
+
+    // Basic range validations (optional but helpful)
+    if (age < 0 || age > 120) {
+      throw FormatException('age out of range (0-120)');
+    }
+    if (height < 30 || height > 300) {
+      throw FormatException('bodyInfo.heightCm out of range (30-300)');
+    }
+    if (weight < 2 || weight > 500) {
+      throw FormatException('bodyInfo.weightKg out of range (2-500)');
+    }
+
+    // Join lists for model fields
+    final String disease = medicalConditions.join(', ');
+    final String allergy = allergies.join(', ');
 
     return UserDataModel(
-      age: userData["age"] ?? 18,
-      height: (bodyInfo["heightCm"] ?? 170).toDouble(),
-      weight: (bodyInfo["weightKg"] ?? 65).toDouble(),
-      disease: diseaseList.join(', '),
-      allergy: allergyList.join(', '),
-      goal: userData["goalWeightKg"]?.toString() ?? "",
+      age: age,
+      height: height,
+      weight: weight,
+      disease: disease,
+      allergy: allergy,
+      goal: goal,
     );
   }
 
@@ -42,13 +141,13 @@ class UserDataModel extends UserDataEntity {
   /// Converts to API request body format
   Map<String, dynamic> toApiBody(String prompt) {
     return {
-      "age": age,
-      "height": height,
-      "weight": weight,
-      "disease": disease,
-      "allergy": allergy,
-      "goal": goal,
-      "prompt": prompt,
+      'age': age,
+      'height': height,
+      'weight': weight,
+      'disease': disease.trim(),
+      'allergy': allergy.trim(),
+      'goal': goal.trim(),
+      'prompt': prompt,
     };
   }
 
