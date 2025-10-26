@@ -3,6 +3,7 @@ class UserDataEntity {
   final int age;
   final double height;
   final double weight;
+  final double? goalWeightKg;
   final String disease;
   final String allergy;
   final String goal;
@@ -11,6 +12,7 @@ class UserDataEntity {
     required this.age,
     required this.height,
     required this.weight,
+    this.goalWeightKg,
     required this.disease,
     required this.allergy,
     required this.goal,
@@ -23,6 +25,7 @@ class UserDataEntity {
         other.age == age &&
         other.height == height &&
         other.weight == weight &&
+        other.goalWeightKg == goalWeightKg &&
         other.disease == disease &&
         other.allergy == allergy &&
         other.goal == goal;
@@ -33,6 +36,7 @@ class UserDataEntity {
     return age.hashCode ^
         height.hashCode ^
         weight.hashCode ^
+        (goalWeightKg?.hashCode ?? 0) ^
         disease.hashCode ^
         allergy.hashCode ^
         goal.hashCode;
@@ -40,6 +44,6 @@ class UserDataEntity {
 
   @override
   String toString() {
-    return 'UserDataEntity(age: $age, height: $height, weight: $weight, disease: $disease, allergy: $allergy, goal: $goal)';
+    return 'UserDataEntity(age: $age, height: $height, weight: $weight, goalWeightKg: $goalWeightKg, disease: $disease, allergy: $allergy, goal: $goal)';
   }
 }

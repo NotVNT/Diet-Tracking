@@ -6,6 +6,7 @@ class UserDataModel extends UserDataEntity {
     required super.age,
     required super.height,
     required super.weight,
+    super.goalWeightKg,
     required super.disease,
     required super.allergy,
     required super.goal,
@@ -47,7 +48,7 @@ class UserDataModel extends UserDataEntity {
       'bodyInfo',
     );
 
-    // heightCm, weightKg
+    // heightCm, weightKg, goalWeightKg (goalWeightKg có thể thiếu -> null)
     final num heightNum = requireType<num>(
       bodyInfo['heightCm'],
       'bodyInfo.heightCm',
@@ -56,8 +57,17 @@ class UserDataModel extends UserDataEntity {
       bodyInfo['weightKg'],
       'bodyInfo.weightKg',
     );
+
     final double height = heightNum.toDouble();
     final double weight = weightNum.toDouble();
+
+    // goalWeightKg: optional on Firestore
+    final dynamic goalWRaw = bodyInfo['goalWeightKg'];
+    final double? goalWeightKg = goalWRaw == null
+        ? null
+        : (goalWRaw is num)
+        ? goalWRaw.toDouble()
+        : double.tryParse(goalWRaw.toString());
 
     // medicalConditions (allow null -> empty list)
     final dynamic medDyn = bodyInfo['medicalConditions'];
@@ -120,6 +130,7 @@ class UserDataModel extends UserDataEntity {
       age: age,
       height: height,
       weight: weight,
+      goalWeightKg: goalWeightKg,
       disease: disease,
       allergy: allergy,
       goal: goal,
@@ -132,6 +143,7 @@ class UserDataModel extends UserDataEntity {
       age: entity.age,
       height: entity.height,
       weight: entity.weight,
+      goalWeightKg: entity.goalWeightKg,
       disease: entity.disease,
       allergy: entity.allergy,
       goal: entity.goal,
@@ -144,6 +156,7 @@ class UserDataModel extends UserDataEntity {
       'age': age,
       'height': height,
       'weight': weight,
+      'goal_weight': goalWeightKg ?? 0.0,
       'disease': disease.trim(),
       'allergy': allergy.trim(),
       'goal': goal.trim(),
@@ -157,6 +170,7 @@ class UserDataModel extends UserDataEntity {
       age: age,
       height: height,
       weight: weight,
+      goalWeightKg: goalWeightKg,
       disease: disease,
       allergy: allergy,
       goal: goal,
@@ -165,6 +179,6 @@ class UserDataModel extends UserDataEntity {
 
   @override
   String toString() {
-    return 'UserDataModel(age: $age, height: $height, weight: $weight, disease: $disease, allergy: $allergy, goal: $goal)';
+    return 'UserDataModel(age: $age, height: $height, weight: $weight, goalWeightKg: $goalWeightKg, disease: $disease, allergy: $allergy, goal: $goal)';
   }
 }

@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
 
 import 'chat_history_service.dart';
 
@@ -37,7 +34,10 @@ class FirestoreService {
 
   /// 📥 Lấy user theo ID
   Future<DocumentSnapshot> getUserById(String userId) {
-    return _firestore.collection(_usersCollection).doc(userId).get();
+    return _firestore
+        .collection(_usersCollection)
+        .doc(userId)
+        .get(const GetOptions(source: Source.server));
   }
 
   /// ❌ Xóa user
@@ -59,7 +59,10 @@ class FirestoreService {
     final doc = await _firestore
         .collection(_usersCollection)
         .doc(user.uid)
-        .get();
+        .get(const GetOptions(source: Source.server));
+
+    // ignore: avoid_print
+    print('[FirestoreService] current uid=${user.uid}');
     return doc.data();
   }
 
@@ -76,78 +79,5 @@ class FirestoreService {
   Future<List<ChatMessage>> loadChatHistoryForCurrentUser() async {
     final uid = _requireUid();
     return load_history_from_firestore(uid);
-  }
-
-  /// 💬 Gửi prompt tới API (FastAPI -> Gemini) và LƯU LỊCH SỬ theo yêu cầu
-  /// Quy trình:
-  /// - Load toàn bộ history hiện tại từ Firestore
-  /// - Append message USER
-  /// - Gọi backend để lấy reply
-  /// - Append message MODEL
-  /// - Lưu TOÀN BỘ lịch sử lại vào Firestore (append-only)
-  Future<String> sendMessageToChatbox(String prompt) async {
-    // 0) Lấy user info để gửi kèm backend như trước đây
-    final userData = await getCurrentUserData();
-    if (userData == null) {
-      throw Exception(
-        "Chưa đăng nhập hoặc không tìm thấy user trong Firestore",
-      );
-    }
-    final uid = _requireUid();
-
-    // 1) Load toàn bộ lịch sử hiện tại
-    final history = await load_history_from_firestore(uid);
-
-    // 2) Append message mới của user (append-only)
-    history.add(
-      ChatMessage(
-        role: 'user',
-        content: prompt,
-        timestamp: DateTime.now().toUtc(),
-      ),
-    );
-
-    // 3) Gọi backend (FastAPI endpoint như cũ, KHÔNG đụng chat_bot)
-    final url = Uri.parse(
-      'http://localhost:8000/chat',
-    ); // đổi thành server thật khi deploy
-
-    final body = jsonEncode({
-      'prompt': prompt,
-      'age': userData['age'],
-      'height': userData['height'],
-      'weight': userData['weight'],
-      'disease': userData['disease'],
-      'goal': userData['goal'],
-    });
-
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: body,
-    );
-
-    if (response.statusCode != 200) {
-      // Không append message model khi lỗi
-      throw Exception('Lỗi chatbox: ${response.statusCode} - ${response.body}');
-    }
-
-    final data = jsonDecode(response.body) as Map<String, dynamic>;
-    final reply = (data['reply'] ?? '').toString();
-
-    // 4) Append message của bot/model
-    history.add(
-      ChatMessage(
-        role: 'model',
-        content: reply,
-        timestamp: DateTime.now().toUtc(),
-      ),
-    );
-
-    // 5) Lưu TOÀN BỘ lịch sử vào Firestore (đúng SYSTEM PROMPT)
-    await save_history_to_firestore(uid, history);
-
-    // 6) Trả về reply
-    return reply;
   }
 }
