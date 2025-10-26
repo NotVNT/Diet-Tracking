@@ -224,7 +224,8 @@ async def chatbox(request: ChatRequest):
     if(action == "DATABASE"):#<---------------------------
         #biến results sẽ là biến mà lưu danh sách database vào
         results = db_lookup(request.prompt)
-        final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight) + "Dưới đây là danh sách món ăn lấy được từ database:" + results + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
+        final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight)
+        # final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight) + "Dưới đây là danh sách món ăn lấy được từ database:" + results + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
         response = chat.send_message(final_prompt)
         return {"reply": response.text}
     
