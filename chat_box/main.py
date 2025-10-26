@@ -57,7 +57,9 @@ def google_search(query: str, num_results: int = 3):
         })
     return results
 
-def db_lookup(tool_query:str): #you intergate your shit into this function
+def db_lookup(tool_query:str): 
+    #you intergate your shit into this function
+    #hàm này là trả danh sách đồ ăn từ database về
     if "giảm cân" in tool_query.lower():
         return """
     Món ăn: Mì xào giòn chay.
@@ -219,7 +221,8 @@ async def chatbox(request: ChatRequest):
         response = chat.send_message(request.prompt)
         return {"reply": response.text}
     
-    if(action == "DATABASE"):
+    if(action == "DATABASE"):#<---------------------------
+        #biến results sẽ là biến mà lưu danh sách database vào
         results = db_lookup(request.prompt)
         final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight) + "Dưới đây là danh sách món ăn lấy được từ database:" + results + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
         response = chat.send_message(final_prompt)
