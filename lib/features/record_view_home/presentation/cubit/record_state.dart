@@ -32,9 +32,11 @@ class RecordError extends RecordState {
 
 class RecordListLoaded extends RecordState {
   final List<FoodRecordEntity> records;
+  final List<FoodRecordEntity> filteredRecords;
 
-  const RecordListLoaded(this.records);
+  const RecordListLoaded(this.records, {List<FoodRecordEntity>? filteredRecords})
+      : filteredRecords = filteredRecords ?? records;
 
   @override
-  List<Object> get props => [records];
+  List<Object> get props => [records, filteredRecords];
 }

@@ -53,7 +53,8 @@ class FoodRecordList extends StatelessWidget {
         }
 
         if (state is RecordListLoaded) {
-          if (state.records.isEmpty) {
+          final recordsToShow = state.filteredRecords;
+          if (recordsToShow.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,9 +87,9 @@ class FoodRecordList extends StatelessWidget {
           return ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: state.records.length,
+            itemCount: recordsToShow.length,
             itemBuilder: (context, index) {
-              final record = state.records[index];
+              final record = recordsToShow[index];
               final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
               return Card(
@@ -191,50 +192,45 @@ class FoodRecordList extends StatelessWidget {
                       ),
                     ],
                   ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.check_circle, color: Colors.green[400]),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        tooltip: 'Xoá món ăn',
-                        icon: Icon(Icons.close_rounded, color: Colors.red[400]),
-                        onPressed: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (ctx) {
-                              return AlertDialog(
-                                title: const Text('Xoá món ăn?'),
-                                content: Text(
-                                  'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
+                  trailing: IconButton(
+                    tooltip: 'Xoá món ăn',
+                    icon: Icon(Icons.close_rounded, color: Colors.red[400]),
+                    onPressed: () async {
+                      // Store the cubit instance before the async gap
+                      final cubit = context.read<RecordCubit>();
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) {
+                          return AlertDialog(
+                            title: const Text('Xoá món ăn?'),
+                            content: Text(
+                              'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(ctx).pop(false),
+                                child: const Text('Huỷ'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(ctx).pop(true),
+                                child: const Text(
+                                  'Xoá',
+                                  style: TextStyle(color: Colors.red),
                                 ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(ctx).pop(false),
-                                    child: const Text('Huỷ'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(ctx).pop(true),
-                                    child: const Text(
-                                      'Xoá',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
+                              ),
+                            ],
                           );
-
-                          if (confirm == true && (record.id != null)) {
-                            context.read<RecordCubit>().deleteFoodRecord(
-                              record.id!,
-                            );
-                          }
                         },
-                      ),
-                    ],
+                      );
+
+                      if (confirm == true && (record.id != null)) {
+                        cubit.deleteFoodRecord(
+                          record.id!,
+                        );
+                      }
+                    },
                   ),
                 ),
               );

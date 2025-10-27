@@ -1,9 +1,9 @@
-import 'package:diet_tracking_project/features/record_view_home/presentation/pages/record_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/chat_bot_view_home/presentation/pages/chat_bot_page.dart';
 import '../profile/profile_view.dart';
 import '../../features/record_view_home/di/record_di.dart';
+import '../main_screens/record_screen.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -18,7 +18,7 @@ class _HomeViewState extends State<HomeView> {
   // Pages: 0 Trang chủ, 1 Ghi nhận, 2 Chat bot, 3 Hồ sơ
   final List<Widget> _pages = [
     const _HomePage(),
-    const RecordPage(),
+    const RecordScreen(),
     // Provide RecordCubit for ChatBotPage so the "Thêm vào danh sách" button can access it
     BlocProvider(
       create: (_) => RecordDI.getRecordCubit(),
