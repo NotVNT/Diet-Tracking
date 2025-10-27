@@ -13,9 +13,9 @@ from pydantic import BaseModel
 #---api_key---#
 load_dotenv()
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GOOGLE_API_KEY = os.getenv('GOOGLE_SEARCH_API_KEY')
-GOOGLE_CX = os.getenv('GOOGLE_SEARCH_CX')
+GEMINI_API_KEY = ("AIzaSyDic7CyKachNcLmKR3VhFINtQb5hK9L03A")
+GOOGLE_API_KEY = ('AIzaSyDyWyqsCP864gGSxyunCqfKAiPtcRg85_s')
+GOOGLE_CX = ('326a236a3e77a4180')
 #---api_key---# 
 
 #---model_database_config---#
