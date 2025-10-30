@@ -9,6 +9,8 @@ import 'package:diet_tracking_project/widget/weight/weight_ruler.dart';
 import 'package:diet_tracking_project/widget/weight/bmi_card.dart';
 import 'package:diet_tracking_project/widget/weight/weight_responsive_design.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
+import 'package:diet_tracking_project/utils/bmi_calculator.dart';
+import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart';
 
 class WeightSelector extends StatefulWidget {
   final AuthService? authService;
@@ -65,8 +67,8 @@ class _WeightSelectorState extends State<WeightSelector> {
         ? _weightKg
         : _weightKg * 2.2046226218; // kg -> lb
     final valueText = displayedValue.toStringAsFixed(1);
-    final bmi = _computeBmi(_weightKg, _heightCm);
-    final bmiText = _bmiDescription(context, bmi);
+    final bmi = BmiCalculator.computeBmi(_weightKg, _heightCm);
+    final bmiText = BmiCalculator.bmiDescription(context, bmi);
 
     return Scaffold(
       backgroundColor: _pageBg,
@@ -77,6 +79,10 @@ class _WeightSelectorState extends State<WeightSelector> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: r.space(12)),
+              // Progress bar
+              const ProgressBarWidget(
+                progress: 5 / 7, // Bước 5/7
+              ),
               SizedBox(height: r.space(18)),
               // Titles
               Text(
@@ -280,27 +286,4 @@ class _WeightSelectorState extends State<WeightSelector> {
     );
   }
 
-  double _computeBmi(double weightKg, double? heightCm) {
-    if (heightCm == null || heightCm <= 0) return 0;
-    final h = heightCm / 100.0;
-    return weightKg / (h * h);
-  }
-
-  String _bmiDescription(BuildContext context, double bmi) {
-    final l10n = AppLocalizations.of(context);
-    if (bmi == 0) {
-      return l10n?.bmiEnterHeightToCalculate ??
-          'Hãy nhập chiều cao để tính BMI.';
-    }
-    if (bmi < 18.5) {
-      return l10n?.bmiUnderweight ?? 'Bạn đang thiếu cân.';
-    }
-    if (bmi < 25) {
-      return l10n?.bmiNormal ?? 'Bạn có cân nặng bình thường.';
-    }
-    if (bmi < 30) {
-      return l10n?.bmiOverweight ?? 'Bạn đang thừa cân.';
-    }
-    return l10n?.bmiObese ?? 'Bạn cần giảm cân nghiêm túc để bảo vệ sức khỏe';
-  }
 }

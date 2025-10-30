@@ -5,9 +5,11 @@ import 'package:diet_tracking_project/widget/weight/weight_display.dart';
 import 'package:diet_tracking_project/widget/weight/weight_ruler.dart';
 import 'package:diet_tracking_project/widget/weight/weight_responsive_design.dart';
 import 'package:diet_tracking_project/widget/weight/bmi_card.dart';
+import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart';
 import '../../../database/local_storage_service.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
-import 'interface_confirmation.dart';
+import 'package:diet_tracking_project/utils/bmi_calculator.dart';
+import 'daily_activities_selector.dart';
 import '../../../database/auth_service.dart';
 
 class GoalWeightSelector extends StatefulWidget {
@@ -70,8 +72,8 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
     final r = WeightResponsive.of(context);
     final displayedValue = _isKg ? _goalWeightKg : _goalWeightKg * 2.2046226218;
     final valueText = displayedValue.toStringAsFixed(1);
-    final bmi = _computeBmi(_goalWeightKg, _heightCm);
-    final bmiText = _bmiDescription(context, bmi);
+    final bmi = BmiCalculator.computeBmi(_goalWeightKg, _heightCm);
+    final bmiText = BmiCalculator.bmiDescription(context, bmi);
 
     return Scaffold(
       backgroundColor: _pageBg,
@@ -82,6 +84,14 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: r.space(12)),
+              // Progress Bar
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: r.space(4)),
+                child: const ProgressBarWidget(
+                  progress: 6 / 7, // Bước 6/7
+                ),
+              ),
+              SizedBox(height: r.space(20)),
               // Titles (keep static text as requested)
               Text(
                 AppLocalizations.of(context)?.goalWeight ?? 'Goal Weight',
@@ -254,15 +264,12 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                           }
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => InterfaceConfirmation(
-                                currentWeightKg: widget.currentWeightKg,
-                                goalWeightKg: _goalWeightKg.round(),
-                              ),
+                              builder: (_) => const DailyActivitiesSelector(),
                             ),
                           );
                         },
                         child: Text(
-                          AppLocalizations.of(context)?.done ?? 'Xong',
+                          AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 16,
@@ -283,25 +290,3 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
   }
 }
 
-double _computeBmi(double weightKg, double? heightCm) {
-  if (heightCm == null || heightCm <= 0) return 0;
-  final h = heightCm / 100.0;
-  return weightKg / (h * h);
-}
-
-String _bmiDescription(BuildContext context, double bmi) {
-  final l10n = AppLocalizations.of(context);
-  if (bmi == 0) {
-    return l10n?.bmiEnterHeightToCalculate ?? 'Hãy nhập chiều cao để tính BMI.';
-  }
-  if (bmi < 18.5) {
-    return l10n?.bmiUnderweight ?? 'Bạn đang thiếu cân.';
-  }
-  if (bmi < 25) {
-    return l10n?.bmiNormal ?? 'Bạn có cân nặng bình thường.';
-  }
-  if (bmi < 30) {
-    return l10n?.bmiOverweight ?? 'Bạn đang thừa cân.';
-  }
-  return l10n?.bmiObese ?? 'Bạn cần giảm cân nghiêm túc để bảo vệ sức khỏe';
-}

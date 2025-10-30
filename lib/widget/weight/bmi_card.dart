@@ -44,8 +44,7 @@ class BmiCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      AppLocalizations.of(context)?.bmiCurrentTitle ??
-                          'BMI hiện tại của bạn',
+                      AppLocalizations.of(context)!.bmiCurrentTitle,
                       style: GoogleFonts.inter(
                         fontSize: r.font(12),
                         fontWeight: FontWeight.w700,

@@ -12,8 +12,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get defineYourGoal => 'Xác định mục tiêu của bạn';
 
   @override
-  String get weWillBuild =>
-      'Chúng tôi sẽ xây dựng cho bạn một kế hoạch tùy chỉnh nhằm giúp bạn duy trì động lực và đạt được mục tiêu của mình.';
+  String get weWillBuild => 'Chúng tôi sẽ xây dựng cho bạn một kế hoạch tùy chỉnh nhằm giúp bạn duy trì động lực và đạt được mục tiêu của mình.';
 
   @override
   String get getStartedNow => 'Bắt đầu ngay!';
@@ -22,12 +21,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'Theo dõi chế độ ăn';
 
   @override
-  String get startTrackingToday =>
-      'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!';
+  String get startTrackingToday => 'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!';
 
   @override
-  String get trackDailyDiet =>
-      'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.';
+  String get trackDailyDiet => 'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.';
 
   @override
   String get getStarted => 'Bắt đầu ngay';
@@ -42,8 +39,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tellUsAboutYourself => 'Hãy cho chúng tôi biết về bản thân bạn';
 
   @override
-  String get weWillCreatePersonalizedPlan =>
-      'Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho bạn dựa trên các chi tiết như tuổi và cân nặng hiện tại của bạn.';
+  String get weWillCreatePersonalizedPlan => 'Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho bạn dựa trên các chi tiết như tuổi và cân nặng hiện tại của bạn.';
 
   @override
   String get start => 'Bắt đầu';
@@ -52,8 +48,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get gender => 'Giới tính';
 
   @override
-  String get weWillUseThisInfo =>
-      'Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.';
+  String get weWillUseThisInfo => 'Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.';
 
   @override
   String get male => 'Nam';
@@ -161,12 +156,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get optimizeMealCosts => 'Muốn tối ưu chi phí bữa ăn';
 
   @override
-  String get weBringYouBestResults =>
-      'Chúng tôi mang đến cho bạn hiệu quả tốt nhất';
+  String get weBringYouBestResults => 'Chúng tôi mang đến cho bạn hiệu quả tốt nhất';
 
   @override
-  String get personalizedPathwayBasedOnGoals =>
-      'Lộ trình cá nhân hóa dựa trên mục tiêu và thói quen của bạn. Bắt đầu ngay để thấy sự thay đổi bền vững.';
+  String get personalizedPathwayBasedOnGoals => 'Lộ trình cá nhân hóa dựa trên mục tiêu và thói quen của bạn. Bắt đầu ngay để thấy sự thay đổi bền vững.';
 
   @override
   String get height => 'Chiều cao';
@@ -193,33 +186,28 @@ class AppLocalizationsVi extends AppLocalizations {
   String get youCanDoIt => 'Bạn sẽ làm được!';
 
   @override
-  String get maintainCurrentWeightIsHealthy =>
-      'Duy trì cân nặng hiện tại là một lựa chọn lành mạnh';
+  String get maintainCurrentWeightIsHealthy => 'Duy trì cân nặng hiện tại là một lựa chọn lành mạnh';
 
   @override
   String get loseWeightGoalPrefix => 'Giảm';
 
   @override
-  String get loseWeightGoalSuffix =>
-      'kg là mục tiêu thách thức nhưng hoàn toàn khả thi';
+  String get loseWeightGoalSuffix => 'kg là mục tiêu thách thức nhưng hoàn toàn khả thi';
 
   @override
   String get gainWeightGoalPrefix => 'Tăng';
 
   @override
-  String get gainWeightGoalSuffix =>
-      'kg sẽ giúp bạn đạt trạng thái cân bằng tốt hơn';
+  String get gainWeightGoalSuffix => 'kg sẽ giúp bạn đạt trạng thái cân bằng tốt hơn';
 
   @override
-  String get setClearGoalsMessage =>
-      'Đặt mục tiêu rõ ràng giúp bạn tiến gần hơn mỗi ngày';
+  String get setClearGoalsMessage => 'Đặt mục tiêu rõ ràng giúp bạn tiến gần hơn mỗi ngày';
 
   @override
   String get goalWeightPrefix => 'Cân nặng mục tiêu';
 
   @override
-  String get userProgressMessage =>
-      'người dùng ghi nhận tiến bộ rõ rệt sau 4 tuần theo kế hoạch';
+  String get userProgressMessage => 'người dùng ghi nhận tiến bộ rõ rệt sau 4 tuần theo kế hoạch';
 
   @override
   String get continueAsGuest => 'Tiếp tục với Guest';
@@ -240,7 +228,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get languageChangedToEnglish => 'Đã chuyển sang tiếng Anh';
 
   @override
-  String get bmiCurrentTitle => 'BMI hiện tại của bạn';
+  String get bmiCurrentTitle => 'Chỉ số BMI hiện tại';
 
   @override
   String get bmiEnterHeightToCalculate => 'Hãy nhập chiều cao để tính BMI.';

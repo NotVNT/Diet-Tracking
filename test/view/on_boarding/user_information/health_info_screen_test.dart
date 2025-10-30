@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/health_info_screen.dart';
 import 'package:diet_tracking_project/database/local_storage_service.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
+import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart';
 
 class _LocalFake extends LocalStorageService {
   Map<String, dynamic>? saved;
@@ -47,5 +48,19 @@ void main() {
 
     // Không crash và không lưu gì
     expect(local.saved, isNull);
+  });
+
+  testWidgets('HealthInfoScreen displays progress bar', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: HealthInfoScreen(),
+      ),
+    );
+
+    // Tìm ProgressBarWidget
+    final progressBarFinder = find.byType(ProgressBarWidget);
+
+    // Kiểm tra xem widget có tồn tại không
+    expect(progressBarFinder, findsOneWidget);
   });
 }

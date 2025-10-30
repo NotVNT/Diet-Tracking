@@ -74,4 +74,23 @@
   "languageChangedSuccessfully": "Language changed successfully!",
   "languageChangedToVietnamese": "Language changed to Vietnamese",
   "languageChangedToEnglish": "Language changed to English"
+,
+  "bmiCurrentTitle": "Current BMI"
+,
+  "bmiEnterHeightToCalculate": "Please enter height to calculate BMI.",
+  "bmiUnderweight": "You are underweight.",
+  "bmiNormal": "You have a normal weight.",
+  "bmiOverweight": "You are overweight.",
+  "bmiObese": "You need to lose weight seriously to protect your health."
+,
+  "activityLevelSedentaryTitle": "Sedentary",
+  "activityLevelSedentarySubtitle": "(Mostly sitting, little or no exercise)",
+  "activityLevelLightlyActiveTitle": "Lightly active",
+  "activityLevelLightlyActiveSubtitle": "(Exercise/sports 1-3 days/week)",
+  "activityLevelModeratelyActiveTitle": "Moderately active",
+  "activityLevelModeratelyActiveSubtitle": "(Exercise/sports 3-5 days/week)",
+  "activityLevelVeryActiveTitle": "Very active",
+  "activityLevelVeryActiveSubtitle": "(Exercise/sports 6-7 days/week)",
+  "activityLevelExtraActiveTitle": "Extra active",
+  "activityLevelExtraActiveSubtitle": "(Exercise twice a day, manual labor)"
 }

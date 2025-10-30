@@ -4,6 +4,7 @@ import '../../../widget/height/height_selector_widget.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../widget/progress_bar/user_progress_bar.dart';
 import 'weight_selector.dart';
 
 class HeightSelector extends StatefulWidget {
@@ -25,7 +26,6 @@ class HeightSelector extends StatefulWidget {
 class _HeightSelectorState extends State<HeightSelector> {
   Color get _accent => const Color(0xFF1F2A37);
   Color get _title => const Color(0xFF2D3A4A);
-  Color get _progress => const Color(0xFFF2C94C);
 
   double _selectedHeight = 172.0;
   final LocalStorageService _local = LocalStorageService();
@@ -49,14 +49,8 @@ class _HeightSelectorState extends State<HeightSelector> {
             children: [
               const SizedBox(height: 16),
               // Progress indicator
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: LinearProgressIndicator(
-                  value: 0.8, // Further along in the onboarding process
-                  minHeight: 10,
-                  backgroundColor: Colors.grey[200],
-                  valueColor: AlwaysStoppedAnimation<Color>(_progress),
-                ),
+              const ProgressBarWidget(
+                progress: 4 / 7, // Bước 4/7
               ),
               const SizedBox(height: 24),
 

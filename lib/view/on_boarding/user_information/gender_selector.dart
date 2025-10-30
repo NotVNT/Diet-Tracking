@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'age_selector.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../widget/progress_bar/user_progress_bar.dart';
 
 class GenderSelector extends StatefulWidget {
   const GenderSelector({super.key});
@@ -46,15 +47,9 @@ class _GenderSelectorState extends State<GenderSelector> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-                  // Thanh tiến trình đơn giản (placeholder)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: LinearProgressIndicator(
-                      value: 0.4,
-                      minHeight: 10,
-                      backgroundColor: Colors.white,
-                      valueColor: AlwaysStoppedAnimation<Color>(_highlight),
-                    ),
+                  // Progress bar mới
+                  const ProgressBarWidget(
+                    progress: 1 / 7, // Bước 1/7
                   ),
                   const SizedBox(height: 24),
                   Text(

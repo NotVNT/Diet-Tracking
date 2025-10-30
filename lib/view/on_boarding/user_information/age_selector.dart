@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/view/on_boarding/user_information/health_info_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../widget/progress_bar/user_progress_bar.dart';
 
 class AgeSelector extends StatefulWidget {
   final dynamic selectedGender;
@@ -16,7 +17,6 @@ class _AgeSelectorState extends State<AgeSelector> {
   Color get _bg => const Color(0xFFFDF0D7);
   Color get _accent => const Color(0xFF1F2A37);
   Color get _title => const Color(0xFF2D3A4A);
-  Color get _progress => const Color(0xFFF2C94C);
 
   FixedExtentScrollController scrollController = FixedExtentScrollController(
     initialItem: 18, // mặc định 30 tuổi khi base = 12
@@ -42,14 +42,8 @@ class _AgeSelectorState extends State<AgeSelector> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: LinearProgressIndicator(
-                  value: 0.6,
-                  minHeight: 10,
-                  backgroundColor: Colors.white,
-                  valueColor: AlwaysStoppedAnimation<Color>(_progress),
-                ),
+              const ProgressBarWidget(
+                progress: 2 / 7, // Bước 2/7
               ),
               const SizedBox(height: 24),
               Text(

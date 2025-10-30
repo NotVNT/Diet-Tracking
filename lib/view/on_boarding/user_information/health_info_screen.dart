@@ -8,6 +8,7 @@ import '../../../widget/health/add_button.dart';
 import '../../../widget/health/health_text_field.dart';
 import '../../../widget/health/health_card_widget.dart';
 import 'height_selector.dart';
+import '../../../widget/progress_bar/user_progress_bar.dart';
 
 class HealthInfoScreen extends StatefulWidget {
   final AuthService? authService;
@@ -67,6 +68,10 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 4),
+              const ProgressBarWidget(
+                progress: 3 / 7, // Bước 3/7
+              ),
+              const SizedBox(height: 12),
               Text(
                 title,
                 style: AppStyles.heading1.copyWith(
