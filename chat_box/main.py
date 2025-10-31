@@ -13,7 +13,7 @@ from pydantic import BaseModel
 #---api_key---#
 load_dotenv()
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-GEMINI_API_KEY = ("AIzaSyDic7CyKachNcLmKR3VhFINtQb5hK9L03A")
+GEMINI_API_KEY = ('AIzaSyDic7CyKachNcLmKR3VhFINtQb5hK9L03A')
 GOOGLE_API_KEY = ('AIzaSyDyWyqsCP864gGSxyunCqfKAiPtcRg85_s')
 GOOGLE_CX = ('326a236a3e77a4180')
 #---api_key---# 

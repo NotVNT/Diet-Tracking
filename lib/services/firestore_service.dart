@@ -51,6 +51,14 @@ class FirestoreService {
     return doc.exists;
   }
 
+  /// ✍️ Cập nhật hoặc tạo mới thông tin user
+  Future<void> updateUser(String userId, Map<String, dynamic> data) {
+    return _firestore
+        .collection(_usersCollection)
+        .doc(userId)
+        .set(data, SetOptions(merge: true));
+  }
+
   /// 👤 Lấy thông tin user đang đăng nhập
   Future<Map<String, dynamic>?> getCurrentUserData() async {
     final user = FirebaseAuth.instance.currentUser;

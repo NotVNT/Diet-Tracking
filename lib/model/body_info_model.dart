@@ -4,6 +4,7 @@ class BodyInfoModel {
   final double? heightCm;
   final double? weightKg;
   final double? goalWeightKg;
+  final String? activityLevel;
   final HealthStatus? health;
   final List<String>? medicalConditions; // bệnh lý
   final List<String>? allergies; // dị ứng
@@ -12,6 +13,7 @@ class BodyInfoModel {
     this.heightCm,
     this.weightKg,
     this.goalWeightKg,
+    this.activityLevel,
     this.health,
     this.medicalConditions,
     this.allergies,
@@ -22,6 +24,7 @@ class BodyInfoModel {
     double? heightCm,
     double? weightKg,
     double? goalWeightKg,
+    String? activityLevel,
     HealthStatus? health,
     List<String>? medicalConditions,
     List<String>? allergies,
@@ -30,6 +33,7 @@ class BodyInfoModel {
       heightCm: heightCm ?? this.heightCm,
       weightKg: weightKg ?? this.weightKg,
       goalWeightKg: goalWeightKg ?? this.goalWeightKg,
+      activityLevel: activityLevel ?? this.activityLevel,
       health: health ?? this.health,
       medicalConditions: medicalConditions ?? this.medicalConditions,
       allergies: allergies ?? this.allergies,
@@ -42,6 +46,7 @@ class BodyInfoModel {
       'heightCm': heightCm,
       'weightKg': weightKg,
       'goalWeightKg': goalWeightKg,
+      'activityLevel': activityLevel,
       'medicalConditions': medicalConditions,
       'allergies': allergies,
     };
@@ -53,6 +58,7 @@ class BodyInfoModel {
       heightCm: (json['heightCm'] as num?)?.toDouble(),
       weightKg: (json['weightKg'] as num?)?.toDouble(),
       goalWeightKg: (json['goalWeightKg'] as num?)?.toDouble(),
+      activityLevel: json['activityLevel'] as String?,
       health: _tryParseHealth(json['health'] as String?),
       medicalConditions: _parseStringList(json['medicalConditions']),
       allergies: _parseStringList(json['allergies']),

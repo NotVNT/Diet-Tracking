@@ -16,6 +16,7 @@ class LocalStorageService {
   static const String _keyLanguage = 'selected_language';
   static const String _keyMedical = 'guest_medical_conditions';
   static const String _keyAllergies = 'guest_allergies';
+  static const String _keyActivityLevel = 'guest_activity_level';
 
   /// Lazy initialization của SharedPreferences
   Future<SharedPreferences> get _prefs async =>
@@ -35,6 +36,7 @@ class LocalStorageService {
     int? age,
     String? gender,
     String? language,
+    String? activityLevel,
   }) async {
     final prefs = await _prefs;
 
@@ -57,6 +59,9 @@ class LocalStorageService {
     if (age != null) await prefs.setInt(_keyAge, age);
     if (gender != null) await prefs.setString(_keyGender, gender);
     if (language != null) await prefs.setString(_keyLanguage, language);
+    if (activityLevel != null) {
+      await prefs.setString(_keyActivityLevel, activityLevel);
+    }
   }
 
   /// Đọc tất cả dữ liệu guest từ local storage
@@ -76,6 +81,7 @@ class LocalStorageService {
       'age': prefs.getInt(_keyAge),
       'gender': prefs.getString(_keyGender),
       'language': prefs.getString(_keyLanguage),
+      'activityLevel': prefs.getString(_keyActivityLevel),
     };
   }
 
@@ -92,7 +98,8 @@ class LocalStorageService {
         prefs.containsKey(_keyAllergies) ||
         prefs.containsKey(_keyAge) ||
         prefs.containsKey(_keyGender) ||
-        prefs.containsKey(_keyLanguage);
+        prefs.containsKey(_keyLanguage) ||
+        prefs.containsKey(_keyActivityLevel);
   }
 
   /// Xóa tất cả dữ liệu guest khỏi local storage
@@ -111,6 +118,7 @@ class LocalStorageService {
     await prefs.remove(_keyAge);
     await prefs.remove(_keyGender);
     await prefs.remove(_keyLanguage);
+    await prefs.remove(_keyActivityLevel);
   }
 
   /// Generic method to save any data with a key

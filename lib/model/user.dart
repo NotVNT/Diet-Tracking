@@ -76,18 +76,39 @@ class User {
       goal: json['goal'] as String?,
     );
   }
+
+  /// Creates a User object from guest data collected during onboarding
+  factory User.fromGuestData(Map<String, dynamic> data) {
+    return User(
+      // Guest users don't have these fields until proper registration
+      uid: '', // Will be set by Firestore later
+      email: '',
+      fullName: 'Guest',
+      phone: '',
+      age: data['age'] as int?,
+      gender: _tryParseGender(data['gender'] as String?),
+      goal: data['goal'] as String?,
+      bodyInfo: BodyInfoModel(
+        heightCm: data['heightCm'] as double?,
+        weightKg: data['weightKg'] as double?,
+        goalWeightKg: data['goalWeightKg'] as double?,
+        activityLevel: data['activityLevel'] as String?,
+        medicalConditions: (data['medicalConditions'] as List?)?.cast<String>(),
+        allergies: (data['allergies'] as List?)?.cast<String>(),
+      ),
+    );
+  }
 }
 
 enum GenderType { male, female, other }
 
-enum ActivityLevel { sedentary, light, moderate, active, veryActive }
-
 GenderType? _tryParseGender(String? value) {
   if (value == null) return null;
-  return GenderType.values.firstWhere(
-    (e) => e.name == value,
-    orElse: () => GenderType.other,
-  );
+  try {
+    return GenderType.values.firstWhere((e) => e.name == value);
+  } catch (_) {
+    return GenderType.other;
+  }
 }
 
 // Removed parsing activity level since it's no longer stored

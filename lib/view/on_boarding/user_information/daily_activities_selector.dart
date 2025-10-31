@@ -1,22 +1,54 @@
+import 'package:diet_tracking_project/database/local_storage_service.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
+
+import 'package:diet_tracking_project/view/on_boarding/user_information/interface_confirmation.dart';
+import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart';
-import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
 class DailyActivitiesSelector extends StatefulWidget {
   const DailyActivitiesSelector({super.key});
 
   @override
-  State<DailyActivitiesSelector> createState() => _DailyActivitiesSelectorState();
+  State<DailyActivitiesSelector> createState() =>
+      _DailyActivitiesSelectorState();
 }
 
 class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
   int? _selectedIndex;
+  final LocalStorageService _local = LocalStorageService();
+
+  final List<Map<String, dynamic>> _activityOptions = [
+    {
+      'title': 'Ít vận động',
+      'description': '(Chủ yếu ngồi, ít hoặc không tập thể dục)',
+      'icon': Icons.weekend_outlined,
+    },
+    {
+      'title': 'Vận động nhẹ',
+      'description': '(Tập thể dục/thể thao 1-3 ngày/tuần)',
+      'icon': Icons.directions_walk,
+    },
+    {
+      'title': 'Vận động vừa',
+      'description': '(Tập thể dục/thể thao 3-5 ngày/tuần)',
+      'icon': Icons.directions_run,
+    },
+    {
+      'title': 'Vận động nặng',
+      'description': '(Tập thể dục/thể thao 6-7 ngày/tuần)',
+      'icon': Icons.fitness_center,
+    },
+    {
+      'title': 'Vận động rất nặng',
+      'description': '(Tập thể dục 2 lần/ngày, công việc lao động phổ thông)',
+      'icon': Icons.local_fire_department_outlined,
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: const Color(0xFFF8F7FF),
       body: SafeArea(
@@ -43,39 +75,17 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
                 ),
               ),
               Expanded(
-                child: ListView(
-                  children: [
-                    _buildActivityOption(
-                      index: 0,
-                      title: 'Ít vận động (Chủ yếu ngồi, ít hoặc không tập thể dục)',
-                      
-                      icon: Icons.weekend_outlined,
-                    ),
-                    _buildActivityOption(
-                      index: 1,
-                      title: 'Vận động nhẹ (Tập thể dục/thể thao 1-3 ngày/tuần)',
-                      
-                      icon: Icons.directions_walk,
-                    ),
-                    _buildActivityOption(
-                      index: 2,
-                      title: 'Vận động vừa (Tập thể dục/thể thao 3-5 ngày/tuần)',
-                      
-                      icon: Icons.directions_run,
-                    ),
-                    _buildActivityOption(
-                      index: 3,
-                      title: 'Vận động nặng (Tập thể dục/thể thao 6-7 ngày/tuần)',
-                      
-                      icon: Icons.fitness_center,
-                    ),
-                     _buildActivityOption(
-                      index: 4,
-                      title: 'Vận động rất nặng (Tập thể dục 2 lần/ngày, công việc lao động phổ thông)',
-                      
-                      icon: Icons.local_fire_department_outlined,
-                    ),
-                  ],
+                child: ListView.builder(
+                  itemCount: _activityOptions.length,
+                  itemBuilder: (context, index) {
+                    final option = _activityOptions[index];
+                    return _buildActivityOption(
+                      index: index,
+                      title: option['title'],
+                      description: option['description'],
+                      icon: option['icon'],
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -89,13 +99,13 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: const Color.fromRGBO(0, 0, 0, 0.08),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
                       ],
                       border: Border.all(
-                        color: Colors.black.withOpacity(0.08),
+                        color: const Color.fromRGBO(0, 0, 0, 0.08),
                         width: 1,
                       ),
                     ),
@@ -123,11 +133,11 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        onPressed: () {
-                          // No action, as requested
-                        },
+                        onPressed: _selectedIndex == null
+                            ? null // Disable button if nothing is selected
+                            : _saveAndNavigate,
                         child: Text(
-                          AppLocalizations.of(context)?.next ?? 'Tiếp theo',
+                          AppLocalizations.of(context)?.next ?? 'Hoàn tất',
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 16,
@@ -147,11 +157,24 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
     );
   }
 
-  
+  Future<void> _saveAndNavigate() async {
+    if (_selectedIndex == null) return;
+
+    final activityLevel = _activityOptions[_selectedIndex!]['title'];
+    await _local.saveGuestData(activityLevel: activityLevel);
+
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const InterfaceConfirmation()),
+      );
+    }
+  }
+
   Widget _buildActivityOption({
     required int index,
     required String title,
-    
+    required String description,
     required IconData icon,
   }) {
     bool isSelected = _selectedIndex == index;
@@ -169,7 +192,9 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
-              border: isSelected ? Border.all(color: const Color(0xFF1F2A37), width: 2) : null,
+              border: isSelected
+                  ? Border.all(color: const Color(0xFF1F2A37), width: 2)
+                  : null,
               boxShadow: [
                 BoxShadow(
                   color: const Color.fromRGBO(0, 0, 0, 0.05),
@@ -184,15 +209,28 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        title,
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF111827),
+                      RichText(
+                        text: TextSpan(
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            color: const Color(0xFF111827),
+                          ),
+                          children: [
+                            TextSpan(
+                              text: title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' $description',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      
                     ],
                   ),
                 ),
