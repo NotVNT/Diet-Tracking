@@ -102,10 +102,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String get whyDoYouWantToLoseWeight => 'Tại sao bạn muốn giảm cân?';
 
   @override
+  String get whyDoYouWantToGainWeight => 'Tại sao bạn muốn tăng cân?';
+
+  @override
+  String get whyDoYouWantToMaintainWeight => 'Tại sao bạn muốn duy trì cân nặng?';
+
+  @override
+  String get whyDoYouWantToBuildMuscle => 'Tại sao bạn muốn tăng cơ?';
+
+  @override
   String get whyDidYouChooseThisGoal => 'Tại sao bạn chọn mục tiêu này?';
 
   @override
   String get improveHealth => 'Cải thiện sức khỏe';
+
+  @override
+  String get feelMoreConfident => 'Cảm thấy tự tin hơn';
 
   @override
   String get increaseConfidence => 'Tăng tự tin';
@@ -124,6 +136,57 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get improvePhysicalFitness => 'Cải thiện thể lực';
+
+  @override
+  String get improveAppearance => 'Cải thiện ngoại hình';
+
+  @override
+  String get doctorRecommendation => 'Theo khuyến nghị của bác sĩ';
+
+  @override
+  String get healthyLifestyle => 'Lối sống lành mạnh';
+
+  @override
+  String get buildStrength => 'Tăng sức mạnh';
+
+  @override
+  String get improveAthletics => 'Cải thiện thể thao';
+
+  @override
+  String get lookMoreMuscular => 'Trông cơ bắp hơn';
+
+  @override
+  String get recoverFromIllness => 'Hồi phục sau bệnh';
+
+  @override
+  String get increaseAppetite => 'Tăng cảm giác thèm ăn';
+
+  @override
+  String get stayHealthy => 'Giữ sức khỏe';
+
+  @override
+  String get preventWeightGain => 'Ngăn tăng cân';
+
+  @override
+  String get balancedLifestyle => 'Lối sống cân bằng';
+
+  @override
+  String get maintainFitness => 'Duy trì thể lực';
+
+  @override
+  String get getStronger => 'Trở nên mạnh mẽ hơn';
+
+  @override
+  String get improveBodyComposition => 'Cải thiện thành phần cơ thể';
+
+  @override
+  String get athleticPerformance => 'Hiệu suất thể thao';
+
+  @override
+  String get lookToned => 'Trông săn chắc';
+
+  @override
+  String get boostMetabolism => 'Tăng cường trao đổi chất';
 
   @override
   String get other => 'Khác';
@@ -244,4 +307,34 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get bmiObese => 'Bạn cần giảm cân nghiêm túc để bảo vệ sức khỏe';
+
+  @override
+  String get activityLevelSedentaryTitle => 'Ít vận động';
+
+  @override
+  String get activityLevelSedentarySubtitle => '(Chủ yếu ngồi, ít hoặc không tập thể dục)';
+
+  @override
+  String get activityLevelLightlyActiveTitle => 'Vận động nhẹ';
+
+  @override
+  String get activityLevelLightlyActiveSubtitle => '(Tập thể dục/thể thao 1-3 ngày/tuần)';
+
+  @override
+  String get activityLevelModeratelyActiveTitle => 'Vận động vừa';
+
+  @override
+  String get activityLevelModeratelyActiveSubtitle => '(Tập thể dục/thể thao 3-5 ngày/tuần)';
+
+  @override
+  String get activityLevelVeryActiveTitle => 'Vận động nặng';
+
+  @override
+  String get activityLevelVeryActiveSubtitle => '(Tập thể dục/thể thao 6-7 ngày/tuần)';
+
+  @override
+  String get activityLevelExtraActiveTitle => 'Vận động rất nặng';
+
+  @override
+  String get activityLevelExtraActiveSubtitle => '(Tập thể dục 2 lần/ngày, công việc lao động phổ thông)';
 }

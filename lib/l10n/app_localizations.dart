@@ -281,6 +281,24 @@ abstract class AppLocalizations {
   /// **'Why do you want to lose weight?'**
   String get whyDoYouWantToLoseWeight;
 
+  /// No description provided for @whyDoYouWantToGainWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Why do you want to gain weight?'**
+  String get whyDoYouWantToGainWeight;
+
+  /// No description provided for @whyDoYouWantToMaintainWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Why do you want to maintain weight?'**
+  String get whyDoYouWantToMaintainWeight;
+
+  /// No description provided for @whyDoYouWantToBuildMuscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why do you want to build muscle?'**
+  String get whyDoYouWantToBuildMuscle;
+
   /// No description provided for @whyDidYouChooseThisGoal.
   ///
   /// In en, this message translates to:
@@ -292,6 +310,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Improve health'**
   String get improveHealth;
+
+  /// No description provided for @feelMoreConfident.
+  ///
+  /// In en, this message translates to:
+  /// **'Feel more confident'**
+  String get feelMoreConfident;
 
   /// No description provided for @increaseConfidence.
   ///
@@ -328,6 +352,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Improve physical fitness'**
   String get improvePhysicalFitness;
+
+  /// No description provided for @improveAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve appearance'**
+  String get improveAppearance;
+
+  /// No description provided for @doctorRecommendation.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor\'s recommendation'**
+  String get doctorRecommendation;
+
+  /// No description provided for @healthyLifestyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Healthy lifestyle'**
+  String get healthyLifestyle;
+
+  /// No description provided for @buildStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Build strength'**
+  String get buildStrength;
+
+  /// No description provided for @improveAthletics.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve athletics'**
+  String get improveAthletics;
+
+  /// No description provided for @lookMoreMuscular.
+  ///
+  /// In en, this message translates to:
+  /// **'Look more muscular'**
+  String get lookMoreMuscular;
+
+  /// No description provided for @recoverFromIllness.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover from illness'**
+  String get recoverFromIllness;
+
+  /// No description provided for @increaseAppetite.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase appetite'**
+  String get increaseAppetite;
+
+  /// No description provided for @stayHealthy.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay healthy'**
+  String get stayHealthy;
+
+  /// No description provided for @preventWeightGain.
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent weight gain'**
+  String get preventWeightGain;
+
+  /// No description provided for @balancedLifestyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced lifestyle'**
+  String get balancedLifestyle;
+
+  /// No description provided for @maintainFitness.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain fitness'**
+  String get maintainFitness;
+
+  /// No description provided for @getStronger.
+  ///
+  /// In en, this message translates to:
+  /// **'Get stronger'**
+  String get getStronger;
+
+  /// No description provided for @improveBodyComposition.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve body composition'**
+  String get improveBodyComposition;
+
+  /// No description provided for @athleticPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Athletic performance'**
+  String get athleticPerformance;
+
+  /// No description provided for @lookToned.
+  ///
+  /// In en, this message translates to:
+  /// **'Look toned'**
+  String get lookToned;
+
+  /// No description provided for @boostMetabolism.
+  ///
+  /// In en, this message translates to:
+  /// **'Boost metabolism'**
+  String get boostMetabolism;
 
   /// No description provided for @other.
   ///
@@ -568,6 +694,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You need to lose weight seriously to protect your health.'**
   String get bmiObese;
+
+  /// No description provided for @activityLevelSedentaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sedentary'**
+  String get activityLevelSedentaryTitle;
+
+  /// No description provided for @activityLevelSedentarySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'(Mostly sitting, little or no exercise)'**
+  String get activityLevelSedentarySubtitle;
+
+  /// No description provided for @activityLevelLightlyActiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightly active'**
+  String get activityLevelLightlyActiveTitle;
+
+  /// No description provided for @activityLevelLightlyActiveSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'(Exercise/sports 1-3 days/week)'**
+  String get activityLevelLightlyActiveSubtitle;
+
+  /// No description provided for @activityLevelModeratelyActiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderately active'**
+  String get activityLevelModeratelyActiveTitle;
+
+  /// No description provided for @activityLevelModeratelyActiveSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'(Exercise/sports 3-5 days/week)'**
+  String get activityLevelModeratelyActiveSubtitle;
+
+  /// No description provided for @activityLevelVeryActiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Very active'**
+  String get activityLevelVeryActiveTitle;
+
+  /// No description provided for @activityLevelVeryActiveSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'(Exercise/sports 6-7 days/week)'**
+  String get activityLevelVeryActiveSubtitle;
+
+  /// No description provided for @activityLevelExtraActiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra active'**
+  String get activityLevelExtraActiveTitle;
+
+  /// No description provided for @activityLevelExtraActiveSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'(Exercise twice a day, manual labor)'**
+  String get activityLevelExtraActiveSubtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

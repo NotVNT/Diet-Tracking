@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'weight_goal_screen.dart';
+import 'goal_reason_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
 import '../../../l10n/app_localizations.dart';
@@ -20,19 +20,15 @@ class _GoalSelectionState extends State<GoalSelection> {
   Color get _muted => const Color(0xFF6B7280);
   Color get _primary => const Color(0xFFFF7A00);
 
-  final Set<int> _selectedIndices = <int>{};
+  int? _selectedIndex;
   late LocalStorageService _local;
   late AuthService _auth;
 
   final List<_GoalItem> _goals = const [
     _GoalItem(icon: '🔥', title: 'loseWeight'),
-    _GoalItem(icon: '⚖️', title: 'maintainWeight'),
     _GoalItem(icon: '🍽️', title: 'gainWeight'),
+    _GoalItem(icon: '⚖️', title: 'maintainWeight'),
     _GoalItem(icon: '💪', title: 'buildMuscle'),
-    _GoalItem(icon: '🏃', title: 'improveFitness'),
-    _GoalItem(icon: '🥗', title: 'eatHealthy'),
-    _GoalItem(icon: '🧘', title: 'reduceStress'),
-    _GoalItem(icon: '🔥', title: 'loseBellyFat'),
   ];
 
   @override
@@ -96,27 +92,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const WeightGoalScreen(
-                            selectedMainGoals: <String>[],
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      AppLocalizations.of(context)?.skip ?? 'Bỏ qua',
-                      style: GoogleFonts.inter(
-                        color: _muted,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+
                 ],
               ),
             ),
@@ -153,37 +129,32 @@ class _GoalSelectionState extends State<GoalSelection> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _selectedIndices.isEmpty
+                  onPressed: _selectedIndex == null
                       ? null
                       : () async {
-                          final selectedTitles = _selectedIndices
-                              .map(
-                                (i) => _getLocalizedTitle(
-                                  context,
-                                  _goals[i].title,
-                                ),
-                              )
-                              .toList(growable: false);
+                          final selectedTitle = _getLocalizedTitle(
+                            context,
+                            _goals[_selectedIndex!].title,
+                          );
 
                           // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
-                          final goalString = selectedTitles.join(', ');
-                          print('🔍 Saving goal to localStorage: $goalString');
-                          await _local.saveGuestData(goal: goalString);
+                          print('🔍 Saving goal to localStorage: $selectedTitle');
+                          await _local.saveGuestData(goal: selectedTitle);
 
                           // Nếu đã đăng nhập: cũng lưu trực tiếp vào Firestore
                           final uid = _auth.currentUser?.uid;
                           if (uid != null) {
                             try {
                               await _auth.updateUserData(uid, {
-                                'goal': selectedTitles,
+                                'goal': [selectedTitle],
                               });
                             } catch (_) {}
                           }
 
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => WeightGoalScreen(
-                                selectedMainGoals: selectedTitles,
+                              builder: (_) => GoalReasonScreen(
+                                selectedMainGoals: [selectedTitle],
                               ),
                             ),
                           );
@@ -215,15 +186,11 @@ class _GoalSelectionState extends State<GoalSelection> {
 
   Widget _buildGoalTile(int index) {
     final item = _goals[index];
-    final bool selected = _selectedIndices.contains(index);
+    final bool selected = _selectedIndex == index;
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () => setState(() {
-        if (selected) {
-          _selectedIndices.remove(index);
-        } else {
-          _selectedIndices.add(index);
-        }
+        _selectedIndex = selected ? null : index;
       }),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -305,15 +272,6 @@ class _GoalSelectionState extends State<GoalSelection> {
         return AppLocalizations.of(context)?.gainWeight ?? 'Tăng cân';
       case 'buildMuscle':
         return AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
-      case 'improveFitness':
-        return AppLocalizations.of(context)?.improveFitness ??
-            'Cải thiện thể lực';
-      case 'eatHealthy':
-        return AppLocalizations.of(context)?.eatHealthy ?? 'Ăn uống lành mạnh';
-      case 'reduceStress':
-        return AppLocalizations.of(context)?.reduceStress ?? 'Giảm stress';
-      case 'loseBellyFat':
-        return AppLocalizations.of(context)?.loseBellyFat ?? 'Giảm mỡ bụng';
       default:
         return key;
     }

@@ -48,21 +48,6 @@ void main() {
       expect(find.byType(LongTermResultsScreen), findsOneWidget);
     });
 
-    testWidgets('Tap Bỏ qua điều hướng thẳng tới LongTermResultsScreen', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: DietReasonScreen(
-            selectedMainGoals: ['Giảm cân'],
-            selectedWeightReasons: ['Cải thiện sức khỏe'],
-          ),
-        ),
-      );
 
-      await tester.tap(find.text('Bỏ qua'));
-      await tester.pumpAndSettle();
-      expect(find.byType(LongTermResultsScreen), findsOneWidget);
-    });
   });
 }

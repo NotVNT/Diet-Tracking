@@ -94,29 +94,7 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => LongTermResultsScreen(
-                            selectedMainGoals: widget.selectedMainGoals,
-                            selectedWeightReasons: widget.selectedWeightReasons,
-                            selectedDietReasons: const <String>[],
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      AppLocalizations.of(context)?.skip ?? 'Bỏ qua',
-                      style: GoogleFonts.inter(
-                        color: _muted,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+
                 ],
               ),
             ),

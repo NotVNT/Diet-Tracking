@@ -102,10 +102,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whyDoYouWantToLoseWeight => 'Why do you want to lose weight?';
 
   @override
+  String get whyDoYouWantToGainWeight => 'Why do you want to gain weight?';
+
+  @override
+  String get whyDoYouWantToMaintainWeight => 'Why do you want to maintain weight?';
+
+  @override
+  String get whyDoYouWantToBuildMuscle => 'Why do you want to build muscle?';
+
+  @override
   String get whyDidYouChooseThisGoal => 'Why did you choose this goal?';
 
   @override
   String get improveHealth => 'Improve health';
+
+  @override
+  String get feelMoreConfident => 'Feel more confident';
 
   @override
   String get increaseConfidence => 'Increase confidence';
@@ -124,6 +136,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get improvePhysicalFitness => 'Improve physical fitness';
+
+  @override
+  String get improveAppearance => 'Improve appearance';
+
+  @override
+  String get doctorRecommendation => 'Doctor\'s recommendation';
+
+  @override
+  String get healthyLifestyle => 'Healthy lifestyle';
+
+  @override
+  String get buildStrength => 'Build strength';
+
+  @override
+  String get improveAthletics => 'Improve athletics';
+
+  @override
+  String get lookMoreMuscular => 'Look more muscular';
+
+  @override
+  String get recoverFromIllness => 'Recover from illness';
+
+  @override
+  String get increaseAppetite => 'Increase appetite';
+
+  @override
+  String get stayHealthy => 'Stay healthy';
+
+  @override
+  String get preventWeightGain => 'Prevent weight gain';
+
+  @override
+  String get balancedLifestyle => 'Balanced lifestyle';
+
+  @override
+  String get maintainFitness => 'Maintain fitness';
+
+  @override
+  String get getStronger => 'Get stronger';
+
+  @override
+  String get improveBodyComposition => 'Improve body composition';
+
+  @override
+  String get athleticPerformance => 'Athletic performance';
+
+  @override
+  String get lookToned => 'Look toned';
+
+  @override
+  String get boostMetabolism => 'Boost metabolism';
 
   @override
   String get other => 'Other';
@@ -244,4 +307,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bmiObese => 'You need to lose weight seriously to protect your health.';
+
+  @override
+  String get activityLevelSedentaryTitle => 'Sedentary';
+
+  @override
+  String get activityLevelSedentarySubtitle => '(Mostly sitting, little or no exercise)';
+
+  @override
+  String get activityLevelLightlyActiveTitle => 'Lightly active';
+
+  @override
+  String get activityLevelLightlyActiveSubtitle => '(Exercise/sports 1-3 days/week)';
+
+  @override
+  String get activityLevelModeratelyActiveTitle => 'Moderately active';
+
+  @override
+  String get activityLevelModeratelyActiveSubtitle => '(Exercise/sports 3-5 days/week)';
+
+  @override
+  String get activityLevelVeryActiveTitle => 'Very active';
+
+  @override
+  String get activityLevelVeryActiveSubtitle => '(Exercise/sports 6-7 days/week)';
+
+  @override
+  String get activityLevelExtraActiveTitle => 'Extra active';
+
+  @override
+  String get activityLevelExtraActiveSubtitle => '(Exercise twice a day, manual labor)';
 }
