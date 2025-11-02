@@ -17,7 +17,18 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
     FirebaseFirestore? firestore,
   }) : _firestore = firestore ?? FirebaseFirestore.instance;
 
-  static const _key = 'food_records';
+  static const _keyPrefix = 'food_records';
+
+  /// Lấy key duy nhất cho từng user
+  String _getUserSpecificKey() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Nếu chưa đăng nhập, dùng key chung cho guest
+      return '${_keyPrefix}_guest';
+    }
+    // Mỗi user có key riêng dựa trên userId
+    return '${_keyPrefix}_${user.uid}';
+  }
 
   List<dynamic> _coerceToJsonList(dynamic data) {
     if (data == null) return <dynamic>[];
@@ -54,7 +65,8 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
     final model = FoodRecordModel.fromEntity(foodRecord);
 
     // Read existing data robustly (handles legacy string storage)
-    final raw = await _localStorageService.getData(_key);
+    final key = _getUserSpecificKey();
+    final raw = await _localStorageService.getData(key);
     final currentList = _coerceToJsonList(raw)
         .map(
           (e) => FoodRecordModel.fromJson(Map<String, dynamic>.from(e as Map)),
@@ -67,7 +79,7 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
         .map((record) => FoodRecordModel.fromEntity(record).toJson())
         .toList();
 
-    await _localStorageService.saveData(_key, jsonList);
+    await _localStorageService.saveData(key, jsonList);
 
     // Save to Firestore in parallel (best-effort)
     try {
@@ -105,13 +117,14 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
 
   @override
   Future<List<FoodRecordEntity>> getFoodRecords() async {
+    final key = _getUserSpecificKey();
     // Lấy dữ liệu từ Firebase trước
     final firestoreRecords = await _getFromFirestore();
 
     // Nếu có dữ liệu từ Firebase, đồng bộ với local storage
     if (firestoreRecords.isNotEmpty) {
       // Lấy dữ liệu local hiện tại
-      final localData = await _localStorageService.getData(_key);
+      final localData = await _localStorageService.getData(key);
       final localList = _coerceToJsonList(localData);
       final localRecords = localList
           .whereType<Map>()
@@ -139,7 +152,7 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
       final jsonList = mergedRecords.values
           .map((record) => record.toJson())
           .toList();
-      await _localStorageService.saveData(_key, jsonList);
+      await _localStorageService.saveData(key, jsonList);
 
       // Trả về danh sách đã sắp xếp theo thời gian
       final sortedRecords = mergedRecords.values.toList();
@@ -148,7 +161,7 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
     }
 
     // Nếu không có dữ liệu từ Firebase, lấy từ local storage
-    final data = await _localStorageService.getData(_key);
+    final data = await _localStorageService.getData(key);
     final list = _coerceToJsonList(data);
     final localRecords = list
         .whereType<Map>()
@@ -166,17 +179,19 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
   /// Đồng bộ dữ liệu từ Firebase về local storage
   @override
   Future<void> syncWithFirestore() async {
+    final key = _getUserSpecificKey();
     final firestoreRecords = await _getFromFirestore();
     if (firestoreRecords.isNotEmpty) {
       final jsonList = firestoreRecords
           .map((record) => record.toJson())
           .toList();
-      await _localStorageService.saveData(_key, jsonList);
+      await _localStorageService.saveData(key, jsonList);
     }
   }
 
   @override
   Future<void> deleteFoodRecord(String id) async {
+    final key = _getUserSpecificKey();
     final records = await getFoodRecords();
     final updatedRecords = records.where((record) => record.id != id).toList();
 
@@ -184,7 +199,7 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
         .map((record) => FoodRecordModel.fromEntity(record).toJson())
         .toList();
 
-    await _localStorageService.saveData(_key, jsonList);
+    await _localStorageService.saveData(key, jsonList);
 
     // Xóa trên Firestore nếu có đăng nhập
     final user = FirebaseAuth.instance.currentUser;

@@ -10,6 +10,7 @@ import '../../features/chat_bot_view_home/presentation/providers/chat_provider_f
 
 import '../../model/user.dart' as app_user;
 import '../../database/auth_service.dart';
+import '../../database/local_storage_service.dart';
 
 class ProfileView extends StatefulWidget {
   final AuthService? authService;
@@ -24,6 +25,7 @@ class _ProfileViewState extends State<ProfileView> {
   late final AuthService _authService;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
+  final LocalStorageService _localStorageService = LocalStorageService();
 
   app_user.User? _appUser;
   bool _loading = true;
@@ -191,6 +193,9 @@ class _ProfileViewState extends State<ProfileView> {
                     label: 'Đăng xuất',
                     isDanger: true,
                     onTap: () async {
+                      // Xóa tất cả dữ liệu local trước khi đăng xuất
+                      await _localStorageService.clearAllFoodRecords();
+
                       await _authService.signOut();
 
                       // Clear chat history when logging out
