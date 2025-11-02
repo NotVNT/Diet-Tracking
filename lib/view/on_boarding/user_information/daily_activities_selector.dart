@@ -1,7 +1,7 @@
 import 'package:diet_tracking_project/database/local_storage_service.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
-import 'package:diet_tracking_project/view/on_boarding/user_information/interface_confirmation.dart';
+import 'package:diet_tracking_project/view/on_boarding/user_information/target_days_selector.dart';
 import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart';
 
 import 'package:flutter/material.dart';
@@ -137,7 +137,7 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
                             ? null // Disable button if nothing is selected
                             : _saveAndNavigate,
                         child: Text(
-                          AppLocalizations.of(context)?.next ?? 'Hoàn tất',
+                          AppLocalizations.of(context)?.next ?? 'Tiếp theo',
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 16,
@@ -166,7 +166,7 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
     if (mounted) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const InterfaceConfirmation()),
+        MaterialPageRoute(builder: (context) => const TargetDaysSelector()),
       );
     }
   }
