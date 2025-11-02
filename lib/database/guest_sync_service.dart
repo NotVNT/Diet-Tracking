@@ -81,6 +81,14 @@ class GuestSyncService {
     }
 
     await _auth.updateUserData(uid, update);
+
+    // Đồng bộ kế hoạch dinh dưỡng nếu có
+    final nutritionPlan =
+        await _local.getData('nutrition_plan') as Map<String, dynamic>?;
+    if (nutritionPlan != null) {
+      await _auth.saveNutritionPlan(uid, nutritionPlan);
+    }
+
     await _local.clearGuestData();
   }
 }

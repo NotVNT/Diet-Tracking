@@ -124,6 +124,23 @@ class AuthService {
     }
   }
 
+  /// Lưu kế hoạch dinh dưỡng của người dùng
+  Future<void> saveNutritionPlan(
+    String uid,
+    Map<String, dynamic> planData,
+  ) async {
+    try {
+      await _firestore
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection('nutrition_plans')
+          .doc('active_plan') // Giả sử mỗi user chỉ có 1 plan active
+          .set(planData, SetOptions(merge: true));
+    } catch (e) {
+      throw FirestoreException('Không thể lưu kế hoạch dinh dưỡng: $e');
+    }
+  }
+
   /// Đăng ký user mới với dữ liệu on_boarding
   Future<User?> signUpWithOnboardingData({
     required String email,

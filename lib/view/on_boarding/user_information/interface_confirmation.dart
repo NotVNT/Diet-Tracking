@@ -423,6 +423,12 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         update['goal'] = data['goal'];
       }
 
+      // Thêm targetDays vào dữ liệu cập nhật
+      final targetDays = await _localStorage.getData('targetDays') as int?;
+      if (targetDays != null) {
+        update['targetDays'] = targetDays;
+      }
+
       if (update.isEmpty) {
         return;
       }

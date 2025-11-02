@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../model/nutrition_calculation_model.dart';
 import '../../../services/nutrition_calculator_service.dart';
+import '../../../database/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'interface_confirmation.dart';
 
 /// Màn hình tổng kết thông tin dinh dưỡng và cảnh báo
@@ -15,6 +17,8 @@ class NutritionSummary extends StatefulWidget {
 
 class _NutritionSummaryState extends State<NutritionSummary> {
   final LocalStorageService _local = LocalStorageService();
+  final AuthService _authService = AuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   UserNutritionInfo? _userInfo;
   NutritionCalculation? _calculation;
@@ -74,8 +78,8 @@ class _NutritionSummaryState extends State<NutritionSummary> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _errorMessage != null
-                ? _buildErrorView()
-                : _buildMainContent(),
+            ? _buildErrorView()
+            : _buildMainContent(),
       ),
     );
   }
@@ -296,19 +300,13 @@ class _NutritionSummaryState extends State<NutritionSummary> {
     );
   }
 
-
-
-
   Widget _buildWarningCard() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: const Color(0xFFFEF2F2),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFEF4444),
-          width: 2,
-        ),
+        border: Border.all(color: const Color(0xFFEF4444), width: 2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,10 +354,7 @@ class _NutritionSummaryState extends State<NutritionSummary> {
       decoration: BoxDecoration(
         color: const Color(0xFFECFDF5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFF10B981),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFF10B981), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,10 +453,7 @@ class _NutritionSummaryState extends State<NutritionSummary> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(18),
                 onTap: () => Navigator.of(context).pop(),
-                child: const Icon(
-                  Icons.arrow_back,
-                  color: Color(0xFF2D3A4A),
-                ),
+                child: const Icon(Icons.arrow_back, color: Color(0xFF2D3A4A)),
               ),
             ),
           ),
@@ -479,26 +471,39 @@ class _NutritionSummaryState extends State<NutritionSummary> {
                     borderRadius: BorderRadius.circular(18),
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  final planData = _calculation!.toJson();
+                  final user = _auth.currentUser;
+
+                  if (user != null) {
+                    // Nếu đã đăng nhập, lưu trực tiếp lên Firestore
+                    await _authService.saveNutritionPlan(user.uid, planData);
+                  } else {
+                    // Nếu là guest, lưu vào local storage
+                    await _local.saveData('nutrition_plan', planData);
+                  }
+
                   if (!_calculation!.isHealthy) {
-                    // Hiển thị cảnh báo nếu không an toàn
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Đã lưu. Vui lòng tham khảo ý kiến chuyên gia.',
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Kế hoạch đã được lưu. Vui lòng tham khảo ý kiến chuyên gia.',
+                          ),
+                          backgroundColor: Color(0xFFEF4444),
                         ),
-                        backgroundColor: Color(0xFFEF4444),
+                      );
+                    }
+                  }
+
+                  if (mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InterfaceConfirmation(),
                       ),
                     );
                   }
-
-                  // Chuyển sang màn hình tiếp theo
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InterfaceConfirmation(),
-                    ),
-                  );
                 },
                 child: Text(
                   _calculation!.isHealthy ? 'Xác nhận' : 'Tôi hiểu rủi ro',

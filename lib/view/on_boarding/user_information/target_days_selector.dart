@@ -44,7 +44,8 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
           data['goalWeightKg'] == null ||
           data['activityLevel'] == null) {
         setState(() {
-          _errorMessage = 'Thiếu thông tin người dùng. Vui lòng quay lại và nhập đầy đủ.';
+          _errorMessage =
+              'Thiếu thông tin người dùng. Vui lòng quay lại và nhập đầy đủ.';
           _isLoading = false;
         });
         return;
@@ -57,6 +58,10 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
         currentWeightKg: data['weightKg'] as double,
         targetWeightKg: data['goalWeightKg'] as double,
         activityLevel: data['activityLevel'] as String,
+      );
+
+      print(
+        '📊 Calculating nutrition with the following user info: $_userInfo',
       );
 
       // Tính toán với số ngày mặc định
@@ -99,9 +104,7 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
     if (mounted) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => const NutritionSummary(),
-        ),
+        MaterialPageRoute(builder: (context) => const NutritionSummary()),
       );
     }
   }
@@ -114,8 +117,8 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _errorMessage != null
-                ? _buildErrorView()
-                : _buildMainContent(),
+            ? _buildErrorView()
+            : _buildMainContent(),
       ),
     );
   }
@@ -313,8 +316,14 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
             ),
           ),
           const SizedBox(height: 16),
-          _buildInfoRow('BMR', '${_calculation!.bmr.toStringAsFixed(0)} cal/ngày'),
-          _buildInfoRow('TDEE', '${_calculation!.tdee.toStringAsFixed(0)} cal/ngày'),
+          _buildInfoRow(
+            'BMR',
+            '${_calculation!.bmr.toStringAsFixed(0)} cal/ngày',
+          ),
+          _buildInfoRow(
+            'TDEE',
+            '${_calculation!.tdee.toStringAsFixed(0)} cal/ngày',
+          ),
           const Divider(height: 24),
           _buildInfoRow(
             'Calories mục tiêu',
@@ -369,10 +378,7 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
       decoration: BoxDecoration(
         color: const Color(0xFFFEF2F2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFEF4444),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFFEF4444), width: 1),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,7 +403,8 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _calculation!.warningMessage ?? 'Chế độ này có thể không phù hợp với sức khỏe của bạn.',
+                  _calculation!.warningMessage ??
+                      'Chế độ này có thể không phù hợp với sức khỏe của bạn.',
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     color: const Color(0xFF991B1B),
@@ -446,10 +453,7 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
             child: InkWell(
               borderRadius: BorderRadius.circular(18),
               onTap: () => Navigator.of(context).pop(),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Color(0xFF2D3A4A),
-              ),
+              child: const Icon(Icons.arrow_back, color: Color(0xFF2D3A4A)),
             ),
           ),
         ),
@@ -481,4 +485,3 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
     );
   }
 }
-
