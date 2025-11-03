@@ -38,11 +38,12 @@ class ChatRequest(BaseModel):
     age: int
     height: float
     weight: float
-    goal_weight: float
+    goal_weight: float | None = None
     disease: str
     allergy: str
     goal: str
     prompt: str
+    nutrition_plan: dict | None = None
 
 def google_search(query: str, num_results: int = 3):
     service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
@@ -139,22 +140,31 @@ def build_google_search_prompt():
     """
 
 
-def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_weight):
+def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_weight, nutrition_plan):
+    plan_details = ""
+    if nutrition_plan:
+        plan_details = f"""\n- Kế hoạch dinh dưỡng hiện tại:
+         - BMR: {nutrition_plan.get('bmr', 'N/A')} kcal
+         - TDEE: {nutrition_plan.get('tdee', 'N/A')} kcal
+         - Lượng calo mục tiêu: {nutrition_plan.get('targetCalories', 'N/A')} kcal/ngày
+         - Thời gian: {nutrition_plan.get('targetDays', 'N/A')} ngày
+         - Trạng thái: {'Lành mạnh' if nutrition_plan.get('isHealthy') else 'Cần cân nhắc'}"""
+
     return f"""
 ### 🔍 **Thông tin đầu vào:**
-- Tuổi: {age}  
-- Chiều cao: {height} cm  
-- Cân nặng: {weight} kg  
-- Bệnh lý: {disease}  
-- Dị ứng: {allergy}  
-- Mục tiêu: {goal}  
-- Cân nặng mục tiêu: {goal_weight}
+- Tuổi: {age}
+- Chiều cao: {height} cm
+- Cân nặng: {weight} kg
+- Bệnh lý: {disease}
+- Dị ứng: {allergy}
+- Mục tiêu: {goal}
+- Cân nặng mục tiêu: {goal_weight}{plan_details}
 - Truy vấn của người dùng: {prompt}
 
 ---
 
 ### ✅ **Nhiệm vụ của bạn:**
-Dựa trên thông tin trên và quy tắc nêu rõ, hãy **trả lời tự nhiên, đúng chuyên môn, thân thiện và thực tế** cho câu hỏi của người dùng.  
+Dựa trên thông tin trên và quy tắc nêu rõ, hãy **trả lời tự nhiên, đúng chuyên môn, thân thiện và thực tế** cho câu hỏi của người dùng.
 Nếu câu hỏi thuộc chủ đề ngoài dinh dưỡng → **từ chối nhẹ nhàng, không lạc đề.**
 """
 
@@ -178,6 +188,9 @@ def decide_action(user_query:str):
     response = model_gemini.generate_content(full_prompt)
     raw = response.text.strip()
     match = re.findall(r'\{.*?\}', raw, re.DOTALL)
+    if not match:
+        # If no JSON is found, treat it as a direct answer problem and let the recovery logic handle it.
+        raise ValueError("No JSON object found in the model's decision response.")
     parsed = json.loads(match[0])
     action = parsed.get("action", "").upper()
     try:
@@ -224,8 +237,8 @@ async def chatbox(request: ChatRequest):
     if(action == "DATABASE"):#<---------------------------
         #biến results sẽ là biến mà lưu danh sách database vào
         results = db_lookup(request.prompt)
-        final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight)
-        # final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight) + "Dưới đây là danh sách món ăn lấy được từ database:" + results + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
+        final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan)
+        # final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan) + "Dưới đây là danh sách món ăn lấy được từ database:" + results + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
         response = chat.send_message(final_prompt)
         return {"reply": response.text}
     

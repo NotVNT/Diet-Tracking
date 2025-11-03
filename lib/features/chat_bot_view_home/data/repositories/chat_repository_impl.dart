@@ -1,9 +1,7 @@
 import '../../domain/entities/chat_message_entity.dart';
-import '../../domain/entities/user_data_entity.dart';
+
 import '../../domain/repositories/chat_repository.dart';
 import '../datasources/gemini_api_datasource.dart';
-
-import '../models/user_data_model.dart';
 
 /// Implementation of ChatRepository
 class ChatRepositoryImpl implements ChatRepository {
@@ -12,9 +10,12 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl(this._geminiApiDatasource);
 
   @override
-  Future<String> sendMessage(String message, UserDataEntity userData) async {
-    final userDataModel = UserDataModel.fromEntity(userData);
-    return await _geminiApiDatasource.sendMessage(message, userDataModel);
+  Future<String> sendMessage(
+    String message,
+    Map<String, dynamic> contextData,
+  ) async {
+    // Pass the context data map directly to the datasource
+    return await _geminiApiDatasource.sendMessage(message, contextData);
   }
 
   @override

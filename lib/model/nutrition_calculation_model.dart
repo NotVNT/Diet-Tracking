@@ -65,13 +65,30 @@ class NutritionCalculation {
       caloriesMin: (json['caloriesMin'] as num).toDouble(),
       weightDifference: (json['weightDifference'] as num).toDouble(),
       totalCaloriesNeeded: (json['totalCaloriesNeeded'] as num).toDouble(),
-      dailyCaloriesAdjustment:
-          (json['dailyCaloriesAdjustment'] as num).toDouble(),
+      dailyCaloriesAdjustment: (json['dailyCaloriesAdjustment'] as num)
+          .toDouble(),
       targetCalories: (json['targetCalories'] as num).toDouble(),
       targetDays: json['targetDays'] as int,
       isHealthy: json['isHealthy'] as bool,
       warningMessage: json['warningMessage'] as String?,
     );
+  }
+
+  @override
+  String toString() {
+    return '''NutritionCalculation {
+      bmr: $bmr,
+      tdee: $tdee,
+      caloriesMax: $caloriesMax,
+      caloriesMin: $caloriesMin,
+      weightDifference: $weightDifference,
+      totalCaloriesNeeded: $totalCaloriesNeeded,
+      dailyCaloriesAdjustment: $dailyCaloriesAdjustment,
+      targetCalories: $targetCalories,
+      targetDays: $targetDays,
+      isHealthy: $isHealthy,
+      warningMessage: $warningMessage
+    }''';
   }
 }
 
@@ -127,4 +144,3 @@ class UserNutritionInfo {
     );
   }
 }
-

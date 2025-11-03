@@ -18,9 +18,27 @@ class SendMessageUseCase {
       }
 
       // Get user data
-      final userData = await _userRepository.getCurrentUserData();
-      if (userData == null) {
+      final userDataEntity = await _userRepository.getCurrentUserData();
+      if (userDataEntity == null) {
         return SendMessageResult.failure("Không thể lấy thông tin người dùng!");
+      }
+
+      // Convert UserDataEntity to a Map
+      final Map<String, dynamic> userData = {
+        'age': userDataEntity.age,
+        'height': userDataEntity.height,
+        'weight': userDataEntity.weight,
+        'goalWeightKg': userDataEntity.goalWeightKg,
+        'disease': userDataEntity.disease,
+        'allergy': userDataEntity.allergy,
+        'goal': userDataEntity.goal,
+      };
+
+      // Get nutrition plan data
+      final nutritionPlan = await _userRepository.getNutritionPlan();
+      if (nutritionPlan != null) {
+        // Merge nutrition plan into user data
+        userData['nutrition_plan'] = nutritionPlan.toJson();
       }
 
       // Send message and get response
@@ -38,23 +56,13 @@ class SendMessageResult {
   final String? response;
   final String? error;
 
-  SendMessageResult._({
-    required this.isSuccess,
-    this.response,
-    this.error,
-  });
+  SendMessageResult._({required this.isSuccess, this.response, this.error});
 
   factory SendMessageResult.success(String response) {
-    return SendMessageResult._(
-      isSuccess: true,
-      response: response,
-    );
+    return SendMessageResult._(isSuccess: true, response: response);
   }
 
   factory SendMessageResult.failure(String error) {
-    return SendMessageResult._(
-      isSuccess: false,
-      error: error,
-    );
+    return SendMessageResult._(isSuccess: false, error: error);
   }
 }

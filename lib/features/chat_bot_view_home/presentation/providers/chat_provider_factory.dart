@@ -2,6 +2,7 @@ import '../../data/datasources/firestore_datasource.dart';
 import '../../data/datasources/gemini_api_datasource.dart';
 import '../../data/datasources/chat_session_local_data_source.dart';
 import '../../data/repositories/chat_repository_impl.dart';
+import '../../../../database/auth_service.dart';
 import '../../data/repositories/user_repository_impl.dart';
 import '../../data/repositories/chat_session_repository_impl.dart';
 import '../../domain/usecases/send_message_usecase.dart';
@@ -26,15 +27,23 @@ class ChatProviderFactory {
     final chatSessionLocalDataSource = InMemoryChatSessionLocalDataSource();
 
     // Repositories
-    final userRepository = UserRepositoryImpl(firestoreDatasource);
+    final authService = AuthService(); // Khởi tạo AuthService
+    final userRepository = UserRepositoryImpl(firestoreDatasource, authService);
     final chatRepository = ChatRepositoryImpl(geminiApiDatasource);
-    final chatSessionRepository = ChatSessionRepositoryImpl(chatSessionLocalDataSource);
+    final chatSessionRepository = ChatSessionRepositoryImpl(
+      chatSessionLocalDataSource,
+    );
 
     // Use cases
-    final sendMessageUseCase = SendMessageUseCase(chatRepository, userRepository);
+    final sendMessageUseCase = SendMessageUseCase(
+      chatRepository,
+      userRepository,
+    );
     final validateMessageUseCase = ValidateMessageUseCase();
     final generateFoodSuggestionUseCase = GenerateFoodSuggestionUseCase();
-    final createNewChatSessionUseCase = CreateNewChatSessionUseCase(chatSessionRepository);
+    final createNewChatSessionUseCase = CreateNewChatSessionUseCase(
+      chatSessionRepository,
+    );
 
     // Create and store singleton instance
     _instance = ChatProvider(

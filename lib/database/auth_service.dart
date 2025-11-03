@@ -175,7 +175,8 @@ class AuthService {
 
     try {
       // Chuyển đổi Map thành đối tượng NutritionCalculation
-      return NutritionCalculation.fromJson(planData);
+      final nutritionPlan = NutritionCalculation.fromJson(planData);
+      return nutritionPlan;
     } catch (e) {
       // Lỗi nếu cấu trúc dữ liệu trên Firestore không khớp
       throw Exception('Lỗi khi chuyển đổi dữ liệu kế hoạch dinh dưỡng: $e');
