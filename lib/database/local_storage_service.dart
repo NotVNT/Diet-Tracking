@@ -185,4 +185,18 @@ class LocalStorageService {
     final prefs = await _prefs;
     await prefs.remove(key);
   }
+
+  /// Xóa tất cả dữ liệu food records của tất cả user
+  /// Được gọi khi đăng xuất để tránh lộ dữ liệu
+  Future<void> clearAllFoodRecords() async {
+    final prefs = await _prefs;
+    final allKeys = prefs.getKeys();
+
+    // Xóa tất cả key bắt đầu với 'food_records'
+    for (final key in allKeys) {
+      if (key.startsWith('food_records')) {
+        await prefs.remove(key);
+      }
+    }
+  }
 }
