@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/user.dart' as app_user;
 import '../model/body_info_model.dart';
+import '../model/nutrition_calculation_model.dart';
 import 'exceptions.dart';
 import 'local_storage_service.dart';
 
@@ -94,7 +95,7 @@ class AuthService {
       final LocalStorageService localStorage = LocalStorageService();
       await localStorage.clearGuestData();
     } catch (e) {
-      print('⚠️ Error clearing guest data: $e');
+      // Log error if needed, for example: FirebaseCrashlytics.instance.recordError(e, stack);
     }
   }
 
@@ -138,6 +139,46 @@ class AuthService {
           .set(planData, SetOptions(merge: true));
     } catch (e) {
       throw FirestoreException('Không thể lưu kế hoạch dinh dưỡng: $e');
+    }
+  }
+
+  /// Lấy kế hoạch dinh dưỡng đang hoạt động của người dùng
+  Future<Map<String, dynamic>?> getActiveNutritionPlan(String uid) async {
+    try {
+      final doc = await _firestore
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection('nutrition_plans')
+          .doc('active_plan')
+          .get();
+
+      if (doc.exists) {
+        return doc.data();
+      }
+      return null;
+    } catch (e) {
+      throw FirestoreException('Không thể lấy kế hoạch dinh dưỡng: $e');
+    }
+  }
+
+  /// Lấy và chuyển đổi kế hoạch dinh dưỡng cho bot
+  Future<NutritionCalculation?> getNutritionPlanForCurrentUser() async {
+    final user = currentUser;
+    if (user == null) {
+      return null; // Không có người dùng, không có kế hoạch
+    }
+
+    final planData = await getActiveNutritionPlan(user.uid);
+    if (planData == null) {
+      return null; // Người dùng chưa có kế hoạch
+    }
+
+    try {
+      // Chuyển đổi Map thành đối tượng NutritionCalculation
+      return NutritionCalculation.fromJson(planData);
+    } catch (e) {
+      // Lỗi nếu cấu trúc dữ liệu trên Firestore không khớp
+      throw Exception('Lỗi khi chuyển đổi dữ liệu kế hoạch dinh dưỡng: $e');
     }
   }
 

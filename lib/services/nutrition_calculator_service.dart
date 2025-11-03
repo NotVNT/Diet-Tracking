@@ -24,7 +24,7 @@ class NutritionCalculatorService {
   static const double maxDailyAdjustment = 1000.0;
 
   /// Tính BMR (Basal Metabolic Rate) theo công thức Mifflin-St Jeor
-  /// 
+  ///
   /// Đối với nam: BMR = (10 × cân nặng) + (6.25 × chiều cao) - (5 × tuổi) + 5
   /// Đối với nữ: BMR = (10 × cân nặng) + (6.25 × chiều cao) - (5 × tuổi) - 161
   static double calculateBMR({
@@ -43,7 +43,7 @@ class NutritionCalculatorService {
   }
 
   /// Tính TDEE (Total Daily Energy Expenditure)
-  /// 
+  ///
   /// TDEE = BMR × hệ số mức độ vận động
   static double calculateTDEE({
     required double bmr,
@@ -63,10 +63,10 @@ class NutritionCalculatorService {
   }
 
   /// Tính calories tối đa
-  /// 
-  /// Calories tối đa = BMR + 1000
-  static double calculateMaxCalories(double bmr) {
-    return bmr + 1000;
+  ///
+  /// Calories tối đa = TDEE + 1000
+  static double calculateMaxCalories(double tdee) {
+    return tdee + 1000;
   }
 
   /// Tính toán đầy đủ các chỉ số dinh dưỡng
@@ -83,14 +83,11 @@ class NutritionCalculatorService {
     );
 
     // 2. Tính TDEE
-    final tdee = calculateTDEE(
-      bmr: bmr,
-      activityLevel: userInfo.activityLevel,
-    );
+    final tdee = calculateTDEE(bmr: bmr, activityLevel: userInfo.activityLevel);
 
     // 3. Tính calories tối thiểu và tối đa
     final caloriesMin = getMinCalories(userInfo.gender);
-    final caloriesMax = calculateMaxCalories(bmr);
+    final caloriesMax = calculateMaxCalories(tdee);
 
     // 4. Tính chênh lệch cân nặng
     final weightDifference = userInfo.currentWeightKg - userInfo.targetWeightKg;
@@ -197,9 +194,7 @@ class NutritionCalculatorService {
   }
 
   /// Tính số ngày tối thiểu để đạt mục tiêu một cách an toàn
-  static int calculateMinimumSafeDays({
-    required UserNutritionInfo userInfo,
-  }) {
+  static int calculateMinimumSafeDays({required UserNutritionInfo userInfo}) {
     final bmr = calculateBMR(
       weightKg: userInfo.currentWeightKg,
       heightCm: userInfo.heightCm,
@@ -207,13 +202,10 @@ class NutritionCalculatorService {
       gender: userInfo.gender,
     );
 
-    final tdee = calculateTDEE(
-      bmr: bmr,
-      activityLevel: userInfo.activityLevel,
-    );
+    final tdee = calculateTDEE(bmr: bmr, activityLevel: userInfo.activityLevel);
 
     final caloriesMin = getMinCalories(userInfo.gender);
-    final caloriesMax = calculateMaxCalories(bmr);
+    final caloriesMax = calculateMaxCalories(tdee);
 
     final weightDifference = userInfo.weightDifference;
     final totalCaloriesNeeded = weightDifference * caloriesPerKg;
@@ -237,9 +229,7 @@ class NutritionCalculatorService {
   }
 
   /// Tính số ngày khuyến nghị (an toàn và hiệu quả)
-  static int calculateRecommendedDays({
-    required UserNutritionInfo userInfo,
-  }) {
+  static int calculateRecommendedDays({required UserNutritionInfo userInfo}) {
     final weightDifference = userInfo.weightDifference;
 
     // Khuyến nghị giảm/tăng 0.5kg mỗi tuần (an toàn)
@@ -248,4 +238,3 @@ class NutritionCalculatorService {
     return weeks * 7; // Chuyển sang ngày
   }
 }
-
