@@ -31,4 +31,13 @@ class UserRepositoryImpl implements UserRepository {
   Future<NutritionCalculation?> getNutritionPlan() async {
     return _authService.getNutritionPlanForCurrentUser();
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> getRecentFoodRecords() async {
+    final uid = await getCurrentUserId();
+    if (uid == null) {
+      return []; // Return empty list if no user is logged in
+    }
+    return _authService.getRecentFoodRecords(uid);
+  }
 }
