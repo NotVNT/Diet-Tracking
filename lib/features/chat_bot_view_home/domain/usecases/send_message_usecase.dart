@@ -41,6 +41,12 @@ class SendMessageUseCase {
         userData['nutrition_plan'] = nutritionPlan.toJson();
       }
 
+      // Get recent food records
+      final foodRecords = await _userRepository.getRecentFoodRecords();
+      if (foodRecords.isNotEmpty) {
+        userData['food_records'] = foodRecords;
+      }
+
       // Send message and get response
       final response = await _chatRepository.sendMessage(message, userData);
       return SendMessageResult.success(response);

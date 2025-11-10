@@ -14,4 +14,7 @@ abstract class UserRepository {
 
   /// Get active nutrition plan for the current user
   Future<NutritionCalculation?> getNutritionPlan();
+
+  /// Get recent food records for the current user
+  Future<List<Map<String, dynamic>>> getRecentFoodRecords();
 }

@@ -1,7 +1,7 @@
 import google.generativeai as genai
 from googleapiclient.discovery import build
 from googlesearch import search
-import requests
+from datetime import datetime
 import json
 import re
 import os
@@ -44,6 +44,7 @@ class ChatRequest(BaseModel):
     goal: str
     prompt: str
     nutrition_plan: dict | None = None
+    food_records: list[dict] | None = None
 
 def google_search(query: str, num_results: int = 3):
     service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
@@ -57,6 +58,7 @@ def google_search(query: str, num_results: int = 3):
             "link": it.get("link")
         })
     return results
+    
 
 def db_lookup(tool_query:str): 
     #you intergate your shit into this function
@@ -71,12 +73,38 @@ def db_lookup(tool_query:str):
     Fat: 5g
     """
 
-def build_system_prompt():
-    return """
+def total_calories_for_today(nutrition_plan, food_records):
+    max_calories = 0
+    if nutrition_plan:
+         max_calories = nutrition_plan.get('caloriesMax')
+    
+    today = datetime.now().strftime("%Y-%m-%d")
+    total_calories = sum(
+    record.get("calories", 0)
+    for record in food_records
+    if record.get("date", "").startswith(today)
+    )
+    print(total_calories)
+    if total_calories >= max_calories:
+        return 1;
+
+
+
+
+def build_system_prompt(nutrition_plan, food_records):
+
+    if total_calories_for_today(nutrition_plan, food_records):
+        return f"""
+### ⚠️ **Thông báo dinh dưỡng**
+Database đã tính toán và thấy rằng người dùng đã tiêu thụ đủ lượng calories cho hôm nay. Hãy từ chối cung cấp thêm món ăn cho người dùng và từ chối thẳng thắn là bạn sẽ không đề xuất món ăn nữa nhưng vẫn sẽ trả lời câu hỏi liên quan về **ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống và món ăn Việt Nam**.
+"""
+
+    else:
+        return """
 Cư xử như **chuyên gia dinh dưỡng Việt Nam**, nói chuyện như **một đầu bếp chuyên nghiệp** với phong cách **đi thẳng vào vấn đề, thân thiện, dễ hiểu và thực tế**.
 
 ### Nhiệm vụ:
-Trả lời mọi câu hỏi liên quan đến **ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống và món ăn Việt Nam.
+Trả lời mọi câu hỏi liên quan đến **ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống và món ăn Việt Nam**.
 Câu trả lời phải **ngắn gọn, tự nhiên, mang tính tư vấn** tối đa 250 câu.
 
 ---
@@ -108,13 +136,13 @@ Câu trả lời phải **ngắn gọn, tự nhiên, mang tính tư vấn** tố
 
 ---
 
-### 🧾 **Định dạng trả lời chuẩn:**
+### 🧾 **Định dạng trả lời chuẩn bắt buộc phải đưa ra cho từng món ăn:**
 
 ⭐
 **Món ăn đề xuất:** (tên món ăn rõ ràng)
 **Lý do chọn:** (1–2 câu nêu lý do chọn món, phù hợp sức khỏe hoặc mục tiêu)
 **Thông tin dinh dưỡng (ước tính cho 1 khẩu phần):**
-- Calo: … kcal
+- Calo: Khoảng (…) - (…) kcal
 - Protein: … g
 - Carb: … g
 - Fat: … g
@@ -138,7 +166,7 @@ def build_google_search_prompt():
     """
 
 
-def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_weight, nutrition_plan):
+def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_weight, nutrition_plan, food_records):
     plan_details = ""
     if nutrition_plan:
         plan_details = f"""\n- Kế hoạch dinh dưỡng hiện tại:
@@ -148,6 +176,12 @@ def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_
          - Thời gian: {nutrition_plan.get('targetDays', 'N/A')} ngày
          - Trạng thái: {'Lành mạnh' if nutrition_plan.get('isHealthy') else 'Cần cân nhắc'}"""
 
+    food_history = ""
+    if food_records:
+        food_history += "\n- Lịch sử ăn uống gần đây:"
+        for record in food_records:
+            food_history += f"\n  - {record.get('foodName', 'N/A')}: {record.get('calories', 'N/A')} kcal"
+
     return f"""
 ### 🔍 **Thông tin đầu vào:**
 - Tuổi: {age}
@@ -156,14 +190,15 @@ def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_
 - Bệnh lý: {disease}
 - Dị ứng: {allergy}
 - Mục tiêu: {goal}
-- Cân nặng mục tiêu: {goal_weight}{plan_details}
+- Cân nặng mục tiêu: {goal_weight}{plan_details}{food_history}
 - Truy vấn của người dùng: {prompt}
 
 ---
 
 ### ✅ **Nhiệm vụ của bạn:**
-Dựa trên thông tin trên và quy tắc nêu rõ, hãy **trả lời tự nhiên, đúng chuyên môn, thân thiện và thực tế** cho câu hỏi của người dùng.
-Nếu câu hỏi thuộc chủ đề ngoài dinh dưỡng → **từ chối nhẹ nhàng, không lạc đề.**
+Dựa trên thông tin trên, hãy **phản hồi tự nhiên, thân thiện và chuyên nghiệp như một chuyên gia dinh dưỡng**.
+- Nếu người dùng hỏi món ăn, gợi ý món phù hợp với mục tiêu và còn trong giới hạn calo.
+- Nếu người dùng hỏi ngoài chủ đề dinh dưỡng, hãy từ chối nhẹ nhàng và hướng lại đúng chủ đề.
 """
 
 def reasoning_intruction():
@@ -180,6 +215,9 @@ def reasoning_intruction():
     '''
     Luôn đảm bảo JSON hợp lệ.
     """
+
+# def check_calories(food_records):
+
 
 def decide_action(user_query:str):
     full_prompt = reasoning_intruction() + user_query
@@ -221,7 +259,7 @@ def decide_action(user_query:str):
 
 @app.post("/chat")
 async def chatbox(request: ChatRequest):
-    print("Received request:", request.model_dump())
+    # print("Received request:", request.model_dump())
     history=[]
     chat = model_gemini.start_chat(history = history)
 
@@ -234,9 +272,12 @@ async def chatbox(request: ChatRequest):
     
     if(action == "DATABASE"):#<---------------------------
         #biến results sẽ là biến mà lưu danh sách database vào
+        print("ĐANG SỬ DỤNG DATABASE")
         results = db_lookup(request.prompt)
-        final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan)
+        final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan, request.food_records)
+        # print("FINAL_PROMPT",final_prompt)
         # final_prompt = build_system_prompt() + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan) + "Dưới đây là danh sách món ăn lấy được từ database:" + results + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
+        # print("\n--- FINAL PROMPT FOR AI ---\n", final_prompt)
         response = chat.send_message(final_prompt)
         return {"reply": response.text}
     
@@ -253,6 +294,7 @@ async def chatbox(request: ChatRequest):
             context.append("Không có context công cụ, hãy trả lời bằng kiến thức nội bộ nếu có.")
             context_string = str(context)
             final_prompt = build_google_search_prompt() + request.prompt + "Ngữ cảnh thu thập được(dùng để tham khảo)" + context_string
+            # print("\n--- FINAL PROMPT FOR AI (GOOGLE) ---\n", final_prompt)
             response = chat.send_message(final_prompt)
             return {"reply": response.text}
         else:
@@ -262,49 +304,6 @@ async def chatbox(request: ChatRequest):
             context.append(f"-{r['title']} - {r['snippet']} - {r['link']}")
             context_string = str(context)
             final_prompt = build_google_search_prompt() + request.prompt +"Ngữ cảnh thu thập được(dùng để tham khảo)" + context_string
+            print("\n--- FINAL PROMPT FOR AI (GOOGLE) ---\n", final_prompt)
             response = chat.send_message(final_prompt)
             return {"reply": response.text}
-
-    # full_prompt = build_system_prompt() + "\n\n" + build_user_prompt(
-    #     request.age, request.height, request.weight,
-    #     request.disease, request.allergy, request.goal, request.prompt, request.goal_weight
-    # )
-
-    # # test_prompt = "mình hiện đang muốn" + request.goal
-
-    # response = chat.send_message(full_prompt)
-
-
-    # return {"reply": response.text}
-
-if __name__ == "__main__":
-    query_text = "gợi ý món ăn giảm cân nhiều protein"
-
-    filters = extract_filter(query_text)
-
-    query_embedding = get_embedding(query_text)
-
-    results = index.query(
-        vector = query_embedding,
-        top_k = 3,
-        include_metadata=True,
-        filter = filters
-    )
-
-    retrieved_docs = []
-    for match in results.matches:
-        meta = match["metadata"]
-        retrieved_docs.append(
-    f"{meta['title']} - Nguyên liệu: {', '.join(meta['ingredients'])}\n"
-    f"Cách nấu: {meta['how-to-cook']}\n"
-    f"Tags: {', '.join(meta['tags'])}\n"
-    f"Calories: {meta['calories']} - Protein: {meta['protein']}"
-)
-
-    context_text = "\n".join(retrieved_docs)
-    full_prompt = build_system_prompt() + "\n\nNgữ cảnh từ CSDL món ăn\n" + context_text + "\n\nCó thể đề xuất thêm nhiều món ăn tương tự món ăn từ CSDL cho người dùng" + build_user_prompt(
-        18, 171, 85, "béo phì", "sữa", "giảm cân", query_text)
-    
-    chat = model_gemini.start_chat(history=[])
-    response = chat.send_message(full_prompt)
-    print(response.text)
