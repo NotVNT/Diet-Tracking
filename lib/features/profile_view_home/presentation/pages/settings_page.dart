@@ -14,7 +14,6 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _notificationsEnabled = true;
   bool _darkModeEnabled = false;
-  bool _autoSyncEnabled = true;
   String _selectedLanguage = 'Tiếng Việt';
   String _selectedUnit = 'Metric (kg, cm)';
 
@@ -40,7 +39,6 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _notificationsEnabled = prefs.getBool('notifications_enabled') ?? true;
       _darkModeEnabled = themeProvider.isDarkMode;
-      _autoSyncEnabled = prefs.getBool('auto_sync_enabled') ?? true;
       _selectedLanguage = prefs.getString('language') ?? 'Tiếng Việt';
       _selectedUnit = prefs.getString('unit') ?? 'Metric (kg, cm)';
     });
@@ -49,7 +47,6 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('notifications_enabled', _notificationsEnabled);
-    await prefs.setBool('auto_sync_enabled', _autoSyncEnabled);
     await prefs.setString('language', _selectedLanguage);
     await prefs.setString('unit', _selectedUnit);
     // Dark mode is handled by ThemeProvider, no need to save separately
@@ -137,77 +134,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: 'Hệ đo lường',
                   value: _selectedUnit,
                   onTap: () => _showUnitDialog(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            
-            // Dữ liệu & Đồng bộ
-            _buildSectionTitle('Dữ liệu & Đồng bộ'),
-            _buildSettingCard(
-              children: [
-                _buildSwitchTile(
-                  icon: Icons.sync_outlined,
-                  title: 'Tự động đồng bộ',
-                  subtitle: 'Đồng bộ dữ liệu tự động với cloud',
-                  value: _autoSyncEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _autoSyncEnabled = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-                const Divider(height: 1),
-                _buildActionTile(
-                  icon: Icons.backup_outlined,
-                  title: 'Sao lưu dữ liệu',
-                  subtitle: 'Sao lưu dữ liệu của bạn',
-                  onTap: () {
-                    _showBackupDialog();
-                  },
-                ),
-                const Divider(height: 1),
-                _buildActionTile(
-                  icon: Icons.delete_outline,
-                  title: 'Xóa cache',
-                  subtitle: 'Xóa dữ liệu tạm thời',
-                  onTap: () {
-                    _showClearCacheDialog();
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            
-            // Về ứng dụng
-            _buildSectionTitle('Về ứng dụng'),
-            _buildSettingCard(
-              children: [
-                _buildInfoTile(
-                  icon: Icons.info_outline,
-                  title: 'Phiên bản',
-                  value: '1.0.0',
-                ),
-                const Divider(height: 1),
-                _buildActionTile(
-                  icon: Icons.privacy_tip_outlined,
-                  title: 'Chính sách bảo mật',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đang mở chính sách bảo mật...')),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
-                _buildActionTile(
-                  icon: Icons.description_outlined,
-                  title: 'Điều khoản sử dụng',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đang mở điều khoản sử dụng...')),
-                    );
-                  },
                 ),
               ],
             ),
@@ -360,110 +286,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildActionTile({
-    required IconData icon,
-    required String title,
-    String? subtitle,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                icon,
-                color: Theme.of(context).colorScheme.primary,
-                size: 24,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoTile({
-    required IconData icon,
-    required String title,
-    required String value,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              icon,
-              color: Theme.of(context).colorScheme.primary,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _showLanguageDialog() async {
     final selected = await showDialog<String>(
       context: context,
@@ -526,71 +348,6 @@ class _SettingsPageState extends State<SettingsPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Đã chuyển sang $selected')),
-      );
-    }
-  }
-
-  Future<void> _showBackupDialog() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Sao lưu dữ liệu'),
-        content: const Text('Bạn có muốn sao lưu toàn bộ dữ liệu của mình không?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Sao lưu'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      if (!mounted) return;
-      // TODO: Implement backup logic
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đang sao lưu dữ liệu...'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-
-  Future<void> _showClearCacheDialog() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Xóa cache'),
-        content: const Text('Bạn có chắc chắn muốn xóa dữ liệu tạm thời không?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
-            child: const Text('Xóa'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      if (!mounted) return;
-      // TODO: Implement clear cache logic
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đã xóa cache thành công'),
-          duration: Duration(seconds: 2),
-        ),
       );
     }
   }

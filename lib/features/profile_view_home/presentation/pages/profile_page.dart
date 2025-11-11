@@ -7,6 +7,8 @@ import '../../../../view/on_boarding/welcome_screen.dart';
 import '../../../chat_bot_view_home/presentation/providers/chat_provider_factory.dart';
 import 'edit_profile_page.dart';
 import 'settings_page.dart';
+import 'data_sync_page.dart';
+import 'support_page.dart';
 
 /// Profile page with Clean Architecture
 class ProfilePage extends StatefulWidget {
@@ -191,9 +193,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
                 _MenuItem(
-                  icon: Icons.lock_outline,
-                  label: 'Thêm mã PIN',
-                  onTap: () {},
+                  icon: Icons.bar_chart_rounded,
+                  label: 'Xem báo cáo thống kê',
+                  onTap: () {
+                    // TODO: Navigate to statistics/report page
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Tính năng đang phát triển'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
                 ),
                 _MenuItem(
                   icon: Icons.settings_outlined,
@@ -208,9 +218,28 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
                 _MenuItem(
-                  icon: Icons.group_add_outlined,
-                  label: 'Mời bạn bè',
-                  onTap: () {},
+                  icon: Icons.cloud_sync_outlined,
+                  label: 'Dữ liệu và đồng bộ',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DataSyncPage(),
+                      ),
+                    );
+                  },
+                ),
+                _MenuItem(
+                  icon: Icons.help_outline_rounded,
+                  label: 'Hỗ trợ',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SupportPage(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
