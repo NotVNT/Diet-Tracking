@@ -17,8 +17,6 @@ class ChatBotPage extends StatefulWidget {
 }
 
 class _ChatBotPageState extends State<ChatBotPage> {
-  static const Color _backgroundColor = Color(0xFF1A1A1A);
-
   // Controllers
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _ingredientsController = TextEditingController();
@@ -52,7 +50,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: _buildAppBar(),
       body: Column(
         children: [
@@ -76,12 +74,12 @@ class _ChatBotPageState extends State<ChatBotPage> {
   /// Builds the app bar
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
       title: Text(
         'Diet Assistant',
         style: GoogleFonts.inter(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.onSurface,
           fontSize: 20,
           fontWeight: FontWeight.w600,
         ),

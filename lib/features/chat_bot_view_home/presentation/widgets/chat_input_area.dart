@@ -9,11 +9,6 @@ class ChatInputArea extends StatelessWidget {
   final VoidCallback onSendPressed;
   final Function(String) onMessageSubmitted;
 
-  static const Color _backgroundColor = Color(0xFF1A1A1A);
-  static const Color _messageBubbleColor = Color(0xFF2D2D2D);
-  static const Color _inputBackgroundColor = Color(0xFF2D2D2D);
-  static const Color _primaryColor = Color(0xFF4CAF50);
-
   const ChatInputArea({
     super.key,
     required this.messageController,
@@ -27,44 +22,56 @@ class ChatInputArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: _backgroundColor,
-        border: Border(top: BorderSide(color: _messageBubbleColor, width: 1)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).colorScheme.outline,
+            width: 1,
+          ),
+        ),
       ),
       child: Row(
         children: [
-          _buildOptionsToggleButton(),
+          _buildOptionsToggleButton(context),
           const SizedBox(width: 8),
-          _buildMessageInputField(),
+          _buildMessageInputField(context),
           const SizedBox(width: 8),
-          _buildSendButton(),
+          _buildSendButton(context),
         ],
       ),
     );
   }
 
   /// Builds the options toggle button
-  Widget _buildOptionsToggleButton() {
+  Widget _buildOptionsToggleButton(BuildContext context) {
     return IconButton(
       onPressed: onToggleOptions,
-      icon: Icon(showOptions ? Icons.close : Icons.add, color: Colors.white),
+      icon: Icon(
+        showOptions ? Icons.close : Icons.add,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
     );
   }
 
   /// Builds the message input text field
-  Widget _buildMessageInputField() {
+  Widget _buildMessageInputField(BuildContext context) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: _inputBackgroundColor,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(24),
         ),
         child: TextField(
           controller: messageController,
-          style: GoogleFonts.inter(color: Colors.white),
+          style: GoogleFonts.inter(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             hintText: 'Nhập tin nhắn...',
-            hintStyle: GoogleFonts.inter(color: Colors.white.withOpacity(0.6)),
+            hintStyle: GoogleFonts.inter(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -78,10 +85,10 @@ class ChatInputArea extends StatelessWidget {
   }
 
   /// Builds the send message button
-  Widget _buildSendButton() {
+  Widget _buildSendButton(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: _primaryColor,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
         shape: BoxShape.circle,
       ),
       child: IconButton(

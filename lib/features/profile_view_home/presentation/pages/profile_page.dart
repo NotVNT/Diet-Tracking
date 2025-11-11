@@ -1,67 +1,46 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../login/login_screen.dart';
-import '../on_boarding/welcome_screen.dart';
-import '../../features/chat_bot_view_home/presentation/providers/chat_provider_factory.dart';
+import 'dart:io';
+import '../providers/profile_provider.dart';
+import '../../../../view/login/login_screen.dart';
+import '../../../../view/on_boarding/welcome_screen.dart';
+import '../../../chat_bot_view_home/presentation/providers/chat_provider_factory.dart';
+import 'edit_profile_page.dart';
+import 'settings_page.dart';
 
-import '../../model/user.dart' as app_user;
-import '../../database/auth_service.dart';
-import '../../database/local_storage_service.dart';
+/// Profile page with Clean Architecture
+class ProfilePage extends StatefulWidget {
+  final ProfileProvider profileProvider;
 
-class ProfileView extends StatefulWidget {
-  final AuthService? authService;
-
-  const ProfileView({super.key, this.authService});
+  const ProfilePage({
+    super.key,
+    required this.profileProvider,
+  });
 
   @override
-  State<ProfileView> createState() => _ProfileViewState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
-  late final AuthService _authService;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+class _ProfilePageState extends State<ProfilePage> {
   final ImagePicker _picker = ImagePicker();
-  final LocalStorageService _localStorageService = LocalStorageService();
-
-  app_user.User? _appUser;
-  bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    _authService = widget.authService ?? AuthService();
-    _loadUser();
+    widget.profileProvider.loadProfile();
+    widget.profileProvider.addListener(_onProfileChanged);
   }
 
-  Future<void> _loadUser() async {
-    final fb_auth.User? current = _authService.currentUser;
-    if (current == null) {
-      setState(() {
-        _appUser = null; // clear cached profile when signed out
-        _loading = false;
-      });
-      return;
-    }
-    final app_user.User? user = await _authService.getUserData(current.uid);
-    setState(() {
-      _appUser = user;
-      _loading = false;
-    });
+  @override
+  void dispose() {
+    widget.profileProvider.removeListener(_onProfileChanged);
+    super.dispose();
   }
 
-  String _defaultAvatarAsset() {
-    final gender = _appUser?.gender;
-    if (gender == app_user.GenderType.male) {
-      return 'assets/gender/men.jpg';
+  void _onProfileChanged() {
+    if (mounted) {
+      setState(() {});
     }
-    if (gender == app_user.GenderType.female) {
-      return 'assets/gender/women.jpg';
-    }
-    return 'assets/gender/men.jpg';
   }
 
   Future<void> _pickAndUploadImage() async {
@@ -72,37 +51,64 @@ class _ProfileViewState extends State<ProfileView> {
       );
       if (picked == null) return;
 
-      final fb_auth.User? current = _authService.currentUser;
-      if (current == null) return;
+      await widget.profileProvider.uploadAvatar(File(picked.path));
 
-      final String path = 'avatars/${current.uid}.jpg';
-      final Reference ref = _storage.ref().child(path);
-      await ref.putFile(File(picked.path));
-      await ref.getDownloadURL();
-      // Avatar is no longer persisted to Firestore; you can store locally if needed
-      setState(() {});
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã cập nhật ảnh đại diện')),
+      );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Không thể cập nhật ảnh: $e')),
+      );
+    }
+  }
+
+  Future<void> _handleSignOut() async {
+    try {
+      await widget.profileProvider.signOut();
+
+      // Clear chat history when logging out
+      ChatProviderFactory.dispose();
+
+      if (!mounted) return;
+
+      // Navigate to Welcome Screen
+      Navigator.pushAndRemoveUntil(
         context,
-      ).showSnackBar(SnackBar(content: Text('Không thể cập nhật ảnh: $e')));
+        MaterialPageRoute(
+          builder: (context) => const WelcomeScreen(),
+        ),
+        (route) => false,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã đăng xuất')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Không thể đăng xuất: $e')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (widget.profileProvider.isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
-    final fb_auth.User? fbUser = _authService.currentUser;
-    final String displayName =
-        _appUser?.fullName ?? fbUser?.displayName ?? 'Người dùng';
-    final String email = _appUser?.email ?? fbUser?.email ?? '';
-    // no persisted avatar URL
+    final profile = widget.profileProvider.profile;
+    final String displayName = profile?.displayName ?? 'Người dùng';
+    final String email = profile?.email ?? '';
+    final bool isLoggedIn = widget.profileProvider.isLoggedIn;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       appBar: AppBar(
         title: const Text('Hồ sơ'),
         centerTitle: true,
@@ -118,8 +124,10 @@ class _ProfileViewState extends State<ProfileView> {
               children: [
                 CircleAvatar(
                   radius: 54,
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage(_defaultAvatarAsset()),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  backgroundImage: AssetImage(
+                    widget.profileProvider.getDefaultAvatarAsset(),
+                  ),
                 ),
                 Positioned(
                   bottom: 4,
@@ -145,18 +153,24 @@ class _ProfileViewState extends State<ProfileView> {
             const SizedBox(height: 12),
             Text(
               displayName,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 6),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFEAF1FF),
+                color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
                 email,
-                style: const TextStyle(color: Color(0xFF3B4A6B)),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -165,7 +179,16 @@ class _ProfileViewState extends State<ProfileView> {
                 _MenuItem(
                   icon: Icons.edit_outlined,
                   label: 'Chỉnh sửa hồ sơ',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(
+                          profileProvider: widget.profileProvider,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 _MenuItem(
                   icon: Icons.lock_outline,
@@ -175,7 +198,14 @@ class _ProfileViewState extends State<ProfileView> {
                 _MenuItem(
                   icon: Icons.settings_outlined,
                   label: 'Cài đặt',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsPage(),
+                      ),
+                    );
+                  },
                 ),
                 _MenuItem(
                   icon: Icons.group_add_outlined,
@@ -187,35 +217,12 @@ class _ProfileViewState extends State<ProfileView> {
             const SizedBox(height: 8),
             _MenuCard(
               children: [
-                if (fbUser != null)
+                if (isLoggedIn)
                   _MenuItem(
                     icon: Icons.logout,
                     label: 'Đăng xuất',
                     isDanger: true,
-                    onTap: () async {
-                      // Xóa tất cả dữ liệu local trước khi đăng xuất
-                      await _localStorageService.clearAllFoodRecords();
-
-                      await _authService.signOut();
-
-                      // Clear chat history when logging out
-                      ChatProviderFactory.dispose();
-
-                      if (!mounted) return;
-
-                      // Chuyển về màn hình Welcome Screen
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const WelcomeScreen(),
-                        ),
-                        (route) => false, // Xóa tất cả các route trước đó
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Đã đăng xuất')),
-                      );
-                    },
+                    onTap: _handleSignOut,
                   )
                 else
                   _MenuItem(
@@ -247,11 +254,11 @@ class _MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Theme.of(context).shadowColor.withOpacity(0.04),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -278,11 +285,11 @@ class _MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color iconColor = isDanger
-        ? const Color(0xFFE74C3C)
-        : const Color(0xFF3B4A6B);
+        ? Theme.of(context).colorScheme.error
+        : Theme.of(context).colorScheme.primary;
     final Color textColor = isDanger
-        ? const Color(0xFFE74C3C)
-        : const Color(0xFF111827);
+        ? Theme.of(context).colorScheme.error
+        : Theme.of(context).colorScheme.onSurface;
 
     return InkWell(
       onTap: onTap,
@@ -302,7 +309,10 @@ class _MenuItem extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: Color(0xFF9CA3AF)),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ],
         ),
       ),

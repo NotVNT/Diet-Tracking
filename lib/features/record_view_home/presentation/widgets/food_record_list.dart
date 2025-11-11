@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/app_colors.dart';
 import '../../../../common/app_styles.dart';
 import '../cubit/record_cubit.dart';
 import '../cubit/record_state.dart';
@@ -33,11 +32,17 @@ class FoodRecordList extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, size: 48, color: Colors.red[300]),
+                Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.error,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   state.message,
-                  style: AppStyles.bodyMedium.copyWith(color: Colors.red[600]),
+                  style: AppStyles.bodyMedium.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -62,20 +67,20 @@ class FoodRecordList extends StatelessWidget {
                   Icon(
                     Icons.restaurant_menu,
                     size: 48,
-                    color: Colors.grey[400],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Chưa có món ăn nào được ghi nhận',
                     style: AppStyles.bodyMedium.copyWith(
-                      color: Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Hãy thêm món ăn đầu tiên của bạn!',
                     style: AppStyles.bodySmall.copyWith(
-                      color: Colors.grey[500],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8),
                       fontSize: 14,
                     ),
                   ),
@@ -118,9 +123,9 @@ class FoodRecordList extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.restaurant,
-                                      color: Colors.black87,
+                                      color: Theme.of(context).colorScheme.primary,
                                     ),
                                     const SizedBox(width: 8),
                                     Expanded(
@@ -128,6 +133,7 @@ class FoodRecordList extends StatelessWidget {
                                         record.foodName,
                                         style: AppStyles.heading2.copyWith(
                                           fontSize: 18,
+                                          color: Theme.of(context).colorScheme.onSurface,
                                         ),
                                       ),
                                     ),
@@ -137,7 +143,7 @@ class FoodRecordList extends StatelessWidget {
                                 Text(
                                   '${_formatCalories(record)} calories',
                                   style: AppStyles.bodyMedium.copyWith(
-                                    color: AppColors.primary,
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -149,12 +155,15 @@ class FoodRecordList extends StatelessWidget {
                                     'Thông tin dinh dưỡng',
                                     style: AppStyles.heading2.copyWith(
                                       fontSize: 16,
+                                      color: Theme.of(context).colorScheme.onSurface,
                                     ),
                                   ),
                                   const SizedBox(height: 6),
                                   Text(
                                     record.nutritionDetails!.trim(),
-                                    style: AppStyles.bodyMedium,
+                                    style: AppStyles.bodyMedium.copyWith(
+                                      color: Theme.of(context).colorScheme.onSurface,
+                                    ),
                                   ),
                                   const SizedBox(height: 12),
                                 ],
@@ -166,12 +175,18 @@ class FoodRecordList extends StatelessWidget {
                     );
                   },
                   leading: CircleAvatar(
-                    backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                    child: Icon(Icons.restaurant, color: AppColors.primary),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    child: Icon(
+                      Icons.restaurant,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                   title: Text(
                     record.foodName,
-                    style: AppStyles.heading2.copyWith(fontSize: 16),
+                    style: AppStyles.heading2.copyWith(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,14 +194,14 @@ class FoodRecordList extends StatelessWidget {
                       Text(
                         '${_formatCalories(record)} calories',
                         style: AppStyles.bodyMedium.copyWith(
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
                         dateFormat.format(record.date),
                         style: AppStyles.bodySmall.copyWith(
-                          color: Colors.grey[600],
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 12,
                         ),
                       ),
@@ -194,7 +209,10 @@ class FoodRecordList extends StatelessWidget {
                   ),
                   trailing: IconButton(
                     tooltip: 'Xoá món ăn',
-                    icon: Icon(Icons.close_rounded, color: Colors.red[400]),
+                    icon: Icon(
+                      Icons.close_rounded,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                     onPressed: () async {
                       // Store the cubit instance before the async gap
                       final cubit = context.read<RecordCubit>();
@@ -215,9 +233,11 @@ class FoodRecordList extends StatelessWidget {
                               TextButton(
                                 onPressed: () =>
                                     Navigator.of(ctx).pop(true),
-                                child: const Text(
+                                child: Text(
                                   'Xoá',
-                                  style: TextStyle(color: Colors.red),
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
                                 ),
                               ),
                             ],

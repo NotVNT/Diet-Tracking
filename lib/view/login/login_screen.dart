@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../common/app_colors.dart';
 import '../../common/app_styles.dart';
@@ -300,7 +299,12 @@ class _LoginScreenState extends State<LoginScreen>
                     opacity: _fadeAnimation,
                     child: SlideTransition(
                       position: _slideAnimation,
-                      child: Text('Đăng Nhập', style: AppStyles.heading1),
+                      child: Text(
+                        'Đăng Nhập',
+                        style: AppStyles.heading1.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -421,7 +425,7 @@ class _LoginScreenState extends State<LoginScreen>
                           Expanded(
                             child: Container(
                               height: 1,
-                              color: AppColors.grey300,
+                              color: Theme.of(context).colorScheme.outline,
                             ),
                           ),
                           Padding(
@@ -429,14 +433,14 @@ class _LoginScreenState extends State<LoginScreen>
                             child: Text(
                               'HOẶC đăng nhập bằng',
                               style: AppStyles.bodyMedium.copyWith(
-                                color: const Color.fromARGB(255, 51, 50, 50),
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ),
                           Expanded(
                             child: Container(
                               height: 1,
-                              color: AppColors.grey300,
+                              color: Theme.of(context).colorScheme.outline,
                             ),
                           ),
                         ],
@@ -451,8 +455,8 @@ class _LoginScreenState extends State<LoginScreen>
                       child: CustomButton(
                         text: 'Tiếp tục với Google',
                         onPressed: _handleGoogleLogin,
-                        backgroundColor: AppColors.white,
-                        textColor: AppColors.black,
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        textColor: Theme.of(context).colorScheme.onSurface,
                         icon: Image.asset(
                           'assets/logo/google_icon.png',
                           width: 20,

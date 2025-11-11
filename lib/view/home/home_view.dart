@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/chat_bot_view_home/presentation/pages/chat_bot_page.dart';
-import '../profile/profile_view.dart';
+import '../../features/profile_view_home/di/profile_di.dart';
+import '../../features/profile_view_home/presentation/pages/profile_page.dart';
 import '../../features/record_view_home/di/record_di.dart';
 import '../../features/record_view_home/presentation/pages/record_page.dart';
 
@@ -27,7 +28,7 @@ class _HomeViewState extends State<HomeView> {
       create: (_) => RecordDI.getRecordCubit(),
       child: const ChatBotPage(),
     ),
-    const ProfileView(),
+    ProfilePage(profileProvider: ProfileDI.getProfileProvider()),
   ];
 
   @override
@@ -73,4 +74,4 @@ class _HomePage extends StatelessWidget {
   }
 }
 
-// Profile page provided by ProfileView in ../profile/profile_view.dart
+// Profile page provided by ProfilePage in features/profile_view_home/presentation/pages/profile_page.dart
