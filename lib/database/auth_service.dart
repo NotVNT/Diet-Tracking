@@ -183,6 +183,26 @@ class AuthService {
     }
   }
 
+  /// Lấy các bản ghi thực phẩm gần đây của người dùng
+  Future<List<Map<String, dynamic>>> getRecentFoodRecords(
+    String uid, {
+    int limit = 5,
+  }) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection('food_records')
+          .orderBy('date', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      throw FirestoreException('Không thể lấy lịch sử ăn uống: $e');
+    }
+  }
+
   /// Đăng ký user mới với dữ liệu on_boarding
   Future<User?> signUpWithOnboardingData({
     required String email,
