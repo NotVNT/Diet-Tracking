@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen>
     } catch (e) {
       print('❌ Exception in login: $e');
       _hideLoadingDialog();
-      _showErrorSnackBar('Đã xảy ra lỗi không xác định: $e');
+      _showErrorSnackBar('Email hoặc mật khẩu không chính xác. Vui lòng thử lại.');
     }
   }
 
@@ -238,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen>
       }
     } catch (e) {
       _hideLoadingDialog();
-      _showErrorSnackBar('Đăng nhập Google thất bại: $e');
+      _showErrorSnackBar('Đăng nhập Google thất bại. Vui lòng thử lại.');
     }
   }
 
@@ -391,8 +391,9 @@ class _LoginScreenState extends State<LoginScreen>
                               );
                             } catch (e) {
                               _hideLoadingDialog();
+                              print('❌ Exception in password reset: $e');
                               _showErrorSnackBar(
-                                'Không thể gửi email đặt lại mật khẩu: $e',
+                                'Không thể gửi email đặt lại mật khẩu. Vui lòng kiểm tra email và thử lại.',
                               );
                             }
                           },

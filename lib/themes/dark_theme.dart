@@ -147,11 +147,19 @@ class AppDarkTheme {
       
       // Bottom Navigation Bar
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Color(0xFF1F2937),
-        selectedItemColor: Color(0xFF818CF8),
-        unselectedItemColor: Color(0xFF6B7280),
+        backgroundColor: Color(0xFF0F172A), // Darker navy blue
+        selectedItemColor: Color(0xFF818CF8), // Indigo
+        unselectedItemColor: Color(0xFF94A3B8), // Lighter gray
         type: BottomNavigationBarType.fixed,
-        elevation: 8,
+        elevation: 12,
+        selectedLabelStyle: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
       ),
       
       // Divider

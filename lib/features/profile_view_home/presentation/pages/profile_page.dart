@@ -5,6 +5,7 @@ import '../providers/profile_provider.dart';
 import '../../../../view/login/login_screen.dart';
 import '../../../../view/on_boarding/welcome_screen.dart';
 import '../../../chat_bot_view_home/presentation/providers/chat_provider_factory.dart';
+import '../widgets/app_info_section.dart';
 import 'edit_profile_page.dart';
 import 'settings_page.dart';
 import 'data_sync_page.dart';
@@ -192,6 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
+                const Divider(height: 1, thickness: 3),
                 _MenuItem(
                   icon: Icons.bar_chart_rounded,
                   label: 'Xem báo cáo thống kê',
@@ -205,6 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
+                const Divider(height: 1, thickness: 3),
                 _MenuItem(
                   icon: Icons.settings_outlined,
                   label: 'Cài đặt',
@@ -217,6 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
+                const Divider(height: 1, thickness: 3),
                 _MenuItem(
                   icon: Icons.cloud_sync_outlined,
                   label: 'Dữ liệu và đồng bộ',
@@ -229,6 +233,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
+                const Divider(height: 1, thickness: 3),
                 _MenuItem(
                   icon: Icons.help_outline_rounded,
                   label: 'Hỗ trợ',
@@ -243,7 +248,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16), 
             _MenuCard(
               children: [
                 if (isLoggedIn)
@@ -268,6 +273,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
               ],
             ),
+            const SizedBox(height: 24), 
+            const AppInfoSection(
+              appName: 'VGP',
+              version: '1.0.0',
+              description: 'Ứng dụng quản lý chế độ ăn uống thông minh',
+              // logoAsset: 'assets/logo/app_logo.png', // Uncomment nếu có logo
+            ),
+            
+            const SizedBox(height: 8),
           ],
         ),
       ),
@@ -276,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class _MenuCard extends StatelessWidget {
-  final List<_MenuItem> children;
+  final List<Widget> children;
   const _MenuCard({required this.children});
 
   @override
