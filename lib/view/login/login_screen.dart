@@ -6,6 +6,7 @@ import '../../common/custom_input_field.dart';
 import '../../common/custom_button.dart';
 import '../../common/gradient_background.dart';
 import '../../database/auth_service.dart';
+import '../../database/exceptions.dart';
 import '../../database/guest_sync_service.dart';
 import '../../database/local_storage_service.dart';
 import '../../services/google_auth_service.dart';
@@ -378,6 +379,9 @@ class _LoginScreenState extends State<LoginScreen>
                             }
                             try {
                               _showLoadingDialog();
+                              _authService ??=
+                                  widget.authService ?? AuthService();
+
                               if (widget.onSendPasswordReset != null) {
                                 await widget.onSendPasswordReset!(email);
                               } else {
@@ -389,6 +393,9 @@ class _LoginScreenState extends State<LoginScreen>
                               _showSuccessSnackBar(
                                 'Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.',
                               );
+                            } on AuthException catch (e) {
+                              _hideLoadingDialog();
+                              _showErrorSnackBar(e.message);
                             } catch (e) {
                               _hideLoadingDialog();
                               _showErrorSnackBar(
