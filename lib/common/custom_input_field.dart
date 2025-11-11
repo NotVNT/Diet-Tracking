@@ -4,7 +4,7 @@ import 'app_styles.dart';
 
 class CustomInputField extends StatefulWidget {
   final String label;
-  final String hint;
+  final String? hint;
   final TextEditingController controller;
   final bool obscureText;
   final TextInputType keyboardType;
@@ -16,7 +16,7 @@ class CustomInputField extends StatefulWidget {
   const CustomInputField({
     super.key,
     required this.label,
-    required this.hint,
+    this.hint,
     required this.controller,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
@@ -117,7 +117,7 @@ class _CustomInputFieldState extends State<CustomInputField>
                     fontSize: 16,
                   ),
                   decoration: InputDecoration(
-                    hintText: widget.hint,
+                    hintText: widget.hint ?? '',
                     hintStyle: GoogleFonts.inter(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontSize: 16,

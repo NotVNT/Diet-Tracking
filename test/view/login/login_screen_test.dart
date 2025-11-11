@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
-import 'package:diet_tracking_project/view/login/login_screen.dart';
+import 'package:diet_tracking_project/view/identities/login/login_main_screen.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
 import 'package:diet_tracking_project/database/guest_sync_service.dart';
 import 'package:diet_tracking_project/model/user.dart' as app_user;

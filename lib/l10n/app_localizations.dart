@@ -754,6 +754,366 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'(Exercise twice a day, manual labor)'**
   String get activityLevelExtraActiveSubtitle;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginTitle;
+
+  /// No description provided for @emailOrPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Email or Phone Number'**
+  String get emailOrPhone;
+
+  /// No description provided for @emailOrPhoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Email or Phone Number'**
+  String get emailOrPhoneHint;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @passwordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'••••••••'**
+  String get passwordHint;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @loginButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginButton;
+
+  /// No description provided for @orLoginWith.
+  ///
+  /// In en, this message translates to:
+  /// **'OR login with'**
+  String get orLoginWith;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'I don\'t have an account'**
+  String get dontHaveAccount;
+
+  /// No description provided for @pleaseEnterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email'**
+  String get pleaseEnterEmail;
+
+  /// No description provided for @pleaseEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter password'**
+  String get pleaseEnterPassword;
+
+  /// No description provided for @loginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Login successful!'**
+  String get loginSuccess;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed. Please check your information.'**
+  String get loginFailed;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Email or password is incorrect. Please try again.'**
+  String get invalidCredentials;
+
+  /// No description provided for @googleLoginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Google login successful!'**
+  String get googleLoginSuccess;
+
+  /// No description provided for @googleLoginCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Google login cancelled.'**
+  String get googleLoginCancelled;
+
+  /// No description provided for @googleLoginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google login failed. Please try again.'**
+  String get googleLoginFailed;
+
+  /// No description provided for @passwordResetEmailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent. Please check your inbox.'**
+  String get passwordResetEmailSent;
+
+  /// No description provided for @pleaseEnterEmailFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email first.'**
+  String get pleaseEnterEmailFirst;
+
+  /// No description provided for @passwordResetFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to send password reset email. Please check your email and try again.'**
+  String get passwordResetFailed;
+
+  /// No description provided for @signupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get signupTitle;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// No description provided for @fullNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get fullNameHint;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @phoneNumberHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter phone number'**
+  String get phoneNumberHint;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'example@gmail.com'**
+  String get emailHint;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @confirmPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'••••••••'**
+  String get confirmPasswordHint;
+
+  /// No description provided for @agreeWith.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree with '**
+  String get agreeWith;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// No description provided for @and.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get and;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @signupButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signupButton;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @loginLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginLink;
+
+  /// No description provided for @forgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPasswordTitle;
+
+  /// No description provided for @forgotPasswordInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and we\'ll send you instructions to reset your password.'**
+  String get forgotPasswordInstruction;
+
+  /// No description provided for @sendResetEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Email'**
+  String get sendResetEmail;
+
+  /// No description provided for @backToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Login'**
+  String get backToLogin;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email.'**
+  String get invalidEmail;
+
+  /// No description provided for @pleaseEnterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email.'**
+  String get pleaseEnterValidEmail;
+
+  /// No description provided for @emailNotExist.
+  ///
+  /// In en, this message translates to:
+  /// **'Email does not exist in the system.'**
+  String get emailNotExist;
+
+  /// No description provided for @accountUsesProviderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This account uses: {provider}. Cannot reset password via email.'**
+  String accountUsesProviderMessage(Object provider);
+
+  /// No description provided for @unableToSendResetEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to send password reset email. Please try again later.'**
+  String get unableToSendResetEmail;
+
+  /// No description provided for @userNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this email.'**
+  String get userNotFound;
+
+  /// No description provided for @tooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please try again later.'**
+  String get tooManyRequests;
+
+  /// No description provided for @networkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your connection and try again.'**
+  String get networkError;
+
+  /// No description provided for @pleaseEnterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your full name.'**
+  String get pleaseEnterFullName;
+
+  /// No description provided for @pleaseEnterPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter phone number.'**
+  String get pleaseEnterPhoneNumber;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters.'**
+  String get passwordMinLength;
+
+  /// No description provided for @pleaseConfirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm password.'**
+  String get pleaseConfirmPassword;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match.'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @pleaseAgreeToTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Please agree to the terms of service.'**
+  String get pleaseAgreeToTerms;
+
+  /// No description provided for @emailAlreadyInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is already in use. Please use a different email.'**
+  String get emailAlreadyInUse;
+
+  /// No description provided for @weakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak. Please use a stronger password.'**
+  String get weakPassword;
+
+  /// No description provided for @registrationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed. Please try again.'**
+  String get registrationFailed;
+
+  /// No description provided for @registrationSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful!'**
+  String get registrationSuccess;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -337,4 +337,186 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get activityLevelExtraActiveSubtitle => '(Exercise twice a day, manual labor)';
+
+  @override
+  String get loginTitle => 'Login';
+
+  @override
+  String get emailOrPhone => 'Email or Phone Number';
+
+  @override
+  String get emailOrPhoneHint => 'Enter Email or Phone Number';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get passwordHint => '••••••••';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get loginButton => 'Login';
+
+  @override
+  String get orLoginWith => 'OR login with';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get dontHaveAccount => 'I don\'t have an account';
+
+  @override
+  String get pleaseEnterEmail => 'Please enter email';
+
+  @override
+  String get pleaseEnterPassword => 'Please enter password';
+
+  @override
+  String get loginSuccess => 'Login successful!';
+
+  @override
+  String get loginFailed => 'Login failed. Please check your information.';
+
+  @override
+  String get invalidCredentials => 'Email or password is incorrect. Please try again.';
+
+  @override
+  String get googleLoginSuccess => 'Google login successful!';
+
+  @override
+  String get googleLoginCancelled => 'Google login cancelled.';
+
+  @override
+  String get googleLoginFailed => 'Google login failed. Please try again.';
+
+  @override
+  String get passwordResetEmailSent => 'Password reset email sent. Please check your inbox.';
+
+  @override
+  String get pleaseEnterEmailFirst => 'Please enter email first.';
+
+  @override
+  String get passwordResetFailed => 'Unable to send password reset email. Please check your email and try again.';
+
+  @override
+  String get signupTitle => 'Create Account';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get fullNameHint => 'Enter your full name';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get phoneNumberHint => 'Enter phone number';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get emailHint => 'example@gmail.com';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get confirmPasswordHint => '••••••••';
+
+  @override
+  String get agreeWith => 'I agree with ';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get and => ' and ';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get signupButton => 'Sign Up';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get loginLink => 'Login';
+
+  @override
+  String get forgotPasswordTitle => 'Forgot Password?';
+
+  @override
+  String get forgotPasswordInstruction => 'Enter your email and we\'ll send you instructions to reset your password.';
+
+  @override
+  String get sendResetEmail => 'Send Reset Email';
+
+  @override
+  String get backToLogin => 'Back to Login';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get invalidEmail => 'Invalid email.';
+
+  @override
+  String get pleaseEnterValidEmail => 'Please enter email.';
+
+  @override
+  String get emailNotExist => 'Email does not exist in the system.';
+
+  @override
+  String accountUsesProviderMessage(Object provider) {
+    return 'This account uses: $provider. Cannot reset password via email.';
+  }
+
+  @override
+  String get unableToSendResetEmail => 'Unable to send password reset email. Please try again later.';
+
+  @override
+  String get userNotFound => 'No account found with this email.';
+
+  @override
+  String get tooManyRequests => 'Too many requests. Please try again later.';
+
+  @override
+  String get networkError => 'Network error. Please check your connection and try again.';
+
+  @override
+  String get pleaseEnterFullName => 'Please enter your full name.';
+
+  @override
+  String get pleaseEnterPhoneNumber => 'Please enter phone number.';
+
+  @override
+  String get passwordMinLength => 'Password must be at least 6 characters.';
+
+  @override
+  String get pleaseConfirmPassword => 'Please confirm password.';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match.';
+
+  @override
+  String get pleaseAgreeToTerms => 'Please agree to the terms of service.';
+
+  @override
+  String get emailAlreadyInUse => 'Email is already in use. Please use a different email.';
+
+  @override
+  String get weakPassword => 'Password is too weak. Please use a stronger password.';
+
+  @override
+  String get registrationFailed => 'Registration failed. Please try again.';
+
+  @override
+  String get registrationSuccess => 'Registration successful!';
 }

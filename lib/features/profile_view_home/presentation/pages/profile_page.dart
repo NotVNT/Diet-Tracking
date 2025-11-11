@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../providers/profile_provider.dart';
-import '../../../../view/login/login_screen.dart';
+import '../../../../view/identities/login/login_main_screen.dart';
 import '../../../../view/on_boarding/welcome_screen.dart';
 import '../../../chat_bot_view_home/presentation/providers/chat_provider_factory.dart';
 import '../widgets/app_info_section.dart';

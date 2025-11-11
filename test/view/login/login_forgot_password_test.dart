@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:diet_tracking_project/view/login/login_screen.dart';
+import 'package:diet_tracking_project/view/identities/login/login_main_screen.dart';
 // Bỏ phụ thuộc Firebase cho test này
 
 class _ResetSpy {
