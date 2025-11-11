@@ -201,7 +201,8 @@ class _SignupScreenState extends State<SignupScreen>
       }
     } catch (e) {
       Navigator.of(context).pop(); // Đóng loading dialog
-      _showErrorSnackBar(e.toString());
+      print('❌ Exception in signup: $e');
+      _showErrorSnackBar('Đăng ký thất bại. Vui lòng kiểm tra lại thông tin và thử lại.');
     }
   }
 

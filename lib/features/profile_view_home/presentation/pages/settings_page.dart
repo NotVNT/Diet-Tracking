@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import '../../../../themes/theme_provider.dart';
+import '../../../../common/language_selector.dart';
+import '../../../../common/unit_selector.dart';
+import '../../../../services/language_service.dart';
 
 /// Settings page for app configuration
 class SettingsPage extends StatefulWidget {
@@ -14,18 +17,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _notificationsEnabled = true;
   bool _darkModeEnabled = false;
-  String _selectedLanguage = 'Tiếng Việt';
-  String _selectedUnit = 'Metric (kg, cm)';
-
-  final List<String> _languages = [
-    'Tiếng Việt',
-    'English',
-  ];
-
-  final List<String> _units = [
-    'Metric (kg, cm)',
-    'Imperial (lb, in)',
-  ];
+  Language _selectedLanguage = Language.vi;
+  UnitSystem _selectedUnit = UnitSystem.metric;
 
   @override
   void initState() {
@@ -36,19 +29,21 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _loadSettings() async {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
+    final languageCode = prefs.getString('language') ?? 'vi';
+    final unitCode = prefs.getString('unit') ?? 'metric';
     setState(() {
       _notificationsEnabled = prefs.getBool('notifications_enabled') ?? true;
       _darkModeEnabled = themeProvider.isDarkMode;
-      _selectedLanguage = prefs.getString('language') ?? 'Tiếng Việt';
-      _selectedUnit = prefs.getString('unit') ?? 'Metric (kg, cm)';
+      _selectedLanguage = languageCode == 'en' ? Language.en : Language.vi;
+      _selectedUnit = unitCode == 'imperial' ? UnitSystem.imperial : UnitSystem.metric;
     });
   }
 
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('notifications_enabled', _notificationsEnabled);
-    await prefs.setString('language', _selectedLanguage);
-    await prefs.setString('unit', _selectedUnit);
+    await prefs.setString('language', _selectedLanguage == Language.vi ? 'vi' : 'en');
+    await prefs.setString('unit', _selectedUnit == UnitSystem.metric ? 'metric' : 'imperial');
     // Dark mode is handled by ThemeProvider, no need to save separately
   }
 
@@ -115,12 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
                 const Divider(height: 1),
-                _buildSelectTile(
-                  icon: Icons.language_outlined,
-                  title: 'Ngôn ngữ',
-                  value: _selectedLanguage,
-                  onTap: () => _showLanguageDialog(),
-                ),
+                _buildLanguageTile(),
               ],
             ),
             const SizedBox(height: 24),
@@ -129,12 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _buildSectionTitle('Đơn vị đo lường'),
             _buildSettingCard(
               children: [
-                _buildSelectTile(
-                  icon: Icons.straighten_outlined,
-                  title: 'Hệ đo lường',
-                  value: _selectedUnit,
-                  onTap: () => _showUnitDialog(),
-                ),
+                _buildUnitTile(),
               ],
             ),
             const SizedBox(height: 32),
@@ -233,122 +218,90 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildSelectTile({
-    required IconData icon,
-    required String title,
-    required String value,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                icon,
-                color: Theme.of(context).colorScheme.primary,
-                size: 24,
-              ),
+  Widget _buildLanguageTile() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
+            child: Icon(
+              Icons.language_outlined,
+              color: Theme.of(context).colorScheme.primary,
+              size: 24,
             ),
-            Text(
-              value,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Ngôn ngữ',
               style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
-            const SizedBox(width: 8),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          LanguageSelector(
+            selected: _selectedLanguage,
+            onChanged: (Language newLanguage) async {
+              setState(() {
+                _selectedLanguage = newLanguage;
+              });
+              await _saveSettings();
+              
+              // Change app language using LanguageService
+              await LanguageService.changeLanguage(newLanguage);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUnitTile() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
             ),
-          ],
-        ),
+            child: Icon(
+              Icons.straighten_outlined,
+              color: Theme.of(context).colorScheme.primary,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Hệ đo lường',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ),
+          UnitSelector(
+            selected: _selectedUnit,
+            onChanged: (UnitSystem newUnit) async {
+              setState(() {
+                _selectedUnit = newUnit;
+              });
+              await _saveSettings();
+            },
+          ),
+        ],
       ),
     );
-  }
-
-  Future<void> _showLanguageDialog() async {
-    final selected = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Chọn ngôn ngữ'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: _languages.map((language) {
-            return RadioListTile<String>(
-              title: Text(language),
-              value: language,
-              groupValue: _selectedLanguage,
-              onChanged: (value) {
-                Navigator.pop(context, value);
-              },
-            );
-          }).toList(),
-        ),
-      ),
-    );
-
-    if (selected != null && selected != _selectedLanguage) {
-      setState(() {
-        _selectedLanguage = selected;
-      });
-      await _saveSettings();
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đã chuyển sang $selected')),
-      );
-    }
-  }
-
-  Future<void> _showUnitDialog() async {
-    final selected = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Chọn hệ đo lường'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: _units.map((unit) {
-            return RadioListTile<String>(
-              title: Text(unit),
-              value: unit,
-              groupValue: _selectedUnit,
-              onChanged: (value) {
-                Navigator.pop(context, value);
-              },
-            );
-          }).toList(),
-        ),
-      ),
-    );
-
-    if (selected != null && selected != _selectedUnit) {
-      setState(() {
-        _selectedUnit = selected;
-      });
-      await _saveSettings();
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đã chuyển sang $selected')),
-      );
-    }
   }
 }
