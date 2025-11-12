@@ -130,7 +130,7 @@ class SupportPage extends StatelessWidget {
             children: [
               _buildSocialMediaButton(
                 context,
-                imagePath: 'icon/tiktok.png',
+                imagePath: 'assets/icon/tiktok.png',
                 label: 'Tiktok',
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -140,7 +140,7 @@ class SupportPage extends StatelessWidget {
               ),
               _buildSocialMediaButton(
                 context,
-                imagePath: 'icon/facebook.png',
+                imagePath: 'assets/icon/facebook.png',
                 label: 'Facebook',
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -150,7 +150,7 @@ class SupportPage extends StatelessWidget {
               ),
               _buildSocialMediaButton(
                 context,
-                imagePath: 'icon/instagram.png',
+                imagePath: 'assets/icon/instagram.png',
                 label: 'Instagram',
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
