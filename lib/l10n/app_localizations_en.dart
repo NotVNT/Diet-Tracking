@@ -944,4 +944,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sunday => 'Sunday';
+
+  @override
+  String get bottomNavHome => 'Home';
+
+  @override
+  String get bottomNavRecord => 'Record';
+
+  @override
+  String get bottomNavChatBot => 'Chat bot';
+
+  @override
+  String get bottomNavProfile => 'Profile';
+
+  @override
+  String get searchHint => 'Search';
+
+  @override
+  String get calorieGoalTitle => 'Calorie Goal';
+
+  @override
+  String get viewReport => 'View Report';
+
+  @override
+  String get calorieRemaining => 'Remaining';
+
+  @override
+  String get goalLabel => 'Goal';
+
+  @override
+  String get consumedLabel => 'Consumed';
+
+  @override
+  String get exerciseLabel => 'Exercise';
+
+  @override
+  String get notificationTitle => 'Notifications';
+
+  @override
+  String get waterReminderTitle => 'Water Reminder';
+
+  @override
+  String get waterReminderMessage => 'Drink enough water every day to keep your body healthy and energized!';
+
+  @override
+  String get markAllAsRead => 'Mark all as read';
+
+  @override
+  String get noNotifications => 'No notifications yet';
+
+  @override
+  String get recordPageTitle => 'Record Meals';
+
+  @override
+  String get recordedMealsTitle => 'Recorded Meals';
+
+  @override
+  String get retryButton => 'Retry';
+
+  @override
+  String get noMealsRecorded => 'No meals recorded yet';
+
+  @override
+  String get addFirstMeal => 'Add your first meal!';
+
+  @override
+  String get calories => 'calories';
+
+  @override
+  String get nutritionInfo => 'Nutrition Information';
 }

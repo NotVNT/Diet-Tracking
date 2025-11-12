@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../common/app_styles.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../common/gradient_background.dart';
+import '../../../../l10n/app_localizations.dart';
 
 import '../cubit/record_cubit.dart';
 import '../widgets/food_record_list.dart';
@@ -14,12 +15,14 @@ class RecordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    
     return Scaffold(
       body: GradientBackground(
         child: Column(
           children: [
-            const CustomAppBar(
-              title: 'Ghi nhận món ăn',
+            CustomAppBar(
+              title: localizations?.recordPageTitle ?? 'Ghi nhận món ăn',
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -32,7 +35,7 @@ class RecordPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Món ăn đã ghi nhận',
+                            localizations?.recordedMealsTitle ?? 'Món ăn đã ghi nhận',
                             style: AppStyles.heading2.copyWith(
                               fontSize: 18,
                               color: Theme.of(context).colorScheme.onSurface,

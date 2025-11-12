@@ -944,4 +944,73 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get sunday => 'Chủ Nhật';
+
+  @override
+  String get bottomNavHome => 'Trang chủ';
+
+  @override
+  String get bottomNavRecord => 'Ghi nhận';
+
+  @override
+  String get bottomNavChatBot => 'Chat bot';
+
+  @override
+  String get bottomNavProfile => 'Hồ sơ';
+
+  @override
+  String get searchHint => 'Tìm kiếm';
+
+  @override
+  String get calorieGoalTitle => 'Mục tiêu calo';
+
+  @override
+  String get viewReport => 'Xem báo cáo';
+
+  @override
+  String get calorieRemaining => 'Calo còn lại';
+
+  @override
+  String get goalLabel => 'Mục tiêu';
+
+  @override
+  String get consumedLabel => 'Đã nạp';
+
+  @override
+  String get exerciseLabel => 'Tập luyện';
+
+  @override
+  String get notificationTitle => 'Thông báo';
+
+  @override
+  String get waterReminderTitle => 'Nhắc nhở uống nước';
+
+  @override
+  String get waterReminderMessage => 'Uống đủ nước mỗi ngày giúp cơ thể khỏe mạnh và duy trì năng lượng!';
+
+  @override
+  String get markAllAsRead => 'Đọc tất cả';
+
+  @override
+  String get noNotifications => 'Chưa có thông báo nào';
+
+  @override
+  String get recordPageTitle => 'Ghi nhận món ăn';
+
+  @override
+  String get recordedMealsTitle => 'Món ăn đã ghi nhận';
+
+  @override
+  String get retryButton => 'Thử lại';
+
+  @override
+  String get noMealsRecorded => 'Chưa có món ăn nào được ghi nhận';
+
+  @override
+  String get addFirstMeal => 'Hãy thêm món ăn đầu tiên của bạn!';
+
+  @override
+  String get calories => 'calories';
+
+  @override
+  String get nutritionInfo => 'Thông tin dinh dưỡng';
 }

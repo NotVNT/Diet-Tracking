@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../common/app_styles.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../cubit/record_cubit.dart';
 import '../cubit/record_state.dart';
 
@@ -21,6 +22,8 @@ class FoodRecordList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    
     return BlocBuilder<RecordCubit, RecordState>(
       builder: (context, state) {
         if (state is RecordLoading) {
@@ -50,7 +53,7 @@ class FoodRecordList extends StatelessWidget {
                   onPressed: () {
                     context.read<RecordCubit>().loadFoodRecords();
                   },
-                  child: const Text('Thử lại'),
+                  child: Text(localizations?.retryButton ?? 'Thử lại'),
                 ),
               ],
             ),
@@ -71,14 +74,14 @@ class FoodRecordList extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Chưa có món ăn nào được ghi nhận',
+                    localizations?.noMealsRecorded ?? 'Chưa có món ăn nào được ghi nhận',
                     style: AppStyles.bodyMedium.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Hãy thêm món ăn đầu tiên của bạn!',
+                    localizations?.addFirstMeal ?? 'Hãy thêm món ăn đầu tiên của bạn!',
                     style: AppStyles.bodySmall.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8),
                       fontSize: 14,
@@ -141,7 +144,7 @@ class FoodRecordList extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  '${_formatCalories(record)} calories',
+                                  '${_formatCalories(record)} ${localizations?.calories ?? 'calories'}',
                                   style: AppStyles.bodyMedium.copyWith(
                                     color: Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.w600,
@@ -152,7 +155,7 @@ class FoodRecordList extends StatelessWidget {
                                     .trim()
                                     .isNotEmpty) ...[
                                   Text(
-                                    'Thông tin dinh dưỡng',
+                                    localizations?.nutritionInfo ?? 'Thông tin dinh dưỡng',
                                     style: AppStyles.heading2.copyWith(
                                       fontSize: 16,
                                       color: Theme.of(context).colorScheme.onSurface,
@@ -192,7 +195,7 @@ class FoodRecordList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${_formatCalories(record)} calories',
+                        '${_formatCalories(record)} ${localizations?.calories ?? 'calories'}',
                         style: AppStyles.bodyMedium.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,

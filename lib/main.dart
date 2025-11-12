@@ -10,7 +10,8 @@ import 'themes/dark_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'database/firebase_options.dart';
-import 'view/splash/splash_screen.dart';
+import 'features/home_page/di/home_di.dart';
+import 'features/home_page/presentation/pages/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,7 +71,10 @@ class _DietTrackingAppState extends State<DietTrackingApp> {
           theme: AppLightTheme.theme,
           darkTheme: AppDarkTheme.theme,
           themeMode: themeProvider.themeMode,
-          home: const SplashScreen(),
+          home: ChangeNotifierProvider(
+            create: (_) => HomeDI.getHomeProvider(),
+            child: const HomePage(),
+          ),
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
             AppLocalizations.delegate,

@@ -1948,6 +1948,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sunday'**
   String get sunday;
+
+  /// No description provided for @bottomNavHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get bottomNavHome;
+
+  /// No description provided for @bottomNavRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get bottomNavRecord;
+
+  /// No description provided for @bottomNavChatBot.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat bot'**
+  String get bottomNavChatBot;
+
+  /// No description provided for @bottomNavProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get bottomNavProfile;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchHint;
+
+  /// No description provided for @calorieGoalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie Goal'**
+  String get calorieGoalTitle;
+
+  /// No description provided for @viewReport.
+  ///
+  /// In en, this message translates to:
+  /// **'View Report'**
+  String get viewReport;
+
+  /// No description provided for @calorieRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get calorieRemaining;
+
+  /// No description provided for @goalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get goalLabel;
+
+  /// No description provided for @consumedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Consumed'**
+  String get consumedLabel;
+
+  /// No description provided for @exerciseLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get exerciseLabel;
+
+  /// No description provided for @notificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationTitle;
+
+  /// No description provided for @waterReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Reminder'**
+  String get waterReminderTitle;
+
+  /// No description provided for @waterReminderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Drink enough water every day to keep your body healthy and energized!'**
+  String get waterReminderMessage;
+
+  /// No description provided for @markAllAsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get markAllAsRead;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotifications;
+
+  /// No description provided for @recordPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Meals'**
+  String get recordPageTitle;
+
+  /// No description provided for @recordedMealsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded Meals'**
+  String get recordedMealsTitle;
+
+  /// No description provided for @retryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryButton;
+
+  /// No description provided for @noMealsRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'No meals recorded yet'**
+  String get noMealsRecorded;
+
+  /// No description provided for @addFirstMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first meal!'**
+  String get addFirstMeal;
+
+  /// No description provided for @calories.
+  ///
+  /// In en, this message translates to:
+  /// **'calories'**
+  String get calories;
+
+  /// No description provided for @nutritionInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Information'**
+  String get nutritionInfo;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
