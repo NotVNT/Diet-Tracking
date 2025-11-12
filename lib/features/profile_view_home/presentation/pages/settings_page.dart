@@ -5,6 +5,7 @@ import '../../../../themes/theme_provider.dart';
 import '../../../../common/language_selector.dart';
 import '../../../../common/unit_selector.dart';
 import '../../../../services/language_service.dart';
+import '../../../../common/custom_app_bar.dart';
 
 /// Settings page for app configuration
 class SettingsPage extends StatefulWidget {
@@ -51,10 +52,9 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: AppBar(
-        title: const Text('Cài đặt'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: const CustomAppBar(
+        title: 'Cài đặt',
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'help_center_page.dart';
+import '../../../../common/custom_app_bar.dart';
 
 /// Support and about page
 class SupportPage extends StatelessWidget {
@@ -8,10 +10,9 @@ class SupportPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: AppBar(
-        title: const Text('Hỗ trợ'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: const CustomAppBar(
+        title: 'Hỗ trợ',
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -259,8 +260,11 @@ class SupportPage extends StatelessWidget {
   Widget _buildSupportCenterSection(BuildContext context) {
     return InkWell(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Đang mở trung tâm hỗ trợ...')),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HelpCenterPage(),
+          ),
         );
       },
       borderRadius: BorderRadius.circular(16),

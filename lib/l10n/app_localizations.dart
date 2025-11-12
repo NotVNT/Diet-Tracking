@@ -1114,6 +1114,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Registration successful!'**
   String get registrationSuccess;
+
+  /// No description provided for @dietAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet Assistant'**
+  String get dietAssistant;
+
+  /// No description provided for @recordMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Meal'**
+  String get recordMeal;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

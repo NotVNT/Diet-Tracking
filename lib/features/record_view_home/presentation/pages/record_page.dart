@@ -18,7 +18,9 @@ class RecordPage extends StatelessWidget {
       body: GradientBackground(
         child: Column(
           children: [
-            const CustomAppBar(title: 'Ghi nhận món ăn'),
+            const CustomAppBar(
+              title: 'Ghi nhận món ăn',
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(

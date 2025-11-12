@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../common/custom_app_bar.dart';
 
 /// Data and synchronization settings page
 class DataSyncPage extends StatefulWidget {
@@ -94,10 +95,9 @@ class _DataSyncPageState extends State<DataSyncPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: AppBar(
-        title: const Text('Dữ liệu & Đồng bộ'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: const CustomAppBar(
+        title: 'Dữ liệu & Đồng bộ',
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

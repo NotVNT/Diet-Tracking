@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../common/app_styles.dart';
 import '../../../common/custom_button.dart';
 import '../../../common/gradient_background.dart';
-import '../../../common/language_selector.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/guest_sync_service.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../services/language_service.dart';
 import '../login/login_main_screen.dart';
 import 'register_controller.dart';
 import 'register_ui_helper.dart';
@@ -43,12 +41,10 @@ class _SignupScreenState extends State<SignupScreen>
   bool _isPasswordFocused = false;
   bool _isConfirmPasswordFocused = false;
   bool _isTermsAccepted = false;
-  Language _selectedLanguage = Language.vi;
 
   @override
   void initState() {
     super.initState();
-    _selectedLanguage = LanguageService.currentLanguage;
     
     // Khởi tạo register controller
     _registerController = RegisterController(
@@ -233,16 +229,6 @@ class _SignupScreenState extends State<SignupScreen>
     });
   }
 
-  /// Xử lý khi người dùng thay đổi ngôn ngữ
-  void _onLanguageChanged(Language newLanguage) async {
-    await LanguageService.changeLanguage(newLanguage);
-    if (mounted) {
-      setState(() {
-        _selectedLanguage = newLanguage;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -254,18 +240,7 @@ class _SignupScreenState extends State<SignupScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
-                  // Language Selector
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      LanguageSelector(
-                        selected: _selectedLanguage,
-                        onChanged: _onLanguageChanged,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 40),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(

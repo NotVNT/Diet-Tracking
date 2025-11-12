@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../common/custom_app_bar.dart';
 import '../../features/chat_bot_view_home/presentation/pages/chat_bot_page.dart';
 import '../../features/profile_view_home/di/profile_di.dart';
 import '../../features/profile_view_home/presentation/pages/profile_page.dart';
@@ -67,9 +68,11 @@ class _HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Trang chủ')),
-      body: const Center(child: Text('Nội dung Trang chủ (đang phát triển)')),
+    return const Scaffold(
+      appBar: CustomAppBar(
+        title: 'Trang chủ',
+      ),
+      body: Center(child: Text('Nội dung Trang chủ (đang phát triển)')),
     );
   }
 }

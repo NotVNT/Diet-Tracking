@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../providers/profile_provider.dart';
 import '../../../../model/user.dart';
+import '../../../../common/custom_app_bar.dart';
 
 /// Page for editing user profile
 class EditProfilePage extends StatefulWidget {
@@ -106,10 +107,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: AppBar(
-        title: const Text('Chỉnh sửa hồ sơ'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: CustomAppBar(
+        title: 'Chỉnh sửa hồ sơ',
+        showBackButton: true,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),

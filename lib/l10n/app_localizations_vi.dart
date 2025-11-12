@@ -519,4 +519,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get registrationSuccess => 'Đăng ký thành công!';
+
+  @override
+  String get dietAssistant => 'Trợ lý dinh dưỡng';
+
+  @override
+  String get recordMeal => 'Ghi nhận món ăn';
 }
