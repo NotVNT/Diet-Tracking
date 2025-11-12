@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../l10n/app_localizations.dart';
 
 /// Settings menu widget that appears when clicking the three-dot icon
 class ChatSettingsMenu extends StatelessWidget {
@@ -16,6 +17,7 @@ class ChatSettingsMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert, color: Colors.white),
       color: const Color(0xFF2A2A2A),
@@ -27,21 +29,21 @@ class ChatSettingsMenu extends StatelessWidget {
         _buildMenuItem(
           value: 'new_chat',
           icon: Icons.add_comment_outlined,
-          title: 'Tạo đoạn chat mới',
-          subtitle: 'Bắt đầu cuộc trò chuyện mới',
+          title: l10n.chatBotCreateNewChat,
+          subtitle: l10n.chatBotStartNewConversation,
         ),
         _buildMenuItem(
           value: 'chat_history',
           icon: Icons.history_outlined,
-          title: 'Lịch sử chat',
-          subtitle: 'Xem các cuộc trò chuyện trước',
+          title: l10n.chatBotChatHistory,
+          subtitle: l10n.chatBotViewPreviousConversations,
         ),
         const PopupMenuDivider(),
         _buildMenuItem(
           value: 'settings',
           icon: Icons.settings_outlined,
-          title: 'Cài đặt',
-          subtitle: 'Tùy chỉnh ứng dụng',
+          title: l10n.chatBotSettings,
+          subtitle: l10n.chatBotCustomizeApp,
         ),
       ],
       onSelected: (String value) {

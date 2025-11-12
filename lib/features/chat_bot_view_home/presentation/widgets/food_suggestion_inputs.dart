@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 
 /// Widget for food suggestion input fields
 class FoodSuggestionInputs extends StatelessWidget {
@@ -17,14 +18,15 @@ class FoodSuggestionInputs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
           TextField(
             controller: ingredientsController,
-            decoration: const InputDecoration(
-              hintText: 'Nhập nguyên liệu món ăn đang có sẵn',
+            decoration: InputDecoration(
+              hintText: l10n.chatBotEnterIngredients,
               filled: true,
               fillColor: Colors.white,
             ),
@@ -32,8 +34,8 @@ class FoodSuggestionInputs extends StatelessWidget {
           const SizedBox(height: 8),
           TextField(
             controller: budgetController,
-            decoration: const InputDecoration(
-              hintText: 'Nhâp chi phí mong muốn cho bữa ăn',
+            decoration: InputDecoration(
+              hintText: l10n.chatBotEnterBudget,
               filled: true,
               fillColor: Colors.white,
             ),
@@ -41,8 +43,8 @@ class FoodSuggestionInputs extends StatelessWidget {
           const SizedBox(height: 8),
           TextField(
             controller: mealTypeController,
-            decoration: const InputDecoration(
-              hintText: 'Bữa sáng, Bữa trưa, Bữa tối, Bữa ăn nhẹ, Thực đơn cả ngày',
+            decoration: InputDecoration(
+              hintText: l10n.chatBotEnterMealType,
               filled: true,
               fillColor: Colors.white,
             ),
@@ -50,7 +52,7 @@ class FoodSuggestionInputs extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: onSubmit,
-            child: const Text("Submit"),
+            child: Text(l10n.chatBotSubmit),
           ),
         ],
       ),

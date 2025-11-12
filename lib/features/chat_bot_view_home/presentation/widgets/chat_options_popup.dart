@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../l10n/app_localizations.dart';
 
 /// Widget for chat options popup menu
 class ChatOptionsPopup extends StatelessWidget {
@@ -7,10 +8,6 @@ class ChatOptionsPopup extends StatelessWidget {
   
   static const Color _messageBubbleColor = Color(0xFF2D2D2D);
   static const double _smallBorderRadius = 12.0;
-  
-  static const List<Map<String, dynamic>> _menuOptions = [
-    {'icon': Icons.attach_file, 'title': 'gợi ý món ăn', 'color': Colors.white},
-  ];
 
   const ChatOptionsPopup({
     super.key,
@@ -19,6 +16,12 @@ class ChatOptionsPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    final menuOptions = [
+      {'icon': Icons.attach_file, 'title': l10n.chatBotFoodSuggestion, 'color': Colors.white},
+    ];
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -33,7 +36,7 @@ class ChatOptionsPopup extends StatelessWidget {
         ],
       ),
       child: Column(
-        children: _menuOptions
+        children: menuOptions
             .map((option) => _buildOptionItem(option))
             .toList(),
       ),

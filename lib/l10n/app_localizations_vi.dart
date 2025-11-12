@@ -521,8 +521,82 @@ class AppLocalizationsVi extends AppLocalizations {
   String get registrationSuccess => 'Đăng ký thành công!';
 
   @override
-  String get dietAssistant => 'Trợ lý dinh dưỡng';
+  String get chatBotDietAssistant => 'Trợ lý dinh dưỡng';
 
   @override
-  String get recordMeal => 'Ghi nhận món ăn';
+  String get chatBotNewChatCreated => 'Đã tạo cuộc trò chuyện mới';
+
+  @override
+  String get chatBotChatHistoryComingSoon => 'Tính năng lịch sử chat sẽ được thêm sau';
+
+  @override
+  String get chatBotSettingsComingSoon => 'Tính năng cài đặt sẽ được thêm sau';
+
+  @override
+  String get chatBotPleaseEnterAllInfo => 'Vui lòng điền đầy đủ thông tin';
+
+  @override
+  String get chatBotCreateNewChat => 'Tạo đoạn chat mới';
+
+  @override
+  String get chatBotStartNewConversation => 'Bắt đầu cuộc trò chuyện mới';
+
+  @override
+  String get chatBotChatHistory => 'Lịch sử chat';
+
+  @override
+  String get chatBotViewPreviousConversations => 'Xem các cuộc trò chuyện trước';
+
+  @override
+  String get chatBotSettings => 'Cài đặt';
+
+  @override
+  String get chatBotCustomizeApp => 'Tùy chỉnh ứng dụng';
+
+  @override
+  String get chatBotEnterMessage => 'Nhập tin nhắn...';
+
+  @override
+  String get chatBotFoodSuggestion => 'gợi ý món ăn';
+
+  @override
+  String get chatBotEnterIngredients => 'Nhập nguyên liệu món ăn đang có sẵn';
+
+  @override
+  String get chatBotEnterBudget => 'Nhập chi phí mong muốn cho bữa ăn';
+
+  @override
+  String get chatBotEnterMealType => 'Bữa sáng, Bữa trưa, Bữa tối, Bữa ăn nhẹ, Thực đơn cả ngày';
+
+  @override
+  String get chatBotSubmit => 'Gửi';
+
+  @override
+  String get chatBotJustNow => 'Vừa xong';
+
+  @override
+  String chatBotMinutesAgo(int minutes) {
+    return '$minutes phút trước';
+  }
+
+  @override
+  String chatBotHoursAgo(int hours) {
+    return '$hours giờ trước';
+  }
+
+  @override
+  String get chatBotSaveAll => 'Lưu tất cả';
+
+  @override
+  String get chatBotSave => 'Lưu';
+
+  @override
+  String chatBotAddedAllToList(int count) {
+    return 'Đã thêm $count món vào danh sách';
+  }
+
+  @override
+  String chatBotAddedToList(String name) {
+    return 'Đã thêm \"$name\" vào danh sách';
+  }
 }

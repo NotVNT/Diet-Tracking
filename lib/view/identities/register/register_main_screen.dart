@@ -5,6 +5,7 @@ import '../../../common/gradient_background.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/guest_sync_service.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../responsive/responsive.dart';
 import '../login/login_main_screen.dart';
 import 'register_controller.dart';
 import 'register_ui_helper.dart';
@@ -231,27 +232,31 @@ class _SignupScreenState extends State<SignupScreen>
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveHelper.of(context);
+    
     return Scaffold(
       body: GradientBackground(
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: responsive.edgePadding(horizontal: 24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(40),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
                       position: _slideAnimation,
                       child: Text(
                         AppLocalizations.of(context)?.signupTitle ?? 'Tạo tài khoản',
-                        style: AppStyles.heading1,
+                        style: AppStyles.heading1.copyWith(
+                          fontSize: responsive.fontSize(AppStyles.heading1.fontSize ?? 32),
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  responsive.verticalSpace(16),
 
                   // Họ và tên
                   FadeTransition(
@@ -265,7 +270,7 @@ class _SignupScreenState extends State<SignupScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  responsive.verticalSpace(24),
 
                   // Số điện thoại
                   FadeTransition(
@@ -279,7 +284,7 @@ class _SignupScreenState extends State<SignupScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  responsive.verticalSpace(24),
 
                   // Email
                   FadeTransition(
@@ -293,7 +298,7 @@ class _SignupScreenState extends State<SignupScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  responsive.verticalSpace(24),
 
                   // Mật khẩu
                   FadeTransition(
@@ -313,7 +318,7 @@ class _SignupScreenState extends State<SignupScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  responsive.verticalSpace(24),
 
                   // Nhập lại mật khẩu
                   FadeTransition(
@@ -333,7 +338,7 @@ class _SignupScreenState extends State<SignupScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  responsive.verticalSpace(16),
 
                   // Điều khoản
                   FadeTransition(
@@ -356,7 +361,7 @@ class _SignupScreenState extends State<SignupScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  responsive.verticalSpace(32),
 
                   // Nút Đăng ký
                   FadeTransition(
@@ -370,7 +375,7 @@ class _SignupScreenState extends State<SignupScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(40),
 
                   // Link đăng nhập
                   FadeTransition(
@@ -389,7 +394,7 @@ class _SignupScreenState extends State<SignupScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(40),
                 ],
               ),
             ),

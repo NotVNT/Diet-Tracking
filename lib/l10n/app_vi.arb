@@ -173,5 +173,57 @@
   "emailAlreadyInUse": "Email đã được sử dụng. Vui lòng sử dụng email khác.",
   "weakPassword": "Mật khẩu quá yếu. Vui lòng sử dụng mật khẩu mạnh hơn.",
   "registrationFailed": "Đăng ký thất bại. Vui lòng thử lại.",
-  "registrationSuccess": "Đăng ký thành công!"
+  "registrationSuccess": "Đăng ký thành công!",
+  "chatBotDietAssistant": "Trợ lý dinh dưỡng",
+  "chatBotNewChatCreated": "Đã tạo cuộc trò chuyện mới",
+  "chatBotChatHistoryComingSoon": "Tính năng lịch sử chat sẽ được thêm sau",
+  "chatBotSettingsComingSoon": "Tính năng cài đặt sẽ được thêm sau",
+  "chatBotPleaseEnterAllInfo": "Vui lòng điền đầy đủ thông tin",
+  "chatBotCreateNewChat": "Tạo đoạn chat mới",
+  "chatBotStartNewConversation": "Bắt đầu cuộc trò chuyện mới",
+  "chatBotChatHistory": "Lịch sử chat",
+  "chatBotViewPreviousConversations": "Xem các cuộc trò chuyện trước",
+  "chatBotSettings": "Cài đặt",
+  "chatBotCustomizeApp": "Tùy chỉnh ứng dụng",
+  "chatBotEnterMessage": "Nhập tin nhắn...",
+  "chatBotFoodSuggestion": "gợi ý món ăn",
+  "chatBotEnterIngredients": "Nhập nguyên liệu món ăn đang có sẵn",
+  "chatBotEnterBudget": "Nhập chi phí mong muốn cho bữa ăn",
+  "chatBotEnterMealType": "Bữa sáng, Bữa trưa, Bữa tối, Bữa ăn nhẹ, Thực đơn cả ngày",
+  "chatBotSubmit": "Gửi",
+  "chatBotJustNow": "Vừa xong",
+  "chatBotMinutesAgo": "{minutes} phút trước",
+  "@chatBotMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "chatBotHoursAgo": "{hours} giờ trước",
+  "@chatBotHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "chatBotSaveAll": "Lưu tất cả",
+  "chatBotSave": "Lưu",
+  "chatBotAddedAllToList": "Đã thêm {count} món vào danh sách",
+  "@chatBotAddedAllToList": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatBotAddedToList": "Đã thêm \"{name}\" vào danh sách",
+  "@chatBotAddedToList": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

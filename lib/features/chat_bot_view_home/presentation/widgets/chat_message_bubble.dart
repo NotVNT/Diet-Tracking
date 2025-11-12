@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../domain/entities/chat_message_entity.dart';
 import '../../../record_view_home/presentation/cubit/record_cubit.dart';
+import '../../../../l10n/app_localizations.dart';
 
 // Helper class for food suggestion data
 class FoodSuggestion {
@@ -102,7 +103,7 @@ class ChatMessageBubble extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              _formatTime(message.timestamp),
+              _formatTime(message.timestamp, context),
               style: GoogleFonts.inter(
                 color: message.isUser
                   ? Colors.white.withValues(alpha: 0.7)
@@ -121,16 +122,17 @@ class ChatMessageBubble extends StatelessWidget {
   }
 
   /// Formats timestamp for display
-  String _formatTime(DateTime timestamp) {
+  String _formatTime(DateTime timestamp, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final difference = now.difference(timestamp);
 
     if (difference.inMinutes < 1) {
-      return 'Vừa xong';
+      return l10n.chatBotJustNow;
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} phút trước';
+      return l10n.chatBotMinutesAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours} giờ trước';
+      return l10n.chatBotHoursAgo(difference.inHours);
     } else {
       return '${timestamp.day}/${timestamp.month}';
     }
@@ -304,6 +306,7 @@ class ChatMessageBubble extends StatelessWidget {
   Widget _buildAddToRecordsActions(List<FoodSuggestion> suggestions) {
     return Builder(
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -322,7 +325,7 @@ class ChatMessageBubble extends StatelessWidget {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Đã thêm ${suggestions.length} món vào danh sách',
+                            l10n.chatBotAddedAllToList(suggestions.length),
                           ),
                           backgroundColor: Colors.green,
                         ),
@@ -333,9 +336,9 @@ class ChatMessageBubble extends StatelessWidget {
                       color: Colors.white,
                       size: 18,
                     ),
-                    label: const Text(
-                      'Lưu tất cả',
-                      style: TextStyle(color: Colors.white),
+                    label: Text(
+                      l10n.chatBotSaveAll,
+                      style: const TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -363,7 +366,7 @@ class ChatMessageBubble extends StatelessWidget {
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Đã thêm "${s.foodName}" vào danh sách'),
+                        content: Text(l10n.chatBotAddedToList(s.foodName)),
                         backgroundColor: Colors.green,
                       ),
                     );
@@ -375,7 +378,7 @@ class ChatMessageBubble extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text('Lưu: $label'),
+                  child: Text('${l10n.chatBotSave}: $label'),
                 );
               }).toList(),
             ),

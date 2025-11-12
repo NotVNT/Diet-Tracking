@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../responsive/responsive.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -19,6 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final responsive = ResponsiveHelper.of(context);
     final resolvedBackground = backgroundColor ?? colorScheme.surfaceContainerHighest;
     final resolvedIconColor = colorScheme.onSurface;
 
@@ -32,7 +34,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: GoogleFonts.inter(
           color: resolvedIconColor,
-          fontSize: 20,
+          fontSize: responsive.fontSize(20),
           fontWeight: FontWeight.w600,
         ),
       ),

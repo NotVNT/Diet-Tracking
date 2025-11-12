@@ -173,5 +173,57 @@
   "emailAlreadyInUse": "Email is already in use. Please use a different email.",
   "weakPassword": "Password is too weak. Please use a stronger password.",
   "registrationFailed": "Registration failed. Please try again.",
-  "registrationSuccess": "Registration successful!"
+  "registrationSuccess": "Registration successful!",
+  "chatBotDietAssistant": "Diet Assistant",
+  "chatBotNewChatCreated": "New conversation created",
+  "chatBotChatHistoryComingSoon": "Chat history feature will be added later",
+  "chatBotSettingsComingSoon": "Settings feature will be added later",
+  "chatBotPleaseEnterAllInfo": "Please fill in all information",
+  "chatBotCreateNewChat": "Create new chat",
+  "chatBotStartNewConversation": "Start a new conversation",
+  "chatBotChatHistory": "Chat history",
+  "chatBotViewPreviousConversations": "View previous conversations",
+  "chatBotSettings": "Settings",
+  "chatBotCustomizeApp": "Customize app",
+  "chatBotEnterMessage": "Enter message...",
+  "chatBotFoodSuggestion": "food suggestion",
+  "chatBotEnterIngredients": "Enter available ingredients",
+  "chatBotEnterBudget": "Enter desired meal budget",
+  "chatBotEnterMealType": "Breakfast, Lunch, Dinner, Snack, Full day menu",
+  "chatBotSubmit": "Submit",
+  "chatBotJustNow": "Just now",
+  "chatBotMinutesAgo": "{minutes} minutes ago",
+  "@chatBotMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "chatBotHoursAgo": "{hours} hours ago",
+  "@chatBotHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "chatBotSaveAll": "Save all",
+  "chatBotSave": "Save",
+  "chatBotAddedAllToList": "Added {count} dishes to list",
+  "@chatBotAddedAllToList": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatBotAddedToList": "Added \"{name}\" to list",
+  "@chatBotAddedToList": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

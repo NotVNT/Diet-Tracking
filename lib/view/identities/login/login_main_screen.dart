@@ -5,6 +5,7 @@ import '../../../common/gradient_background.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/guest_sync_service.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../responsive/responsive.dart';
 import '../../../services/google_auth_service.dart';
 import '../../home/home_view.dart';
 import '../../on_boarding/started_view/started_screen.dart' as started_onboarding;
@@ -234,16 +235,18 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveHelper.of(context);
+    
     return Scaffold(
       body: GradientBackground(
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: responsive.edgePadding(horizontal: 24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(32),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -251,12 +254,13 @@ class _LoginScreenState extends State<LoginScreen>
                       child: Text(
                         AppLocalizations.of(context)?.loginTitle ?? 'Đăng Nhập',
                         style: AppStyles.heading1.copyWith(
+                          fontSize: responsive.fontSize(AppStyles.heading1.fontSize ?? 32),
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  responsive.verticalSpace(12),
 
                   FadeTransition(
                     opacity: _fadeAnimation,
@@ -274,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  responsive.verticalSpace(20),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -297,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  responsive.verticalSpace(12),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -307,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  responsive.verticalSpace(24),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -318,7 +322,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  responsive.verticalSpace(24),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -326,7 +330,7 @@ class _LoginScreenState extends State<LoginScreen>
                       child: const OrDivider(),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  responsive.verticalSpace(24),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -338,14 +342,14 @@ class _LoginScreenState extends State<LoginScreen>
                         textColor: Theme.of(context).colorScheme.onSurface,
                         icon: Image.asset(
                           'assets/logo/google_icon.png',
-                          width: 20,
-                          height: 20,
+                          width: responsive.iconSize(20),
+                          height: responsive.iconSize(20),
                           fit: BoxFit.contain,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(32),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -355,7 +359,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(24),
                 ],
               ),
             ),

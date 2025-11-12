@@ -3,6 +3,7 @@ import '../../../common/app_styles.dart';
 import '../../../common/custom_button.dart';
 import '../../../common/gradient_background.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../responsive/responsive.dart';
 import 'forgot_password_controller.dart';
 import 'forgot_password_service.dart';
 import 'forgot_password_ui_helper.dart';
@@ -149,11 +150,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveHelper.of(context);
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
+          iconSize: responsive.iconSize(24),
           icon: Icon(
             Icons.arrow_back,
             color: Theme.of(context).colorScheme.onSurface,
@@ -165,11 +169,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: responsive.edgePadding(horizontal: 24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(40),
                   
                   // Title
                   FadeTransition(
@@ -180,12 +184,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         AppLocalizations.of(context)?.forgotPasswordTitle ??
                             'Quên mật khẩu?',
                         style: AppStyles.heading1.copyWith(
+                          fontSize: responsive.fontSize(AppStyles.heading1.fontSize ?? 32),
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  responsive.verticalSpace(16),
 
                   // Instruction
                   FadeTransition(
@@ -195,7 +200,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                       child: const ForgotPasswordInstruction(),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(40),
 
                   // Email field
                   FadeTransition(
@@ -213,7 +218,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  responsive.verticalSpace(32),
 
                   // Send button
                   FadeTransition(
@@ -227,7 +232,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  responsive.verticalSpace(32),
 
                   // Back to login link
                   FadeTransition(
@@ -239,7 +244,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  responsive.verticalSpace(40),
                 ],
               ),
             ),

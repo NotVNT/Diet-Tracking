@@ -521,8 +521,82 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registrationSuccess => 'Registration successful!';
 
   @override
-  String get dietAssistant => 'Diet Assistant';
+  String get chatBotDietAssistant => 'Diet Assistant';
 
   @override
-  String get recordMeal => 'Record Meal';
+  String get chatBotNewChatCreated => 'New conversation created';
+
+  @override
+  String get chatBotChatHistoryComingSoon => 'Chat history feature will be added later';
+
+  @override
+  String get chatBotSettingsComingSoon => 'Settings feature will be added later';
+
+  @override
+  String get chatBotPleaseEnterAllInfo => 'Please fill in all information';
+
+  @override
+  String get chatBotCreateNewChat => 'Create new chat';
+
+  @override
+  String get chatBotStartNewConversation => 'Start a new conversation';
+
+  @override
+  String get chatBotChatHistory => 'Chat history';
+
+  @override
+  String get chatBotViewPreviousConversations => 'View previous conversations';
+
+  @override
+  String get chatBotSettings => 'Settings';
+
+  @override
+  String get chatBotCustomizeApp => 'Customize app';
+
+  @override
+  String get chatBotEnterMessage => 'Enter message...';
+
+  @override
+  String get chatBotFoodSuggestion => 'food suggestion';
+
+  @override
+  String get chatBotEnterIngredients => 'Enter available ingredients';
+
+  @override
+  String get chatBotEnterBudget => 'Enter desired meal budget';
+
+  @override
+  String get chatBotEnterMealType => 'Breakfast, Lunch, Dinner, Snack, Full day menu';
+
+  @override
+  String get chatBotSubmit => 'Submit';
+
+  @override
+  String get chatBotJustNow => 'Just now';
+
+  @override
+  String chatBotMinutesAgo(int minutes) {
+    return '$minutes minutes ago';
+  }
+
+  @override
+  String chatBotHoursAgo(int hours) {
+    return '$hours hours ago';
+  }
+
+  @override
+  String get chatBotSaveAll => 'Save all';
+
+  @override
+  String get chatBotSave => 'Save';
+
+  @override
+  String chatBotAddedAllToList(int count) {
+    return 'Added $count dishes to list';
+  }
+
+  @override
+  String chatBotAddedToList(String name) {
+    return 'Added \"$name\" to list';
+  }
 }

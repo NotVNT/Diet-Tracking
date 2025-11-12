@@ -6,6 +6,7 @@ import '../../features/profile_view_home/di/profile_di.dart';
 import '../../features/profile_view_home/presentation/pages/profile_page.dart';
 import '../../features/record_view_home/di/record_di.dart';
 import '../../features/record_view_home/presentation/pages/record_page.dart';
+import '../../responsive/responsive.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -34,12 +35,17 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveHelper.of(context);
+    
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         onTap: (index) => setState(() => _currentIndex = index),
+        selectedFontSize: responsive.fontSize(14),
+        unselectedFontSize: responsive.fontSize(12),
+        iconSize: responsive.iconSize(24),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),

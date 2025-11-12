@@ -1115,17 +1115,149 @@ abstract class AppLocalizations {
   /// **'Registration successful!'**
   String get registrationSuccess;
 
-  /// No description provided for @dietAssistant.
+  /// No description provided for @chatBotDietAssistant.
   ///
   /// In en, this message translates to:
   /// **'Diet Assistant'**
-  String get dietAssistant;
+  String get chatBotDietAssistant;
 
-  /// No description provided for @recordMeal.
+  /// No description provided for @chatBotNewChatCreated.
   ///
   /// In en, this message translates to:
-  /// **'Record Meal'**
-  String get recordMeal;
+  /// **'New conversation created'**
+  String get chatBotNewChatCreated;
+
+  /// No description provided for @chatBotChatHistoryComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat history feature will be added later'**
+  String get chatBotChatHistoryComingSoon;
+
+  /// No description provided for @chatBotSettingsComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings feature will be added later'**
+  String get chatBotSettingsComingSoon;
+
+  /// No description provided for @chatBotPleaseEnterAllInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in all information'**
+  String get chatBotPleaseEnterAllInfo;
+
+  /// No description provided for @chatBotCreateNewChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new chat'**
+  String get chatBotCreateNewChat;
+
+  /// No description provided for @chatBotStartNewConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a new conversation'**
+  String get chatBotStartNewConversation;
+
+  /// No description provided for @chatBotChatHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat history'**
+  String get chatBotChatHistory;
+
+  /// No description provided for @chatBotViewPreviousConversations.
+  ///
+  /// In en, this message translates to:
+  /// **'View previous conversations'**
+  String get chatBotViewPreviousConversations;
+
+  /// No description provided for @chatBotSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get chatBotSettings;
+
+  /// No description provided for @chatBotCustomizeApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize app'**
+  String get chatBotCustomizeApp;
+
+  /// No description provided for @chatBotEnterMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter message...'**
+  String get chatBotEnterMessage;
+
+  /// No description provided for @chatBotFoodSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'food suggestion'**
+  String get chatBotFoodSuggestion;
+
+  /// No description provided for @chatBotEnterIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter available ingredients'**
+  String get chatBotEnterIngredients;
+
+  /// No description provided for @chatBotEnterBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter desired meal budget'**
+  String get chatBotEnterBudget;
+
+  /// No description provided for @chatBotEnterMealType.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast, Lunch, Dinner, Snack, Full day menu'**
+  String get chatBotEnterMealType;
+
+  /// No description provided for @chatBotSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get chatBotSubmit;
+
+  /// No description provided for @chatBotJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get chatBotJustNow;
+
+  /// No description provided for @chatBotMinutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes ago'**
+  String chatBotMinutesAgo(int minutes);
+
+  /// No description provided for @chatBotHoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hours ago'**
+  String chatBotHoursAgo(int hours);
+
+  /// No description provided for @chatBotSaveAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Save all'**
+  String get chatBotSaveAll;
+
+  /// No description provided for @chatBotSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get chatBotSave;
+
+  /// No description provided for @chatBotAddedAllToList.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {count} dishes to list'**
+  String chatBotAddedAllToList(int count);
+
+  /// No description provided for @chatBotAddedToList.
+  ///
+  /// In en, this message translates to:
+  /// **'Added \"{name}\" to list'**
+  String chatBotAddedToList(String name);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

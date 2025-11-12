@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'app_styles.dart';
+import '../responsive/responsive.dart';
 
 class CustomButton extends StatefulWidget {
   final String text;
@@ -83,6 +84,7 @@ class _CustomButtonState extends State<CustomButton>
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = !widget.isEnabled || widget.onPressed == null;
+    final responsive = ResponsiveHelper.of(context);
 
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -91,11 +93,11 @@ class _CustomButtonState extends State<CustomButton>
           scale: _scaleAnimation.value,
           child: SizedBox(
             width: widget.width ?? double.infinity,
-            height: widget.height,
+            height: responsive.height(widget.height),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.circular(AppStyles.radiusL),
+                borderRadius: BorderRadius.circular(responsive.radius(AppStyles.radiusL)),
                 onTap: isDisabled ? null : _handlePress,
                 child: Container(
                   decoration: BoxDecoration(
@@ -112,7 +114,7 @@ class _CustomButtonState extends State<CustomButton>
                             end: Alignment.centerRight,
                           ),
                     color: isDisabled ? AppColors.grey300 : null,
-                    borderRadius: BorderRadius.circular(AppStyles.radiusL),
+                    borderRadius: BorderRadius.circular(responsive.radius(AppStyles.radiusL)),
                     boxShadow: isDisabled
                         ? null
                         : [
@@ -132,7 +134,7 @@ class _CustomButtonState extends State<CustomButton>
                           return Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(
-                                AppStyles.radiusL,
+                                responsive.radius(AppStyles.radiusL),
                               ),
                               gradient: RadialGradient(
                                 center: Alignment.center,
@@ -155,8 +157,8 @@ class _CustomButtonState extends State<CustomButton>
                           children: [
                             if (widget.isLoading) ...[
                               SizedBox(
-                                width: 20,
-                                height: 20,
+                                width: responsive.iconSize(20),
+                                height: responsive.iconSize(20),
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
@@ -164,15 +166,15 @@ class _CustomButtonState extends State<CustomButton>
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              responsive.horizontalSpace(12),
                             ] else if (widget.icon != null) ...[
                               widget.icon!,
-                              const SizedBox(width: 12),
+                              responsive.horizontalSpace(12),
                             ],
                             Text(
                               widget.text,
                               style: GoogleFonts.inter(
-                                fontSize: 16,
+                                fontSize: responsive.fontSize(16),
                                 fontWeight: FontWeight.w600,
                                 color:
                                     widget.textColor ??

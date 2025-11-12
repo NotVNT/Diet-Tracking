@@ -7,6 +7,7 @@ import '../../common/custom_button.dart';
 import '../../services/language_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../../themes/theme_provider.dart';
+import '../../responsive/responsive.dart';
 import 'started_view/started_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -120,16 +121,17 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final responsive = ResponsiveHelper.of(context);
     
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: responsive.edgePadding(horizontal: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
+              responsive.verticalSpace(30),
               Row(
                 children: [
                   Expanded(
@@ -138,12 +140,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       onChanged: _onLanguageChanged,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  responsive.horizontalSpace(8),
                   // Theme toggle button
                   Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(responsive.radius(12)),
                       boxShadow: [
                         BoxShadow(
                           color: Theme.of(context).shadowColor.withOpacity(0.1),
@@ -153,6 +155,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       ],
                     ),
                     child: IconButton(
+                      iconSize: responsive.iconSize(24),
                       onPressed: () {
                         themeProvider.toggleTheme();
                       },
@@ -169,7 +172,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              responsive.verticalSpace(12),
 
               FadeTransition(
                 opacity: _fadeAnimation,
@@ -179,7 +182,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     AppLocalizations.of(context)?.startTrackingToday ??
                         'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!',
                     style: GoogleFonts.inter(
-                      fontSize: 32,
+                      fontSize: responsive.fontSize(32),
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface,
                       height: 1.2,
@@ -187,7 +190,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
+              responsive.verticalSpace(15),
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: SlideTransition(
@@ -196,14 +199,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     AppLocalizations.of(context)?.trackDailyDiet ??
                         'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.',
                     style: GoogleFonts.inter(
-                      fontSize: 16,
+                      fontSize: responsive.fontSize(16),
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       height: 1.5,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
+              responsive.verticalSpace(15),
               Expanded(
                 child: FadeTransition(
                   opacity: _fadeAnimation,
@@ -226,11 +229,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   _showImageDialog(context, index);
                                 },
                                 child: Container(
-                                  margin: const EdgeInsets.symmetric(
+                                  margin: responsive.edgePadding(
                                     horizontal: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(responsive.radius(20)),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey.withOpacity(0.1),
@@ -240,7 +243,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                     ],
                                   ),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(responsive.radius(20)),
                                     child: Image.asset(
                                       _images[index],
                                       fit: BoxFit.cover,
@@ -252,21 +255,21 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             },
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        responsive.verticalSpace(20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
                             _images.length,
                             (index) => AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              width: _currentImageIndex == index ? 24 : 8,
-                              height: 8,
+                              margin: responsive.edgePadding(horizontal: 4),
+                              width: _currentImageIndex == index ? responsive.width(24) : responsive.width(8),
+                              height: responsive.height(8),
                               decoration: BoxDecoration(
                                 color: _currentImageIndex == index
                                     ? const Color(0xFF9C27B0)
                                     : Colors.grey.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(responsive.radius(4)),
                               ),
                             ),
                           ),
@@ -276,7 +279,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              responsive.verticalSpace(40),
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: SlideTransition(
@@ -286,8 +289,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       Align(
                         alignment: Alignment.center,
                         child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.85,
-                          height: 56,
+                          width: responsive.width(MediaQuery.of(context).size.width * 0.85),
+                          height: responsive.height(56),
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -295,7 +298,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                               ),
-                              borderRadius: BorderRadius.circular(28),
+                              borderRadius: BorderRadius.circular(responsive.radius(28)),
                               boxShadow: [
                                 BoxShadow(
                                   color: const Color(
@@ -309,7 +312,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             child: Material(
                               color: Colors.transparent,
                               child: InkWell(
-                                borderRadius: BorderRadius.circular(28),
+                                borderRadius: BorderRadius.circular(responsive.radius(28)),
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -321,19 +324,19 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const SizedBox(width: 12),
+                                    responsive.horizontalSpace(12),
                                     Text(
                                       AppLocalizations.of(
                                             context,
                                           )?.getStarted ??
                                           'Bắt đầu ngay',
                                       style: GoogleFonts.inter(
-                                        fontSize: 16,
+                                        fontSize: responsive.fontSize(16),
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white,
                                       ),
                                     ),
-                                    const SizedBox(width: 12),
+                                    responsive.horizontalSpace(12),
                                     AnimatedBuilder(
                                       animation: _arrowAnimation,
                                       builder: (context, child) {
@@ -350,23 +353,23 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                                 color: Colors.white.withOpacity(
                                                   0.8,
                                                 ),
-                                                size: 14,
+                                                size: responsive.iconSize(14),
                                               ),
-                                              const SizedBox(width: 2),
+                                              responsive.horizontalSpace(2),
                                               Icon(
                                                 Icons.arrow_forward_ios,
                                                 color: Colors.white.withOpacity(
                                                   0.6,
                                                 ),
-                                                size: 14,
+                                                size: responsive.iconSize(14),
                                               ),
-                                              const SizedBox(width: 2),
+                                              responsive.horizontalSpace(2),
                                               Icon(
                                                 Icons.arrow_forward_ios,
                                                 color: Colors.white.withOpacity(
                                                   0.4,
                                                 ),
-                                                size: 14,
+                                                size: responsive.iconSize(14),
                                               ),
                                             ],
                                           ),
@@ -380,11 +383,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           ),
                         ),
                       ),
-                      const SizedBox(height: 14),
+                      responsive.verticalSpace(14),
                       Align(
                         alignment: Alignment.center,
                         child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.85,
+                          width: responsive.width(MediaQuery.of(context).size.width * 0.85),
                           child: CustomButton(
                             text:
                                 AppLocalizations.of(context)?.login ??
@@ -401,7 +404,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                 ),
                               );
                             },
-                            height: 56,
+                            height: responsive.height(56),
                           ),
                         ),
                       ),
@@ -409,7 +412,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              responsive.verticalSpace(40),
             ],
           ),
         ),

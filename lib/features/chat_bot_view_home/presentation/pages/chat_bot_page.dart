@@ -7,6 +7,7 @@ import '../widgets/chat_options_popup.dart';
 import '../widgets/food_suggestion_inputs.dart';
 import '../widgets/chat_settings_menu.dart';
 import '../../../../common/custom_app_bar.dart';
+import '../../../../l10n/app_localizations.dart';
 
 /// Main chat bot page with clean architecture
 class ChatBotPage extends StatefulWidget {
@@ -49,10 +50,11 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: CustomAppBar(
-        title: 'Diet Assistant',
+        title: l10n.chatBotDietAssistant,
         actions: [
           ChatSettingsMenu(
             onCreateNewChat: _onCreateNewChat,
@@ -108,25 +110,29 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   /// Handles create new chat action
   void _onCreateNewChat() async {
+    final l10n = AppLocalizations.of(context)!;
     await _chatProvider.createNewChatSession();
-    _showSnackBar('Đã tạo cuộc trò chuyện mới');
+    _showSnackBar(l10n.chatBotNewChatCreated);
   }
 
   /// Handles chat history action
   void _onChatHistory() {
+    final l10n = AppLocalizations.of(context)!;
     // TODO: Implement chat history view
-    _showSnackBar('Tính năng lịch sử chat sẽ được thêm sau');
+    _showSnackBar(l10n.chatBotChatHistoryComingSoon);
   }
 
   /// Handles settings action
   void _onSettings() {
+    final l10n = AppLocalizations.of(context)!;
     // TODO: Implement settings page
-    _showSnackBar('Tính năng cài đặt sẽ được thêm sau');
+    _showSnackBar(l10n.chatBotSettingsComingSoon);
   }
 
   /// Handles option selection
   void _onOptionSelected(String option) {
-    if (option == 'gợi ý món ăn') {
+    final l10n = AppLocalizations.of(context)!;
+    if (option == l10n.chatBotFoodSuggestion) {
       _chatProvider.showFoodSuggestionInputs();
       return;
     }
@@ -147,12 +153,13 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   /// Handles food suggestion submission
   void _onFoodSuggestionSubmit(ChatProvider chatProvider) async {
+    final l10n = AppLocalizations.of(context)!;
     final ingredients = _ingredientsController.text.trim();
     final budget = _budgetController.text.trim();
     final mealType = _mealTypeController.text.trim();
 
     if (ingredients.isEmpty || budget.isEmpty || mealType.isEmpty) {
-      _showSnackBar('Vui lòng điền đầy đủ thông tin');
+      _showSnackBar(l10n.chatBotPleaseEnterAllInfo);
       return;
     }
 
