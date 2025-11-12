@@ -599,4 +599,328 @@ class AppLocalizationsEn extends AppLocalizations {
   String chatBotAddedToList(String name) {
     return 'Added \"$name\" to list';
   }
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get profileUser => 'User';
+
+  @override
+  String get profileAvatarUpdated => 'Avatar updated';
+
+  @override
+  String get profileCannotUpdateAvatar => 'Cannot update avatar';
+
+  @override
+  String get profileSignedOut => 'Signed out';
+
+  @override
+  String get profileCannotSignOut => 'Cannot sign out';
+
+  @override
+  String get profileEditProfile => 'Edit profile';
+
+  @override
+  String get profileViewStatistics => 'View statistics';
+
+  @override
+  String get profileSettings => 'Settings';
+
+  @override
+  String get profileDataAndSync => 'Data and sync';
+
+  @override
+  String get profileSupport => 'Support';
+
+  @override
+  String get profileSignOut => 'Sign out';
+
+  @override
+  String get profileSignIn => 'Sign in';
+
+  @override
+  String get profileFeatureInDevelopment => 'Feature in development';
+
+  @override
+  String get profileAppName => 'VGP';
+
+  @override
+  String get profileAppDescription => 'Smart diet management app';
+
+  @override
+  String get editProfileTitle => 'Edit profile';
+
+  @override
+  String get editProfileSave => 'Save';
+
+  @override
+  String get editProfileUpdated => 'Profile updated';
+
+  @override
+  String get editProfileError => 'Error';
+
+  @override
+  String get editProfilePersonalInfo => 'Personal information';
+
+  @override
+  String get editProfileFullName => 'Full name';
+
+  @override
+  String get editProfilePleaseEnterFullName => 'Please enter full name';
+
+  @override
+  String get editProfileAge => 'Age';
+
+  @override
+  String get editProfilePleaseEnterAge => 'Please enter age';
+
+  @override
+  String get editProfileInvalidAge => 'Invalid age';
+
+  @override
+  String get editProfileGender => 'Gender';
+
+  @override
+  String get editProfileMale => 'Male';
+
+  @override
+  String get editProfileFemale => 'Female';
+
+  @override
+  String get editProfileBodyMetrics => 'Body metrics';
+
+  @override
+  String get editProfileHeight => 'Height (cm)';
+
+  @override
+  String get editProfileInvalidHeight => 'Invalid height';
+
+  @override
+  String get editProfileWeight => 'Weight (kg)';
+
+  @override
+  String get editProfileInvalidWeight => 'Invalid weight';
+
+  @override
+  String get editProfileGoalWeight => 'Goal weight (kg)';
+
+  @override
+  String get editProfileInvalidGoalWeight => 'Invalid goal weight';
+
+  @override
+  String get editProfileYourGoal => 'Your goal';
+
+  @override
+  String get editProfileSelectGoal => 'Select goal';
+
+  @override
+  String get editProfileGoalLoseWeight => 'Lose weight';
+
+  @override
+  String get editProfileGoalGainWeight => 'Gain weight';
+
+  @override
+  String get editProfileGoalMaintainWeight => 'Maintain weight';
+
+  @override
+  String get editProfileGoalBuildMuscle => 'Build muscle';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsNotifications => 'Notifications';
+
+  @override
+  String get settingsNotificationTitle => 'Notifications';
+
+  @override
+  String get settingsNotificationSubtitle => 'Receive notifications about meals and goals';
+
+  @override
+  String get settingsAppearance => 'Appearance';
+
+  @override
+  String get settingsDarkMode => 'Dark mode';
+
+  @override
+  String get settingsDarkModeSubtitle => 'Use dark theme';
+
+  @override
+  String get settingsDarkModeEnabled => 'Switched to dark mode';
+
+  @override
+  String get settingsDarkModeDisabled => 'Switched to light mode';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsUnits => 'Units';
+
+  @override
+  String get settingsUnitSystem => 'Unit system';
+
+  @override
+  String get dataSyncTitle => 'Data & Sync';
+
+  @override
+  String get dataSyncAutoSync => 'Auto sync';
+
+  @override
+  String get dataSyncAutoSyncSubtitle => 'Sync data automatically with cloud';
+
+  @override
+  String get dataSyncBackupData => 'Backup data';
+
+  @override
+  String get dataSyncBackupDataSubtitle => 'Backup your data';
+
+  @override
+  String get dataSyncBackupDialogTitle => 'Backup data';
+
+  @override
+  String get dataSyncBackupDialogMessage => 'Do you want to backup your data to the cloud?';
+
+  @override
+  String get dataSyncBackupDialogCancel => 'Cancel';
+
+  @override
+  String get dataSyncBackupDialogConfirm => 'Backup';
+
+  @override
+  String get dataSyncBackupInProgress => 'Backing up data...';
+
+  @override
+  String get dataSyncClearCache => 'Clear cache';
+
+  @override
+  String get dataSyncClearCacheSubtitle => 'Clear temporary data';
+
+  @override
+  String get dataSyncClearCacheDialogTitle => 'Clear cache';
+
+  @override
+  String get dataSyncClearCacheDialogMessage => 'Clearing cache will free up storage but may slow down the app on next launch. Are you sure you want to clear?';
+
+  @override
+  String get dataSyncClearCacheDialogCancel => 'Cancel';
+
+  @override
+  String get dataSyncClearCacheDialogConfirm => 'Clear';
+
+  @override
+  String get dataSyncClearCacheSuccess => 'Cache cleared successfully';
+
+  @override
+  String get supportTitle => 'Support';
+
+  @override
+  String get supportPrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get supportOpeningPrivacyPolicy => 'Opening privacy policy...';
+
+  @override
+  String get supportTermsOfService => 'Terms of service';
+
+  @override
+  String get supportOpeningTermsOfService => 'Opening terms of service...';
+
+  @override
+  String get supportRecommendationSources => 'Recommendation sources';
+
+  @override
+  String get supportOpeningRecommendationSources => 'Opening recommendation sources...';
+
+  @override
+  String get supportFindVGPOnSocialMedia => 'Find VGP on social media';
+
+  @override
+  String get supportTiktok => 'Tiktok';
+
+  @override
+  String get supportOpeningTiktok => 'Opening TikTok...';
+
+  @override
+  String get supportFacebook => 'Facebook';
+
+  @override
+  String get supportOpeningFacebook => 'Opening Facebook...';
+
+  @override
+  String get supportInstagram => 'Instagram';
+
+  @override
+  String get supportOpeningInstagram => 'Opening Instagram...';
+
+  @override
+  String get supportHelpCenter => 'Help center';
+
+  @override
+  String get supportAlwaysHereToHelp => 'We are always here to help';
+
+  @override
+  String get helpCenterTitle => 'Help center';
+
+  @override
+  String get helpCenterWeAreReadyToHelp => 'We are ready to help';
+
+  @override
+  String get helpCenterFindAnswersOrContact => 'Find answers or contact the team';
+
+  @override
+  String get helpCenterFAQ => 'Frequently asked questions';
+
+  @override
+  String get helpCenterContactUs => 'Contact us';
+
+  @override
+  String get helpCenterFAQ1Question => 'How to track nutrition?';
+
+  @override
+  String get helpCenterFAQ1Answer => 'You can add food to your daily meal diary. The app will automatically calculate nutrition for you.';
+
+  @override
+  String get helpCenterFAQ2Question => 'Can I set calorie goals?';
+
+  @override
+  String get helpCenterFAQ2Answer => 'Yes, you can set calorie goals and other nutrition metrics in the Goal Settings section.';
+
+  @override
+  String get helpCenterFAQ3Question => 'How to create a menu?';
+
+  @override
+  String get helpCenterFAQ3Answer => 'Go to the Menu section, select \"Create new\" and add the dishes you want. The app will automatically calculate nutrition.';
+
+  @override
+  String get helpCenterFAQ4Question => 'Is my data synchronized?';
+
+  @override
+  String get helpCenterFAQ4Answer => 'Yes, data is automatically synchronized with cloud if you are logged in to an account.';
+
+  @override
+  String get helpCenterFAQ5Question => 'How to export reports?';
+
+  @override
+  String get helpCenterFAQ5Answer => 'Go to the Report section, select a time period and press the \"Export PDF\" button to download the report to your device.';
+
+  @override
+  String get helpCenterContactEmail => 'Email';
+
+  @override
+  String get helpCenterContactEmailAddress => 'support@vgp.com';
+
+  @override
+  String get helpCenterContactPhone => 'Phone';
+
+  @override
+  String get helpCenterContactPhoneNumber => '+84 123 456 789';
+
+  @override
+  String get helpCenterContactAddress => 'Address';
+
+  @override
+  String get helpCenterContactAddressValue => '123 Main Street, District 1, Ho Chi Minh City';
 }

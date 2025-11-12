@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../common/custom_app_bar.dart';
 
 /// Trang Trung tâm hỗ trợ đơn giản
@@ -9,8 +10,8 @@ class HelpCenterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: const CustomAppBar(
-        title: 'Trung tâm hỗ trợ',
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!.helpCenterTitle,
         showBackButton: true,
       ),
       body: SingleChildScrollView(
@@ -24,14 +25,14 @@ class HelpCenterPage extends StatelessWidget {
             const SizedBox(height: 24),
             
             // FAQ Section
-            _buildSectionTitle(context, 'Câu hỏi thường gặp'),
+            _buildSectionTitle(context, AppLocalizations.of(context)!.helpCenterFAQ),
             const SizedBox(height: 12),
             _buildFAQCard(context),
             
             const SizedBox(height: 24),
             
             // Contact Section
-            _buildSectionTitle(context, 'Liên hệ với chúng tôi'),
+            _buildSectionTitle(context, AppLocalizations.of(context)!.helpCenterContactUs),
             const SizedBox(height: 12),
             _buildContactCard(context),
             
@@ -69,7 +70,7 @@ class HelpCenterPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Chúng tôi sẵn sàng hỗ trợ',
+                  AppLocalizations.of(context)!.helpCenterWeAreReadyToHelp,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -78,7 +79,7 @@ class HelpCenterPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Tìm câu trả lời hoặc liên hệ với team',
+                  AppLocalizations.of(context)!.helpCenterFindAnswersOrContact,
                   style: TextStyle(
                     fontSize: 13,
                     color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
@@ -109,24 +110,24 @@ class HelpCenterPage extends StatelessWidget {
   Widget _buildFAQCard(BuildContext context) {
     final faqItems = [
       {
-        'question': 'Làm thế nào để theo dõi dinh dưỡng?',
-        'answer': 'Bạn có thể thêm thực phẩm vào nhật ký bữa ăn hàng ngày. Ứng dụng sẽ tự động tính toán dinh dưỡng cho bạn.',
+        'question': AppLocalizations.of(context)!.helpCenterFAQ1Question,
+        'answer': AppLocalizations.of(context)!.helpCenterFAQ1Answer,
       },
       {
-        'question': 'Tôi có thể đặt mục tiêu calo không?',
-        'answer': 'Có, bạn có thể đặt mục tiêu calo và các chỉ số dinh dưỡng khác trong phần Cài đặt Mục tiêu.',
+        'question': AppLocalizations.of(context)!.helpCenterFAQ2Question,
+        'answer': AppLocalizations.of(context)!.helpCenterFAQ2Answer,
       },
       {
-        'question': 'Làm sao để tạo thực đơn?',
-        'answer': 'Vào phần Thực đơn, chọn "Tạo mới" và thêm các món ăn bạn muốn. Ứng dụng sẽ tính toán dinh dưỡng tự động.',
+        'question': AppLocalizations.of(context)!.helpCenterFAQ3Question,
+        'answer': AppLocalizations.of(context)!.helpCenterFAQ3Answer,
       },
       {
-        'question': 'Dữ liệu của tôi có được đồng bộ không?',
-        'answer': 'Có, dữ liệu được tự động đồng bộ với cloud nếu bạn đã đăng nhập tài khoản.',
+        'question': AppLocalizations.of(context)!.helpCenterFAQ4Question,
+        'answer': AppLocalizations.of(context)!.helpCenterFAQ4Answer,
       },
       {
-        'question': 'Làm sao để xuất báo cáo?',
-        'answer': 'Vào phần Báo cáo, chọn khoảng thời gian và nhấn nút "Xuất PDF" để tải báo cáo về máy.',
+        'question': AppLocalizations.of(context)!.helpCenterFAQ5Question,
+        'answer': AppLocalizations.of(context)!.helpCenterFAQ5Answer,
       },
     ];
 

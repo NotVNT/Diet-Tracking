@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../themes/theme_provider.dart';
 import '../../../../common/language_selector.dart';
 import '../../../../common/unit_selector.dart';
@@ -52,8 +53,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: const CustomAppBar(
-        title: 'Cài đặt',
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!.settingsTitle,
         showBackButton: true,
       ),
       body: SingleChildScrollView(
@@ -64,13 +65,13 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 8),
             
             // Thông báo
-            _buildSectionTitle('Thông báo'),
+            _buildSectionTitle(AppLocalizations.of(context)!.settingsNotifications),
             _buildSettingCard(
               children: [
                 _buildSwitchTile(
                   icon: Icons.notifications_outlined,
-                  title: 'Thông báo',
-                  subtitle: 'Nhận thông báo về bữa ăn và mục tiêu',
+                  title: AppLocalizations.of(context)!.settingsNotificationTitle,
+                  subtitle: AppLocalizations.of(context)!.settingsNotificationSubtitle,
                   value: _notificationsEnabled,
                   onChanged: (value) {
                     setState(() {
@@ -84,13 +85,13 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 24),
             
             // Giao diện
-            _buildSectionTitle('Giao diện'),
+            _buildSectionTitle(AppLocalizations.of(context)!.settingsAppearance),
             _buildSettingCard(
               children: [
                 _buildSwitchTile(
                   icon: Icons.dark_mode_outlined,
-                  title: 'Chế độ tối',
-                  subtitle: 'Sử dụng giao diện tối',
+                  title: AppLocalizations.of(context)!.settingsDarkMode,
+                  subtitle: AppLocalizations.of(context)!.settingsDarkModeSubtitle,
                   value: _darkModeEnabled,
                   onChanged: (value) async {
                     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
@@ -102,8 +103,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(_darkModeEnabled 
-                            ? 'Đã chuyển sang chế độ tối' 
-                            : 'Đã chuyển sang chế độ sáng'),
+                            ? AppLocalizations.of(context)!.settingsDarkModeEnabled
+                            : AppLocalizations.of(context)!.settingsDarkModeDisabled),
                         duration: const Duration(seconds: 2),
                       ),
                     );
@@ -116,7 +117,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 24),
             
             // Đơn vị đo lường
-            _buildSectionTitle('Đơn vị đo lường'),
+            _buildSectionTitle(AppLocalizations.of(context)!.settingsUnits),
             _buildSettingCard(
               children: [
                 _buildUnitTile(),
@@ -238,7 +239,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Ngôn ngữ',
+              AppLocalizations.of(context)!.settingsLanguage,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -283,7 +284,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Hệ đo lường',
+              AppLocalizations.of(context)!.settingsUnitSystem,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'help_center_page.dart';
 import '../../../../common/custom_app_bar.dart';
 
@@ -10,8 +11,8 @@ class SupportPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: const CustomAppBar(
-        title: 'Hỗ trợ',
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!.supportTitle,
         showBackButton: true,
       ),
       body: SingleChildScrollView(
@@ -28,10 +29,10 @@ class SupportPage extends StatelessWidget {
                 _buildActionTile(
                   context,
                   icon: Icons.privacy_tip_outlined,
-                  title: 'Chính sách bảo mật',
+                  title: AppLocalizations.of(context)!.supportPrivacyPolicy,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đang mở chính sách bảo mật...')),
+                      SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningPrivacyPolicy)),
                     );
                   },
                 ),
@@ -39,10 +40,10 @@ class SupportPage extends StatelessWidget {
                 _buildActionTile(
                   context,
                   icon: Icons.description_outlined,
-                  title: 'Điều khoản sử dụng',
+                  title: AppLocalizations.of(context)!.supportTermsOfService,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đang mở điều khoản sử dụng...')),
+                      SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningTermsOfService)),
                     );
                   },
                 ),
@@ -50,10 +51,10 @@ class SupportPage extends StatelessWidget {
                  _buildActionTile(
                   context,
                   icon: Icons.lightbulb_outline,
-                  title: 'Nguồn khuyến nghị',
+                  title: AppLocalizations.of(context)!.supportRecommendationSources,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đang mở nguồn khuyến nghị...')),
+                      SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningRecommendationSources)),
                     );
                   },
                 ),
@@ -111,7 +112,7 @@ class SupportPage extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Tìm VGP trên trang mạng xã hội',
+                  AppLocalizations.of(context)!.supportFindVGPOnSocialMedia,
                   style: TextStyle(
                     color: isDarkMode
                         ? Colors.white
@@ -131,30 +132,30 @@ class SupportPage extends StatelessWidget {
               _buildSocialMediaButton(
                 context,
                 imagePath: 'assets/icon/tiktok.png',
-                label: 'Tiktok',
+                label: AppLocalizations.of(context)!.supportTiktok,
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Đang mở TikTok...')),
+                    SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningTiktok)),
                   );
                 },
               ),
               _buildSocialMediaButton(
                 context,
                 imagePath: 'assets/icon/facebook.png',
-                label: 'Facebook',
+                label: AppLocalizations.of(context)!.supportFacebook,
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Đang mở Facebook...')),
+                    SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningFacebook)),
                   );
                 },
               ),
               _buildSocialMediaButton(
                 context,
                 imagePath: 'assets/icon/instagram.png',
-                label: 'Instagram',
+                label: AppLocalizations.of(context)!.supportInstagram,
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Đang mở Instagram...')),
+                    SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningInstagram)),
                   );
                 },
               ),
@@ -288,7 +289,7 @@ class SupportPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Trung tâm hỗ trợ',
+                    AppLocalizations.of(context)!.supportHelpCenter,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -297,7 +298,7 @@ class SupportPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Chúng tôi luôn sẵn sàng giúp đỡ',
+                    AppLocalizations.of(context)!.supportAlwaysHereToHelp,
                     style: TextStyle(
                       fontSize: 12,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,

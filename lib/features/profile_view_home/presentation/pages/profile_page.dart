@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/profile_provider.dart';
 import '../../../../view/identities/login/login_main_screen.dart';
 import '../../../../view/on_boarding/welcome_screen.dart';
@@ -59,12 +60,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đã cập nhật ảnh đại diện')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.profileAvatarUpdated)),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Không thể cập nhật ảnh: $e')),
+        SnackBar(content: Text('${AppLocalizations.of(context)!.profileCannotUpdateAvatar}: $e')),
       );
     }
   }
@@ -88,12 +89,12 @@ class _ProfilePageState extends State<ProfilePage> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đã đăng xuất')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.profileSignedOut)),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Không thể đăng xuất: $e')),
+        SnackBar(content: Text('${AppLocalizations.of(context)!.profileCannotSignOut}: $e')),
       );
     }
   }
@@ -109,14 +110,14 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     final profile = widget.profileProvider.profile;
-    final String displayName = profile?.displayName ?? 'Người dùng';
+    final String displayName = profile?.displayName ?? AppLocalizations.of(context)!.profileUser;
     final String email = profile?.email ?? '';
     final bool isLoggedIn = widget.profileProvider.isLoggedIn;
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerHighest,
-      appBar: const CustomAppBar(
-        title: 'Hồ sơ',
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!.profileTitle,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -180,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 _MenuItem(
                   icon: Icons.edit_outlined,
-                  label: 'Chỉnh sửa hồ sơ',
+                  label: AppLocalizations.of(context)!.profileEditProfile,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -195,12 +196,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(height: 1, thickness: 3),
                 _MenuItem(
                   icon: Icons.bar_chart_rounded,
-                  label: 'Xem báo cáo thống kê',
+                  label: AppLocalizations.of(context)!.profileViewStatistics,
                   onTap: () {
                     // TODO: Navigate to statistics/report page
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Tính năng đang phát triển'),
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)!.profileFeatureInDevelopment),
                         duration: Duration(seconds: 2),
                       ),
                     );
@@ -209,7 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(height: 1, thickness: 3),
                 _MenuItem(
                   icon: Icons.settings_outlined,
-                  label: 'Cài đặt',
+                  label: AppLocalizations.of(context)!.profileSettings,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -222,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(height: 1, thickness: 3),
                 _MenuItem(
                   icon: Icons.cloud_sync_outlined,
-                  label: 'Dữ liệu và đồng bộ',
+                  label: AppLocalizations.of(context)!.profileDataAndSync,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -235,7 +236,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(height: 1, thickness: 3),
                 _MenuItem(
                   icon: Icons.help_outline_rounded,
-                  label: 'Hỗ trợ',
+                  label: AppLocalizations.of(context)!.profileSupport,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -253,14 +254,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 if (isLoggedIn)
                   _MenuItem(
                     icon: Icons.logout,
-                    label: 'Đăng xuất',
+                    label: AppLocalizations.of(context)!.profileSignOut,
                     isDanger: true,
                     onTap: _handleSignOut,
                   )
                 else
                   _MenuItem(
                     icon: Icons.login,
-                    label: 'Đăng nhập',
+                    label: AppLocalizations.of(context)!.profileSignIn,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -273,10 +274,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             const SizedBox(height: 24), 
-            const AppInfoSection(
-              appName: 'VGP',
+            AppInfoSection(
+              appName: AppLocalizations.of(context)!.profileAppName,
               version: '1.0.0',
-              description: 'Ứng dụng quản lý chế độ ăn uống thông minh',
+              description: AppLocalizations.of(context)!.profileAppDescription,
               // logoAsset: 'assets/logo/app_logo.png', // Uncomment nếu có logo
             ),
             

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../common/custom_app_bar.dart';
 
 /// Data and synchronization settings page
@@ -35,24 +36,24 @@ class _DataSyncPageState extends State<DataSyncPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Sao lưu dữ liệu'),
-        content: const Text('Bạn có muốn sao lưu dữ liệu của mình lên cloud không?'),
+        title: Text(AppLocalizations.of(context)!.dataSyncBackupDialogTitle),
+        content: Text(AppLocalizations.of(context)!.dataSyncBackupDialogMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
+            child: Text(AppLocalizations.of(context)!.dataSyncBackupDialogCancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Đang sao lưu dữ liệu...'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.dataSyncBackupInProgress),
                   duration: Duration(seconds: 2),
                 ),
               );
             },
-            child: const Text('Sao lưu'),
+            child: Text(AppLocalizations.of(context)!.dataSyncBackupDialogConfirm),
           ),
         ],
       ),
@@ -63,19 +64,19 @@ class _DataSyncPageState extends State<DataSyncPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Xóa cache'),
-        content: const Text('Việc xóa cache sẽ giải phóng dung lượng nhưng có thể làm ứng dụng chậm hơn trong lần mở tiếp theo. Bạn có chắc chắn muốn xóa?'),
+        title: Text(AppLocalizations.of(context)!.dataSyncClearCacheDialogTitle),
+        content: Text(AppLocalizations.of(context)!.dataSyncClearCacheDialogMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
+            child: Text(AppLocalizations.of(context)!.dataSyncClearCacheDialogCancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Đã xóa cache thành công'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.dataSyncClearCacheSuccess),
                   duration: Duration(seconds: 2),
                 ),
               );
@@ -84,7 +85,7 @@ class _DataSyncPageState extends State<DataSyncPage> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Xóa'),
+            child: Text(AppLocalizations.of(context)!.dataSyncClearCacheDialogConfirm),
           ),
         ],
       ),
@@ -95,8 +96,8 @@ class _DataSyncPageState extends State<DataSyncPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: const CustomAppBar(
-        title: 'Dữ liệu & Đồng bộ',
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!.dataSyncTitle,
         showBackButton: true,
       ),
       body: SingleChildScrollView(
@@ -110,8 +111,8 @@ class _DataSyncPageState extends State<DataSyncPage> {
               children: [
                 _buildSwitchTile(
                   icon: Icons.sync_outlined,
-                  title: 'Tự động đồng bộ',
-                  subtitle: 'Đồng bộ dữ liệu tự động với cloud',
+                  title: AppLocalizations.of(context)!.dataSyncAutoSync,
+                  subtitle: AppLocalizations.of(context)!.dataSyncAutoSyncSubtitle,
                   value: _autoSyncEnabled,
                   onChanged: (value) {
                     setState(() {
@@ -128,8 +129,8 @@ class _DataSyncPageState extends State<DataSyncPage> {
               children: [
                 _buildActionTile(
                   icon: Icons.cloud_upload_outlined,
-                  title: 'Sao lưu dữ liệu',
-                  subtitle: 'Sao lưu dữ liệu của bạn',
+                  title: AppLocalizations.of(context)!.dataSyncBackupData,
+                  subtitle: AppLocalizations.of(context)!.dataSyncBackupDataSubtitle,
                   onTap: _showBackupDialog,
                 ),
               ],
@@ -140,8 +141,8 @@ class _DataSyncPageState extends State<DataSyncPage> {
               children: [
                 _buildActionTile(
                   icon: Icons.delete_outline,
-                  title: 'Xóa cache',
-                  subtitle: 'Xóa dữ liệu tạm thời',
+                  title: AppLocalizations.of(context)!.dataSyncClearCache,
+                  subtitle: AppLocalizations.of(context)!.dataSyncClearCacheSubtitle,
                   onTap: _showClearCacheDialog,
                 ),
               ],
