@@ -1,19 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import '../../../../database/auth_service.dart';
 import '../../../../model/user.dart';
+import '../../../../services/cloudinary_service.dart';
 
 /// Remote data source for profile operations (Firebase)
 class ProfileRemoteDataSource {
   final AuthService _authService;
-  final FirebaseStorage _storage;
+  final CloudinaryService _cloudinaryService;
 
   ProfileRemoteDataSource({
     AuthService? authService,
-    FirebaseStorage? storage,
+    CloudinaryService? cloudinaryService,
   })  : _authService = authService ?? AuthService(),
-        _storage = storage ?? FirebaseStorage.instance;
+        _cloudinaryService =
+            cloudinaryService ?? CloudinaryService.fromConfig();
 
   /// Get current Firebase user
   fb_auth.User? getCurrentUser() {
@@ -25,12 +26,11 @@ class ProfileRemoteDataSource {
     return await _authService.getUserData(uid);
   }
 
-  /// Upload avatar to Firebase Storage
+  /// Upload avatar to Cloudinary
   Future<String> uploadAvatar(File imageFile, String userId) async {
-    final String path = 'avatars/$userId.jpg';
-    final Reference ref = _storage.ref().child(path);
-    await ref.putFile(imageFile);
-    return await ref.getDownloadURL();
+    final String url = await _cloudinaryService.uploadImage(imageFile);
+    await _authService.updateUserData(userId, {'avatars': url});
+    return url;
   }
 
   /// Update user data in Firestore

@@ -59,8 +59,10 @@ class ProfileProvider extends ChangeNotifier {
     }
 
     try {
-      await _uploadAvatarUseCase.call(imageFile, _profile!.uid);
-      // Avatar uploaded successfully - you can store URL locally if needed
+    final String avatarUrl =
+          await _uploadAvatarUseCase.call(imageFile, _profile!.uid);
+    _profile = _profile?.copyWith(avatars: avatarUrl);
+      _error = null;
       notifyListeners();
     } catch (e) {
       _error = 'Không thể cập nhật ảnh: $e';
@@ -103,14 +105,16 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   /// Get default avatar asset based on gender
-  String getDefaultAvatarAsset() {
+  ImageProvider<Object> getAvatarImage() {
+  final String? avatarUrl = _profile?.avatars;
+    if (avatarUrl != null && avatarUrl.isNotEmpty) {
+      return NetworkImage(avatarUrl);
+    }
+
     final gender = _profile?.gender;
-    if (gender == GenderType.male) {
-      return 'assets/gender/men.jpg';
-    }
     if (gender == GenderType.female) {
-      return 'assets/gender/women.jpg';
+      return const AssetImage('assets/gender/women.jpg');
     }
-    return 'assets/gender/men.jpg';
+    return const AssetImage('assets/gender/men.jpg');
   }
 }

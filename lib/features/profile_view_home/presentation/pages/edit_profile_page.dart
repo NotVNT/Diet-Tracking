@@ -85,6 +85,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         goal: _selectedGoal,
         medicalConditions: profile.medicalConditions,
         allergies: profile.allergies,
+        avatars: profile.avatars,
       );
 
       await widget.profileProvider.updateProfile(updatedProfile);

@@ -66,7 +66,8 @@ class GoogleAuthService {
       final String? email = userInfoOverride?['email'] ?? firebaseUser?.email;
       final String? displayName =
           userInfoOverride?['displayName'] ?? firebaseUser?.displayName;
-      // Avatar URL is ignored; not persisted
+    final String? avatarUrl =
+      userInfoOverride?['photoURL'] ?? firebaseUser?.photoURL;
 
       if (uid != null) {
         // Tạo/Lưu document người dùng nếu có uid
@@ -74,6 +75,7 @@ class GoogleAuthService {
           uid: uid,
           email: email,
           fullName: displayName,
+          avatars: avatarUrl,
         );
       }
 
@@ -129,6 +131,7 @@ class GoogleAuthService {
     required String uid,
     String? email,
     String? fullName,
+    String? avatars,
   }) async {
     final docRef = _firestore.collection(_usersCollection).doc(uid);
     final snapshot = await docRef.get();
@@ -142,6 +145,7 @@ class GoogleAuthService {
       uid: uid,
       email: email,
       fullName: fullName,
+      avatars: avatars,
     );
     await docRef.set(userData.toJson());
     print('🔍 GoogleAuthService: User document created successfully');

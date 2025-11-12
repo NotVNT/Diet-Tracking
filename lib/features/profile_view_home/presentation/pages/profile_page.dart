@@ -129,9 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 CircleAvatar(
                   radius: 54,
                   backgroundColor: Theme.of(context).colorScheme.surface,
-                  backgroundImage: AssetImage(
-                    widget.profileProvider.getDefaultAvatarAsset(),
-                  ),
+                  backgroundImage: widget.profileProvider.getAvatarImage(),
                 ),
                 Positioned(
                   bottom: 4,

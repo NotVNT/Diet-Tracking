@@ -13,6 +13,7 @@ class ProfileEntity {
   final String? goal;
   final List<String>? medicalConditions;
   final List<String>? allergies;
+  final String? avatars;
 
   const ProfileEntity({
     required this.uid,
@@ -26,6 +27,7 @@ class ProfileEntity {
     this.goal,
     this.medicalConditions,
     this.allergies,
+    this.avatars,
   });
 
   /// Create ProfileEntity from User model
@@ -42,6 +44,36 @@ class ProfileEntity {
       goal: user.goal,
       medicalConditions: user.bodyInfo?.medicalConditions,
       allergies: user.bodyInfo?.allergies,
+      avatars: user.avatars,
+    );
+  }
+
+  ProfileEntity copyWith({
+    String? displayName,
+    String? email,
+    GenderType? gender,
+    int? age,
+    double? height,
+    double? weight,
+    double? goalWeight,
+    String? goal,
+    List<String>? medicalConditions,
+    List<String>? allergies,
+    String? avatars,
+  }) {
+    return ProfileEntity(
+      uid: uid,
+      displayName: displayName ?? this.displayName,
+      email: email ?? this.email,
+      gender: gender ?? this.gender,
+      age: age ?? this.age,
+      height: height ?? this.height,
+      weight: weight ?? this.weight,
+      goalWeight: goalWeight ?? this.goalWeight,
+      goal: goal ?? this.goal,
+      medicalConditions: medicalConditions ?? this.medicalConditions,
+      allergies: allergies ?? this.allergies,
+      avatars: avatars ?? this.avatars,
     );
   }
 }

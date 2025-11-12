@@ -53,6 +53,7 @@ class AuthService {
           email: email,
           fullName: fullName,
           phone: phone,
+          avatars: user.photoURL,
         );
 
         // Lưu thông tin user vào Firestore
@@ -251,6 +252,7 @@ class AuthService {
           ),
           age: age,
           goal: goal,
+          avatars: user.photoURL,
         );
 
         // Lưu thông tin user vào Firestore

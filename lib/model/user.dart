@@ -11,7 +11,7 @@ class User {
   final int? age;
   final BodyInfoModel? bodyInfo;
   final String? goal;
-  // Removed avatarUrl from Firestore persistence
+  final String? avatars;
 
   const User({
     this.uid,
@@ -22,6 +22,7 @@ class User {
     this.age,
     this.bodyInfo,
     this.goal,
+    this.avatars,
   });
 
   /// Creates a copy of this user with updated fields
@@ -34,6 +35,7 @@ class User {
     int? age,
     BodyInfoModel? bodyInfo,
     String? goal,
+    String? avatars,
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -44,6 +46,7 @@ class User {
       age: age ?? this.age,
       bodyInfo: bodyInfo ?? this.bodyInfo,
       goal: goal ?? this.goal,
+      avatars: avatars ?? this.avatars,
     );
   }
 
@@ -59,6 +62,7 @@ class User {
       'age': age,
       'bodyInfo': bodyInfo?.toJson(),
       'goal': goal,
+      'avatars': avatars,
     };
   }
 
@@ -75,6 +79,7 @@ class User {
           ? BodyInfoModel.fromJson(json['bodyInfo'] as Map<String, dynamic>)
           : null,
       goal: json['goal'] as String?,
+      avatars: json['avatars'] as String?,
     );
   }
 

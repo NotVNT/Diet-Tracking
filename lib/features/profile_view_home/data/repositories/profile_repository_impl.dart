@@ -29,6 +29,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
         uid: currentUser.uid,
         displayName: currentUser.displayName ?? 'Người dùng',
         email: currentUser.email ?? '',
+        avatars: currentUser.photoURL,
       );
     }
 
@@ -60,6 +61,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       gender: profile.gender,
       age: profile.age,
       goal: profile.goal,
+  avatars: profile.avatars,
       bodyInfo: BodyInfoModel(
         heightCm: profile.height,
         weightKg: profile.weight,
