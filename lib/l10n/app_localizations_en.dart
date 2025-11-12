@@ -519,4 +519,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registrationSuccess => 'Registration successful!';
+
+  @override
+  String get dietAssistant => 'Diet Assistant';
+
+  @override
+  String get recordMeal => 'Record Meal';
 }

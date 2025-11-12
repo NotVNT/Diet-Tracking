@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../common/app_styles.dart';
 import '../../../common/custom_button.dart';
 import '../../../common/gradient_background.dart';
-import '../../../common/language_selector.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/guest_sync_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../services/google_auth_service.dart';
-import '../../../services/language_service.dart';
 import '../../home/home_view.dart';
 import '../../on_boarding/started_view/started_screen.dart' as started_onboarding;
 import '../forgot_password/forgot_password_screen.dart';
@@ -42,12 +40,10 @@ class _LoginScreenState extends State<LoginScreen>
   bool _isPasswordVisible = false;
   bool _isEmailFocused = false;
   bool _isPasswordFocused = false;
-  Language _selectedLanguage = Language.vi;
 
   @override
   void initState() {
     super.initState();
-    _selectedLanguage = LanguageService.currentLanguage;
     
     // Khởi tạo login controller
     _loginController = LoginController(
@@ -236,16 +232,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  /// Xử lý khi người dùng thay đổi ngôn ngữ
-  void _onLanguageChanged(Language newLanguage) async {
-    await LanguageService.changeLanguage(newLanguage);
-    if (mounted) {
-      setState(() {
-        _selectedLanguage = newLanguage;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,18 +243,7 @@ class _LoginScreenState extends State<LoginScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
-                  // Language Selector
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      LanguageSelector(
-                        selected: _selectedLanguage,
-                        onChanged: _onLanguageChanged,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 40),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(

@@ -10,6 +10,7 @@ import 'edit_profile_page.dart';
 import 'settings_page.dart';
 import 'data_sync_page.dart';
 import 'support_page.dart';
+import '../../../../common/custom_app_bar.dart';
 
 /// Profile page with Clean Architecture
 class ProfilePage extends StatefulWidget {
@@ -99,6 +100,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (widget.profileProvider.isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -111,11 +114,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final bool isLoggedIn = widget.profileProvider.isLoggedIn;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      appBar: AppBar(
-        title: const Text('Hồ sơ'),
-        centerTitle: true,
-        elevation: 0,
+      backgroundColor: colorScheme.surfaceContainerHighest,
+      appBar: const CustomAppBar(
+        title: 'Hồ sơ',
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

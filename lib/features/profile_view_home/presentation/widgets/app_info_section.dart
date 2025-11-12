@@ -26,11 +26,11 @@ class AppInfoSection extends StatelessWidget {
           // App Name
           Text(
             appName,
-            style: GoogleFonts.poppins(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
+            style: GoogleFonts.bebasNeue(
+              fontSize: 32,
+              fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.onSurface,
-              letterSpacing: 0.5,
+              letterSpacing: 1.5,
             ),
           ),
           
