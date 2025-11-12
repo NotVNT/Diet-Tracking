@@ -923,4 +923,25 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get helpCenterContactAddressValue => '123 Đường Chính, Quận 1, TP. Hồ Chí Minh';
+
+  @override
+  String get monday => 'Thứ Hai';
+
+  @override
+  String get tuesday => 'Thứ Ba';
+
+  @override
+  String get wednesday => 'Thứ Tư';
+
+  @override
+  String get thursday => 'Thứ Năm';
+
+  @override
+  String get friday => 'Thứ Sáu';
+
+  @override
+  String get saturday => 'Thứ Bảy';
+
+  @override
+  String get sunday => 'Chủ Nhật';
 }

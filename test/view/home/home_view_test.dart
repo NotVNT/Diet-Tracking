@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:diet_tracking_project/view/home/home_view.dart';
+import 'package:provider/provider.dart';
+import 'package:diet_tracking_project/features/home_page/presentation/pages/home_page.dart';
+import 'package:diet_tracking_project/features/home_page/di/home_di.dart';
 
 void main() {
-  testWidgets('HomeView chuyển trang bằng BottomNavigationBar', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: HomeView()));
+  testWidgets('HomePage chuyển trang bằng BottomNavigationBar', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ChangeNotifierProvider(
+          create: (_) => HomeDI.getHomeProvider(),
+          child: const HomePage(),
+        ),
+      ),
+    );
 
     // Mặc định tab 0 'Trang chủ' (tiêu đề AppBar)
     expect(find.widgetWithText(AppBar, 'Trang chủ'), findsOneWidget);

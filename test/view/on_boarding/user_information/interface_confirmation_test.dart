@@ -13,7 +13,7 @@ void main() {
       // Bỏ qua do SignupScreen khởi tạo Firebase trong initState; đã được kiểm thử riêng ở flow khác.
     }, skip: true);
 
-    testWidgets('Tap Tiếp tục với Guest lưu local và điều hướng HomeView', (
+    testWidgets('Tap Tiếp tục với Guest lưu local và điều hướng HomePage', (
       tester,
     ) async {
       // Skip test này vì InterfaceConfirmation tạo AuthService trong constructor

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../common/app_styles.dart';
 import '../../../common/custom_button.dart';
 import '../../../common/gradient_background.dart';
@@ -7,7 +8,8 @@ import '../../../database/guest_sync_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../responsive/responsive.dart';
 import '../../../services/google_auth_service.dart';
-import '../../home/home_view.dart';
+import '../../../features/home_page/presentation/pages/home_page.dart';
+import '../../../features/home_page/di/home_di.dart';
 import '../../on_boarding/started_view/started_screen.dart' as started_onboarding;
 import '../forgot_password/forgot_password_screen.dart';
 import '../register/register_main_screen.dart';
@@ -188,7 +190,10 @@ class _LoginScreenState extends State<LoginScreen>
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomeView(),
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => HomeDI.getHomeProvider(),
+            child: const HomePage(),
+          ),
         ),
       );
     }

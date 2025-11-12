@@ -923,4 +923,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpCenterContactAddressValue => '123 Main Street, District 1, Ho Chi Minh City';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get sunday => 'Sunday';
 }

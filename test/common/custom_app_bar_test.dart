@@ -40,6 +40,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             appBar: CustomAppBar(
+              title: 'Test',
               onBackPressed: () {
                 backPressed = true;
               },

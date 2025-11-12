@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../../identities/register/register_main_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
-import '../../home/home_view.dart';
+import '../../../features/home_page/presentation/pages/home_page.dart';
+import '../../../features/home_page/di/home_di.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Màn hình xác nhận hoàn thành onboarding
@@ -81,7 +83,12 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const HomeView()),
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider(
+          create: (_) => HomeDI.getHomeProvider(),
+          child: const HomePage(),
+        ),
+      ),
       (route) => false,
     );
   }
@@ -320,7 +327,12 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const HomeView()),
+              MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider(
+                  create: (_) => HomeDI.getHomeProvider(),
+                  child: const HomePage(),
+                ),
+              ),
               (route) => false,
             );
           } catch (e) {
@@ -330,7 +342,12 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
             // Vẫn chuyển trang ngay cả khi có lỗi
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const HomeView()),
+              MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider(
+                  create: (_) => HomeDI.getHomeProvider(),
+                  child: const HomePage(),
+                ),
+              ),
               (route) => false,
             );
           }
