@@ -1,52 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:diet_tracking_project/common/custom_app_bar.dart';
-import 'package:diet_tracking_project/common/app_colors.dart';
-import 'package:diet_tracking_project/common/app_styles.dart';
 
 void main() {
   group('CustomAppBar', () {
-    testWidgets('should render with default properties', (
+    testWidgets('should render with required title', (
       WidgetTester tester,
     ) async {
+      const String title = 'Test Title';
+      
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(appBar: const CustomAppBar())),
+        const MaterialApp(home: Scaffold(appBar: CustomAppBar(title: title))),
       );
 
       expect(find.byType(CustomAppBar), findsOneWidget);
       expect(find.byType(AppBar), findsOneWidget);
-    });
-
-    testWidgets('should render with title', (WidgetTester tester) async {
-      const String title = 'Test Title';
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(appBar: const CustomAppBar(title: title)),
-        ),
-      );
-
       expect(find.text(title), findsOneWidget);
     });
 
-    testWidgets('should show back button by default', (
+    testWidgets('should not show back button', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(appBar: const CustomAppBar())),
+        const MaterialApp(home: Scaffold(appBar: CustomAppBar(title: 'Test'))),
       );
 
-      expect(find.byIcon(Icons.arrow_back), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_back), findsNothing);
     });
-
-    testWidgets('should hide back button when showBackButton is false', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(appBar: const CustomAppBar(showBackButton: false)),
-        ),
-      );
 
       expect(find.byIcon(Icons.arrow_back), findsNothing);
     });

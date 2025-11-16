@@ -325,10 +325,100 @@ class AuthService {
 
   /// Gửi email reset password
   Future<void> sendPasswordResetEmail(String email) async {
+    final String sanitizedEmail = email.trim();
+    if (sanitizedEmail.isEmpty) {
+      throw const AuthException('Email không hợp lệ.', 'invalid-email');
+    }
+
+    String emailForReset = sanitizedEmail;
+
     try {
-      await _auth.sendPasswordResetEmail(email: email);
+      List<String> signInMethods =
+          await _auth.fetchSignInMethodsForEmail(emailForReset);
+
+      if (signInMethods.isEmpty) {
+        final String lowerCaseEmail = sanitizedEmail.toLowerCase();
+        if (lowerCaseEmail != sanitizedEmail) {
+          signInMethods =
+              await _auth.fetchSignInMethodsForEmail(lowerCaseEmail);
+          if (signInMethods.isNotEmpty) {
+            emailForReset = lowerCaseEmail;
+          }
+        }
+
+        if (signInMethods.isEmpty) {
+          final bool exists =
+              await _doesUserExistByEmail(emailForReset);
+          if (!exists && lowerCaseEmail != sanitizedEmail) {
+            final bool existsLower =
+                await _doesUserExistByEmail(lowerCaseEmail);
+            if (existsLower) {
+              emailForReset = lowerCaseEmail;
+            } else {
+              throw const AuthException(
+                'Email không tồn tại trong hệ thống.',
+                'user-not-found',
+              );
+            }
+          } else if (!exists) {
+            throw const AuthException(
+              'Email không tồn tại trong hệ thống.',
+              'user-not-found',
+            );
+          }
+        }
+      }
+
+      if (signInMethods.isNotEmpty &&
+          !signInMethods.contains('password')) {
+        final String providers =
+            signInMethods.map(_providerDisplayName).join(', ');
+        throw AuthException(
+          'Tài khoản này đang đăng nhập bằng: $providers. Không thể đặt lại mật khẩu bằng email.',
+          'requires-different-provider',
+        );
+      }
+
+      await _auth.sendPasswordResetEmail(email: emailForReset);
     } on FirebaseAuthException catch (e) {
       throw AuthException(_handleAuthException(e), e.code);
+    }
+  }
+
+  Future<bool> _doesUserExistByEmail(String email) async {
+    final String lowerCaseEmail = email.trim().toLowerCase();
+
+    final QuerySnapshot<Map<String, dynamic>> normalizedSnapshot = await _firestore
+        .collection(_usersCollection)
+        .where('emailLowercase', isEqualTo: lowerCaseEmail)
+        .limit(1)
+        .get();
+
+    if (normalizedSnapshot.docs.isNotEmpty) {
+      return true;
+    }
+
+    final QuerySnapshot<Map<String, dynamic>> legacySnapshot = await _firestore
+        .collection(_usersCollection)
+        .where('email', isEqualTo: email.trim())
+        .limit(1)
+        .get();
+
+    return legacySnapshot.docs.isNotEmpty;
+  }
+
+  String _providerDisplayName(String providerId) {
+    switch (providerId) {
+      case 'password':
+        return 'Email & Mật khẩu';
+      case 'google.com':
+        return 'Google';
+      case 'facebook.com':
+        return 'Facebook';
+      case 'apple.com':
+        return 'Apple';
+      default:
+        return providerId;
     }
   }
 

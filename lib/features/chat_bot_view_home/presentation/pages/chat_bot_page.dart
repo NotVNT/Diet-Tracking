@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../providers/chat_provider_factory.dart';
 import '../providers/chat_provider.dart';
 import '../widgets/chat_message_bubble.dart';
@@ -7,6 +6,7 @@ import '../widgets/chat_input_area.dart';
 import '../widgets/chat_options_popup.dart';
 import '../widgets/food_suggestion_inputs.dart';
 import '../widgets/chat_settings_menu.dart';
+import '../../../../common/custom_app_bar.dart';
 
 /// Main chat bot page with clean architecture
 class ChatBotPage extends StatefulWidget {
@@ -17,8 +17,6 @@ class ChatBotPage extends StatefulWidget {
 }
 
 class _ChatBotPageState extends State<ChatBotPage> {
-  static const Color _backgroundColor = Color(0xFF1A1A1A);
-
   // Controllers
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _ingredientsController = TextEditingController();
@@ -52,8 +50,17 @@ class _ChatBotPageState extends State<ChatBotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
-      appBar: _buildAppBar(),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: CustomAppBar(
+        title: 'Diet Assistant',
+        actions: [
+          ChatSettingsMenu(
+            onCreateNewChat: _onCreateNewChat,
+            onChatHistory: _onChatHistory,
+            onSettings: _onSettings,
+          ),
+        ],
+      ),
       body: Column(
         children: [
           _buildMessagesArea(_chatProvider),
@@ -70,30 +77,6 @@ class _ChatBotPageState extends State<ChatBotPage> {
           ),
         ],
       ),
-    );
-  }
-
-  /// Builds the app bar
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: _backgroundColor,
-      elevation: 0,
-      title: Text(
-        'Diet Assistant',
-        style: GoogleFonts.inter(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        ChatSettingsMenu(
-          onCreateNewChat: _onCreateNewChat,
-          onChatHistory: _onChatHistory,
-          onSettings: _onSettings,
-        ),
-      ],
     );
   }
 

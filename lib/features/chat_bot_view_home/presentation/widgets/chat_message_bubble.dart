@@ -22,8 +22,6 @@ class FoodSuggestion {
 /// Widget for displaying chat message bubbles
 class ChatMessageBubble extends StatelessWidget {
   final ChatMessageEntity message;
-  static const Color _primaryColor = Color(0xFF4CAF50);
-  static const Color _messageBubbleColor = Color(0xFF2D2D2D);
   static const double _borderRadius = 20.0;
 
   const ChatMessageBubble({super.key, required this.message});
@@ -53,17 +51,19 @@ class ChatMessageBubble extends StatelessWidget {
 
   /// Builds user or bot avatar
   Widget _buildAvatar({required bool isUser}) {
-    return Container(
-      width: 32,
-      height: 32,
-      decoration: const BoxDecoration(
-        color: _primaryColor,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        isUser ? Icons.person : Icons.smart_toy,
-        color: Colors.white,
-        size: 18,
+    return Builder(
+      builder: (context) => Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          isUser ? Icons.person : Icons.smart_toy,
+          color: Colors.white,
+          size: 18,
+        ),
       ),
     );
   }
@@ -72,39 +72,50 @@ class ChatMessageBubble extends StatelessWidget {
   Widget _buildMessageContent() {
     final suggestions = _extractFoodSuggestions(message.text);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: message.isUser ? _primaryColor : _messageBubbleColor,
-        borderRadius: BorderRadius.circular(_borderRadius).copyWith(
-          bottomLeft: message.isUser
-              ? const Radius.circular(_borderRadius)
-              : const Radius.circular(4),
-          bottomRight: message.isUser
-              ? const Radius.circular(4)
-              : const Radius.circular(_borderRadius),
+    return Builder(
+      builder: (context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: message.isUser 
+            ? Theme.of(context).colorScheme.primary 
+            : Theme.of(context).colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(_borderRadius).copyWith(
+            bottomLeft: message.isUser
+                ? const Radius.circular(_borderRadius)
+                : const Radius.circular(4),
+            bottomRight: message.isUser
+                ? const Radius.circular(4)
+                : const Radius.circular(_borderRadius),
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            message.text,
-            style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            _formatTime(message.timestamp),
-            style: GoogleFonts.inter(
-              color: Colors.white.withValues(alpha: 0.7),
-              fontSize: 12,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              message.text,
+              style: GoogleFonts.inter(
+                color: message.isUser 
+                  ? Colors.white 
+                  : Theme.of(context).colorScheme.onSurface,
+                fontSize: 14,
+              ),
             ),
-          ),
-          if (!message.isUser && suggestions.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            _buildAddToRecordsActions(suggestions),
+            const SizedBox(height: 4),
+            Text(
+              _formatTime(message.timestamp),
+              style: GoogleFonts.inter(
+                color: message.isUser
+                  ? Colors.white.withValues(alpha: 0.7)
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 12,
+              ),
+            ),
+            if (!message.isUser && suggestions.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              _buildAddToRecordsActions(suggestions),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -327,7 +338,7 @@ class ChatMessageBubble extends StatelessWidget {
                       style: TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _primaryColor,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -358,8 +369,8 @@ class ChatMessageBubble extends StatelessWidget {
                     );
                   },
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: _primaryColor),
-                    foregroundColor: Colors.white,
+                    side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

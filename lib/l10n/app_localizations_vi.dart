@@ -337,4 +337,195 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get activityLevelExtraActiveSubtitle => '(Tập thể dục 2 lần/ngày, công việc lao động phổ thông)';
+<<<<<<< HEAD
+=======
+
+  @override
+  String get loginTitle => 'Đăng Nhập';
+
+  @override
+  String get emailOrPhone => 'Email hoặc Số Điện Thoại';
+
+  @override
+  String get emailOrPhoneHint => 'Nhập Email hoặc Số Điện Thoại';
+
+  @override
+  String get password => 'Mật khẩu';
+
+  @override
+  String get passwordHint => '••••••••';
+
+  @override
+  String get forgotPassword => 'Quên mật khẩu?';
+
+  @override
+  String get loginButton => 'Đăng nhập';
+
+  @override
+  String get orLoginWith => 'HOẶC đăng nhập bằng';
+
+  @override
+  String get continueWithGoogle => 'Tiếp tục với Google';
+
+  @override
+  String get dontHaveAccount => 'Tôi chưa có tài khoản';
+
+  @override
+  String get pleaseEnterEmail => 'Vui lòng nhập email';
+
+  @override
+  String get pleaseEnterPassword => 'Vui lòng nhập mật khẩu';
+
+  @override
+  String get loginSuccess => 'Đăng nhập thành công!';
+
+  @override
+  String get loginFailed => 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.';
+
+  @override
+  String get invalidCredentials => 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.';
+
+  @override
+  String get googleLoginSuccess => 'Đăng nhập Google thành công!';
+
+  @override
+  String get googleLoginCancelled => 'Đăng nhập Google đã bị hủy.';
+
+  @override
+  String get googleLoginFailed => 'Đăng nhập Google thất bại. Vui lòng thử lại.';
+
+  @override
+  String get passwordResetEmailSent => 'Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.';
+
+  @override
+  String get pleaseEnterEmailFirst => 'Vui lòng nhập email trước.';
+
+  @override
+  String get passwordResetFailed => 'Không thể gửi email đặt lại mật khẩu. Vui lòng kiểm tra email và thử lại.';
+
+  @override
+  String get signupTitle => 'Tạo tài khoản';
+
+  @override
+  String get fullName => 'Họ và tên';
+
+  @override
+  String get fullNameHint => 'Nhập họ và tên của bạn';
+
+  @override
+  String get phoneNumber => 'Số điện thoại';
+
+  @override
+  String get phoneNumberHint => 'Nhập số điện thoại';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get emailHint => 'example@gmail.com';
+
+  @override
+  String get confirmPassword => 'Nhập lại mật khẩu';
+
+  @override
+  String get confirmPasswordHint => '••••••••';
+
+  @override
+  String get agreeWith => 'Tôi đồng ý với ';
+
+  @override
+  String get termsOfService => 'Điều khoản sử dụng';
+
+  @override
+  String get and => ' và ';
+
+  @override
+  String get privacyPolicy => 'Chính sách bảo mật';
+
+  @override
+  String get signupButton => 'Đăng ký';
+
+  @override
+  String get alreadyHaveAccount => 'Đã có tài khoản? ';
+
+  @override
+  String get loginLink => 'Đăng nhập';
+
+  @override
+  String get forgotPasswordTitle => 'Quên mật khẩu?';
+
+  @override
+  String get forgotPasswordInstruction => 'Nhập email của bạn và chúng tôi sẽ gửi cho bạn hướng dẫn để đặt lại mật khẩu.';
+
+  @override
+  String get sendResetEmail => 'Gửi email đặt lại mật khẩu';
+
+  @override
+  String get backToLogin => 'Quay lại đăng nhập';
+
+  @override
+  String get success => 'Thành công';
+
+  @override
+  String get invalidEmail => 'Email không hợp lệ.';
+
+  @override
+  String get pleaseEnterValidEmail => 'Vui lòng nhập email.';
+
+  @override
+  String get emailNotExist => 'Email không tồn tại trong hệ thống.';
+
+  @override
+  String accountUsesProviderMessage(Object provider) {
+    return 'Tài khoản này đang đăng nhập bằng: $provider. Không thể đặt lại mật khẩu bằng email.';
+  }
+
+  @override
+  String get unableToSendResetEmail => 'Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.';
+
+  @override
+  String get userNotFound => 'Không tìm thấy tài khoản với email này.';
+
+  @override
+  String get tooManyRequests => 'Quá nhiều yêu cầu. Vui lòng thử lại sau.';
+
+  @override
+  String get networkError => 'Lỗi kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.';
+
+  @override
+  String get pleaseEnterFullName => 'Vui lòng nhập họ và tên.';
+
+  @override
+  String get pleaseEnterPhoneNumber => 'Vui lòng nhập số điện thoại.';
+
+  @override
+  String get passwordMinLength => 'Mật khẩu phải có ít nhất 6 ký tự.';
+
+  @override
+  String get pleaseConfirmPassword => 'Vui lòng nhập lại mật khẩu.';
+
+  @override
+  String get passwordsDoNotMatch => 'Mật khẩu xác nhận không khớp.';
+
+  @override
+  String get pleaseAgreeToTerms => 'Vui lòng đồng ý với điều khoản sử dụng.';
+
+  @override
+  String get emailAlreadyInUse => 'Email đã được sử dụng. Vui lòng sử dụng email khác.';
+
+  @override
+  String get weakPassword => 'Mật khẩu quá yếu. Vui lòng sử dụng mật khẩu mạnh hơn.';
+
+  @override
+  String get registrationFailed => 'Đăng ký thất bại. Vui lòng thử lại.';
+
+  @override
+  String get registrationSuccess => 'Đăng ký thành công!';
+
+  @override
+  String get dietAssistant => 'Trợ lý dinh dưỡng';
+
+  @override
+  String get recordMeal => 'Ghi nhận món ăn';
+>>>>>>> 34fe3db9ee2fbe41befcb7c6d761953ebaa95435
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'app_colors.dart';
 import 'app_styles.dart';
 
 class CustomInputField extends StatefulWidget {
   final String label;
-  final String hint;
+  final String? hint;
   final TextEditingController controller;
   final bool obscureText;
   final TextInputType keyboardType;
@@ -17,7 +16,7 @@ class CustomInputField extends StatefulWidget {
   const CustomInputField({
     super.key,
     required this.label,
-    required this.hint,
+    this.hint,
     required this.controller,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
@@ -35,7 +34,6 @@ class _CustomInputFieldState extends State<CustomInputField>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  late Animation<Color?> _borderColorAnimation;
 
   @override
   void initState() {
@@ -48,14 +46,6 @@ class _CustomInputFieldState extends State<CustomInputField>
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.02,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-
-    _borderColorAnimation = ColorTween(
-      begin: AppColors.grey300,
-      end: AppColors.primary,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
@@ -87,7 +77,9 @@ class _CustomInputFieldState extends State<CustomInputField>
       children: [
         Text(
           widget.label,
-          style: AppStyles.labelMedium,
+          style: AppStyles.labelMedium.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         const SizedBox(height: AppStyles.spacingS),
         AnimatedBuilder(
@@ -97,17 +89,19 @@ class _CustomInputFieldState extends State<CustomInputField>
               scale: _scaleAnimation.value,
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(AppStyles.radiusL),
                   border: Border.all(
-                    color: _borderColorAnimation.value ?? AppColors.grey300,
+                    color: widget.isFocused
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.outline,
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: widget.isFocused 
-                          ? AppColors.primary.withOpacity(0.1)
-                          : AppColors.shadowLight,
+                          ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                          : Theme.of(context).shadowColor.withOpacity(0.05),
                       blurRadius: widget.isFocused ? 15 : 10,
                       offset: const Offset(0, 5),
                     ),
@@ -119,13 +113,13 @@ class _CustomInputFieldState extends State<CustomInputField>
                   obscureText: widget.obscureText,
                   keyboardType: widget.keyboardType,
                   style: GoogleFonts.inter(
-                    color: AppColors.black,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 16,
                   ),
                   decoration: InputDecoration(
-                    hintText: widget.hint,
+                    hintText: widget.hint ?? '',
                     hintStyle: GoogleFonts.inter(
-                      color: AppColors.grey500,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontSize: 16,
                     ),
                     border: InputBorder.none,

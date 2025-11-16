@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../login/login_screen.dart';
+import 'package:provider/provider.dart';
+import '../identities/login/login_main_screen.dart';
 import '../../common/language_selector.dart';
 import '../../common/custom_button.dart';
 import '../../services/language_service.dart';
 import '../../l10n/app_localizations.dart';
+import '../../themes/theme_provider.dart';
 import 'started_view/started_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -117,8 +119,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -126,9 +130,44 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              LanguageSelector(
-                selected: LanguageService.currentLanguage,
-                onChanged: _onLanguageChanged,
+              Row(
+                children: [
+                  Expanded(
+                    child: LanguageSelector(
+                      selected: LanguageService.currentLanguage,
+                      onChanged: _onLanguageChanged,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Theme toggle button
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).shadowColor.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        themeProvider.toggleTheme();
+                      },
+                      icon: Icon(
+                        themeProvider.isDarkMode 
+                          ? Icons.light_mode_rounded 
+                          : Icons.dark_mode_rounded,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                      tooltip: themeProvider.isDarkMode 
+                        ? 'Chuyển sang chế độ sáng' 
+                        : 'Chuyển sang chế độ tối',
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
 
@@ -142,7 +181,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     style: GoogleFonts.inter(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       height: 1.2,
                     ),
                   ),
@@ -158,7 +197,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.',
                     style: GoogleFonts.inter(
                       fontSize: 16,
-                      color: Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       height: 1.5,
                     ),
                   ),
@@ -350,7 +389,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             text:
                                 AppLocalizations.of(context)?.login ??
                                 'Đăng nhập',
-                            backgroundColor: const Color(0xFF1F2A37),
+                            backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            textColor: Theme.of(context).colorScheme.onSurface,
                             onPressed: () {
                               Navigator.push(
                                 context,

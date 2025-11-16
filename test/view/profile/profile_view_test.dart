@@ -2,55 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 
-import 'package:diet_tracking_project/view/profile/profile_view.dart';
-import 'package:diet_tracking_project/database/auth_service.dart';
+import 'package:diet_tracking_project/features/profile_view_home/presentation/pages/profile_page.dart';
+import 'package:diet_tracking_project/features/profile_view_home/presentation/providers/profile_provider.dart';
+import 'package:diet_tracking_project/features/profile_view_home/domain/usecases/get_user_profile_usecase.dart';
+import 'package:diet_tracking_project/features/profile_view_home/domain/usecases/upload_avatar_usecase.dart';
+import 'package:diet_tracking_project/features/profile_view_home/domain/usecases/sign_out_usecase.dart';
 
 import 'profile_view_test.mocks.dart';
 
-@GenerateMocks([AuthService])
+@GenerateMocks([GetUserProfileUseCase, UploadAvatarUseCase, SignOutUseCase])
 void main() {
-  group('ProfileView', () {
-    late MockAuthService mockAuthService;
+  group('ProfilePage', () {
+    late MockGetUserProfileUseCase mockGetUserProfileUseCase;
+    late MockUploadAvatarUseCase mockUploadAvatarUseCase;
+    late MockSignOutUseCase mockSignOutUseCase;
+    late ProfileProvider profileProvider;
 
     setUp(() {
-      mockAuthService = MockAuthService();
+      mockGetUserProfileUseCase = MockGetUserProfileUseCase();
+      mockUploadAvatarUseCase = MockUploadAvatarUseCase();
+      mockSignOutUseCase = MockSignOutUseCase();
+      
+      profileProvider = ProfileProvider(
+        getUserProfileUseCase: mockGetUserProfileUseCase,
+        uploadAvatarUseCase: mockUploadAvatarUseCase,
+        signOutUseCase: mockSignOutUseCase,
+      );
     });
 
-    test('ProfileView có thể được tạo với AuthService', () {
+    test('ProfilePage có thể được tạo với ProfileProvider', () {
       // Arrange & Act
-      final profileView = ProfileView(authService: mockAuthService);
+      final profilePage = ProfilePage(profileProvider: profileProvider);
 
       // Assert
-      expect(profileView, isNotNull);
-      expect(profileView.authService, equals(mockAuthService));
+      expect(profilePage, isNotNull);
+      expect(profilePage.profileProvider, equals(profileProvider));
     });
 
-    test('ProfileView có thể được tạo mà không cần AuthService', () {
-      // Arrange & Act
-      final profileView = const ProfileView();
-
-      // Assert
-      expect(profileView, isNotNull);
-      expect(profileView.authService, isNull);
-    });
-
-    test('ProfileView có key được set đúng', () {
+    test('ProfilePage có key được set đúng', () {
       // Arrange
       const key = Key('test_key');
 
       // Act
-      final profileView = ProfileView(key: key, authService: mockAuthService);
+      final profilePage = ProfilePage(key: key, profileProvider: profileProvider);
 
       // Assert
-      expect(profileView.key, equals(key));
+      expect(profilePage.key, equals(key));
     });
 
-    test('ProfileView có widget type đúng', () {
+    test('ProfilePage có widget type đúng', () {
       // Arrange
-      final profileView = ProfileView(authService: mockAuthService);
+      final profilePage = ProfilePage(profileProvider: profileProvider);
 
       // Assert
-      expect(profileView, isA<StatefulWidget>());
+      expect(profilePage, isA<StatefulWidget>());
     });
   });
 }

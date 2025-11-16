@@ -17,10 +17,17 @@ class GradientBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: colors ?? AppColors.backgroundGradient,
+          colors: colors ?? (isDark 
+            ? [
+                Theme.of(context).colorScheme.surface,
+                Theme.of(context).colorScheme.surfaceContainerHighest,
+              ]
+            : AppColors.backgroundGradient),
           begin: begin ?? Alignment.topLeft,
           end: end ?? Alignment.bottomRight,
         ),
@@ -48,18 +55,27 @@ class GradientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       margin: margin,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: gradientColors ?? AppColors.cardGradient,
+          colors: gradientColors ?? (isDark
+            ? [
+                Theme.of(context).colorScheme.surface,
+                Theme.of(context).colorScheme.surfaceContainerLow,
+              ]
+            : AppColors.cardGradient),
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(borderRadius ?? 20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowLight,
+            color: isDark 
+              ? Colors.black.withOpacity(0.3)
+              : AppColors.shadowLight,
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

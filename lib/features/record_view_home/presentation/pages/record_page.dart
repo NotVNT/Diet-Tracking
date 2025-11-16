@@ -18,7 +18,9 @@ class RecordPage extends StatelessWidget {
       body: GradientBackground(
         child: Column(
           children: [
-            const CustomAppBar(title: 'Ghi nhận món ăn'),
+            const CustomAppBar(
+              title: 'Ghi nhận món ăn',
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -33,7 +35,7 @@ class RecordPage extends StatelessWidget {
                             'Món ăn đã ghi nhận',
                             style: AppStyles.heading2.copyWith(
                               fontSize: 18,
-                              color: const Color.fromARGB(255, 10, 1, 12),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 16),

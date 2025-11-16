@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
-import '../../../common/language_selector.dart';
 import '../../../services/language_service.dart';
 import 'goal_selection.dart';
 
@@ -30,12 +29,7 @@ class _StartScreenState extends State<StartScreen> {
     }
   }
 
-  Future<void> _onLanguageChanged(Language language) async {
-    await LanguageService.changeLanguage(language);
-    if (mounted) {
-      setState(() {});
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +43,7 @@ class _StartScreenState extends State<StartScreen> {
             children: [
               const SizedBox(height: 20),
               // Ngôn ngữ ở góc phải như ảnh
-              Row(
-                children: [
-                  const Spacer(),
-                  LanguageSelector(
-                    selected: LanguageService.currentLanguage,
-                    onChanged: _onLanguageChanged,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
+
               Text(
                 AppLocalizations.of(context)?.defineYourGoal ??
                     'Xác định mục tiêu của bạn',

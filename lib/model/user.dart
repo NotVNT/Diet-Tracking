@@ -52,6 +52,7 @@ class User {
     return {
       'uid': uid,
       'email': email,
+      'emailLowercase': email?.toLowerCase(),
       'fullName': fullName,
       'phone': phone,
       'gender': gender?.name,
