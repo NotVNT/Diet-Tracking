@@ -17,7 +17,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _notificationsEnabled = true;
   bool _darkModeEnabled = false;
   Language _selectedLanguage = Language.vi;
   UnitSystem _selectedUnit = UnitSystem.metric;
@@ -34,7 +33,6 @@ class _SettingsPageState extends State<SettingsPage> {
     final languageCode = prefs.getString('language') ?? 'vi';
     final unitCode = prefs.getString('unit') ?? 'metric';
     setState(() {
-      _notificationsEnabled = prefs.getBool('notifications_enabled') ?? true;
       _darkModeEnabled = themeProvider.isDarkMode;
       _selectedLanguage = languageCode == 'en' ? Language.en : Language.vi;
       _selectedUnit = unitCode == 'imperial' ? UnitSystem.imperial : UnitSystem.metric;
@@ -43,7 +41,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('notifications_enabled', _notificationsEnabled);
     await prefs.setString('language', _selectedLanguage == Language.vi ? 'vi' : 'en');
     await prefs.setString('unit', _selectedUnit == UnitSystem.metric ? 'metric' : 'imperial');
     // Dark mode is handled by ThemeProvider, no need to save separately
@@ -63,26 +60,6 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            
-            // Thông báo
-            _buildSectionTitle(AppLocalizations.of(context)!.settingsNotifications),
-            _buildSettingCard(
-              children: [
-                _buildSwitchTile(
-                  icon: Icons.notifications_outlined,
-                  title: AppLocalizations.of(context)!.settingsNotificationTitle,
-                  subtitle: AppLocalizations.of(context)!.settingsNotificationSubtitle,
-                  value: _notificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _notificationsEnabled = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
             
             // Giao diện
             _buildSectionTitle(AppLocalizations.of(context)!.settingsAppearance),

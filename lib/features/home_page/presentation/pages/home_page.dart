@@ -14,11 +14,26 @@ import '../../../../l10n/app_localizations.dart';
 import '../widgets/search_filter_bar.dart';
 import '../widgets/filter_bottom_sheet.dart';
 import '../widgets/calorie_goal_card.dart';
-import 'notification_page.dart';
+import '../widgets/speed_dial_fab.dart';
+import '../../../../utils/snackbar_helper.dart';
 
 /// Main home page with bottom navigation
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _isFabOpen = false;
+  final GlobalKey<SpeedDialFabState> _fabKey = GlobalKey<SpeedDialFabState>();
+
+  void _setFabOpen(bool isOpen) {
+    setState(() {
+      _isFabOpen = isOpen;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +58,54 @@ class HomePage extends StatelessWidget {
         ];
         
         return Scaffold(
-          body: pages[homeProvider.currentIndex],
+          body: Stack(
+            children: [
+              pages[homeProvider.currentIndex],
+              // Background overlay when FAB is open
+              if (_isFabOpen)
+                GestureDetector(
+                  onTap: () {
+                    _fabKey.currentState?.close();
+                  },
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                ),
+            ],
+          ),
+          floatingActionButton: SpeedDialFab(
+            key: _fabKey,
+            actions: [
+              SpeedDialAction(
+                icon: Icons.note_add_outlined,
+                label: localizations?.bottomNavRecord ?? 'Ghi nhận',
+                onTap: () => homeProvider.setCurrentIndex(1),
+              ),
+              SpeedDialAction(
+                icon: Icons.smart_toy_outlined,
+                label: localizations?.bottomNavChatBot ?? 'Chat bot',
+                onTap: () => homeProvider.setCurrentIndex(2),
+              ),
+            ],
+            onToggle: _setFabOpen,
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: homeProvider.currentIndex,
+            currentIndex: homeProvider.currentIndex == 1 || homeProvider.currentIndex == 2 
+                ? 0 // Show Home as selected when on Record or Chat bot pages
+                : homeProvider.currentIndex > 2 
+                    ? 2 // Profile is now index 2 in bottom nav
+                    : homeProvider.currentIndex,
             type: BottomNavigationBarType.fixed,
-            onTap: (index) => homeProvider.setCurrentIndex(index),
+            onTap: (index) {
+              // Ignore tap on center item (FAB placeholder)
+              if (index == 1) return;
+              
+              // Map bottom nav index to actual page index
+              // 0 -> Home (0), 2 -> Profile (3)
+              final pageIndex = index == 0 ? 0 : 3;
+              homeProvider.setCurrentIndex(pageIndex);
+            },
             selectedFontSize: responsive.fontSize(14),
             unselectedFontSize: responsive.fontSize(12),
             iconSize: responsive.iconSize(24),
@@ -56,13 +114,9 @@ class HomePage extends StatelessWidget {
                 icon: const Icon(Icons.home_outlined),
                 label: localizations?.bottomNavHome ?? 'Trang chủ',
               ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.note_add_outlined),
-                label: localizations?.bottomNavRecord ?? 'Ghi nhận',
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.smart_toy_outlined),
-                label: localizations?.bottomNavChatBot ?? 'Chat bot',
+              const BottomNavigationBarItem(
+                icon: SizedBox.shrink(), // Empty space for FAB
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: const Icon(Icons.person_outline),
@@ -125,117 +179,75 @@ class _HomeMainPageState extends State<_HomeMainPage> {
     return Scaffold(
       appBar: CustomAppBar(
         title: localizations?.bottomNavHome ?? 'Trang chủ',
-        actions: [
-          Stack(
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(responsive.width(16)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_outlined),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationPage(),
-                    ),
-                  );
+              WeekCalendarWidget(
+                initialDate: _selectedDate,
+                onDateSelected: (date) {
+                  setState(() {
+                    _selectedDate = date;
+                  });
+                  // TODO: Load data for selected date
+                  debugPrint('Selected date: $date');
+                },
+                showMonthYear: true,
+              ),
+              SizedBox(height: responsive.height(16)),
+              SearchFilterBar(
+                controller: _searchController,
+                onSearchChanged: _onSearchChanged,
+                onFilterTapped: _onFilterTapped,
+                showFilterButton: true,
+              ),
+              SizedBox(height: responsive.height(16)),
+              CalorieGoalCard(
+                nutritionInfo: NutritionInfo(
+                  calorieGoal: 2273,
+                  calorieConsumed: 0,
+                  proteinConsumed: 0,
+                  carbsConsumed: 0,
+                ),
+                onViewReport: () {
+                  // TODO: Navigate to detailed report
+                  SnackBarHelper.showInfo(context, 'Xem báo cáo chi tiết');
                 },
               ),
-              // Badge for unread notifications
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 16,
-                    minHeight: 16,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '1', // Default water reminder
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+              SizedBox(height: responsive.height(12)),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: responsive.height(20)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _searchQuery.isEmpty
+                            ? 'Danh sách bữa ăn sẽ hiển thị ở đây'
+                            : 'Tìm kiếm: $_searchQuery',
+                        style: TextStyle(
+                          fontSize: responsive.fontSize(14),
+                        ),
                       ),
-                    ),
+                      if (_activeFilters != null) ...[
+                        SizedBox(height: responsive.height(6)),
+                        Text(
+                          'Lọc: ${_activeFilters!['category']} | ${_activeFilters!['calorieMin']}-${_activeFilters!['calorieMax']} kcal',
+                          style: TextStyle(
+                            fontSize: responsive.fontSize(11),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
             ],
           ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(responsive.width(16)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            WeekCalendarWidget(
-              initialDate: _selectedDate,
-              onDateSelected: (date) {
-                setState(() {
-                  _selectedDate = date;
-                });
-                // TODO: Load data for selected date
-                debugPrint('Selected date: $date');
-              },
-              showMonthYear: true,
-            ),
-            SizedBox(height: responsive.height(16)),
-            SearchFilterBar(
-              controller: _searchController,
-              onSearchChanged: _onSearchChanged,
-              onFilterTapped: _onFilterTapped,
-              showFilterButton: true,
-            ),
-            SizedBox(height: responsive.height(16)),
-            CalorieGoalCard(
-              nutritionInfo: NutritionInfo(
-                calorieGoal: 2273,
-                calorieConsumed: 0,
-                proteinConsumed: 0,
-                carbsConsumed: 0,
-              ),
-              onViewReport: () {
-                // TODO: Navigate to detailed report
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Xem báo cáo chi tiết'),
-                    duration: Duration(seconds: 1),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: responsive.height(16)),
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _searchQuery.isEmpty
-                          ? 'Danh sách bữa ăn sẽ hiển thị ở đây'
-                          : 'Tìm kiếm: $_searchQuery',
-                    ),
-                    if (_activeFilters != null) ...[
-                      SizedBox(height: responsive.height(8)),
-                      Text(
-                        'Lọc: ${_activeFilters!['category']} | ${_activeFilters!['calorieMin']}-${_activeFilters!['calorieMax']} kcal',
-                        style: TextStyle(
-                          fontSize: responsive.fontSize(12),
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
