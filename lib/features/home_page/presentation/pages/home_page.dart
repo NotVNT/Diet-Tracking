@@ -5,6 +5,7 @@ import '../widgets/custom_floating_action_button.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
 import 'home_page_config.dart';
 import '../../../../common/permission_service.dart';
+import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
 
 /// Main home page with bottom navigation
 /// 
@@ -60,7 +61,12 @@ class _HomePageState extends State<HomePage> {
     PermissionService.requestCameraPermission(
       context,
       onPermissionGranted: () {
-        // TODO: Implement scan food functionality
+        if (!mounted) return;
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => const FoodScannerPage(),
+          ),
+        );
       },
     );
   }

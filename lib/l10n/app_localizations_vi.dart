@@ -1019,4 +1019,55 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get nutritionInfo => 'Thông tin dinh dưỡng';
+
+  @override
+  String get foodScannerTitle => 'Quét món ăn';
+
+  @override
+  String get foodScannerSubtitle => 'Căn chỉnh sản phẩm trong khung';
+
+  @override
+  String get foodScannerOverlayAutoDetect => 'Đang tự động nhận diện...';
+
+  @override
+  String get foodScannerOverlayBarcodeHint => 'Căn mã vạch trong khung';
+
+  @override
+  String get foodScannerActionFood => 'Quét món ăn';
+
+  @override
+  String get foodScannerActionBarcode => 'Mã vạch';
+
+  @override
+  String get foodScannerActionGallery => 'Thư viện';
+
+  @override
+  String get foodScannerHelpTitle => 'Cách quét';
+
+  @override
+  String get foodScannerHelpTip1 => 'Đặt món ăn nằm gọn trong khung.';
+
+  @override
+  String get foodScannerHelpTip2 => 'Dùng chế độ Mã vạch cho sản phẩm đóng gói.';
+
+  @override
+  String get foodScannerHelpTip3 => 'Chọn từ Thư viện để dùng lại ảnh đã chụp.';
+
+  @override
+  String get foodScannerGalleryTitle => 'Chọn từ thư viện';
+
+  @override
+  String get foodScannerGallerySubtitle => 'Chọn ảnh món ăn đã chụp trước đó.';
+
+  @override
+  String get foodScannerGalleryButton => 'Mở thư viện';
+
+  @override
+  String get foodScannerPlaceholderCaptureFood => 'Đang chụp ảnh món ăn (sắp ra mắt)';
+
+  @override
+  String get foodScannerPlaceholderScanBarcode => 'Đang quét mã vạch (sắp ra mắt)';
+
+  @override
+  String get foodScannerPlaceholderOpenGallery => 'Đang mở thư viện (sắp ra mắt)';
 }

@@ -365,5 +365,22 @@
   "noMealsRecorded": "No meals recorded yet",
   "addFirstMeal": "Add your first meal!",
   "calories": "calories",
-  "nutritionInfo": "Nutrition Information"
+  "nutritionInfo": "Nutrition Information",
+  "foodScannerTitle": "Food scanner",
+  "foodScannerSubtitle": "Align the product inside the frame",
+  "foodScannerOverlayAutoDetect": "Auto detecting...",
+  "foodScannerOverlayBarcodeHint": "Align barcode inside the frame",
+  "foodScannerActionFood": "Scan food",
+  "foodScannerActionBarcode": "Barcode",
+  "foodScannerActionGallery": "Gallery",
+  "foodScannerHelpTitle": "How to scan",
+  "foodScannerHelpTip1": "Place the meal fully inside the frame.",
+  "foodScannerHelpTip2": "Use the Barcode mode for packaged products.",
+  "foodScannerHelpTip3": "Pick from Gallery to reuse saved photos.",
+  "foodScannerGalleryTitle": "Pick from gallery",
+  "foodScannerGallerySubtitle": "Select a previously captured meal photo.",
+  "foodScannerGalleryButton": "Open gallery",
+  "foodScannerPlaceholderCaptureFood": "Capturing food photo (coming soon)",
+  "foodScannerPlaceholderScanBarcode": "Scanning barcode (coming soon)",
+  "foodScannerPlaceholderOpenGallery": "Opening gallery (coming soon)"
 }

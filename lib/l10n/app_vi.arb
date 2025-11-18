@@ -365,5 +365,22 @@
   "noMealsRecorded": "Chưa có món ăn nào được ghi nhận",
   "addFirstMeal": "Hãy thêm món ăn đầu tiên của bạn!",
   "calories": "calories",
-  "nutritionInfo": "Thông tin dinh dưỡng"
+  "nutritionInfo": "Thông tin dinh dưỡng",
+  "foodScannerTitle": "Quét món ăn",
+  "foodScannerSubtitle": "Căn chỉnh sản phẩm trong khung",
+  "foodScannerOverlayAutoDetect": "Đang tự động nhận diện...",
+  "foodScannerOverlayBarcodeHint": "Căn mã vạch trong khung",
+  "foodScannerActionFood": "Quét món ăn",
+  "foodScannerActionBarcode": "Mã vạch",
+  "foodScannerActionGallery": "Thư viện",
+  "foodScannerHelpTitle": "Cách quét",
+  "foodScannerHelpTip1": "Đặt món ăn nằm gọn trong khung.",
+  "foodScannerHelpTip2": "Dùng chế độ Mã vạch cho sản phẩm đóng gói.",
+  "foodScannerHelpTip3": "Chọn từ Thư viện để dùng lại ảnh đã chụp.",
+  "foodScannerGalleryTitle": "Chọn từ thư viện",
+  "foodScannerGallerySubtitle": "Chọn ảnh món ăn đã chụp trước đó.",
+  "foodScannerGalleryButton": "Mở thư viện",
+  "foodScannerPlaceholderCaptureFood": "Đang chụp ảnh món ăn (sắp ra mắt)",
+  "foodScannerPlaceholderScanBarcode": "Đang quét mã vạch (sắp ra mắt)",
+  "foodScannerPlaceholderOpenGallery": "Đang mở thư viện (sắp ra mắt)"
 }

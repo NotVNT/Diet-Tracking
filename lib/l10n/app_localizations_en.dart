@@ -1019,4 +1019,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nutritionInfo => 'Nutrition Information';
+
+  @override
+  String get foodScannerTitle => 'Food scanner';
+
+  @override
+  String get foodScannerSubtitle => 'Align the product inside the frame';
+
+  @override
+  String get foodScannerOverlayAutoDetect => 'Auto detecting...';
+
+  @override
+  String get foodScannerOverlayBarcodeHint => 'Align barcode inside the frame';
+
+  @override
+  String get foodScannerActionFood => 'Scan food';
+
+  @override
+  String get foodScannerActionBarcode => 'Barcode';
+
+  @override
+  String get foodScannerActionGallery => 'Gallery';
+
+  @override
+  String get foodScannerHelpTitle => 'How to scan';
+
+  @override
+  String get foodScannerHelpTip1 => 'Place the meal fully inside the frame.';
+
+  @override
+  String get foodScannerHelpTip2 => 'Use the Barcode mode for packaged products.';
+
+  @override
+  String get foodScannerHelpTip3 => 'Pick from Gallery to reuse saved photos.';
+
+  @override
+  String get foodScannerGalleryTitle => 'Pick from gallery';
+
+  @override
+  String get foodScannerGallerySubtitle => 'Select a previously captured meal photo.';
+
+  @override
+  String get foodScannerGalleryButton => 'Open gallery';
+
+  @override
+  String get foodScannerPlaceholderCaptureFood => 'Capturing food photo (coming soon)';
+
+  @override
+  String get foodScannerPlaceholderScanBarcode => 'Scanning barcode (coming soon)';
+
+  @override
+  String get foodScannerPlaceholderOpenGallery => 'Opening gallery (coming soon)';
 }

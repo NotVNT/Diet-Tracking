@@ -2098,6 +2098,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nutrition Information'**
   String get nutritionInfo;
+
+  /// No description provided for @foodScannerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Food scanner'**
+  String get foodScannerTitle;
+
+  /// No description provided for @foodScannerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Align the product inside the frame'**
+  String get foodScannerSubtitle;
+
+  /// No description provided for @foodScannerOverlayAutoDetect.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto detecting...'**
+  String get foodScannerOverlayAutoDetect;
+
+  /// No description provided for @foodScannerOverlayBarcodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Align barcode inside the frame'**
+  String get foodScannerOverlayBarcodeHint;
+
+  /// No description provided for @foodScannerActionFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan food'**
+  String get foodScannerActionFood;
+
+  /// No description provided for @foodScannerActionBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode'**
+  String get foodScannerActionBarcode;
+
+  /// No description provided for @foodScannerActionGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get foodScannerActionGallery;
+
+  /// No description provided for @foodScannerHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to scan'**
+  String get foodScannerHelpTitle;
+
+  /// No description provided for @foodScannerHelpTip1.
+  ///
+  /// In en, this message translates to:
+  /// **'Place the meal fully inside the frame.'**
+  String get foodScannerHelpTip1;
+
+  /// No description provided for @foodScannerHelpTip2.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the Barcode mode for packaged products.'**
+  String get foodScannerHelpTip2;
+
+  /// No description provided for @foodScannerHelpTip3.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from Gallery to reuse saved photos.'**
+  String get foodScannerHelpTip3;
+
+  /// No description provided for @foodScannerGalleryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from gallery'**
+  String get foodScannerGalleryTitle;
+
+  /// No description provided for @foodScannerGallerySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a previously captured meal photo.'**
+  String get foodScannerGallerySubtitle;
+
+  /// No description provided for @foodScannerGalleryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Open gallery'**
+  String get foodScannerGalleryButton;
+
+  /// No description provided for @foodScannerPlaceholderCaptureFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Capturing food photo (coming soon)'**
+  String get foodScannerPlaceholderCaptureFood;
+
+  /// No description provided for @foodScannerPlaceholderScanBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning barcode (coming soon)'**
+  String get foodScannerPlaceholderScanBarcode;
+
+  /// No description provided for @foodScannerPlaceholderOpenGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening gallery (coming soon)'**
+  String get foodScannerPlaceholderOpenGallery;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
