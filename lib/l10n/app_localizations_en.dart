@@ -958,6 +958,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bottomNavProfile => 'Profile';
 
   @override
+  String get bottomNavScanFood => 'Scan food';
+
+  @override
+  String get bottomNavReport => 'Report';
+
+  @override
   String get searchHint => 'Search';
 
   @override

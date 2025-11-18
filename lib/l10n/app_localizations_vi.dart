@@ -958,6 +958,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get bottomNavProfile => 'Hồ sơ';
 
   @override
+  String get bottomNavScanFood => 'Quét món ăn';
+
+  @override
+  String get bottomNavReport => 'Báo cáo';
+
+  @override
   String get searchHint => 'Tìm kiếm';
 
   @override

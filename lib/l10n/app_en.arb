@@ -345,6 +345,8 @@
   "bottomNavRecord": "Record",
   "bottomNavChatBot": "Chat bot",
   "bottomNavProfile": "Profile",
+  "bottomNavScanFood": "Scan food",
+  "bottomNavReport": "Report",
   "searchHint": "Search",
   "calorieGoalTitle": "Calorie Goal",
   "viewReport": "View Report",

@@ -60,5 +60,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Camera and Photo Library Permissions -->
+	<key>NSCameraUsageDescription</key>
+	<string>CalDiet cần quyền truy cập camera để chụp ảnh thức ăn và phân tích dinh dưỡng.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CalDiet cần quyền truy cập thư viện ảnh để chọn ảnh thức ăn và phân tích dinh dưỡng.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>CalDiet cần quyền lưu ảnh vào thư viện ảnh của bạn.</string>
 </dict>
 </plist>

@@ -1973,6 +1973,18 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get bottomNavProfile;
 
+  /// No description provided for @bottomNavScanFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan food'**
+  String get bottomNavScanFood;
+
+  /// No description provided for @bottomNavReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get bottomNavReport;
+
   /// No description provided for @searchHint.
   ///
   /// In en, this message translates to:

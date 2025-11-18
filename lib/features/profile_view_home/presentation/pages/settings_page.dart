@@ -76,15 +76,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       _darkModeEnabled = value;
                     });
                     await themeProvider.toggleTheme();
-                    if (!mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(_darkModeEnabled 
-                            ? AppLocalizations.of(context)!.settingsDarkModeEnabled
-                            : AppLocalizations.of(context)!.settingsDarkModeDisabled),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
                   },
                 ),
                 const Divider(height: 1),
