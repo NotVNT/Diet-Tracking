@@ -1070,4 +1070,40 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get foodScannerPlaceholderOpenGallery => 'Đang mở thư viện (sắp ra mắt)';
+
+  @override
+  String get recentlyLoggedTitle => 'Đã ghi nhận gần đây';
+
+  @override
+  String get recentlyLoggedSubtitle => 'Bắt đầu theo dõi bữa ăn bằng cách chụp ảnh nhanh';
+
+  @override
+  String get recentlyLoggedEmpty => 'Bạn chưa tải lên bất kỳ món ăn nào';
+
+  @override
+  String get viewAll => 'Xem tất cả';
+
+  @override
+  String get delete => 'Xóa';
+
+  @override
+  String get cancel => 'Hủy';
+
+  @override
+  String get deletePhoto => 'Xóa ảnh';
+
+  @override
+  String get deletePhotoConfirmation => 'Bạn có chắc chắn muốn xóa ảnh này không?';
+
+  @override
+  String get photoDeletedSuccessfully => 'Đã xóa ảnh thành công';
+
+  @override
+  String get analyzeFood => 'Phân tích món ăn';
+
+  @override
+  String get shareFunctionality => 'Tính năng chia sẻ sắp ra mắt';
+
+  @override
+  String get aiFoodAnalysis => 'Phân tích món ăn bằng AI sắp ra mắt';
 }

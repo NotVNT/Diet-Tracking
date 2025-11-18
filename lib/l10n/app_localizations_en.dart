@@ -1070,4 +1070,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get foodScannerPlaceholderOpenGallery => 'Opening gallery (coming soon)';
+
+  @override
+  String get recentlyLoggedTitle => 'Recently logged';
+
+  @override
+  String get recentlyLoggedSubtitle => 'Start tracking your meals by taking a quick picture';
+
+  @override
+  String get recentlyLoggedEmpty => 'You haven\'t uploaded any food';
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get deletePhoto => 'Delete Photo';
+
+  @override
+  String get deletePhotoConfirmation => 'Are you sure you want to delete this photo?';
+
+  @override
+  String get photoDeletedSuccessfully => 'Photo deleted successfully';
+
+  @override
+  String get analyzeFood => 'Analyze Food';
+
+  @override
+  String get shareFunctionality => 'Share functionality coming soon';
+
+  @override
+  String get aiFoodAnalysis => 'AI food analysis coming soon';
 }

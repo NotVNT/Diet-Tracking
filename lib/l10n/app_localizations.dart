@@ -2200,6 +2200,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Opening gallery (coming soon)'**
   String get foodScannerPlaceholderOpenGallery;
+
+  /// No description provided for @recentlyLoggedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently logged'**
+  String get recentlyLoggedTitle;
+
+  /// No description provided for @recentlyLoggedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking your meals by taking a quick picture'**
+  String get recentlyLoggedSubtitle;
+
+  /// No description provided for @recentlyLoggedEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t uploaded any food'**
+  String get recentlyLoggedEmpty;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get viewAll;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @deletePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Photo'**
+  String get deletePhoto;
+
+  /// No description provided for @deletePhotoConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this photo?'**
+  String get deletePhotoConfirmation;
+
+  /// No description provided for @photoDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo deleted successfully'**
+  String get photoDeletedSuccessfully;
+
+  /// No description provided for @analyzeFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze Food'**
+  String get analyzeFood;
+
+  /// No description provided for @shareFunctionality.
+  ///
+  /// In en, this message translates to:
+  /// **'Share functionality coming soon'**
+  String get shareFunctionality;
+
+  /// No description provided for @aiFoodAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'AI food analysis coming soon'**
+  String get aiFoodAnalysis;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

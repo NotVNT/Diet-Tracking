@@ -204,12 +204,7 @@ class HelpCenterPage extends StatelessWidget {
             title: 'Email',
             subtitle: 'support@diettracking.vn',
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Đang mở ứng dụng email...'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              debugPrint('Opening email app');
             },
           ),
           Divider(
@@ -223,12 +218,7 @@ class HelpCenterPage extends StatelessWidget {
             title: 'Hotline',
             subtitle: '1900 xxxx (8:00 - 22:00)',
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Đang gọi hotline...'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              debugPrint('Calling hotline');
             },
           ),
           Divider(
@@ -242,12 +232,7 @@ class HelpCenterPage extends StatelessWidget {
             title: 'Live Chat',
             subtitle: 'Trò chuyện trực tiếp với chúng tôi',
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Tính năng đang được phát triển...'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              debugPrint('Live chat feature in development');
             },
           ),
         ],

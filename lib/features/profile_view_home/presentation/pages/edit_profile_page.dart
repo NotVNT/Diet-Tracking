@@ -87,26 +87,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
       if (!mounted) return;
       
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.editProfileUpdated)),
-      );
+      debugPrint('Profile updated successfully');
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${AppLocalizations.of(context)!.editProfileError}: $e')),
-      );
+      debugPrint('Profile update error: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Initialize goals with localization
+    // Initialize goals with localized strings
     _goals = [
       AppLocalizations.of(context)!.editProfileGoalLoseWeight,
       AppLocalizations.of(context)!.editProfileGoalGainWeight,
       AppLocalizations.of(context)!.editProfileGoalMaintainWeight,
       AppLocalizations.of(context)!.editProfileGoalBuildMuscle,
     ];
+    
+    // Validate selectedGoal is in the current goals list
+    if (_selectedGoal != null && !_goals.contains(_selectedGoal)) {
+      _selectedGoal = null;
+    }
     
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,

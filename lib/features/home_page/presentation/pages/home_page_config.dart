@@ -5,7 +5,6 @@ import '../../../profile_view_home/di/profile_di.dart';
 import '../../../profile_view_home/presentation/pages/profile_page.dart';
 import '../../../record_view_home/di/record_di.dart';
 import '../../../record_view_home/presentation/pages/record_page.dart';
-import 'home_main_page.dart';
 
 /// Configuration class for home page
 /// Quản lý danh sách các trang và index mapping
@@ -16,10 +15,10 @@ class HomePageConfig {
   static const int chatBotIndex = 2;
   static const int profileIndex = 3;
 
-  /// Get all pages with their providers
+  /// Get all pages with their providers (excluding home which is built inline)
   static List<Widget> getPages() {
     return [
-      const HomeMainPage(),
+      const SizedBox.shrink(), // Home is built inline in HomePage
       BlocProvider(
         create: (_) => RecordDI.getRecordCubit()..loadFoodRecords(),
         child: const RecordPage(),

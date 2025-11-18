@@ -46,12 +46,7 @@ class _DataSyncPageState extends State<DataSyncPage> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.dataSyncBackupInProgress),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              debugPrint('Backup in progress');
             },
             child: Text(AppLocalizations.of(context)!.dataSyncBackupDialogConfirm),
           ),

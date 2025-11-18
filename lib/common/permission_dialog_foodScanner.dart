@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -8,9 +9,12 @@ import 'package:google_fonts/google_fonts.dart';
 class PermissionDialog extends StatelessWidget {
   final String title;
   final String message;
-  final VoidCallback onAllow;
-  final VoidCallback onAllowOnce;
-  final VoidCallback onDeny;
+  final AsyncCallback onAllow;
+  final AsyncCallback onAllowOnce;
+  final AsyncCallback onDeny;
+  final String allowLabel;
+  final String allowOnceLabel;
+  final String denyLabel;
 
   const PermissionDialog({
     super.key,
@@ -19,6 +23,9 @@ class PermissionDialog extends StatelessWidget {
     required this.onAllow,
     required this.onAllowOnce,
     required this.onDeny,
+    this.allowLabel = 'TRONG KHI DÙNG ỨNG DỤNG',
+    this.allowOnceLabel = 'CHỈ LẦN NÀY',
+    this.denyLabel = 'KHÔNG CHO PHÉP',
   });
 
   @override
@@ -61,11 +68,23 @@ class PermissionDialog extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
+
+            if (message.isNotEmpty) ...[
+              Text(
+                message,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+            ],
             
             // Allow button
             _buildButton(
               context: context,
-              text: 'TRONG KHI DÙNG ỨNG DỤNG',
+              text: allowLabel,
               color: const Color(0xFF2196F3),
               onTap: onAllow,
             ),
@@ -74,7 +93,7 @@ class PermissionDialog extends StatelessWidget {
             // Allow once button
             _buildButton(
               context: context,
-              text: 'CHỈ LẦN NÀY',
+              text: allowOnceLabel,
               color: const Color(0xFF4D4D4D),
               onTap: onAllowOnce,
             ),
@@ -83,7 +102,7 @@ class PermissionDialog extends StatelessWidget {
             // Deny button
             _buildButton(
               context: context,
-              text: 'KHÔNG CHO PHÉP',
+              text: denyLabel,
               color: const Color(0xFF4D4D4D),
               onTap: onDeny,
             ),
@@ -97,10 +116,12 @@ class PermissionDialog extends StatelessWidget {
     required BuildContext context,
     required String text,
     required Color color,
-    required VoidCallback onTap,
+    required AsyncCallback onTap,
   }) {
     return InkWell(
-      onTap: onTap,
+      onTap: () async {
+        await onTap();
+      },
       borderRadius: BorderRadius.circular(8),
       child: Container(
         width: double.infinity,

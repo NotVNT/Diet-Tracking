@@ -382,5 +382,17 @@
   "foodScannerGalleryButton": "Mở thư viện",
   "foodScannerPlaceholderCaptureFood": "Đang chụp ảnh món ăn (sắp ra mắt)",
   "foodScannerPlaceholderScanBarcode": "Đang quét mã vạch (sắp ra mắt)",
-  "foodScannerPlaceholderOpenGallery": "Đang mở thư viện (sắp ra mắt)"
+  "foodScannerPlaceholderOpenGallery": "Đang mở thư viện (sắp ra mắt)",
+  "recentlyLoggedTitle": "Đã ghi nhận gần đây",
+  "recentlyLoggedSubtitle": "Bắt đầu theo dõi bữa ăn bằng cách chụp ảnh nhanh",
+  "recentlyLoggedEmpty": "Bạn chưa tải lên bất kỳ món ăn nào",
+  "viewAll": "Xem tất cả",
+  "delete": "Xóa",
+  "cancel": "Hủy",
+  "deletePhoto": "Xóa ảnh",
+  "deletePhotoConfirmation": "Bạn có chắc chắn muốn xóa ảnh này không?",
+  "photoDeletedSuccessfully": "Đã xóa ảnh thành công",
+  "analyzeFood": "Phân tích món ăn",
+  "shareFunctionality": "Tính năng chia sẻ sắp ra mắt",
+  "aiFoodAnalysis": "Phân tích món ăn bằng AI sắp ra mắt"
 }

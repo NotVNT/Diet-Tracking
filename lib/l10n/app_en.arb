@@ -382,5 +382,17 @@
   "foodScannerGalleryButton": "Open gallery",
   "foodScannerPlaceholderCaptureFood": "Capturing food photo (coming soon)",
   "foodScannerPlaceholderScanBarcode": "Scanning barcode (coming soon)",
-  "foodScannerPlaceholderOpenGallery": "Opening gallery (coming soon)"
+  "foodScannerPlaceholderOpenGallery": "Opening gallery (coming soon)",
+  "recentlyLoggedTitle": "Recently logged",
+  "recentlyLoggedSubtitle": "Start tracking your meals by taking a quick picture",
+  "recentlyLoggedEmpty": "You haven't uploaded any food",
+  "viewAll": "View all",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "deletePhoto": "Delete Photo",
+  "deletePhotoConfirmation": "Are you sure you want to delete this photo?",
+  "photoDeletedSuccessfully": "Photo deleted successfully",
+  "analyzeFood": "Analyze Food",
+  "shareFunctionality": "Share functionality coming soon",
+  "aiFoodAnalysis": "AI food analysis coming soon"
 }

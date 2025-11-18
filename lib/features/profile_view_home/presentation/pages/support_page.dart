@@ -31,9 +31,7 @@ class SupportPage extends StatelessWidget {
                   icon: Icons.privacy_tip_outlined,
                   title: AppLocalizations.of(context)!.supportPrivacyPolicy,
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningPrivacyPolicy)),
-                    );
+                    debugPrint('Opening privacy policy');
                   },
                 ),
                 const Divider(height: 1),
@@ -42,9 +40,7 @@ class SupportPage extends StatelessWidget {
                   icon: Icons.description_outlined,
                   title: AppLocalizations.of(context)!.supportTermsOfService,
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningTermsOfService)),
-                    );
+                    debugPrint('Opening terms of service');
                   },
                 ),
                const Divider(height: 1),
@@ -53,9 +49,7 @@ class SupportPage extends StatelessWidget {
                   icon: Icons.lightbulb_outline,
                   title: AppLocalizations.of(context)!.supportRecommendationSources,
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningRecommendationSources)),
-                    );
+                    debugPrint('Opening recommendation sources');
                   },
                 ),
               ],
@@ -134,9 +128,7 @@ class SupportPage extends StatelessWidget {
                 imagePath: 'assets/icon/tiktok.png',
                 label: AppLocalizations.of(context)!.supportTiktok,
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningTiktok)),
-                  );
+                  debugPrint('Opening TikTok');
                 },
               ),
               _buildSocialMediaButton(
@@ -144,9 +136,7 @@ class SupportPage extends StatelessWidget {
                 imagePath: 'assets/icon/facebook.png',
                 label: AppLocalizations.of(context)!.supportFacebook,
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningFacebook)),
-                  );
+                  debugPrint('Opening Facebook');
                 },
               ),
               _buildSocialMediaButton(
@@ -154,9 +144,7 @@ class SupportPage extends StatelessWidget {
                 imagePath: 'assets/icon/instagram.png',
                 label: AppLocalizations.of(context)!.supportInstagram,
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.supportOpeningInstagram)),
-                  );
+                  debugPrint('Opening Instagram');
                 },
               ),
             ],
