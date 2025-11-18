@@ -59,14 +59,10 @@ class _ProfilePageState extends State<ProfilePage> {
       await widget.profileProvider.uploadAvatar(File(picked.path));
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.profileAvatarUpdated)),
-      );
+      debugPrint('Avatar updated successfully');
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${AppLocalizations.of(context)!.profileCannotUpdateAvatar}: $e')),
-      );
+      debugPrint('Cannot update avatar: $e');
     }
   }
 
@@ -88,14 +84,10 @@ class _ProfilePageState extends State<ProfilePage> {
         (route) => false,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.profileSignedOut)),
-      );
+      debugPrint('User signed out successfully');
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${AppLocalizations.of(context)!.profileCannotSignOut}: $e')),
-      );
+      debugPrint('Cannot sign out: $e');
     }
   }
 
@@ -199,12 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   label: AppLocalizations.of(context)!.profileViewStatistics,
                   onTap: () {
                     // TODO: Navigate to statistics/report page
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(AppLocalizations.of(context)!.profileFeatureInDevelopment),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
+                    debugPrint('Feature in development');
                   },
                 ),
                 const Divider(height: 1, thickness: 3),

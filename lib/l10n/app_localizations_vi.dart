@@ -958,6 +958,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get bottomNavProfile => 'Hồ sơ';
 
   @override
+  String get bottomNavScanFood => 'Quét món ăn';
+
+  @override
+  String get bottomNavReport => 'Báo cáo';
+
+  @override
   String get searchHint => 'Tìm kiếm';
 
   @override
@@ -1013,4 +1019,91 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get nutritionInfo => 'Thông tin dinh dưỡng';
+
+  @override
+  String get foodScannerTitle => 'Quét món ăn';
+
+  @override
+  String get foodScannerSubtitle => 'Căn chỉnh sản phẩm trong khung';
+
+  @override
+  String get foodScannerOverlayAutoDetect => 'Đang tự động nhận diện...';
+
+  @override
+  String get foodScannerOverlayBarcodeHint => 'Căn mã vạch trong khung';
+
+  @override
+  String get foodScannerActionFood => 'Quét món ăn';
+
+  @override
+  String get foodScannerActionBarcode => 'Mã vạch';
+
+  @override
+  String get foodScannerActionGallery => 'Thư viện';
+
+  @override
+  String get foodScannerHelpTitle => 'Cách quét';
+
+  @override
+  String get foodScannerHelpTip1 => 'Đặt món ăn nằm gọn trong khung.';
+
+  @override
+  String get foodScannerHelpTip2 => 'Dùng chế độ Mã vạch cho sản phẩm đóng gói.';
+
+  @override
+  String get foodScannerHelpTip3 => 'Chọn từ Thư viện để dùng lại ảnh đã chụp.';
+
+  @override
+  String get foodScannerGalleryTitle => 'Chọn từ thư viện';
+
+  @override
+  String get foodScannerGallerySubtitle => 'Chọn ảnh món ăn đã chụp trước đó.';
+
+  @override
+  String get foodScannerGalleryButton => 'Mở thư viện';
+
+  @override
+  String get foodScannerPlaceholderCaptureFood => 'Đang chụp ảnh món ăn (sắp ra mắt)';
+
+  @override
+  String get foodScannerPlaceholderScanBarcode => 'Đang quét mã vạch (sắp ra mắt)';
+
+  @override
+  String get foodScannerPlaceholderOpenGallery => 'Đang mở thư viện (sắp ra mắt)';
+
+  @override
+  String get recentlyLoggedTitle => 'Đã ghi nhận gần đây';
+
+  @override
+  String get recentlyLoggedSubtitle => 'Bắt đầu theo dõi bữa ăn bằng cách chụp ảnh nhanh';
+
+  @override
+  String get recentlyLoggedEmpty => 'Bạn chưa tải lên bất kỳ món ăn nào';
+
+  @override
+  String get viewAll => 'Xem tất cả';
+
+  @override
+  String get delete => 'Xóa';
+
+  @override
+  String get cancel => 'Hủy';
+
+  @override
+  String get deletePhoto => 'Xóa ảnh';
+
+  @override
+  String get deletePhotoConfirmation => 'Bạn có chắc chắn muốn xóa ảnh này không?';
+
+  @override
+  String get photoDeletedSuccessfully => 'Đã xóa ảnh thành công';
+
+  @override
+  String get analyzeFood => 'Phân tích món ăn';
+
+  @override
+  String get shareFunctionality => 'Tính năng chia sẻ sắp ra mắt';
+
+  @override
+  String get aiFoodAnalysis => 'Phân tích món ăn bằng AI sắp ra mắt';
 }

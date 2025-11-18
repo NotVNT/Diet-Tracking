@@ -1,6 +1,6 @@
 {
-    "name": "diet_tracking_project",
-    "short_name": "diet_tracking_project",
+    "name": "Diet Tracking",
+    "short_name": "Diet Tracking",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -958,6 +958,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bottomNavProfile => 'Profile';
 
   @override
+  String get bottomNavScanFood => 'Scan food';
+
+  @override
+  String get bottomNavReport => 'Report';
+
+  @override
   String get searchHint => 'Search';
 
   @override
@@ -1013,4 +1019,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nutritionInfo => 'Nutrition Information';
+
+  @override
+  String get foodScannerTitle => 'Food scanner';
+
+  @override
+  String get foodScannerSubtitle => 'Align the product inside the frame';
+
+  @override
+  String get foodScannerOverlayAutoDetect => 'Auto detecting...';
+
+  @override
+  String get foodScannerOverlayBarcodeHint => 'Align barcode inside the frame';
+
+  @override
+  String get foodScannerActionFood => 'Scan food';
+
+  @override
+  String get foodScannerActionBarcode => 'Barcode';
+
+  @override
+  String get foodScannerActionGallery => 'Gallery';
+
+  @override
+  String get foodScannerHelpTitle => 'How to scan';
+
+  @override
+  String get foodScannerHelpTip1 => 'Place the meal fully inside the frame.';
+
+  @override
+  String get foodScannerHelpTip2 => 'Use the Barcode mode for packaged products.';
+
+  @override
+  String get foodScannerHelpTip3 => 'Pick from Gallery to reuse saved photos.';
+
+  @override
+  String get foodScannerGalleryTitle => 'Pick from gallery';
+
+  @override
+  String get foodScannerGallerySubtitle => 'Select a previously captured meal photo.';
+
+  @override
+  String get foodScannerGalleryButton => 'Open gallery';
+
+  @override
+  String get foodScannerPlaceholderCaptureFood => 'Capturing food photo (coming soon)';
+
+  @override
+  String get foodScannerPlaceholderScanBarcode => 'Scanning barcode (coming soon)';
+
+  @override
+  String get foodScannerPlaceholderOpenGallery => 'Opening gallery (coming soon)';
+
+  @override
+  String get recentlyLoggedTitle => 'Recently logged';
+
+  @override
+  String get recentlyLoggedSubtitle => 'Start tracking your meals by taking a quick picture';
+
+  @override
+  String get recentlyLoggedEmpty => 'You haven\'t uploaded any food';
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get deletePhoto => 'Delete Photo';
+
+  @override
+  String get deletePhotoConfirmation => 'Are you sure you want to delete this photo?';
+
+  @override
+  String get photoDeletedSuccessfully => 'Photo deleted successfully';
+
+  @override
+  String get analyzeFood => 'Analyze Food';
+
+  @override
+  String get shareFunctionality => 'Share functionality coming soon';
+
+  @override
+  String get aiFoodAnalysis => 'AI food analysis coming soon';
 }

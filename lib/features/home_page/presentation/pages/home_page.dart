@@ -1,94 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import '../../../../common/custom_app_bar.dart';
-import '../../../chat_bot_view_home/presentation/pages/chat_bot_page.dart';
-import '../../../profile_view_home/di/profile_di.dart';
-import '../../../profile_view_home/presentation/pages/profile_page.dart';
-import '../../../record_view_home/di/record_di.dart';
-import '../../../record_view_home/presentation/pages/record_page.dart';
 import '../../../../responsive/responsive.dart';
-import '../providers/home_provider.dart';
-import '../widgets/week_calendar_widget.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../common/permission_service.dart';
+import '../providers/home_provider.dart';
+import '../widgets/custom_floating_action_button.dart';
+import '../widgets/custom_bottom_navigation_bar.dart';
+import '../widgets/week_calendar_widget.dart';
 import '../widgets/search_filter_bar.dart';
 import '../widgets/filter_bottom_sheet.dart';
 import '../widgets/calorie_goal_card.dart';
-import 'notification_page.dart';
+import '../widgets/recently_logged_section.dart';
+import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
+import '../../../food_scanner/domain/repositories/scanned_food_repository.dart';
+import '../../../food_scanner/data/datasources/scanned_food_local_datasource.dart';
+import '../../../food_scanner/data/repositories/scanned_food_repository_impl.dart';
+import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
+import '../../../food_scanner/presentation/pages/scanned_food_detail_page.dart';
+import 'home_page_config.dart';
 
 /// Main home page with bottom navigation
-class HomePage extends StatelessWidget {
+/// 
+/// Quản lý navigation giữa các trang chính:
+/// - Trang chủ (Home)
+/// - Ghi nhận (Record)
+/// - Chat bot
+/// - Hồ sơ (Profile)
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<HomeProvider>(
-      builder: (context, homeProvider, child) {
-        final responsive = ResponsiveHelper.of(context);
-        final localizations = AppLocalizations.of(context);
-        
-        // Pages: 0 Trang chủ, 1 Ghi nhận, 2 Chat bot, 3 Hồ sơ
-        final pages = [
-          const _HomeMainPage(),
-          BlocProvider(
-            create: (_) => RecordDI.getRecordCubit()..loadFoodRecords(),
-            child: const RecordPage(),
-          ),
-          // Provide RecordCubit for ChatBotPage so the "Thêm vào danh sách" button can access it
-          BlocProvider(
-            create: (_) => RecordDI.getRecordCubit(),
-            child: const ChatBotPage(),
-          ),
-          ProfilePage(profileProvider: ProfileDI.getProfileProvider()),
-        ];
-        
-        return Scaffold(
-          body: pages[homeProvider.currentIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: homeProvider.currentIndex,
-            type: BottomNavigationBarType.fixed,
-            onTap: (index) => homeProvider.setCurrentIndex(index),
-            selectedFontSize: responsive.fontSize(14),
-            unselectedFontSize: responsive.fontSize(12),
-            iconSize: responsive.iconSize(24),
-            items: [
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.home_outlined),
-                label: localizations?.bottomNavHome ?? 'Trang chủ',
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.note_add_outlined),
-                label: localizations?.bottomNavRecord ?? 'Ghi nhận',
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.smart_toy_outlined),
-                label: localizations?.bottomNavChatBot ?? 'Chat bot',
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.person_outline),
-                label: localizations?.bottomNavProfile ?? 'Hồ sơ',
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  State<HomePage> createState() => _HomePageState();
 }
 
-/// Main home content page
-class _HomeMainPage extends StatefulWidget {
-  const _HomeMainPage();
-
-  @override
-  State<_HomeMainPage> createState() => _HomeMainPageState();
-}
-
-class _HomeMainPageState extends State<_HomeMainPage> {
+class _HomePageState extends State<HomePage> {
+  // Home content state
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   Map<String, dynamic>? _activeFilters;
+  late final ScannedFoodRepository _scannedFoodRepository;
+  List<ScannedFoodEntity> _scannedFoods = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _scannedFoodRepository = ScannedFoodRepositoryImpl(
+      localDataSource: ScannedFoodLocalDataSource(),
+    );
+    _loadScannedFoods();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload scanned foods when returning to this page
+    _loadScannedFoods();
+  }
+
+  Future<void> _loadScannedFoods() async {
+    final foods = await _scannedFoodRepository.getRecentScannedFoods(limit: 6);
+    if (mounted) {
+      setState(() {
+        _scannedFoods = foods;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -117,127 +95,183 @@ class _HomeMainPageState extends State<_HomeMainPage> {
     );
   }
 
+  void _onDateSelected(DateTime date) {
+    setState(() {
+      _selectedDate = date;
+    });
+    // TODO: Load data for selected date
+    debugPrint('Selected date: $date');
+  }
+
+  void _onViewReport() {
+    // TODO: Navigate to detailed report
+    debugPrint('View report tapped');
+  }
+
+  /// Handle picture tap - navigate to detail page
+  Future<void> _onPictureTap(ScannedFoodEntity food) async {
+    final shouldDelete = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => ScannedFoodDetailPage(scannedFood: food),
+      ),
+    );
+
+    // If user deleted the photo, reload the list
+    if (shouldDelete == true) {
+      await _scannedFoodRepository.deleteScannedFood(food.id);
+      await _loadScannedFoods();
+    }
+  }
   @override
   Widget build(BuildContext context) {
+    return Consumer<HomeProvider>(
+      builder: (context, homeProvider, child) {
+        final pages = HomePageConfig.getPages();
+
+        return Scaffold(
+          body: homeProvider.currentIndex == HomePageConfig.homeIndex
+              ? _buildHomeContent(context)
+              : pages[homeProvider.currentIndex],
+          floatingActionButton: CustomFloatingActionButton(
+            onRecordSelected: () => _navigateToRecord(homeProvider),
+            onChatBotSelected: () => _navigateToChatBot(homeProvider),
+            onScanFoodSelected: () => _onScanFoodTapped(),
+            onReportSelected: () => _onReportTapped(),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: CustomBottomNavigationBar(
+            currentIndex: homeProvider.currentIndex,
+            onTap: (index) => _onBottomNavTap(homeProvider, index),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Build home content
+  Widget _buildHomeContent(BuildContext context) {
     final responsive = ResponsiveHelper.of(context);
     final localizations = AppLocalizations.of(context);
-    
+
     return Scaffold(
       appBar: CustomAppBar(
         title: localizations?.bottomNavHome ?? 'Trang chủ',
-        actions: [
-          Stack(
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(responsive.width(16)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_outlined),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationPage(),
-                    ),
-                  );
-                },
+              WeekCalendarWidget(
+                initialDate: _selectedDate,
+                onDateSelected: _onDateSelected,
+                showMonthYear: true,
               ),
-              // Badge for unread notifications
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 16,
-                    minHeight: 16,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '1', // Default water reminder
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+              SizedBox(height: responsive.height(16)),
+              SearchFilterBar(
+                controller: _searchController,
+                onSearchChanged: _onSearchChanged,
+                onFilterTapped: _onFilterTapped,
+                showFilterButton: true,
+              ),
+              SizedBox(height: responsive.height(16)),
+              CalorieGoalCard(
+                nutritionInfo: NutritionInfo(
+                  calorieGoal: 2273,
+                  calorieConsumed: 0,
+                  proteinConsumed: 0,
+                  carbsConsumed: 0,
+                ),
+                onViewReport: _onViewReport,
+              ),
+              SizedBox(height: responsive.height(16)),
+              RecentlyLoggedSection(
+                scannedFoods: _scannedFoods,
+                onViewAll: () {
+                  // TODO: Navigate to full gallery view
+                  debugPrint('View all tapped');
+                },
+                onPictureTap: (food) => _onPictureTap(food),
+              ),
+              SizedBox(height: responsive.height(12)),
+              _buildContentPlaceholder(responsive),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContentPlaceholder(ResponsiveHelper responsive) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: responsive.height(20)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              _searchQuery.isEmpty
+                  ? 'Danh sách bữa ăn sẽ hiển thị ở đây'
+                  : 'Tìm kiếm: $_searchQuery',
+              style: TextStyle(
+                fontSize: responsive.fontSize(14),
+              ),
+            ),
+            if (_activeFilters != null) ...[
+              SizedBox(height: responsive.height(6)),
+              Text(
+                'Lọc: ${_activeFilters!['category']} | ${_activeFilters!['calorieMin']}-${_activeFilters!['calorieMax']} kcal',
+                style: TextStyle(
+                  fontSize: responsive.fontSize(11),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(responsive.width(16)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            WeekCalendarWidget(
-              initialDate: _selectedDate,
-              onDateSelected: (date) {
-                setState(() {
-                  _selectedDate = date;
-                });
-                // TODO: Load data for selected date
-                debugPrint('Selected date: $date');
-              },
-              showMonthYear: true,
-            ),
-            SizedBox(height: responsive.height(16)),
-            SearchFilterBar(
-              controller: _searchController,
-              onSearchChanged: _onSearchChanged,
-              onFilterTapped: _onFilterTapped,
-              showFilterButton: true,
-            ),
-            SizedBox(height: responsive.height(16)),
-            CalorieGoalCard(
-              nutritionInfo: NutritionInfo(
-                calorieGoal: 2273,
-                calorieConsumed: 0,
-                proteinConsumed: 0,
-                carbsConsumed: 0,
-              ),
-              onViewReport: () {
-                // TODO: Navigate to detailed report
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Xem báo cáo chi tiết'),
-                    duration: Duration(seconds: 1),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: responsive.height(16)),
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _searchQuery.isEmpty
-                          ? 'Danh sách bữa ăn sẽ hiển thị ở đây'
-                          : 'Tìm kiếm: $_searchQuery',
-                    ),
-                    if (_activeFilters != null) ...[
-                      SizedBox(height: responsive.height(8)),
-                      Text(
-                        'Lọc: ${_activeFilters!['category']} | ${_activeFilters!['calorieMin']}-${_activeFilters!['calorieMax']} kcal',
-                        style: TextStyle(
-                          fontSize: responsive.fontSize(12),
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
+  }
+
+  /// Navigate to record page
+  void _navigateToRecord(HomeProvider provider) {
+    provider.setCurrentIndex(HomePageConfig.recordIndex);
+  }
+
+  /// Navigate to chat bot page
+  void _navigateToChatBot(HomeProvider provider) {
+    provider.setCurrentIndex(HomePageConfig.chatBotIndex);
+  }
+
+  /// Handle scan food action
+  void _onScanFoodTapped() {
+    PermissionService.requestCameraPermission(
+      context,
+      onPermissionGranted: () async {
+        if (!mounted) return;
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => const FoodScannerPage(),
+          ),
+        );
+        // Trigger a rebuild to refresh the scanned foods list
+        if (mounted) {
+          setState(() {});
+        }
+      },
+    );
+  }
+
+  /// Handle report action
+  void _onReportTapped() {
+    // TODO: Implement report functionality
+  }
+
+  /// Handle bottom navigation tap
+  void _onBottomNavTap(HomeProvider provider, int index) {
+    if (HomePageConfig.isValidIndex(index)) {
+      provider.setCurrentIndex(index);
+    }
   }
 }
