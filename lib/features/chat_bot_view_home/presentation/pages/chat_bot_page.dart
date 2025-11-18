@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../providers/chat_provider_factory.dart';
 import '../providers/chat_provider.dart';
-import '../widgets/chat_message_bubble.dart';
+import '../widgets/messages_area.dart';
 import '../widgets/chat_input_area.dart';
 import '../widgets/chat_options_popup.dart';
 import '../widgets/food_suggestion_inputs.dart';
@@ -59,39 +59,22 @@ class _ChatBotPageState extends State<ChatBotPage> {
           ChatSettingsMenu(
             onCreateNewChat: _onCreateNewChat,
             onChatHistory: _onChatHistory,
-            onSettings: _onSettings,
           ),
         ],
       ),
       body: Column(
         children: [
-          _buildMessagesArea(_chatProvider),
+          MessagesArea(messages: _chatProvider.messages),
           if (_chatProvider.showOptions)
             ChatOptionsPopup(onOptionSelected: _onOptionSelected),
           if (_chatProvider.showFileInputs)
             _buildFoodSuggestionInputs(_chatProvider),
           ChatInputArea(
             messageController: _messageController,
-            showOptions: _chatProvider.showOptions,
-            onToggleOptions: () => _chatProvider.toggleOptions(),
             onSendPressed: () => _onSendPressed(_chatProvider),
             onMessageSubmitted: (text) => _onMessageSubmitted(text, _chatProvider),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Builds the scrollable messages area
-  Widget _buildMessagesArea(ChatProvider chatProvider) {
-    return Expanded(
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: chatProvider.messages.length,
-        itemBuilder: (context, index) {
-          final message = chatProvider.messages[index];
-          return ChatMessageBubble(message: message);
-        },
       ),
     );
   }
@@ -122,12 +105,6 @@ class _ChatBotPageState extends State<ChatBotPage> {
     _showSnackBar(l10n.chatBotChatHistoryComingSoon);
   }
 
-  /// Handles settings action
-  void _onSettings() {
-    final l10n = AppLocalizations.of(context)!;
-    // TODO: Implement settings page
-    _showSnackBar(l10n.chatBotSettingsComingSoon);
-  }
 
   /// Handles option selection
   void _onOptionSelected(String option) {
