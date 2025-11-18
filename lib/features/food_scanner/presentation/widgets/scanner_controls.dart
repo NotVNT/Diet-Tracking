@@ -19,6 +19,7 @@ class ScannerControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           children: actions
@@ -36,11 +37,8 @@ class ScannerControls extends StatelessWidget {
               )
               .toList(),
         ),
-        const SizedBox(height: 28),
-        _ScannerCaptureButton(
-          action: selectedAction,
-          onPressed: onCapture,
-        ),
+        const SizedBox(height: 20),
+        _ScannerCaptureButton(action: selectedAction, onPressed: onCapture),
       ],
     );
   }
@@ -73,13 +71,14 @@ class _ScannerActionButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         onTap: onPressed,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 config.icon,
                 color: selected ? Colors.black : Colors.white,
+                size: 22,
               ),
               const SizedBox(height: 8),
               Text(
@@ -87,7 +86,7 @@ class _ScannerActionButton extends StatelessWidget {
                 style: GoogleFonts.inter(
                   color: selected ? Colors.black : Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
+                  fontSize: 11,
                 ),
               ),
             ],
@@ -102,26 +101,23 @@ class _ScannerCaptureButton extends StatelessWidget {
   final VoidCallback onPressed;
   final ScannerActionType action;
 
-  const _ScannerCaptureButton({
-    required this.onPressed,
-    required this.action,
-  });
+  const _ScannerCaptureButton({required this.onPressed, required this.action});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: 88,
-        height: 88,
+        width: 76,
+        height: 76,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.white54, width: 4),
+          border: Border.all(color: Colors.white54, width: 3),
         ),
         child: Center(
           child: Container(
-            width: 64,
-            height: 64,
+            width: 56,
+            height: 56,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: action == ScannerActionType.gallery

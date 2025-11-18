@@ -5,31 +5,37 @@ import '../widgets/animated_scanner_background.dart';
 class ScanFoodModeView extends StatelessWidget {
   final String overlayText;
   final TextStyle overlayTextStyle;
+  final Widget? cameraPreview;
 
   const ScanFoodModeView({
     super.key,
     required this.overlayText,
     required this.overlayTextStyle,
+    this.cameraPreview,
   });
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final bottomInset = mediaQuery.padding.bottom;
+    final double dynamicGap = (mediaQuery.size.height * 0.12)
+        .clamp(96.0, 160.0)
+        .toDouble();
     return Stack(
       children: [
-        const AnimatedScannerBackground(),
+        Positioned.fill(
+          child: cameraPreview ?? const AnimatedScannerBackground(),
+        ),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            margin: const EdgeInsets.all(16),
+            margin: EdgeInsets.fromLTRB(16, 16, 16, dynamicGap + bottomInset),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.black54,
+              color: Colors.black.withOpacity(0.65),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(
-              overlayText,
-              style: overlayTextStyle,
-            ),
+            child: Text(overlayText, style: overlayTextStyle),
           ),
         ),
       ],

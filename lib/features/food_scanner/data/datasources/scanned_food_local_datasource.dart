@@ -14,10 +14,14 @@ class ScannedFoodLocalDataSource {
   Future<void> saveScannedFood(ScannedFoodModel food) async {
     final prefs = await _prefs;
     final foods = await _getAllScannedFoods();
-    
+    foods.removeWhere(
+      (existing) =>
+          existing.id == food.id || existing.imagePath == food.imagePath,
+    );
+
     // Add new food to the beginning of the list
     foods.insert(0, food);
-    
+
     // Convert to JSON and save
     final jsonList = foods.map((f) => f.toJson()).toList();
     await prefs.setString(_keyScannedFoods, jsonEncode(jsonList));
@@ -32,7 +36,7 @@ class ScannedFoodLocalDataSource {
   Future<List<ScannedFoodModel>> _getAllScannedFoods() async {
     final prefs = await _prefs;
     final jsonString = prefs.getString(_keyScannedFoods);
-    
+
     if (jsonString == null || jsonString.isEmpty) {
       return [];
     }
@@ -40,7 +44,9 @@ class ScannedFoodLocalDataSource {
     try {
       final jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList
-          .map((json) => ScannedFoodModel.fromJson(json as Map<String, dynamic>))
+          .map(
+            (json) => ScannedFoodModel.fromJson(json as Map<String, dynamic>),
+          )
           .toList();
     } catch (e) {
       // If parsing fails, return empty list and clear corrupted data
@@ -53,10 +59,10 @@ class ScannedFoodLocalDataSource {
   Future<void> deleteScannedFood(String id) async {
     final prefs = await _prefs;
     final foods = await _getAllScannedFoods();
-    
-    // Remove the item with matching id
-    foods.removeWhere((food) => food.id == id);
-    
+
+    // Remove the item with matching id or url
+    foods.removeWhere((food) => food.id == id || food.imagePath == id);
+
     // Save updated list
     final jsonList = foods.map((f) => f.toJson()).toList();
     await prefs.setString(_keyScannedFoods, jsonEncode(jsonList));
@@ -72,9 +78,11 @@ class ScannedFoodLocalDataSource {
   Future<void> markAsProcessed(String id) async {
     final prefs = await _prefs;
     final foods = await _getAllScannedFoods();
-    
-    // Find and update the item
-    final index = foods.indexWhere((food) => food.id == id);
+
+    // Find and update the item (match by id or url)
+    final index = foods.indexWhere(
+      (food) => food.id == id || food.imagePath == id,
+    );
     if (index != -1) {
       foods[index] = ScannedFoodModel(
         id: foods[index].id,
@@ -83,7 +91,7 @@ class ScannedFoodLocalDataSource {
         scanDate: foods[index].scanDate,
         isProcessed: true,
       );
-      
+
       // Save updated list
       final jsonList = foods.map((f) => f.toJson()).toList();
       await prefs.setString(_keyScannedFoods, jsonEncode(jsonList));

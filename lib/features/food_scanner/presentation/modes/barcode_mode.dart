@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import '../widgets/animated_scanner_background.dart';
 
@@ -5,24 +7,51 @@ import '../widgets/animated_scanner_background.dart';
 class BarcodeModeView extends StatelessWidget {
   final String bottomHint;
   final TextStyle hintStyle;
+  final Widget? cameraPreview;
 
   const BarcodeModeView({
     super.key,
     required this.bottomHint,
     required this.hintStyle,
+    this.cameraPreview,
   });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final bottomInset = MediaQuery.of(context).padding.bottom;
+        final maxWidth = constraints.maxWidth;
+        final maxHeight = constraints.maxHeight;
+
+        const double minWidth = 220;
+        final double maxAllowedWidth = math.max(maxWidth - 32, minWidth);
+        final double targetWidth = maxWidth * 0.75;
+        final double frameWidth = targetWidth
+            .clamp(minWidth, maxAllowedWidth)
+            .toDouble();
+
+        const double widthToHeightRatio = 2.4;
+        const double minHeight = 110;
+        final double tentativeHeight = frameWidth / widthToHeightRatio;
+        final double maxAllowedHeight = math.max(maxHeight * 0.45, minHeight);
+        final double frameHeight = tentativeHeight
+            .clamp(minHeight, maxAllowedHeight)
+            .toDouble();
+
+        final double bottomGap = (maxHeight * 0.12)
+            .clamp(96.0, 170.0)
+            .toDouble();
+
         return Stack(
           children: [
-            const AnimatedScannerBackground(),
+            Positioned.fill(
+              child: cameraPreview ?? const AnimatedScannerBackground(),
+            ),
             Center(
               child: Container(
-                width: constraints.maxWidth * 0.65,
-                height: constraints.maxHeight * 0.35,
+                width: frameWidth,
+                height: frameHeight,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(color: Colors.white, width: 3),
@@ -32,16 +61,17 @@ class BarcodeModeView extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                margin:
+                    EdgeInsets.fromLTRB(16, 16, 16, bottomGap + bottomInset),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.black54,
+                  color: Colors.black.withOpacity(0.65),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
-                  bottomHint,
-                  style: hintStyle,
-                ),
+                child: Text(bottomHint, style: hintStyle),
               ),
             ),
           ],

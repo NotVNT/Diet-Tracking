@@ -7,11 +7,7 @@ class PictureCard extends StatelessWidget {
   final String imagePath;
   final VoidCallback? onTap;
 
-  const PictureCard({
-    super.key,
-    required this.imagePath,
-    this.onTap,
-  });
+  const PictureCard({super.key, required this.imagePath, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +36,22 @@ class PictureCard extends StatelessWidget {
   }
 
   Widget _buildImageContent(BuildContext context) {
+    if (_isNetworkImage) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, progress) {
+          if (progress == null) return child;
+          return _buildPlaceholder(context, showLoader: true);
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return _buildPlaceholder(context);
+        },
+      );
+    }
+
     final file = File(imagePath);
-    
+
     // Check if file exists
     if (!file.existsSync()) {
       return _buildPlaceholder(context);
@@ -56,16 +66,29 @@ class PictureCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholder(BuildContext context) {
+  Widget _buildPlaceholder(BuildContext context, {bool showLoader = false}) {
     return Container(
       color: Theme.of(context).colorScheme.surfaceVariant,
       child: Center(
-        child: Icon(
-          Icons.image_outlined,
-          color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
-          size: 32,
-        ),
+        child: showLoader
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : Icon(
+                Icons.image_outlined,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withOpacity(0.5),
+                size: 32,
+              ),
       ),
     );
+  }
+
+  bool get _isNetworkImage {
+    final uri = Uri.tryParse(imagePath);
+    return uri != null && uri.hasScheme;
   }
 }

@@ -9,10 +9,7 @@ import '../../domain/entities/scanned_food_entity.dart';
 class ScannedFoodDetailPage extends StatelessWidget {
   final ScannedFoodEntity scannedFood;
 
-  const ScannedFoodDetailPage({
-    super.key,
-    required this.scannedFood,
-  });
+  const ScannedFoodDetailPage({super.key, required this.scannedFood});
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +38,7 @@ class ScannedFoodDetailPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Center(
-              child: _buildImage(context, responsive),
-            ),
-          ),
+          Expanded(child: Center(child: _buildImage(context, responsive))),
           _buildBottomSheet(context, responsive, localizations),
         ],
       ),
@@ -53,6 +46,23 @@ class ScannedFoodDetailPage extends StatelessWidget {
   }
 
   Widget _buildImage(BuildContext context, ResponsiveHelper responsive) {
+    if (_isNetworkImage) {
+      return InteractiveViewer(
+        minScale: 0.5,
+        maxScale: 4.0,
+        child: Image.network(
+          scannedFood.imagePath,
+          fit: BoxFit.contain,
+          errorBuilder: (_, __, ___) =>
+              _buildImageError(responsive, 'Error loading image'),
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+      );
+    }
+
     final file = File(scannedFood.imagePath);
 
     if (!file.existsSync()) {
@@ -211,11 +221,7 @@ class ScannedFoodDetailPage extends StatelessWidget {
   ) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: responsive.fontSize(20),
-          color: Colors.grey.shade600,
-        ),
+        Icon(icon, size: responsive.fontSize(20), color: Colors.grey.shade600),
         SizedBox(width: responsive.width(12)),
         Expanded(
           child: Column(
@@ -288,7 +294,10 @@ class ScannedFoodDetailPage extends StatelessWidget {
     final localizations = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(localizations?.shareFunctionality ?? 'Share functionality coming soon'),
+        content: Text(
+          localizations?.shareFunctionality ??
+              'Share functionality coming soon',
+        ),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -333,6 +342,35 @@ class ScannedFoodDetailPage extends StatelessWidget {
   }
 
   void _showImageDetails(BuildContext context) {
+    if (_isNetworkImage) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Image Details'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Image URL:\n${scannedFood.imagePath}'),
+              const SizedBox(height: 12),
+              Text(
+                'Scan date: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(scannedFood.scanDate)}',
+              ),
+              const SizedBox(height: 12),
+              Text('ID: ${scannedFood.id}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     final file = File(scannedFood.imagePath);
     final fileSize = file.existsSync() ? file.lengthSync() : 0;
     final fileSizeKB = (fileSize / 1024).toStringAsFixed(2);
@@ -349,7 +387,9 @@ class ScannedFoodDetailPage extends StatelessWidget {
             const SizedBox(height: 12),
             Text('File size: $fileSizeKB KB'),
             const SizedBox(height: 12),
-            Text('Scan date: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(scannedFood.scanDate)}'),
+            Text(
+              'Scan date: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(scannedFood.scanDate)}',
+            ),
             const SizedBox(height: 12),
             Text('ID: ${scannedFood.id}'),
           ],
@@ -364,14 +404,21 @@ class ScannedFoodDetailPage extends StatelessWidget {
     );
   }
 
+  bool get _isNetworkImage {
+    final uri = Uri.tryParse(scannedFood.imagePath);
+    return uri != null && uri.hasScheme;
+  }
+
   void _onDelete(BuildContext context) {
     final localizations = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(localizations?.deletePhoto ?? 'Delete Photo'),
-        content: Text(localizations?.deletePhotoConfirmation ?? 
-            'Are you sure you want to delete this photo?'),
+        content: Text(
+          localizations?.deletePhotoConfirmation ??
+              'Are you sure you want to delete this photo?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -394,7 +441,9 @@ class ScannedFoodDetailPage extends StatelessWidget {
     final localizations = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(localizations?.aiFoodAnalysis ?? 'AI food analysis coming soon'),
+        content: Text(
+          localizations?.aiFoodAnalysis ?? 'AI food analysis coming soon',
+        ),
         behavior: SnackBarBehavior.floating,
       ),
     );

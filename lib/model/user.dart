@@ -13,6 +13,9 @@ class User {
   final String? goal;
   final String? avatars;
 
+  /// Cloudinary image URLs for the user's recent diet entries
+  final List<String> diet;
+
   const User({
     this.uid,
     this.email,
@@ -23,6 +26,7 @@ class User {
     this.bodyInfo,
     this.goal,
     this.avatars,
+    this.diet = const [],
   });
 
   /// Creates a copy of this user with updated fields
@@ -36,6 +40,7 @@ class User {
     BodyInfoModel? bodyInfo,
     String? goal,
     String? avatars,
+    List<String>? diet,
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -47,6 +52,7 @@ class User {
       bodyInfo: bodyInfo ?? this.bodyInfo,
       goal: goal ?? this.goal,
       avatars: avatars ?? this.avatars,
+      diet: diet ?? this.diet,
     );
   }
 
@@ -63,6 +69,7 @@ class User {
       'bodyInfo': bodyInfo?.toJson(),
       'goal': goal,
       'avatars': avatars,
+      'diet': diet,
     };
   }
 
@@ -80,6 +87,7 @@ class User {
           : null,
       goal: json['goal'] as String?,
       avatars: json['avatars'] as String?,
+      diet: _parseDietUrls(json['diet']),
     );
   }
 
@@ -102,6 +110,7 @@ class User {
         medicalConditions: (data['medicalConditions'] as List?)?.cast<String>(),
         allergies: (data['allergies'] as List?)?.cast<String>(),
       ),
+      diet: const [],
     );
   }
 }
@@ -115,6 +124,24 @@ GenderType? _tryParseGender(String? value) {
   } catch (_) {
     return GenderType.other;
   }
+}
+
+List<String> _parseDietUrls(dynamic raw) {
+  if (raw is! List) return const <String>[];
+  return raw
+      .map((entry) {
+        if (entry is String) return entry;
+        if (entry is Map) {
+          final data = Map<String, dynamic>.from(entry.cast<String, dynamic>());
+          final path = data['imagePath'] ?? data['imageUrl'];
+          if (path is String && path.isNotEmpty) {
+            return path;
+          }
+        }
+        return null;
+      })
+      .whereType<String>()
+      .toList();
 }
 
 // Removed parsing activity level since it's no longer stored

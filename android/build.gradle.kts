@@ -18,6 +18,9 @@ subprojects {
             targetCompatibility = JavaVersion.VERSION_17.toString()
             options.compilerArgs.addAll(listOf("-Xlint:-options"))
         }
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+            kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+        }
         
         extensions.findByType<com.android.build.gradle.BaseExtension>()?.apply {
             compileOptions {

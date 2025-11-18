@@ -21,7 +21,7 @@ import '../../../food_scanner/presentation/pages/scanned_food_detail_page.dart';
 import 'home_page_config.dart';
 
 /// Main home page with bottom navigation
-/// 
+///
 /// Quản lý navigation giữa các trang chính:
 /// - Trang chủ (Home)
 /// - Ghi nhận (Record)
@@ -60,11 +60,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadScannedFoods() async {
-    final foods = await _scannedFoodRepository.getRecentScannedFoods(limit: 6);
-    if (mounted) {
-      setState(() {
-        _scannedFoods = foods;
-      });
+    try {
+      final foods = await _scannedFoodRepository.getRecentScannedFoods(
+        limit: 6,
+      );
+      if (mounted) {
+        setState(() {
+          _scannedFoods = foods;
+        });
+      }
+    } catch (e) {
+      debugPrint('Unable to load scanned foods: $e');
     }
   }
 
@@ -122,6 +128,7 @@ class _HomePageState extends State<HomePage> {
       await _loadScannedFoods();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
@@ -138,7 +145,8 @@ class _HomePageState extends State<HomePage> {
             onScanFoodSelected: () => _onScanFoodTapped(),
             onReportSelected: () => _onReportTapped(),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: CustomBottomNavigationBar(
             currentIndex: homeProvider.currentIndex,
             onTap: (index) => _onBottomNavTap(homeProvider, index),
@@ -154,9 +162,7 @@ class _HomePageState extends State<HomePage> {
     final localizations = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: localizations?.bottomNavHome ?? 'Trang chủ',
-      ),
+      appBar: CustomAppBar(title: localizations?.bottomNavHome ?? 'Trang chủ'),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(responsive.width(16)),
@@ -214,9 +220,7 @@ class _HomePageState extends State<HomePage> {
               _searchQuery.isEmpty
                   ? 'Danh sách bữa ăn sẽ hiển thị ở đây'
                   : 'Tìm kiếm: $_searchQuery',
-              style: TextStyle(
-                fontSize: responsive.fontSize(14),
-              ),
+              style: TextStyle(fontSize: responsive.fontSize(14)),
             ),
             if (_activeFilters != null) ...[
               SizedBox(height: responsive.height(6)),
@@ -224,7 +228,9 @@ class _HomePageState extends State<HomePage> {
                 'Lọc: ${_activeFilters!['category']} | ${_activeFilters!['calorieMin']}-${_activeFilters!['calorieMax']} kcal',
                 style: TextStyle(
                   fontSize: responsive.fontSize(11),
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
             ],
@@ -251,13 +257,11 @@ class _HomePageState extends State<HomePage> {
       onPermissionGranted: () async {
         if (!mounted) return;
         await Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => const FoodScannerPage(),
-          ),
+          MaterialPageRoute<void>(builder: (_) => const FoodScannerPage()),
         );
         // Trigger a rebuild to refresh the scanned foods list
         if (mounted) {
-          setState(() {});
+          await _loadScannedFoods();
         }
       },
     );
