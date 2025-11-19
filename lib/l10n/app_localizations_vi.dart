@@ -1063,13 +1063,30 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerGalleryButton => 'Mở thư viện';
 
   @override
-  String get foodScannerPlaceholderCaptureFood => 'Đang chụp ảnh món ăn (sắp ra mắt)';
+  String get foodScannerPlaceholderCaptureFood => 'Đang lưu ảnh món ăn';
 
   @override
   String get foodScannerPlaceholderScanBarcode => 'Đang quét mã vạch (sắp ra mắt)';
 
   @override
   String get foodScannerPlaceholderOpenGallery => 'Đang mở thư viện (sắp ra mắt)';
+
+  @override
+  String get foodScannerBarcodeScanning => 'Đang quét mã vạch...';
+
+  @override
+  String foodScannerBarcodeDetected(String value) {
+    return 'Đã phát hiện mã: $value';
+  }
+
+  @override
+  String get foodScannerBarcodeCopy => 'Sao chép mã';
+
+  @override
+  String get foodScannerBarcodeScanAgain => 'Quét lại';
+
+  @override
+  String get foodScannerBarcodeCopied => 'Đã sao chép mã vạch';
 
   @override
   String get recentlyLoggedTitle => 'Đã ghi nhận gần đây';

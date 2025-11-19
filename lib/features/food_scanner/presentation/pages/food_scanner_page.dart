@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -12,6 +13,8 @@ import '../../domain/entities/scanned_food_entity.dart';
 import '../../domain/repositories/scanned_food_repository.dart';
 import '../../data/datasources/scanned_food_local_datasource.dart';
 import '../../data/repositories/scanned_food_repository_impl.dart';
+import '../../services/barcode_scanner_service.dart';
+import '../widgets/barcode_result_dialog.dart';
 import '../widgets/scanner_controls.dart';
 import '../widgets/scanner_preview.dart';
 import '../widgets/scanner_toolbar.dart';
@@ -28,11 +31,17 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
   ScannerActionType _selectedAction = ScannerActionType.food;
   final ImagePicker _picker = ImagePicker();
   late final ScannedFoodRepository _scannedFoodRepository;
+  late final BarcodeScannerService _barcodeScannerService;
 
   bool _isUploading = false;
   CameraController? _cameraController;
   bool _isCameraInitializing = false;
   String? _cameraErrorMessage;
+  
+  // Real-time barcode scanning
+  bool _isRealTimeScanning = false;
+  String? _lastDetectedBarcode;
+  DateTime? _lastBarcodeDetectionTime;
 
   bool _usesCameraAction(ScannerActionType type) =>
       type == ScannerActionType.food || type == ScannerActionType.barcode;
@@ -43,12 +52,15 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     _scannedFoodRepository = ScannedFoodRepositoryImpl(
       localDataSource: ScannedFoodLocalDataSource(),
     );
+    _barcodeScannerService = BarcodeScannerService();
     _initializeCamera();
   }
 
   @override
   void dispose() {
+    _stopRealTimeScanning();
     _cameraController?.dispose();
+    _barcodeScannerService.dispose();
     super.dispose();
   }
 
@@ -131,6 +143,11 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       setState(() {
         _cameraController = controller;
       });
+
+      // Bắt đầu real-time scanning nếu đang ở chế độ barcode
+      if (_selectedAction == ScannerActionType.barcode) {
+        _startRealTimeScanning();
+      }
     } on CameraException catch (e) {
       if (mounted) {
         setState(() {
@@ -207,11 +224,21 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       return;
     }
 
+    // Stop real-time scanning if switching away from barcode mode
+    if (_selectedAction == ScannerActionType.barcode && type != ScannerActionType.barcode) {
+      _stopRealTimeScanning();
+    }
+
     _ensureCameraForAction(type);
 
     setState(() {
       _selectedAction = type;
     });
+
+    // Start real-time scanning if switching to barcode mode
+    if (type == ScannerActionType.barcode) {
+      _startRealTimeScanning();
+    }
   }
 
   void _onCapturePressed() {
@@ -410,11 +437,201 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       );
 
       if (image != null && mounted) {
-        await _saveScannedFood(image.path, ScanType.gallery);
+        // Thử quét barcode từ ảnh
+        await _scanBarcodeFromImage(image.path);
       }
     } catch (_) {
       if (mounted) {
         _showPlaceholderMessage(errorMessage);
+      }
+    }
+  }
+
+  /// Quét barcode từ ảnh được chọn
+  Future<void> _scanBarcodeFromImage(String imagePath) async {
+    if (_isUploading) return;
+
+    setState(() {
+      _isUploading = true;
+    });
+
+    try {
+      // Quét barcode
+      final barcodes = await _barcodeScannerService.scanBarcodeFromImage(imagePath);
+
+      if (!mounted) return;
+
+      if (barcodes.isEmpty) {
+        // Không tìm thấy barcode, lưu như ảnh thông thường
+        await _saveScannedFood(imagePath, ScanType.gallery);
+        _showPlaceholderMessage('Không tìm thấy mã vạch trong ảnh');
+      } else {
+        // Tìm thấy barcode, hiển thị dialog
+        await _showBarcodeResultDialog(barcodes, imagePath);
+      }
+    } catch (e) {
+      if (mounted) {
+        // Nếu có lỗi khi quét barcode, vẫn lưu ảnh
+        await _saveScannedFood(imagePath, ScanType.gallery);
+        _showPlaceholderMessage('Đã lưu ảnh');
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
+    }
+  }
+
+  /// Hiển thị dialog kết quả barcode
+  Future<void> _showBarcodeResultDialog(
+    List<Barcode> barcodes,
+    String imagePath,
+  ) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => BarcodeResultDialog(
+        barcodes: barcodes,
+        imagePath: imagePath,
+        onClose: () => Navigator.of(context).pop(),
+        onBarcodeSelected: (barcode) => _handleBarcodeSelected(barcode, imagePath),
+      ),
+    );
+  }
+
+  /// Xử lý khi người dùng chọn một barcode
+  void _handleBarcodeSelected(Barcode barcode, String imagePath) {
+    final barcodeValue = barcode.displayValue ?? barcode.rawValue ?? '';
+    
+    // Lưu ảnh với barcode
+    _saveScannedFood(imagePath, ScanType.barcode);
+    
+    // Hiển thị thông báo
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Đã lưu mã: $barcodeValue'),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Real-time barcode scanning
+  // ---------------------------------------------------------------------------
+
+  /// Bắt đầu quét barcode real-time
+  void _startRealTimeScanning() {
+    final controller = _cameraController;
+    if (controller == null || !controller.value.isInitialized) {
+      return;
+    }
+
+    setState(() {
+      _isRealTimeScanning = true;
+      _lastDetectedBarcode = null;
+    });
+
+    controller.startImageStream((CameraImage image) {
+      _processCameraImage(image);
+    });
+  }
+
+  /// Dừng quét barcode real-time
+  void _stopRealTimeScanning() {
+    final controller = _cameraController;
+    if (controller != null && controller.value.isStreamingImages) {
+      controller.stopImageStream();
+    }
+
+    setState(() {
+      _isRealTimeScanning = false;
+      _lastDetectedBarcode = null;
+    });
+  }
+
+  /// Xử lý camera image để tìm barcode
+  Future<void> _processCameraImage(CameraImage image) async {
+    if (!_isRealTimeScanning || _isUploading) return;
+
+    try {
+      final barcode = await _barcodeScannerService.scanBarcodeFromCameraImage(image);
+      
+      if (barcode != null && mounted) {
+        final barcodeValue = barcode.displayValue ?? barcode.rawValue ?? '';
+        
+        // Tránh detect cùng một mã nhiều lần
+        if (barcodeValue == _lastDetectedBarcode) {
+          final now = DateTime.now();
+          if (_lastBarcodeDetectionTime != null &&
+              now.difference(_lastBarcodeDetectionTime!).inSeconds < 3) {
+            return;
+          }
+        }
+
+        // Tìm thấy barcode mới
+        _lastDetectedBarcode = barcodeValue;
+        _lastBarcodeDetectionTime = DateTime.now();
+        
+        // Dừng scanning và lưu
+        await _onBarcodeDetected(barcode);
+      }
+    } catch (e) {
+      // Ignore errors during real-time scanning
+    }
+  }
+
+  /// Xử lý khi phát hiện barcode
+  Future<void> _onBarcodeDetected(Barcode barcode) async {
+    _stopRealTimeScanning();
+
+    if (!mounted) return;
+
+    setState(() {
+      _isUploading = true;
+    });
+
+    try {
+      // Chụp ảnh hiện tại
+      final controller = _cameraController;
+      if (controller != null && controller.value.isInitialized) {
+        final XFile photo = await controller.takePicture();
+        
+        // Lưu với barcode
+        await _saveScannedFood(photo.path, ScanType.barcode);
+        
+        final barcodeValue = barcode.displayValue ?? barcode.rawValue ?? '';
+        
+        if (mounted) {
+          // Hiển thị thông báo thành công
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đã quét mã: $barcodeValue'),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+
+          // Đóng scanner và quay về homepage
+          await Future.delayed(const Duration(milliseconds: 500));
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        _showErrorMessage();
+        _startRealTimeScanning(); // Tiếp tục scan nếu có lỗi
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
       }
     }
   }
@@ -487,7 +704,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
   }
 
   Widget _buildScannerControls(List<ScannerActionConfig> actions) {
-    final bool disableCapture = _isUploading || _isCameraInitializing;
+    final bool disableCapture = _isUploading || _isCameraInitializing || _selectedAction == ScannerActionType.barcode;
     return ScannerControls(
       actions: actions,
       selectedAction: _selectedAction,
@@ -504,8 +721,6 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final actions = _buildActions(l10n);
-    final bool showControlsInsidePreview =
-        _selectedAction == ScannerActionType.barcode;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -521,9 +736,8 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
                 fontSize: 14,
               ),
               cameraPreview: _buildCameraPreview(),
-              barcodeControlsOverlay: showControlsInsidePreview
-                  ? _buildScannerControls(actions)
-                  : null,
+              barcodeControlsOverlay: null,
+              isRealTimeScanning: _isRealTimeScanning,
             ),
           ),
           SafeArea(
@@ -536,22 +750,21 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
                   onClose: () => Navigator.of(context).pop(),
                 ),
                 const Spacer(),
-                if (!showControlsInsidePreview)
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.85),
-                          Colors.black.withOpacity(0.0),
-                        ],
-                      ),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.85),
+                        Colors.black.withOpacity(0.0),
+                      ],
                     ),
-                    padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
-                    child: _buildScannerControls(actions),
                   ),
+                  padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
+                  child: _buildScannerControls(actions),
+                ),
               ],
             ),
           ),

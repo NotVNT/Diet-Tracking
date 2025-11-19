@@ -10,6 +10,7 @@ class ScannerPreview extends StatelessWidget {
   final TextStyle overlayTextStyle;
   final Widget? cameraPreview;
   final Widget? barcodeControlsOverlay;
+  final bool isRealTimeScanning;
 
   const ScannerPreview({
     super.key,
@@ -19,6 +20,7 @@ class ScannerPreview extends StatelessWidget {
     required this.overlayTextStyle,
     this.cameraPreview,
     this.barcodeControlsOverlay,
+    this.isRealTimeScanning = false,
   });
 
   @override
@@ -40,6 +42,7 @@ class ScannerPreview extends StatelessWidget {
           hintStyle: overlayTextStyle,
           cameraPreview: cameraPreview,
           controlsOverlay: barcodeControlsOverlay,
+          isScanning: isRealTimeScanning,
         );
       case ScannerActionType.gallery:
         return ScanFoodModeView(

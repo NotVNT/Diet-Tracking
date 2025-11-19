@@ -16,27 +16,10 @@ class ScanFoodModeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final bottomInset = mediaQuery.padding.bottom;
-    final double dynamicGap = (mediaQuery.size.height * 0.12)
-        .clamp(96.0, 160.0)
-        .toDouble();
     return Stack(
       children: [
         Positioned.fill(
           child: cameraPreview ?? const AnimatedScannerBackground(),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            margin: EdgeInsets.fromLTRB(16, 16, 16, dynamicGap + bottomInset),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.65),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(overlayText, style: overlayTextStyle),
-          ),
         ),
       ],
     );

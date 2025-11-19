@@ -2201,6 +2201,36 @@ abstract class AppLocalizations {
   /// **'Opening gallery (coming soon)'**
   String get foodScannerPlaceholderOpenGallery;
 
+  /// No description provided for @foodScannerBarcodeScanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning for barcode...'**
+  String get foodScannerBarcodeScanning;
+
+  /// No description provided for @foodScannerBarcodeDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Detected barcode: {value}'**
+  String foodScannerBarcodeDetected(String value);
+
+  /// No description provided for @foodScannerBarcodeCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get foodScannerBarcodeCopy;
+
+  /// No description provided for @foodScannerBarcodeScanAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan again'**
+  String get foodScannerBarcodeScanAgain;
+
+  /// No description provided for @foodScannerBarcodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode copied to clipboard'**
+  String get foodScannerBarcodeCopied;
+
   /// No description provided for @recentlyLoggedTitle.
   ///
   /// In en, this message translates to:

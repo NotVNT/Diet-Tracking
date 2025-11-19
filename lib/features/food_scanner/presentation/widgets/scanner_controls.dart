@@ -37,8 +37,10 @@ class ScannerControls extends StatelessWidget {
               )
               .toList(),
         ),
-        const SizedBox(height: 20),
-        _ScannerCaptureButton(action: selectedAction, onPressed: onCapture),
+        if (selectedAction != ScannerActionType.barcode) ...[
+          const SizedBox(height: 20),
+          _ScannerCaptureButton(action: selectedAction, onPressed: onCapture),
+        ],
       ],
     );
   }
