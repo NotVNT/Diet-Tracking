@@ -103,10 +103,12 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => FoodRecordModel.fromJson({
-                ...doc.data(),
-                'id': doc.id, // đảm bảo có id
-              }))
+          .map(
+            (doc) => FoodRecordModel.fromJson({
+              ...doc.data(),
+              'id': doc.id, // đảm bảo có id
+            }),
+          )
           .toList();
     } catch (e) {
       // Log error without using print in production
@@ -128,7 +130,9 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
       final localList = _coerceToJsonList(localData);
       final localRecords = localList
           .whereType<Map>()
-          .map((json) => FoodRecordModel.fromJson(Map<String, dynamic>.from(json)))
+          .map(
+            (json) => FoodRecordModel.fromJson(Map<String, dynamic>.from(json)),
+          )
           .toList();
 
       // Tạo map để merge dữ liệu (ưu tiên Firebase)
@@ -166,8 +170,7 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
     final localRecords = list
         .whereType<Map>()
         .map(
-          (json) =>
-              FoodRecordModel.fromJson(Map<String, dynamic>.from(json)),
+          (json) => FoodRecordModel.fromJson(Map<String, dynamic>.from(json)),
         )
         .toList();
 
