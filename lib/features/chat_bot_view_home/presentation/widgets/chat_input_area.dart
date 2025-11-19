@@ -5,16 +5,12 @@ import '../../../../l10n/app_localizations.dart';
 /// Widget for chat input area with text field and send button
 class ChatInputArea extends StatelessWidget {
   final TextEditingController messageController;
-  final bool showOptions;
-  final VoidCallback onToggleOptions;
   final VoidCallback onSendPressed;
   final Function(String) onMessageSubmitted;
 
   const ChatInputArea({
     super.key,
     required this.messageController,
-    required this.showOptions,
-    required this.onToggleOptions,
     required this.onSendPressed,
     required this.onMessageSubmitted,
   });
@@ -34,23 +30,10 @@ class ChatInputArea extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _buildOptionsToggleButton(context),
-          const SizedBox(width: 8),
           _buildMessageInputField(context),
           const SizedBox(width: 8),
           _buildSendButton(context),
         ],
-      ),
-    );
-  }
-
-  /// Builds the options toggle button
-  Widget _buildOptionsToggleButton(BuildContext context) {
-    return IconButton(
-      onPressed: onToggleOptions,
-      icon: Icon(
-        showOptions ? Icons.close : Icons.add,
-        color: Theme.of(context).colorScheme.onSurface,
       ),
     );
   }

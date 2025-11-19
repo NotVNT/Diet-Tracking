@@ -18,32 +18,37 @@ class ChatSettingsMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    
     return PopupMenuButton<String>(
-      icon: const Icon(Icons.more_vert, color: Colors.white),
-      color: const Color(0xFF2A2A2A),
+      icon: Icon(
+        Icons.more_vert,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      color: Theme.of(context).colorScheme.surface,
+      surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
       offset: const Offset(0, 40),
       itemBuilder: (BuildContext context) => [
         _buildMenuItem(
+          context: context,
           value: 'new_chat',
           icon: Icons.add_comment_outlined,
           title: l10n.chatBotCreateNewChat,
           subtitle: l10n.chatBotStartNewConversation,
         ),
+        const PopupMenuDivider(),
         _buildMenuItem(
+          context: context,
           value: 'chat_history',
           icon: Icons.history_outlined,
           title: l10n.chatBotChatHistory,
           subtitle: l10n.chatBotViewPreviousConversations,
-        ),
-        const PopupMenuDivider(),
-        _buildMenuItem(
-          value: 'settings',
-          icon: Icons.settings_outlined,
-          title: l10n.chatBotSettings,
-          subtitle: l10n.chatBotCustomizeApp,
         ),
       ],
       onSelected: (String value) {
@@ -63,11 +68,14 @@ class ChatSettingsMenu extends StatelessWidget {
   }
 
   PopupMenuItem<String> _buildMenuItem({
+    required BuildContext context,
     required String value,
     required IconData icon,
     required String title,
     required String subtitle,
   }) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return PopupMenuItem<String>(
       value: value,
       child: Container(
@@ -77,12 +85,14 @@ class ChatSettingsMenu extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFF3A3A3A),
+                color: isDarkMode 
+                    ? Theme.of(context).colorScheme.surfaceContainerHighest
+                    : Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primary,
                 size: 20,
               ),
             ),
@@ -95,7 +105,7 @@ class ChatSettingsMenu extends StatelessWidget {
                   Text(
                     title,
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -104,7 +114,7 @@ class ChatSettingsMenu extends StatelessWidget {
                   Text(
                     subtitle,
                     style: GoogleFonts.inter(
-                      color: Colors.grey[400],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),
