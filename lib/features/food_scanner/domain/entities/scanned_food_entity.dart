@@ -5,6 +5,9 @@ class ScannedFoodEntity {
   final ScanType scanType;
   final DateTime scanDate;
   final bool isProcessed;
+  final String? foodName;        // Tên món ăn (từ barcode hoặc AI)
+  final double? calories;         // Calories (từ OpenFoodFacts)
+  final String? description;      // Mô tả/thông tin dinh dưỡng
 
   const ScannedFoodEntity({
     required this.id,
@@ -12,6 +15,9 @@ class ScannedFoodEntity {
     required this.scanType,
     required this.scanDate,
     this.isProcessed = false,
+    this.foodName,
+    this.calories,
+    this.description,
   });
 }
 

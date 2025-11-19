@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../common/permission_service.dart';
 import '../providers/home_provider.dart';
 import '../widgets/custom_floating_action_button.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
@@ -12,6 +11,7 @@ import '../widgets/search_filter_bar.dart';
 import '../widgets/filter_bottom_sheet.dart';
 import '../widgets/calorie_goal_card.dart';
 import '../widgets/recently_logged_section.dart';
+import '../widgets/meals_list_section.dart';
 import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
 import '../../../food_scanner/domain/repositories/scanned_food_repository.dart';
 import '../../../food_scanner/data/datasources/scanned_food_local_datasource.dart';
@@ -192,49 +192,32 @@ class _HomePageState extends State<HomePage> {
                 onViewReport: _onViewReport,
               ),
               SizedBox(height: responsive.height(16)),
-              RecentlyLoggedSection(
-                scannedFoods: _scannedFoods,
+              
+              // Danh sách bữa ăn (hiển thị TẤT CẢ: food + barcode)
+              MealsListSection(
+                meals: _scannedFoods,
+                onMealTap: (food) => _onPictureTap(food),
                 onViewAll: () {
-                  // TODO: Navigate to full gallery view
-                  debugPrint('View all tapped');
+                  debugPrint('View all meals tapped');
+                },
+              ),
+              
+              SizedBox(height: responsive.height(16)),
+              
+              // Ảnh đã ghi nhận (CHỈ hiển thị có ảnh, KHÔNG hiển thị barcode)
+              RecentlyLoggedSection(
+                scannedFoods: _scannedFoods.where((food) => 
+                  food.imagePath.isNotEmpty && 
+                  food.scanType != ScanType.barcode
+                ).toList(),
+                onViewAll: () {
+                  debugPrint('View all photos tapped');
                 },
                 onPictureTap: (food) => _onPictureTap(food),
               ),
-              SizedBox(height: responsive.height(12)),
-              _buildContentPlaceholder(responsive),
+              SizedBox(height: responsive.height(24)),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContentPlaceholder(ResponsiveHelper responsive) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: responsive.height(20)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              _searchQuery.isEmpty
-                  ? 'Danh sách bữa ăn sẽ hiển thị ở đây'
-                  : 'Tìm kiếm: $_searchQuery',
-              style: TextStyle(fontSize: responsive.fontSize(14)),
-            ),
-            if (_activeFilters != null) ...[
-              SizedBox(height: responsive.height(6)),
-              Text(
-                'Lọc: ${_activeFilters!['category']} | ${_activeFilters!['calorieMin']}-${_activeFilters!['calorieMax']} kcal',
-                style: TextStyle(
-                  fontSize: responsive.fontSize(11),
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withOpacity(0.6),
-                ),
-              ),
-            ],
-          ],
         ),
       ),
     );
@@ -251,20 +234,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Handle scan food action
-  void _onScanFoodTapped() {
-    PermissionService.requestCameraPermission(
-      context,
-      onPermissionGranted: () async {
-        if (!mounted) return;
-        await Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const FoodScannerPage()),
-        );
-        // Trigger a rebuild to refresh the scanned foods list
-        if (mounted) {
-          await _loadScannedFoods();
-        }
-      },
+  void _onScanFoodTapped() async {
+    // Mở trực tiếp FoodScannerPage, để hệ thống tự xử lý permission
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const FoodScannerPage()),
     );
+    // Trigger a rebuild to refresh the scanned foods list
+    if (mounted) {
+      await _loadScannedFoods();
+    }
   }
 
   /// Handle report action

@@ -9,11 +9,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../models/scanner_action_config.dart';
+import '../../models/barcode_product.dart';
 import '../../domain/entities/scanned_food_entity.dart';
 import '../../domain/repositories/scanned_food_repository.dart';
 import '../../data/datasources/scanned_food_local_datasource.dart';
 import '../../data/repositories/scanned_food_repository_impl.dart';
 import '../../services/barcode_scanner_service.dart';
+import '../../services/barcode_api_service.dart';
 import '../widgets/barcode_result_dialog.dart';
 import '../widgets/scanner_controls.dart';
 import '../widgets/scanner_preview.dart';
@@ -32,6 +34,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
   final ImagePicker _picker = ImagePicker();
   late final ScannedFoodRepository _scannedFoodRepository;
   late final BarcodeScannerService _barcodeScannerService;
+  late final BarcodeApiService _barcodeApiService;
 
   bool _isUploading = false;
   CameraController? _cameraController;
@@ -53,6 +56,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       localDataSource: ScannedFoodLocalDataSource(),
     );
     _barcodeScannerService = BarcodeScannerService();
+    _barcodeApiService = BarcodeApiService();
     _initializeCamera();
   }
 
@@ -176,6 +180,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       return true;
     }
 
+    // Yêu cầu permission trực tiếp từ hệ thống (không dùng custom dialog)
     if (status.isDenied || status.isRestricted) {
       status = await Permission.camera.request();
       if (status.isGranted || status.isLimited) {
@@ -321,6 +326,60 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
           _isUploading = false;
         });
       }
+    }
+  }
+
+  /// Lưu sản phẩm từ barcode với thông tin chi tiết từ OpenFoodFacts
+  Future<void> _saveBarcodeProduct(
+    BarcodeProduct product,
+    String imagePath,
+  ) async {
+    try {
+      // Tạo tên món ăn từ thông tin sản phẩm
+      String foodName = product.productName ?? 'Sản phẩm ${product.barcode}';
+      if (product.brands != null && product.brands!.isNotEmpty) {
+        foodName = '${product.productName ?? "Sản phẩm"} - ${product.brands}';
+      }
+
+      // Tạo description từ thông tin dinh dưỡng
+      String description = 'Barcode: ${product.barcode}\n\n';
+      
+      if (product.calories != null) {
+        description += '🔥 Calories: ${product.calories!.toStringAsFixed(0)} kcal\n';
+      }
+      if (product.protein != null) {
+        description += '🥩 Protein: ${product.protein!.toStringAsFixed(1)}g\n';
+      }
+      if (product.carbohydrates != null) {
+        description += '🍚 Carbs: ${product.carbohydrates!.toStringAsFixed(1)}g\n';
+      }
+      if (product.fat != null) {
+        description += '🧈 Fat: ${product.fat!.toStringAsFixed(1)}g\n';
+      }
+      if (product.ingredientsText != null && product.ingredientsText!.isNotEmpty) {
+        description += '\n📝 Nguyên liệu: ${product.ingredientsText}';
+      }
+
+      final scannedFood = ScannedFoodEntity(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        imagePath: '', // Không lưu ảnh cho barcode
+        scanType: ScanType.barcode,
+        scanDate: DateTime.now(),
+        foodName: foodName,
+        calories: product.calories,
+        description: description.trim(),
+      );
+
+      await _scannedFoodRepository.saveScannedFood(scannedFood);
+      
+      print('✅ [DEBUG] Đã lưu barcode product: $foodName');
+      print('✅ [DEBUG] Calories: ${product.calories}, Description length: ${description.length}');
+    } catch (e) {
+      print('❌ [DEBUG] Lỗi khi lưu barcode product: $e');
+      if (mounted) {
+        _showErrorMessage();
+      }
+      rethrow;
     }
   }
 
@@ -502,20 +561,69 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
   }
 
   /// Xử lý khi người dùng chọn một barcode
-  void _handleBarcodeSelected(Barcode barcode, String imagePath) {
+  Future<void> _handleBarcodeSelected(Barcode barcode, String imagePath) async {
     final barcodeValue = barcode.displayValue ?? barcode.rawValue ?? '';
     
-    // Lưu ảnh với barcode
-    _saveScannedFood(imagePath, ScanType.barcode);
+    setState(() {
+      _isUploading = true;
+    });
     
-    // Hiển thị thông báo
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Đã lưu mã: $barcodeValue'),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.green,
-      ),
-    );
+    try {
+      // Gọi API Python để lấy thông tin sản phẩm
+      // GỬI MÃ BARCODE TRỰC TIẾP (không gửi ảnh)
+      print('🔵 [DEBUG] Gallery - Gọi API cho mã: $barcodeValue');
+      
+      BarcodeProduct? product;
+      try {
+        product = await _barcodeApiService.getProductInfo(barcodeValue);
+        
+        print('🟢 [DEBUG] Gallery - API SUCCESS: ${product.productName}');
+        
+        if (mounted) {
+          // Lưu với thông tin đầy đủ (không lưu ảnh)
+          await _saveBarcodeProduct(product, imagePath);
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đã quét: ${product.productName ?? barcodeValue}'),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        // Fallback nếu API lỗi (lưu không có ảnh)
+        print('🔴 [DEBUG] Gallery - API ERROR: $e');
+        
+        if (mounted) {
+          final scannedFood = ScannedFoodEntity(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            imagePath: '', // Không lưu ảnh
+            scanType: ScanType.barcode,
+            scanDate: DateTime.now(),
+            foodName: 'Barcode: $barcodeValue',
+            calories: null,
+            description: 'Mã vạch: $barcodeValue\n\nKhông tìm thấy thông tin chi tiết từ OpenFoodFacts',
+          );
+          
+          await _scannedFoodRepository.saveScannedFood(scannedFood);
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đã lưu mã: $barcodeValue (Không tìm thấy chi tiết)'),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -594,33 +702,77 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     });
 
     try {
-      // Chụp ảnh hiện tại
+      // Chụp ảnh hiện tại (chỉ để có timestamp, không lưu)
       final controller = _cameraController;
-      if (controller != null && controller.value.isInitialized) {
-        final XFile photo = await controller.takePicture();
+      if (controller == null || !controller.value.isInitialized) {
+        throw Exception('Camera chưa sẵn sàng');
+      }
+
+      final XFile photo = await controller.takePicture();
+      final barcodeValue = barcode.displayValue ?? barcode.rawValue ?? '';
+
+      // Gọi API Python để lấy thông tin sản phẩm từ OpenFoodFacts
+      // GỬI MÃ BARCODE TRỰC TIẾP (không gửi ảnh)
+      BarcodeProduct? product;
+      try {
+        print('🔵 [DEBUG] Bắt đầu gọi API với mã barcode: $barcodeValue');
         
-        // Lưu với barcode
-        await _saveScannedFood(photo.path, ScanType.barcode);
+        product = await _barcodeApiService.getProductInfo(barcodeValue);
         
-        final barcodeValue = barcode.displayValue ?? barcode.rawValue ?? '';
+        print('🟢 [DEBUG] API SUCCESS: ${product.productName}');
         
         if (mounted) {
+          // Lưu sản phẩm với thông tin đầy đủ từ OpenFoodFacts
+          await _saveBarcodeProduct(product, photo.path);
+          
           // Hiển thị thông báo thành công
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Đã quét mã: $barcodeValue'),
+              content: Text(
+                'Đã quét: ${product.productName ?? barcodeValue}',
+              ),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.green,
               duration: const Duration(seconds: 2),
             ),
           );
-
-          // Đóng scanner và quay về homepage
-          await Future.delayed(const Duration(milliseconds: 500));
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
         }
+      } catch (e) {
+        // Nếu API lỗi, vẫn lưu với thông tin cơ bản (không có ảnh)
+        print('🔴 [DEBUG] API ERROR: $e');
+        print('🔴 [DEBUG] Error type: ${e.runtimeType}');
+        
+        if (mounted) {
+          // Lưu barcode cơ bản không có thông tin chi tiết
+          final scannedFood = ScannedFoodEntity(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            imagePath: '', // Không lưu ảnh
+            scanType: ScanType.barcode,
+            scanDate: DateTime.now(),
+            foodName: 'Barcode: $barcodeValue',
+            calories: null,
+            description: 'Mã vạch: $barcodeValue\n\nKhông tìm thấy thông tin chi tiết từ OpenFoodFacts',
+          );
+          
+          await _scannedFoodRepository.saveScannedFood(scannedFood);
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Đã lưu mã: $barcodeValue (Không tìm thấy thông tin chi tiết)',
+              ),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.orange,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+
+      // Đóng scanner và quay về homepage
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (mounted) {
+        Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {

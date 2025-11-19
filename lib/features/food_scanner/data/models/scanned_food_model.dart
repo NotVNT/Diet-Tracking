@@ -8,6 +8,9 @@ class ScannedFoodModel extends ScannedFoodEntity {
     required super.scanType,
     required super.scanDate,
     super.isProcessed,
+    super.foodName,
+    super.calories,
+    super.description,
   });
 
   /// Create from JSON
@@ -22,6 +25,9 @@ class ScannedFoodModel extends ScannedFoodEntity {
       ),
       scanDate: _parseDate(json['scanDate']),
       isProcessed: json['isProcessed'] as bool? ?? false,
+      foodName: json['foodName'] as String?,
+      calories: _parseDouble(json['calories']),
+      description: json['description'] as String?,
     );
   }
 
@@ -33,6 +39,14 @@ class ScannedFoodModel extends ScannedFoodEntity {
     return DateTime.now();
   }
 
+  static double? _parseDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value);
+    return null;
+  }
+
   /// Convert to JSON
   Map<String, dynamic> toJson() {
     return {
@@ -41,6 +55,9 @@ class ScannedFoodModel extends ScannedFoodEntity {
       'scanType': scanType.name,
       'scanDate': scanDate.toIso8601String(),
       'isProcessed': isProcessed,
+      'foodName': foodName,
+      'calories': calories,
+      'description': description,
     };
   }
 
@@ -52,6 +69,9 @@ class ScannedFoodModel extends ScannedFoodEntity {
       scanType: entity.scanType,
       scanDate: entity.scanDate,
       isProcessed: entity.isProcessed,
+      foodName: entity.foodName,
+      calories: entity.calories,
+      description: entity.description,
     );
   }
 }

@@ -38,16 +38,26 @@ class ScannedFoodRemoteDataSource {
 
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
-      final existing = _readDietUrls(snapshot.data());
+      final rawList = _rawDietList(snapshot.data());
+      
+      // Convert model to JSON để lưu đầy đủ thông tin
+      final foodJson = food.toJson();
+      
+      // Remove existing entry with same id if exists
+      rawList.removeWhere((entry) {
+        final existingId = _extractId(entry);
+        return existingId == food.id;
+      });
+      
+      // Insert new entry at the beginning
+      rawList.insert(0, foodJson);
 
-      existing.removeWhere((url) => url == food.imagePath);
-      existing.insert(0, food.imagePath);
-
-      if (existing.length > maxStoredItems) {
-        existing.removeRange(maxStoredItems, existing.length);
+      // Keep only maxStoredItems
+      if (rawList.length > maxStoredItems) {
+        rawList.removeRange(maxStoredItems, rawList.length);
       }
 
-      transaction.set(docRef, {_dietField: existing}, SetOptions(merge: true));
+      transaction.set(docRef, {_dietField: rawList}, SetOptions(merge: true));
     });
   }
 
@@ -69,17 +79,13 @@ class ScannedFoodRemoteDataSource {
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       final rawList = _rawDietList(snapshot.data());
-      final filtered = <String>[];
+      final filtered = <dynamic>[];
 
       for (final entry in rawList) {
-        final url = _extractImageUrl(entry);
-        if (url == null) continue;
         final entryId = _extractId(entry);
-        if (entryId == id || url == id) {
-          continue;
-        }
-        if (!filtered.contains(url)) {
-          filtered.add(url);
+        // Chỉ giữ lại các entry KHÔNG trùng với id cần xóa
+        if (entryId != id) {
+          filtered.add(entry); // Giữ nguyên entry (Map hoặc String)
         }
       }
 

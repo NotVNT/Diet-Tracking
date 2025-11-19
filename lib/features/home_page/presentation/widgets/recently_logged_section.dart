@@ -124,6 +124,9 @@ class RecentlyLoggedSection extends StatelessWidget {
         final food = scannedFoods[index];
         return PictureCard(
           imagePath: food.imagePath,
+          foodName: food.foodName,
+          calories: food.calories,
+          scanType: food.scanType,
           onTap: onPictureTap != null ? () => onPictureTap!(food) : null,
         );
       },

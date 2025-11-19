@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../login/login_screen.dart';
 import '../on_boarding/welcome_screen.dart';
 import '../../features/chat_bot_view_home/presentation/providers/chat_provider_factory.dart';
 
@@ -225,7 +224,7 @@ class _ProfileViewState extends State<ProfileView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
+                          builder: (context) => const WelcomeScreen(),
                         ),
                       );
                     },

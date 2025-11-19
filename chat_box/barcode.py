@@ -1,10 +1,72 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
 from pyzbar.pyzbar import decode
 from PIL import Image
 import requests
 import io
 
 app = FastAPI()
+
+@app.post("/get_product_info")
+async def get_product_info(barcode: str = Form(...)):
+    """
+    Endpoint chính: Nhận mã barcode từ Flutter (đã quét bằng ML Kit)
+    và trả về thông tin sản phẩm từ OpenFoodFacts
+    """
+    print(f"\n{'='*60}")
+    print(f"🔵 [INFO] Nhận barcode từ Flutter: {barcode}")
+    
+    url = f"https://world.openfoodfacts.org/api/v2/product/{barcode}.json"
+    print(f"🔵 [INFO] Đang gọi OpenFoodFacts API...")
+    
+    try:
+        resp = requests.get(url, timeout=10).json()
+        
+        status = resp.get('status')
+        print(f"🔵 [INFO] API status: {status}")
+        
+        if status != 1:
+            print(f"🔴 [WARNING] Sản phẩm không tồn tại trong OpenFoodFacts")
+            return {
+                "barcode": barcode,
+                "product": None,
+                "message": "Sản phẩm không có trong database OpenFoodFacts"
+            }
+
+        product = resp.get("product", {})
+        
+        # Log thông tin sản phẩm
+        product_name = product.get('product_name', 'N/A')
+        brands = product.get('brands', 'N/A')
+        nutriments = product.get('nutriments', {})
+        calories = nutriments.get('energy-kcal', 0)
+        protein = nutriments.get('proteins', 0)
+        carbs = nutriments.get('carbohydrates', 0)
+        fat = nutriments.get('fat', 0)
+        
+        print(f"🟢 [SUCCESS] Tìm thấy sản phẩm!")
+        print(f"   📦 Tên: {product_name}")
+        print(f"   🏷️  Thương hiệu: {brands}")
+        print(f"   🔥 Calories: {calories} kcal")
+        print(f"   🥩 Protein: {protein}g")
+        print(f"   🍚 Carbs: {carbs}g")
+        print(f"   🧈 Fat: {fat}g")
+        print(f"{'='*60}\n")
+        
+        return {
+            "barcode": barcode,
+            "product": product
+        }
+        
+    except requests.Timeout:
+        print(f"🔴 [ERROR] Timeout khi gọi OpenFoodFacts API")
+        return {
+            "error": "Timeout khi tra cứu sản phẩm"
+        }
+    except Exception as e:
+        print(f"🔴 [ERROR] Lỗi: {str(e)}")
+        return {
+            "error": f"Lỗi khi tra cứu sản phẩm: {str(e)}"
+        }
 
 @app.post("/scan_barcode")
 async def scan_barcode(file: UploadFile = File(...)):

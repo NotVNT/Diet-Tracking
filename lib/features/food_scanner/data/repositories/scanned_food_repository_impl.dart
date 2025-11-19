@@ -25,18 +25,29 @@ class ScannedFoodRepositoryImpl implements ScannedFoodRepository {
 
   @override
   Future<void> saveScannedFood(ScannedFoodEntity food) async {
-    final file = File(food.imagePath);
-    if (!file.existsSync()) {
-      throw StateError('Image file ${food.imagePath} was not found');
+    String uploadedUrl = '';
+    
+    // Nếu có ảnh thì upload lên Cloudinary
+    if (food.imagePath.isNotEmpty) {
+      final file = File(food.imagePath);
+      if (!file.existsSync()) {
+        throw StateError('Image file ${food.imagePath} was not found');
+      }
+      uploadedUrl = await cloudinaryService.uploadImage(file);
+    } else {
+      // Không có ảnh (ví dụ: barcode scan) - tạo ID unique
+      uploadedUrl = 'barcode_${DateTime.now().millisecondsSinceEpoch}';
     }
-
-    final uploadedUrl = await cloudinaryService.uploadImage(file);
+    
     final remoteModel = ScannedFoodModel(
       id: uploadedUrl,
-      imagePath: uploadedUrl,
+      imagePath: food.imagePath.isNotEmpty ? uploadedUrl : '', // Nếu không có ảnh thì để rỗng
       scanType: food.scanType,
       scanDate: food.scanDate,
       isProcessed: food.isProcessed,
+      foodName: food.foodName,
+      calories: food.calories,
+      description: food.description,
     );
 
     await remoteDataSource.saveScannedFood(remoteModel);
