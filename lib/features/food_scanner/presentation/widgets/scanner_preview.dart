@@ -9,6 +9,7 @@ class ScannerPreview extends StatelessWidget {
   final String barcodeHint;
   final TextStyle overlayTextStyle;
   final Widget? cameraPreview;
+  final Widget? barcodeControlsOverlay;
 
   const ScannerPreview({
     super.key,
@@ -17,6 +18,7 @@ class ScannerPreview extends StatelessWidget {
     required this.barcodeHint,
     required this.overlayTextStyle,
     this.cameraPreview,
+    this.barcodeControlsOverlay,
   });
 
   @override
@@ -37,6 +39,7 @@ class ScannerPreview extends StatelessWidget {
           bottomHint: barcodeHint,
           hintStyle: overlayTextStyle,
           cameraPreview: cameraPreview,
+          controlsOverlay: barcodeControlsOverlay,
         );
       case ScannerActionType.gallery:
         return ScanFoodModeView(

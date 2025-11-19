@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import '../../models/scanner_action_config.dart';
 import '../../domain/entities/scanned_food_entity.dart';
 import '../../domain/repositories/scanned_food_repository.dart';
@@ -13,9 +17,6 @@ import '../widgets/scanner_preview.dart';
 import '../widgets/scanner_toolbar.dart';
 
 /// Screen allowing the user to scan food, barcodes, or pick images.
-///
-/// The class is UI-focused so later camera/barcode integrations can plug into
-/// `ScannerPreview` and the callbacks defined in [_FoodScannerPageState].
 class FoodScannerPage extends StatefulWidget {
   const FoodScannerPage({super.key});
 
@@ -27,10 +28,14 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
   ScannerActionType _selectedAction = ScannerActionType.food;
   final ImagePicker _picker = ImagePicker();
   late final ScannedFoodRepository _scannedFoodRepository;
+
   bool _isUploading = false;
   CameraController? _cameraController;
   bool _isCameraInitializing = false;
   String? _cameraErrorMessage;
+
+  bool _usesCameraAction(ScannerActionType type) =>
+      type == ScannerActionType.food || type == ScannerActionType.barcode;
 
   @override
   void initState() {
@@ -46,6 +51,10 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     _cameraController?.dispose();
     super.dispose();
   }
+
+  // ---------------------------------------------------------------------------
+  // Actions
+  // ---------------------------------------------------------------------------
 
   List<ScannerActionConfig> _buildActions(AppLocalizations l10n) {
     return [
@@ -67,8 +76,15 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     ];
   }
 
+  // ---------------------------------------------------------------------------
+  // Camera init / permissions
+  // ---------------------------------------------------------------------------
+
   Future<void> _initializeCamera() async {
     if (_isCameraInitializing) return;
+
+    final hasPermission = await _ensureCameraPermission();
+    if (!hasPermission) return;
 
     final previousController = _cameraController;
     setState(() {
@@ -92,9 +108,16 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
         return;
       }
 
+      // Ưu tiên camera sau, nếu không có thì dùng camera đầu tiên.
+      final CameraDescription backCamera = cameras.firstWhere(
+        (cam) => cam.lensDirection == CameraLensDirection.back,
+        orElse: () => cameras.first,
+      );
+
+      // veryHigh thường map 1920x1080 (16:9) trên Android → gần với camera gốc.
       final controller = CameraController(
-        cameras.first,
-        ResolutionPreset.high,
+        backCamera,
+        ResolutionPreset.veryHigh,
         enableAudio: false,
       );
 
@@ -129,6 +152,50 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     }
   }
 
+  Future<bool> _ensureCameraPermission() async {
+    var status = await Permission.camera.status;
+
+    if (status.isGranted || status.isLimited) {
+      return true;
+    }
+
+    if (status.isDenied || status.isRestricted) {
+      status = await Permission.camera.request();
+      if (status.isGranted || status.isLimited) {
+        return true;
+      }
+    }
+
+    if (mounted) {
+      final bool permanentlyDenied = status.isPermanentlyDenied;
+      final message = permanentlyDenied
+          ? 'Hãy bật quyền camera trong Cài đặt để tiếp tục quét.'
+          : 'Ứng dụng cần quyền camera để quét.';
+      setState(() {
+        _cameraErrorMessage = message;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          action: permanentlyDenied
+              ? SnackBarAction(
+                  label: 'Cài đặt',
+                  onPressed: () {
+                    openAppSettings();
+                  },
+                )
+              : null,
+        ),
+      );
+    }
+
+    return false;
+  }
+
+  // ---------------------------------------------------------------------------
+  // UI callbacks
+  // ---------------------------------------------------------------------------
+
   void _onActionSelected(ScannerActionType type) {
     if (type == ScannerActionType.gallery) {
       _openGalleryPicker();
@@ -136,8 +203,11 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     }
 
     if (_selectedAction == type) {
+      _ensureCameraForAction(type);
       return;
     }
+
+    _ensureCameraForAction(type);
 
     setState(() {
       _selectedAction = type;
@@ -159,7 +229,10 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     }
   }
 
-  /// Capture photo using camera
+  // ---------------------------------------------------------------------------
+  // Capture & save
+  // ---------------------------------------------------------------------------
+
   Future<void> _capturePhoto(
     ScanType scanType,
     String placeholderMessage,
@@ -193,7 +266,6 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     }
   }
 
-  /// Save scanned food to repository
   Future<void> _saveScannedFood(String imagePath, ScanType scanType) async {
     if (_isUploading) return;
     setState(() {
@@ -212,7 +284,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       if (mounted) {
         _showSuccessMessage();
       }
-    } catch (e) {
+    } catch (_) {
       if (mounted) {
         _showErrorMessage();
       }
@@ -224,6 +296,10 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       }
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // Messages
+  // ---------------------------------------------------------------------------
 
   void _showSuccessMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -312,16 +388,19 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // Gallery
+  // ---------------------------------------------------------------------------
+
   void _openGalleryPicker() {
     if (_isUploading) return;
     _pickFromGallery();
   }
 
-  /// Pick image from gallery
   Future<void> _pickFromGallery() async {
     final errorMessage =
         AppLocalizations.of(context)?.foodScannerPlaceholderOpenGallery ??
-        'Không thể mở thư viện. Vui lòng thử lại.';
+            'Không thể mở thư viện. Vui lòng thử lại.';
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -333,12 +412,16 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       if (image != null && mounted) {
         await _saveScannedFood(image.path, ScanType.gallery);
       }
-    } catch (e) {
+    } catch (_) {
       if (mounted) {
         _showPlaceholderMessage(errorMessage);
       }
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // Camera preview
+  // ---------------------------------------------------------------------------
 
   Widget? _buildCameraPreview() {
     if (_cameraErrorMessage != null) {
@@ -365,6 +448,13 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       return null;
     }
 
+    // Camera sensor thường trả về landscape (ngang), nhưng app dùng portrait (dọc).
+    // Đảo ngược tỷ lệ để preview dọc khớp với ảnh chụp.
+    final previewAspectRatio = controller.value.aspectRatio;
+    if (previewAspectRatio <= 0) {
+      return const SizedBox.shrink();
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth;
@@ -373,34 +463,49 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
           return const SizedBox.shrink();
         }
 
-        final previewAspectRatio = controller.value.aspectRatio;
-        if (previewAspectRatio <= 0) {
-          return const SizedBox.shrink();
-        }
-        final viewAspectRatio = maxWidth / maxHeight;
-        final scale = previewAspectRatio / viewAspectRatio;
-        final fittedScale = scale < 1 ? (1 / scale) : scale;
+        // Đảo tỷ lệ từ landscape (ngang) sang portrait (dọc).
+        final correctedAspectRatio = 1 / previewAspectRatio;
 
-        return ClipRect(
-          child: Transform.scale(
-            scale: fittedScale.isFinite ? fittedScale : 1,
-            alignment: Alignment.center,
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: previewAspectRatio,
-                child: CameraPreview(controller),
-              ),
-            ),
+        return Center(
+          child: AspectRatio(
+            aspectRatio: correctedAspectRatio,
+            child: CameraPreview(controller),
           ),
         );
       },
     );
   }
 
+  void _ensureCameraForAction(ScannerActionType type) {
+    if (!_usesCameraAction(type)) return;
+    final controller = _cameraController;
+    final needsInitialization =
+        controller == null || !controller.value.isInitialized;
+    if (needsInitialization && !_isCameraInitializing) {
+      unawaited(_initializeCamera());
+    }
+  }
+
+  Widget _buildScannerControls(List<ScannerActionConfig> actions) {
+    final bool disableCapture = _isUploading || _isCameraInitializing;
+    return ScannerControls(
+      actions: actions,
+      selectedAction: _selectedAction,
+      onActionSelected: _onActionSelected,
+      onCapture: disableCapture ? () {} : _onCapturePressed,
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Build
+  // ---------------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final actions = _buildActions(l10n);
+    final bool showControlsInsidePreview =
+        _selectedAction == ScannerActionType.barcode;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -416,6 +521,9 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
                 fontSize: 14,
               ),
               cameraPreview: _buildCameraPreview(),
+              barcodeControlsOverlay: showControlsInsidePreview
+                  ? _buildScannerControls(actions)
+                  : null,
             ),
           ),
           SafeArea(
@@ -428,28 +536,22 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
                   onClose: () => Navigator.of(context).pop(),
                 ),
                 const Spacer(),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Colors.black.withOpacity(0.85),
-                        Colors.black.withOpacity(0.0),
-                      ],
+                if (!showControlsInsidePreview)
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.85),
+                          Colors.black.withOpacity(0.0),
+                        ],
+                      ),
                     ),
+                    padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
+                    child: _buildScannerControls(actions),
                   ),
-                  padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
-                  child: ScannerControls(
-                    actions: actions,
-                    selectedAction: _selectedAction,
-                    onActionSelected: _onActionSelected,
-                    onCapture: (_isUploading || _isCameraInitializing)
-                        ? () {}
-                        : _onCapturePressed,
-                  ),
-                ),
               ],
             ),
           ),

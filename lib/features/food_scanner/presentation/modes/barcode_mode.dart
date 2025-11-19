@@ -8,12 +8,14 @@ class BarcodeModeView extends StatelessWidget {
   final String bottomHint;
   final TextStyle hintStyle;
   final Widget? cameraPreview;
+  final Widget? controlsOverlay;
 
   const BarcodeModeView({
     super.key,
     required this.bottomHint,
     required this.hintStyle,
     this.cameraPreview,
+    this.controlsOverlay,
   });
 
   @override
@@ -39,9 +41,11 @@ class BarcodeModeView extends StatelessWidget {
             .clamp(minHeight, maxAllowedHeight)
             .toDouble();
 
-        final double bottomGap = (maxHeight * 0.12)
-            .clamp(96.0, 170.0)
-            .toDouble();
+    final double bottomGap = (maxHeight * 0.12)
+      .clamp(64.0, 140.0)
+      .toDouble();
+    final double hintBottomSpacing =
+      controlsOverlay == null ? bottomGap : 24.0;
 
         return Stack(
           children: [
@@ -60,18 +64,37 @@ class BarcodeModeView extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                margin:
-                    EdgeInsets.fromLTRB(16, 16, 16, bottomGap + bottomInset),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (controlsOverlay != null) ...[
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: controlsOverlay!,
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                    Container(
+                      margin: EdgeInsets.only(bottom: hintBottomSpacing),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.65),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(bottomHint, style: hintStyle),
+                    ),
+                  ],
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.65),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(bottomHint, style: hintStyle),
               ),
             ),
           ],
