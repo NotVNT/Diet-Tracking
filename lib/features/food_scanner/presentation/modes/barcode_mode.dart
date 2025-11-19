@@ -9,6 +9,7 @@ class BarcodeModeView extends StatelessWidget {
   final TextStyle hintStyle;
   final Widget? cameraPreview;
   final Widget? controlsOverlay;
+  final bool isScanning;
 
   const BarcodeModeView({
     super.key,
@@ -16,13 +17,13 @@ class BarcodeModeView extends StatelessWidget {
     required this.hintStyle,
     this.cameraPreview,
     this.controlsOverlay,
+    this.isScanning = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final bottomInset = MediaQuery.of(context).padding.bottom;
         final maxWidth = constraints.maxWidth;
         final maxHeight = constraints.maxHeight;
 
@@ -41,12 +42,6 @@ class BarcodeModeView extends StatelessWidget {
             .clamp(minHeight, maxAllowedHeight)
             .toDouble();
 
-    final double bottomGap = (maxHeight * 0.12)
-      .clamp(64.0, 140.0)
-      .toDouble();
-    final double hintBottomSpacing =
-      controlsOverlay == null ? bottomGap : 24.0;
-
         return Stack(
           children: [
             Positioned.fill(
@@ -58,45 +53,53 @@ class BarcodeModeView extends StatelessWidget {
                 height: frameHeight,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white, width: 3),
+                  border: Border.all(
+                    color: isScanning ? Colors.green : Colors.white,
+                    width: 3,
+                  ),
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (controlsOverlay != null) ...[
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(24),
+            if (isScanning)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
                         ),
-                        child: controlsOverlay!,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Đang quét mã vạch...',
+                        style: hintStyle.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
-                    Container(
-                      margin: EdgeInsets.only(bottom: hintBottomSpacing),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.65),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(bottomHint, style: hintStyle),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            // Removed black wrap, controls overlay, and bottom hint message
           ],
         );
       },
