@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
+import 'package:diet_tracking_project/services/session_permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
@@ -35,19 +36,20 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
   late final ScannedFoodRepository _scannedFoodRepository;
   late final BarcodeScannerService _barcodeScannerService;
   late final BarcodeApiService _barcodeApiService;
+  late final SessionPermissionService _sessionPermissionService;
 
   bool _isUploading = false;
   CameraController? _cameraController;
   bool _isCameraInitializing = false;
   String? _cameraErrorMessage;
-  
+
   // Real-time barcode scanning
   bool _isRealTimeScanning = false;
   String? _lastDetectedBarcode;
   DateTime? _lastBarcodeDetectionTime;
 
   bool _usesCameraAction(ScannerActionType type) =>
-      type == ScannerActionType.food || type == ScannerActionType.barcode;
+      type == ScannerActionType.barcode;
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     );
     _barcodeScannerService = BarcodeScannerService();
     _barcodeApiService = BarcodeApiService();
+    _sessionPermissionService = SessionPermissionService();
     _initializeCamera();
   }
 
@@ -180,10 +183,32 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       return true;
     }
 
-    // Yêu cầu permission trực tiếp từ hệ thống (không dùng custom dialog)
+    // Permission already requested from home page, check if permanently denied
+    if (status.isPermanentlyDenied) {
+      if (mounted) {
+        final message = 'Hãy bật quyền camera trong Cài đặt để tiếp tục quét.';
+        setState(() {
+          _cameraErrorMessage = message;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            action: SnackBarAction(
+              label: 'Cài đặt',
+              onPressed: () {
+                openAppSettings();
+              },
+            ),
+          ),
+        );
+      }
+      return false;
+    }
+
+    // If denied but not permanently, use session-aware permission request
     if (status.isDenied || status.isRestricted) {
-      status = await Permission.camera.request();
-      if (status.isGranted || status.isLimited) {
+      final hasPermission = await _sessionPermissionService.requestCameraPermission();
+      if (hasPermission) {
         return true;
       }
     }
@@ -224,6 +249,14 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       return;
     }
 
+    // Food action does not require camera permission
+    if (type == ScannerActionType.food) {
+      setState(() {
+        _selectedAction = type;
+      });
+      return;
+    }
+
     if (_selectedAction == type) {
       _ensureCameraForAction(type);
       return;
@@ -250,7 +283,8 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     final l10n = AppLocalizations.of(context)!;
     switch (_selectedAction) {
       case ScannerActionType.food:
-        _capturePhoto(ScanType.food, l10n.foodScannerPlaceholderCaptureFood);
+        // Food action does not support camera capture
+        _showPlaceholderMessage('Chức năng quét món ăn không khả dụng');
         break;
       case ScannerActionType.barcode:
         _capturePhoto(ScanType.barcode, l10n.foodScannerPlaceholderScanBarcode);
@@ -856,7 +890,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
   }
 
   Widget _buildScannerControls(List<ScannerActionConfig> actions) {
-    final bool disableCapture = _isUploading || _isCameraInitializing || _selectedAction == ScannerActionType.barcode;
+    final bool disableCapture = _isUploading || _isCameraInitializing || _selectedAction == ScannerActionType.barcode || _selectedAction == ScannerActionType.food;
     return ScannerControls(
       actions: actions,
       selectedAction: _selectedAction,

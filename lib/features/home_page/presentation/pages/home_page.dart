@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../services/permission_service.dart';
 import '../providers/home_provider.dart';
 import '../widgets/custom_floating_action_button.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
@@ -38,7 +39,9 @@ class _HomePageState extends State<HomePage> {
   // Home content state
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _searchController = TextEditingController();
+  // ignore: unused_field
   String _searchQuery = '';
+  // ignore: unused_field
   Map<String, dynamic>? _activeFilters;
   late final ScannedFoodRepository _scannedFoodRepository;
   List<ScannedFoodEntity> _scannedFoods = [];
@@ -233,15 +236,26 @@ class _HomePageState extends State<HomePage> {
     provider.setCurrentIndex(HomePageConfig.chatBotIndex);
   }
 
-  /// Handle scan food action
+  /// Handle scan food action - Request camera permission first
   void _onScanFoodTapped() async {
-    // Mở trực tiếp FoodScannerPage, để hệ thống tự xử lý permission
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const FoodScannerPage()),
-    );
-    // Trigger a rebuild to refresh the scanned foods list
+    final permissionService = PermissionService();
+
+    // Request camera permission with single prompt
+    final hasPermission = await permissionService.requestCameraPermission();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    // Permission granted, navigate to FoodScannerPage
     if (mounted) {
-      await _loadScannedFoods();
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const FoodScannerPage()),
+      );
+      // Trigger a rebuild to refresh the scanned foods list
+      if (mounted) {
+        await _loadScannedFoods();
+      }
     }
   }
 

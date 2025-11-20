@@ -130,23 +130,6 @@ class ScannedFoodRemoteDataSource {
     return List<dynamic>.from(rawList);
   }
 
-  List<String> _readDietUrls(Map<String, dynamic>? rawData) {
-    final rawList = _rawDietList(rawData);
-    return _normalizeDietUrls(rawList);
-  }
-
-  List<String> _normalizeDietUrls(List<dynamic> rawList) {
-    final urls = <String>[];
-    final seen = <String>{};
-    for (final entry in rawList) {
-      final url = _extractImageUrl(entry);
-      if (url != null && seen.add(url)) {
-        urls.add(url);
-      }
-    }
-    return urls;
-  }
-
   List<ScannedFoodModel> _readDietModels(Map<String, dynamic>? rawData) {
     final rawList = _rawDietList(rawData);
     final models = <ScannedFoodModel>[];
