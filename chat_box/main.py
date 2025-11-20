@@ -141,21 +141,30 @@ def weighted_random_choice(matches, k=5):
     food_list = [matches[i]['metadata'] for i in chosen]
     return food_list.tolist()
 
-def db_lookup(tool_query: str, top_k=10):
+def db_lookup(tool_query: str, gender: str = "male", top_k=10):
     """
     Thực hiện Hybrid Search (v3)
     Hàm này là hàm chính để ứng dụng của bạn gọi.
+    Args:
+        tool_query: Câu truy vấn (ví dụ: "món gà")
+        gender: "male" hoặc "female" (mặc định là "male")
     """
 
-    print(f"--- Đang thực hiện Hybrid Search v3 cho: '{tool_query}' ---")
+    print(f"--- Đang tìm kiếm cho: '{tool_query}' | Giới tính: {gender} ---")
 
-    # Bước 1: Trích xuất Tag bằng Gemini
+    # 1. Xác định Namespace dựa trên giới tính
+    # Đây là tên namespace bạn đã dùng lúc upsert ở bước 1
+    target_namespace = "male_diet"
+    if gender.lower() == "female":
+        target_namespace = "female_diet"
+
+    # 2. Trích xuất Tag bằng Gemini
     extracted_tags = extract_tags_with_gemini(tool_query)
     print(f"Tags trích xuất từ Gemini: {extracted_tags}")
 
     pinecone_filter = {}
     filter_parts = [] # Dùng $and để kết hợp các điều kiện
-
+    
     if extracted_tags:
         # $in: Dùng cho các cột là LIST
         if extracted_tags.get("true_ingredients"):
@@ -184,14 +193,16 @@ def db_lookup(tool_query: str, top_k=10):
             vector=query_vector,
             filter=pinecone_filter,
             top_k=top_k,
-            include_metadata=True
+            include_metadata=True,
+            namespace=target_namespace
         )
     else:
         print("Không có filter, thực hiện tìm kiếm ngữ nghĩa đơn thuần.")
         results = index.query(
             vector=query_vector,
             top_k=top_k,
-            include_metadata=True
+            include_metadata=True,
+            namespace=target_namespace
         )
 
         # Bước 4: Trả về kết quả (thay vì chỉ in)
@@ -421,7 +432,7 @@ async def chatbox(request: ChatRequest):
     if(action == "DATABASE"):#<---------------------------
         #biến results sẽ là biến mà lưu danh sách database vào
         print("ĐANG SỬ DỤNG DATABASE")
-        results = db_lookup(request.prompt +  request.goal, 10)
+        results = db_lookup(request.prompt +  request.goal, gender = "male", top_k=5)
         # final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan, request.food_records)
         # print("FINAL_PROMPT",final_prompt)
         final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan, request.food_records) + "Dưới đây là danh sách món ăn lấy được từ database:" + str(results) + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
