@@ -1,9 +1,20 @@
-import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/models/food_scanner_models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/entities/scanned_food_entity.dart';
+import '../../data/repositories/scanned_food_repository_impl.dart';
+import '../../domain/usecases/get_barcode_product_info.dart';
+import '../../domain/usecases/request_camera_permission.dart';
+import '../../domain/usecases/save_scanned_food.dart';
+import '../../domain/usecases/scan_barcode_from_image.dart';
+import '../../services/barcode_api_service.dart';
+import '../../services/session_permission_service.dart';
+import '../bloc/food_scanner_bloc.dart';
+import '../bloc/food_scanner_event.dart';
+
 import '../../services/barcode_scanner_service.dart' as barcode_service;
 import '../widgets/food_scanner_page_widget/scanner_widgets.dart';
 import '../widgets/food_scanner_page_widget/scanner_preview.dart';
@@ -18,39 +29,55 @@ class FoodScannerPage extends StatefulWidget {
 }
 
 class _FoodScannerPageState extends State<FoodScannerPage> {
-  // State management
+  late final FoodScannerBloc _bloc;
+  // UI mirror states (sync via BlocListener)
   late ActionSelectedState _actionState;
   late UploadingState _uploadingState;
   late CameraInitializingState _cameraInitState;
   late CameraErrorState? _cameraErrorState;
   late RealTimeScanningState _realTimeScanState;
-
-  // Dependencies
-  late final barcode_service.BarcodeScannerService _barcodeScannerService;
-
-  // Camera
   CameraController? _cameraController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize states
-    _actionState = ActionSelectedState(selectedAction: ScannerActionType.food);
-    _uploadingState = UploadingState(isUploading: false);
-    _cameraInitState = CameraInitializingState(isInitializing: false);
+    // Local UI mirrors of bloc state
+    _actionState = const ActionSelectedState(
+      selectedAction: ScannerActionType.food,
+    );
+    _uploadingState = const UploadingState(isUploading: false);
+    _cameraInitState = const CameraInitializingState(isInitializing: false);
     _cameraErrorState = null;
-    _realTimeScanState = RealTimeScanningState(isScanning: false);
+    _realTimeScanState = const RealTimeScanningState(isScanning: false);
 
-    // Initialize dependencies
-    _barcodeScannerService = barcode_service.BarcodeScannerService();
-    _initializeCamera();
+    // Build dependencies and create bloc
+    final repository = ScannedFoodRepositoryImpl();
+    final scannerService = barcode_service.BarcodeScannerService();
+    final apiService = BarcodeApiService();
+
+    final scanBarcodeFromImage = ScanBarcodeFromImage(scannerService);
+    final requestPermission = RequestCameraPermission(
+      SessionPermissionService(),
+    );
+    final saveScannedFood = SaveScannedFood(repository);
+    final getProductInfo = GetBarcodeProductInfo(apiService);
+
+    _bloc = FoodScannerBloc(
+      scannedFoodRepository: repository,
+      barcodeScannerService: scannerService,
+      barcodeApiService: apiService,
+      scanBarcodeFromImageUseCase: scanBarcodeFromImage,
+      requestCameraPermissionUseCase: requestPermission,
+      saveScannedFoodUseCase: saveScannedFood,
+      getBarcodeProductInfoUseCase: getProductInfo,
+    );
+
+    _bloc.add(const InitializeCameraEvent());
   }
 
   @override
   void dispose() {
-    _stopRealTimeScanning();
-    _cameraController?.dispose();
-    _barcodeScannerService.dispose();
+    _bloc.close();
     super.dispose();
   }
 
@@ -74,7 +101,22 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     ];
   }
 
-
+  void _syncState(FoodScannerState state) {
+    if (state is ActionSelectedState) {
+      _actionState = state;
+    } else if (state is UploadingState) {
+      _uploadingState = state;
+    } else if (state is CameraInitializingState) {
+      _cameraInitState = state;
+    } else if (state is CameraErrorState) {
+      _cameraErrorState = state;
+    } else if (state is CameraReadyState) {
+      _cameraController = state.controller;
+      _cameraErrorState = null;
+    } else if (state is RealTimeScanningState) {
+      _realTimeScanState = state;
+    }
+  }
 
   void _showHelp() {
     final l10n = AppLocalizations.of(context)!;
@@ -130,7 +172,6 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     );
   }
 
-
   Widget? _buildCameraPreview() {
     if (_cameraErrorState != null) {
       return Center(
@@ -184,35 +225,47 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     );
   }
 
-
-
   void _onActionSelected(ScannerActionType type) {
-    setState(() {
-      _actionState = ActionSelectedState(selectedAction: type);
-    });
+    _bloc.add(ActionSelectedEvent(actionType: type));
+    // Nếu chọn Gallery, mở thư viện ngay
+    if (type == ScannerActionType.gallery) {
+      _bloc.add(
+        CapturePhotoEvent(
+          scanType: ScanType.gallery,
+          placeholderMessage: 'Không thể mở thư viện, vui lòng thử lại.',
+        ),
+      );
+    }
   }
 
   void _onCapturePressed() {
-    // Placeholder for capture action
-  }
-
-  Future<void> _initializeCamera() async {
-    // Placeholder for camera initialization
-  }
-
-  void _stopRealTimeScanning() {
-    setState(() {
-      _realTimeScanState = RealTimeScanningState(isScanning: false);
-    });
+    final selected = _actionState.selectedAction;
+    final scanType = selected == ScannerActionType.food
+        ? ScanType.food
+        : ScanType.gallery;
+    _bloc.add(
+      CapturePhotoEvent(
+        scanType: scanType,
+        placeholderMessage: 'Không thể chụp ảnh, vui lòng thử lại.',
+      ),
+    );
   }
 
   Widget _buildScannerControls(List<ScannerActionConfig> actions) {
-    final bool disableCapture = _uploadingState.isUploading ||
-        _cameraInitState.isInitializing ||
-        _actionState.selectedAction == ScannerActionType.barcode;
+    final action = _actionState.selectedAction;
+
+    // Chỉ disable capture khi:
+    // - Đang upload
+    // - Ở chế độ Barcode (nút capture ẩn theo UI)
+    // - Ở chế độ Food và camera đang initializing
+    final bool disableCapture =
+        _uploadingState.isUploading ||
+        action == ScannerActionType.barcode ||
+        (action == ScannerActionType.food && _cameraInitState.isInitializing);
+
     return ScannerControls(
       actions: actions,
-      selectedAction: _actionState.selectedAction,
+      selectedAction: action,
       onActionSelected: _onActionSelected,
       onCapture: disableCapture ? () {} : _onCapturePressed,
     );
@@ -223,58 +276,112 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     final l10n = AppLocalizations.of(context)!;
     final actions = _buildActions(l10n);
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: ScannerPreview(
-              action: _actionState.selectedAction,
-              overlayText: l10n.foodScannerOverlayAutoDetect,
-              barcodeHint: l10n.foodScannerOverlayBarcodeHint,
-              overlayTextStyle: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 14,
+    return BlocProvider.value(
+      value: _bloc,
+      child: BlocListener<FoodScannerBloc, FoodScannerState>(
+        listener: (context, state) {
+          setState(() => _syncState(state));
+
+          // Show notifications and navigate on success/error
+          if (state is ScanSuccessState) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+            // Pop back to previous (home) after a short delay
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (!mounted) return;
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            });
+          } else if (state is ScanErrorState) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (!mounted) return;
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            });
+          } else if (state is NoBarcodeFoundState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Không tìm thấy mã trong ảnh. Đã lưu ảnh.'),
               ),
-              cameraPreview: _buildCameraPreview(),
-              barcodeControlsOverlay: null,
-              isRealTimeScanning: _realTimeScanState.isScanning,
-            ),
-          ),
-          SafeArea(
-            child: Column(
-              children: [
-                ScannerToolbar(
-                  title: l10n.foodScannerTitle,
-                  subtitle: l10n.foodScannerSubtitle,
-                  onHelp: _showHelp,
-                  onClose: () => Navigator.of(context).pop(),
-                ),
-                const Spacer(),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Colors.black.withValues(alpha: 0.85),
-                        Colors.black.withValues(alpha: 0.0),
-                      ],
-                    ),
+            );
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (!mounted) return;
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            });
+          } else if (state is CameraErrorState) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (!mounted) return;
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            });
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: ScannerPreview(
+                  action: _actionState.selectedAction,
+                  overlayText: l10n.foodScannerOverlayAutoDetect,
+                  barcodeHint: l10n.foodScannerOverlayBarcodeHint,
+                  overlayTextStyle: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontSize: 14,
                   ),
-                  padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
-                  child: _buildScannerControls(actions),
+                  cameraPreview: _buildCameraPreview(),
+                  barcodeControlsOverlay: null,
+                  isRealTimeScanning: _realTimeScanState.isScanning,
                 ),
-              ],
-            ),
+              ),
+              SafeArea(
+                child: Column(
+                  children: [
+                    ScannerToolbar(
+                      title: l10n.foodScannerTitle,
+                      subtitle: l10n.foodScannerSubtitle,
+                      onHelp: _showHelp,
+                      onClose: () => Navigator.of(context).pop(),
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.85),
+                            Colors.black.withValues(alpha: 0.0),
+                          ],
+                        ),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
+                      child: _buildScannerControls(actions),
+                    ),
+                  ],
+                ),
+              ),
+              if (_uploadingState.isUploading)
+                Container(
+                  color: Colors.black.withValues(alpha: 0.6),
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+            ],
           ),
-          if (_uploadingState.isUploading)
-            Container(
-              color: Colors.black.withValues(alpha: 0.6),
-              child: const Center(child: CircularProgressIndicator()),
-            ),
-        ],
+        ),
       ),
     );
   }
