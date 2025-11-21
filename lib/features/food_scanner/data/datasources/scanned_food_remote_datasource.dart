@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/entities/scanned_food_entity.dart';
-import '../models/scanned_food_model.dart';
+import '../models/food_scanner_models.dart';
 
 /// Remote datasource that stores scanned food photos under the current user's document.
 class ScannedFoodRemoteDataSource {

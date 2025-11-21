@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/user.dart' as app_user;
 import '../model/body_info_model.dart';
 import '../model/nutrition_calculation_model.dart';
-import '../services/session_permission_service.dart';
+import '../features/food_scanner/services/session_permission_service.dart';
 import 'exceptions.dart';
 import 'local_storage_service.dart';
 

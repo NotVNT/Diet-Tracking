@@ -6,7 +6,7 @@ import '../../domain/entities/scanned_food_entity.dart';
 import '../../domain/repositories/scanned_food_repository.dart';
 import '../datasources/scanned_food_local_datasource.dart';
 import '../datasources/scanned_food_remote_datasource.dart';
-import '../models/scanned_food_model.dart';
+import '../models/food_scanner_models.dart';
 import '../../../../services/cloudinary_service.dart';
 
 /// Implementation of ScannedFoodRepository
