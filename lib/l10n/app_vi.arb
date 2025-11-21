@@ -394,5 +394,6 @@
   "photoDeletedSuccessfully": "Đã xóa ảnh thành công",
   "analyzeFood": "Phân tích món ăn",
   "shareFunctionality": "Tính năng chia sẻ sắp ra mắt",
-  "aiFoodAnalysis": "Phân tích món ăn bằng AI sắp ra mắt"
+  "aiFoodAnalysis": "Phân tích món ăn bằng AI sắp ra mắt",
+  "permissionCameraRequired": "Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này."
 }

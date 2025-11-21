@@ -394,5 +394,6 @@
   "photoDeletedSuccessfully": "Photo deleted successfully",
   "analyzeFood": "Analyze Food",
   "shareFunctionality": "Share functionality coming soon",
-  "aiFoodAnalysis": "AI food analysis coming soon"
+  "aiFoodAnalysis": "AI food analysis coming soon",
+  "permissionCameraRequired": "Please grant camera access to use this feature."
 }

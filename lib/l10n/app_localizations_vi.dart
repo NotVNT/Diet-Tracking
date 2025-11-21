@@ -1072,23 +1072,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerPlaceholderOpenGallery => 'Đang mở thư viện (sắp ra mắt)';
 
   @override
-  String get foodScannerBarcodeScanning => 'Đang quét mã vạch...';
-
-  @override
-  String foodScannerBarcodeDetected(String value) {
-    return 'Đã phát hiện mã: $value';
-  }
-
-  @override
-  String get foodScannerBarcodeCopy => 'Sao chép mã';
-
-  @override
-  String get foodScannerBarcodeScanAgain => 'Quét lại';
-
-  @override
-  String get foodScannerBarcodeCopied => 'Đã sao chép mã vạch';
-
-  @override
   String get recentlyLoggedTitle => 'Đã ghi nhận gần đây';
 
   @override
@@ -1123,4 +1106,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get aiFoodAnalysis => 'Phân tích món ăn bằng AI sắp ra mắt';
+
+  @override
+  String get permissionCameraRequired => 'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
 }

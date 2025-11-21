@@ -1072,23 +1072,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodScannerPlaceholderOpenGallery => 'Opening gallery (coming soon)';
 
   @override
-  String get foodScannerBarcodeScanning => 'Scanning for barcode...';
-
-  @override
-  String foodScannerBarcodeDetected(String value) {
-    return 'Detected barcode: $value';
-  }
-
-  @override
-  String get foodScannerBarcodeCopy => 'Copy code';
-
-  @override
-  String get foodScannerBarcodeScanAgain => 'Scan again';
-
-  @override
-  String get foodScannerBarcodeCopied => 'Barcode copied to clipboard';
-
-  @override
   String get recentlyLoggedTitle => 'Recently logged';
 
   @override
@@ -1123,4 +1106,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiFoodAnalysis => 'AI food analysis coming soon';
+
+  @override
+  String get permissionCameraRequired => 'Please grant camera access to use this feature.';
 }

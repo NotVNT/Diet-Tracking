@@ -20,6 +20,7 @@ import '../../../food_scanner/data/repositories/scanned_food_repository_impl.dar
 import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
 import '../../../food_scanner/presentation/pages/scanned_food_detail_page.dart';
 import 'home_page_config.dart';
+import '../../../../utils/snackbar_helper.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -244,6 +245,14 @@ class _HomePageState extends State<HomePage> {
     final hasPermission = await permissionService.requestCameraPermission();
 
     if (!hasPermission) {
+      if (mounted) {
+        final localizations = AppLocalizations.of(context);
+        SnackBarHelper.showWarning(
+          context,
+          localizations?.permissionCameraRequired ??
+              'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.',
+        );
+      }
       return;
     }
 

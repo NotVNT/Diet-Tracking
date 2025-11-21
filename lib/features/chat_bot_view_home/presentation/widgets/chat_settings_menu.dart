@@ -6,13 +6,12 @@ import '../../../../l10n/app_localizations.dart';
 class ChatSettingsMenu extends StatelessWidget {
   final VoidCallback? onCreateNewChat;
   final VoidCallback? onChatHistory;
-  final VoidCallback? onSettings;
 
   const ChatSettingsMenu({
     super.key,
     this.onCreateNewChat,
     this.onChatHistory,
-    this.onSettings,
+    
   });
 
   @override
@@ -58,9 +57,6 @@ class ChatSettingsMenu extends StatelessWidget {
             break;
           case 'chat_history':
             onChatHistory?.call();
-            break;
-          case 'settings':
-            onSettings?.call();
             break;
         }
       },
