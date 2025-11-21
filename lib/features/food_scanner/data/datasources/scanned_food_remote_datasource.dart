@@ -39,16 +39,27 @@ class ScannedFoodRemoteDataSource {
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       final rawList = _rawDietList(snapshot.data());
-      
-      // Convert model to JSON để lưu đầy đủ thông tin
-      final foodJson = food.toJson();
-      
-      // Remove existing entry with same id if exists
-      rawList.removeWhere((entry) {
-        final existingId = _extractId(entry);
-        return existingId == food.id;
-      });
-      
+
+      // Convert model to JSON và loại bỏ các trường không cần lưu
+      final original = food.toJson();
+      final foodJson = Map<String, dynamic>.from(original);
+      // Không lưu id và isProcessed=false, imagePath rỗng
+      foodJson.remove('id');
+      if ((foodJson['imagePath'] as String?)?.isEmpty ?? true) {
+        foodJson.remove('imagePath');
+      }
+      if (foodJson['isProcessed'] == false) {
+        foodJson.remove('isProcessed');
+      }
+
+      // Nếu vẫn muốn tránh trùng, chỉ xóa khi có id hợp lệ
+      if (food.id.isNotEmpty) {
+        rawList.removeWhere((entry) {
+          final existingId = _extractId(entry);
+          return existingId == food.id;
+        });
+      }
+
       // Insert new entry at the beginning
       rawList.insert(0, foodJson);
 

@@ -23,10 +23,16 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
   final GetBarcodeProductInfo getBarcodeProductInfoUseCase;
 
   CameraController? _cameraController;
-  ActionSelectedState _actionState = ActionSelectedState(selectedAction: ScannerActionType.food);
+  ActionSelectedState _actionState = ActionSelectedState(
+    selectedAction: ScannerActionType.food,
+  );
   UploadingState _uploadingState = UploadingState(isUploading: false);
-  CameraInitializingState _cameraInitState = CameraInitializingState(isInitializing: false);
-  RealTimeScanningState _realTimeScanState = RealTimeScanningState(isScanning: false);
+  CameraInitializingState _cameraInitState = CameraInitializingState(
+    isInitializing: false,
+  );
+  RealTimeScanningState _realTimeScanState = RealTimeScanningState(
+    isScanning: false,
+  );
 
   FoodScannerBloc({
     required this.scannedFoodRepository,
@@ -50,7 +56,10 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     on<SaveBarcodeProductEvent>(_onSaveBarcodeProduct);
   }
 
-  Future<void> _onInitializeCamera(InitializeCameraEvent event, Emitter<FoodScannerState> emit) async {
+  Future<void> _onInitializeCamera(
+    InitializeCameraEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
     if (_cameraInitState.isInitializing) return;
     emit(CameraInitializingState(isInitializing: true));
 
@@ -62,7 +71,11 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     try {
       final cameras = await availableCameras();
       if (cameras.isEmpty) {
-        emit(CameraErrorState(errorMessage: 'Không tìm thấy camera trên thiết bị.'));
+        emit(
+          CameraErrorState(
+            errorMessage: 'Không tìm thấy camera trên thiết bị.',
+          ),
+        );
         return;
       }
 
@@ -93,7 +106,10 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     }
   }
 
-  Future<void> _onActionSelected(ActionSelectedEvent event, Emitter<FoodScannerState> emit) async {
+  Future<void> _onActionSelected(
+    ActionSelectedEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
     _actionState = ActionSelectedState(selectedAction: event.actionType);
     emit(_actionState);
 
@@ -104,12 +120,34 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     }
   }
 
-  Future<void> _onCapturePhoto(CapturePhotoEvent event, Emitter<FoodScannerState> emit) async {
-    if (_uploadingState.isUploading || _cameraController == null) return;
+  Future<void> _onCapturePhoto(
+    CapturePhotoEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
+    if (_uploadingState.isUploading) return;
 
     try {
+      if (event.scanType == ScanType.gallery) {
+        // Mở thư viện chọn ảnh
+        final picker = ImagePicker();
+        final XFile? picked = await picker.pickImage(
+          source: ImageSource.gallery,
+        );
+        if (picked == null) return;
+        add(ScanBarcodeFromImageEvent(imagePath: picked.path));
+        return;
+      }
+
+      // Mặc định: chụp ảnh từ camera
+      if (_cameraController == null ||
+          !_cameraController!.value.isInitialized) {
+        emit(ScanErrorState(message: event.placeholderMessage));
+        return;
+      }
       final XFile photo = await _cameraController!.takePicture();
-      add(SaveScannedFoodEvent(imagePath: photo.path, scanType: event.scanType));
+      add(
+        SaveScannedFoodEvent(imagePath: photo.path, scanType: event.scanType),
+      );
     } on CameraException catch (_) {
       emit(ScanErrorState(message: event.placeholderMessage));
     } catch (_) {
@@ -117,7 +155,10 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     }
   }
 
-  Future<void> _onSaveScannedFood(SaveScannedFoodEvent event, Emitter<FoodScannerState> emit) async {
+  Future<void> _onSaveScannedFood(
+    SaveScannedFoodEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
     if (_uploadingState.isUploading) return;
     emit(UploadingState(isUploading: true));
 
@@ -131,59 +172,131 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
       );
       emit(ScanSuccessState(message: 'Đã lưu ảnh thành công'));
     } catch (_) {
-      emit(ScanErrorState(message: 'Không thể tải ảnh lên Cloudinary. Vui lòng thử lại.'));
+      emit(
+        ScanErrorState(
+          message: 'Không thể tải ảnh lên Cloudinary. Vui lòng thử lại.',
+        ),
+      );
     } finally {
       emit(UploadingState(isUploading: false));
     }
   }
 
-  Future<void> _onScanBarcodeFromImage(ScanBarcodeFromImageEvent event, Emitter<FoodScannerState> emit) async {
+  Future<void> _onScanBarcodeFromImage(
+    ScanBarcodeFromImageEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
     if (_uploadingState.isUploading) return;
     emit(UploadingState(isUploading: true));
 
     try {
       final barcodes = await scanBarcodeFromImageUseCase(event.imagePath);
       if (barcodes.isEmpty) {
-        add(SaveScannedFoodEvent(imagePath: event.imagePath, scanType: ScanType.gallery));
+        add(
+          SaveScannedFoodEvent(
+            imagePath: event.imagePath,
+            scanType: ScanType.gallery,
+          ),
+        );
         emit(NoBarcodeFoundState(imagePath: event.imagePath));
       } else {
-        emit(BarcodeProductFoundState(product: BarcodeProduct(barcode: ''), imagePath: event.imagePath));
+        // Lấy barcode đầu tiên rồi tra cứu sản phẩm từ server
+        final first = barcodes.first;
+        final value = first.displayValue ?? first.rawValue ?? '';
+        if (value.isEmpty) {
+          add(
+            SaveScannedFoodEvent(
+              imagePath: event.imagePath,
+              scanType: ScanType.gallery,
+            ),
+          );
+          emit(NoBarcodeFoundState(imagePath: event.imagePath));
+        } else {
+          try {
+            final product = await getBarcodeProductInfoUseCase(value);
+            add(
+              SaveBarcodeProductEvent(
+                product: product,
+                imagePath: event.imagePath,
+              ),
+            );
+          } catch (e) {
+            await saveScannedFoodUseCase(
+              imagePath: '',
+              scanType: ScanType.barcode,
+              foodName: 'Barcode: $value',
+              calories: null,
+              description:
+                  'Mã vạch: $value\n\nKhông tìm thấy thông tin chi tiết từ OpenFoodFacts',
+            );
+            emit(
+              ScanSuccessState(
+                message:
+                    'Đã lưu mã: $value (Không tìm thấy thông tin chi tiết)',
+              ),
+            );
+          }
+        }
       }
     } catch (e) {
-      add(SaveScannedFoodEvent(imagePath: event.imagePath, scanType: ScanType.gallery));
+      add(
+        SaveScannedFoodEvent(
+          imagePath: event.imagePath,
+          scanType: ScanType.gallery,
+        ),
+      );
       emit(ScanErrorState(message: 'Đã lưu ảnh'));
     } finally {
       emit(UploadingState(isUploading: false));
     }
   }
 
-  Future<void> _onHandleBarcodeSelected(HandleBarcodeSelectedEvent event, Emitter<FoodScannerState> emit) async {
-    final barcodeValue = event.barcode.displayValue ?? event.barcode.rawValue ?? '';
+  Future<void> _onHandleBarcodeSelected(
+    HandleBarcodeSelectedEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
+    final barcodeValue =
+        event.barcode.displayValue ?? event.barcode.rawValue ?? '';
     emit(UploadingState(isUploading: true));
 
     try {
       try {
         final product = await getBarcodeProductInfoUseCase(barcodeValue);
-        add(SaveBarcodeProductEvent(product: product, imagePath: event.imagePath));
+        add(
+          SaveBarcodeProductEvent(product: product, imagePath: event.imagePath),
+        );
       } catch (e) {
         await saveScannedFoodUseCase(
           imagePath: '',
           scanType: ScanType.barcode,
           foodName: 'Barcode: $barcodeValue',
           calories: null,
-          description: 'Mã vạch: $barcodeValue\n\nKhông tìm thấy thông tin chi tiết từ OpenFoodFacts',
+          description:
+              'Mã vạch: $barcodeValue\n\nKhông tìm thấy thông tin chi tiết từ OpenFoodFacts',
         );
-        emit(ScanSuccessState(message: 'Đã lưu mã: $barcodeValue (Không tìm thấy chi tiết)'));
+        emit(
+          ScanSuccessState(
+            message: 'Đã lưu mã: $barcodeValue (Không tìm thấy chi tiết)',
+          ),
+        );
       }
     } finally {
       emit(UploadingState(isUploading: false));
     }
   }
 
-  Future<void> _onStartRealTimeScanning(StartRealTimeScanningEvent event, Emitter<FoodScannerState> emit) async {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) return;
+  Future<void> _onStartRealTimeScanning(
+    StartRealTimeScanningEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
+    if (_cameraController == null || !_cameraController!.value.isInitialized) {
+      return;
+    }
 
-    _realTimeScanState = RealTimeScanningState(isScanning: true, lastDetectedBarcode: null);
+    _realTimeScanState = RealTimeScanningState(
+      isScanning: true,
+      lastDetectedBarcode: null,
+    );
     emit(_realTimeScanState);
 
     _cameraController!.startImageStream((CameraImage image) {
@@ -191,27 +304,42 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     });
   }
 
-  Future<void> _onStopRealTimeScanning(StopRealTimeScanningEvent event, Emitter<FoodScannerState> emit) async {
-    if (_cameraController != null && _cameraController!.value.isStreamingImages) {
+  Future<void> _onStopRealTimeScanning(
+    StopRealTimeScanningEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
+    if (_cameraController != null &&
+        _cameraController!.value.isStreamingImages) {
       _cameraController!.stopImageStream();
     }
 
-    _realTimeScanState = RealTimeScanningState(isScanning: false, lastDetectedBarcode: null);
+    _realTimeScanState = RealTimeScanningState(
+      isScanning: false,
+      lastDetectedBarcode: null,
+    );
     emit(_realTimeScanState);
   }
 
-  Future<void> _onProcessCameraImage(ProcessCameraImageEvent event, Emitter<FoodScannerState> emit) async {
+  Future<void> _onProcessCameraImage(
+    ProcessCameraImageEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
     if (!_realTimeScanState.isScanning || _uploadingState.isUploading) return;
 
     try {
-      final barcode = await barcodeScannerService.scanBarcodeFromCameraImage(event.image);
+      final barcode = await barcodeScannerService.scanBarcodeFromCameraImage(
+        event.image,
+      );
       if (barcode != null) {
         final barcodeValue = barcode.displayValue ?? barcode.rawValue ?? '';
 
         if (barcodeValue == _realTimeScanState.lastDetectedBarcode) {
           final now = DateTime.now();
           if (_realTimeScanState.lastBarcodeDetectionTime != null &&
-              now.difference(_realTimeScanState.lastBarcodeDetectionTime!).inSeconds < 3) {
+              now
+                      .difference(_realTimeScanState.lastBarcodeDetectionTime!)
+                      .inSeconds <
+                  3) {
             return;
           }
         }
@@ -229,7 +357,10 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     }
   }
 
-  Future<void> _onBarcodeDetected(BarcodeDetectedEvent event, Emitter<FoodScannerState> emit) async {
+  Future<void> _onBarcodeDetected(
+    BarcodeDetectedEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
     add(StopRealTimeScanningEvent());
     emit(UploadingState(isUploading: true));
 
@@ -240,7 +371,8 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
       }
 
       final XFile photo = await controller.takePicture();
-      final barcodeValue = event.barcode.displayValue ?? event.barcode.rawValue ?? '';
+      final barcodeValue =
+          event.barcode.displayValue ?? event.barcode.rawValue ?? '';
 
       try {
         final product = await getBarcodeProductInfoUseCase(barcodeValue);
@@ -251,9 +383,15 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
           scanType: ScanType.barcode,
           foodName: 'Barcode: $barcodeValue',
           calories: null,
-          description: 'Mã vạch: $barcodeValue\n\nKhông tìm thấy thông tin chi tiết từ OpenFoodFacts',
+          description:
+              'Mã vạch: $barcodeValue\n\nKhông tìm thấy thông tin chi tiết từ OpenFoodFacts',
         );
-        emit(ScanSuccessState(message: 'Đã lưu mã: $barcodeValue (Không tìm thấy thông tin chi tiết)'));
+        emit(
+          ScanSuccessState(
+            message:
+                'Đã lưu mã: $barcodeValue (Không tìm thấy thông tin chi tiết)',
+          ),
+        );
       }
 
       await Future.delayed(const Duration(milliseconds: 500));
@@ -265,28 +403,37 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     }
   }
 
-  Future<void> _onSaveBarcodeProduct(SaveBarcodeProductEvent event, Emitter<FoodScannerState> emit) async {
+  Future<void> _onSaveBarcodeProduct(
+    SaveBarcodeProductEvent event,
+    Emitter<FoodScannerState> emit,
+  ) async {
     try {
-      String foodName = event.product.productName ?? 'Sản phẩm ${event.product.barcode}';
+      String foodName =
+          event.product.productName ?? 'Sản phẩm ${event.product.barcode}';
       if (event.product.brands != null && event.product.brands!.isNotEmpty) {
-        foodName = '${event.product.productName ?? "Sản phẩm"} - ${event.product.brands}';
+        foodName =
+            '${event.product.productName ?? "Sản phẩm"} - ${event.product.brands}';
       }
 
       String description = 'Barcode: ${event.product.barcode}\n\n';
 
       if (event.product.calories != null) {
-        description += '🔥 Calories: ${event.product.calories!.toStringAsFixed(0)} kcal\n';
+        description +=
+            '🔥 Calories: ${event.product.calories!.toStringAsFixed(0)} kcal\n';
       }
       if (event.product.protein != null) {
-        description += '🥩 Protein: ${event.product.protein!.toStringAsFixed(1)}g\n';
+        description +=
+            '🥩 Protein: ${event.product.protein!.toStringAsFixed(1)}g\n';
       }
       if (event.product.carbohydrates != null) {
-        description += '🍚 Carbs: ${event.product.carbohydrates!.toStringAsFixed(1)}g\n';
+        description +=
+            '🍚 Carbs: ${event.product.carbohydrates!.toStringAsFixed(1)}g\n';
       }
       if (event.product.fat != null) {
         description += '🧈 Fat: ${event.product.fat!.toStringAsFixed(1)}g\n';
       }
-      if (event.product.ingredientsText != null && event.product.ingredientsText!.isNotEmpty) {
+      if (event.product.ingredientsText != null &&
+          event.product.ingredientsText!.isNotEmpty) {
         description += '\n📝 Nguyên liệu: ${event.product.ingredientsText}';
       }
 
