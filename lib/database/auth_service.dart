@@ -201,7 +201,16 @@ class AuthService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => doc.data()).toList();
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        final rawDate = data['date'];
+        if (rawDate is Timestamp) {
+          data['date'] = rawDate.toDate().toIso8601String();
+        } else if (rawDate is DateTime) {
+          data['date'] = rawDate.toIso8601String();
+        }
+        return data;
+      }).toList();
     } catch (e) {
       throw FirestoreException('Không thể lấy lịch sử ăn uống: $e');
     }
@@ -338,25 +347,27 @@ class AuthService {
     String emailForReset = sanitizedEmail;
 
     try {
-      List<String> signInMethods =
-          await _auth.fetchSignInMethodsForEmail(emailForReset);
+      List<String> signInMethods = await _auth.fetchSignInMethodsForEmail(
+        emailForReset,
+      );
 
       if (signInMethods.isEmpty) {
         final String lowerCaseEmail = sanitizedEmail.toLowerCase();
         if (lowerCaseEmail != sanitizedEmail) {
-          signInMethods =
-              await _auth.fetchSignInMethodsForEmail(lowerCaseEmail);
+          signInMethods = await _auth.fetchSignInMethodsForEmail(
+            lowerCaseEmail,
+          );
           if (signInMethods.isNotEmpty) {
             emailForReset = lowerCaseEmail;
           }
         }
 
         if (signInMethods.isEmpty) {
-          final bool exists =
-              await _doesUserExistByEmail(emailForReset);
+          final bool exists = await _doesUserExistByEmail(emailForReset);
           if (!exists && lowerCaseEmail != sanitizedEmail) {
-            final bool existsLower =
-                await _doesUserExistByEmail(lowerCaseEmail);
+            final bool existsLower = await _doesUserExistByEmail(
+              lowerCaseEmail,
+            );
             if (existsLower) {
               emailForReset = lowerCaseEmail;
             } else {
@@ -374,10 +385,10 @@ class AuthService {
         }
       }
 
-      if (signInMethods.isNotEmpty &&
-          !signInMethods.contains('password')) {
-        final String providers =
-            signInMethods.map(_providerDisplayName).join(', ');
+      if (signInMethods.isNotEmpty && !signInMethods.contains('password')) {
+        final String providers = signInMethods
+            .map(_providerDisplayName)
+            .join(', ');
         throw AuthException(
           'Tài khoản này đang đăng nhập bằng: $providers. Không thể đặt lại mật khẩu bằng email.',
           'requires-different-provider',
@@ -393,11 +404,12 @@ class AuthService {
   Future<bool> _doesUserExistByEmail(String email) async {
     final String lowerCaseEmail = email.trim().toLowerCase();
 
-    final QuerySnapshot<Map<String, dynamic>> normalizedSnapshot = await _firestore
-        .collection(_usersCollection)
-        .where('emailLowercase', isEqualTo: lowerCaseEmail)
-        .limit(1)
-        .get();
+    final QuerySnapshot<Map<String, dynamic>> normalizedSnapshot =
+        await _firestore
+            .collection(_usersCollection)
+            .where('emailLowercase', isEqualTo: lowerCaseEmail)
+            .limit(1)
+            .get();
 
     if (normalizedSnapshot.docs.isNotEmpty) {
       return true;

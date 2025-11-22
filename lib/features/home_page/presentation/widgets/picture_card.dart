@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../responsive/responsive.dart';
-import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
 
 /// Widget to display a single picture card in the recently logged section
 class PictureCard extends StatelessWidget {
-  final String imagePath;
+  final String? imagePath;
   final VoidCallback? onTap;
   final String? foodName;
   final double? calories;
-  final ScanType? scanType;
+  final RecordType? recordType;
 
   const PictureCard({
     super.key,
@@ -17,16 +17,17 @@ class PictureCard extends StatelessWidget {
     this.onTap,
     this.foodName,
     this.calories,
-    this.scanType,
+    this.recordType,
   });
 
   @override
   Widget build(BuildContext context) {
     final responsive = ResponsiveHelper.of(context);
-    
+
     // Check xem có phải barcode không có ảnh không
-    final isBarcodeWithoutImage = scanType == ScanType.barcode && 
-        (imagePath.isEmpty || imagePath.trim().isEmpty);
+    final isBarcodeWithoutImage =
+        recordType == RecordType.barcode &&
+        (imagePath == null || imagePath!.trim().isEmpty);
 
     return GestureDetector(
       onTap: onTap,
@@ -53,7 +54,7 @@ class PictureCard extends StatelessWidget {
               else
                 _buildImageContent(context),
               // Overlay cho barcode items có ảnh
-              if (scanType == ScanType.barcode && 
+              if (recordType == RecordType.barcode &&
                   !isBarcodeWithoutImage &&
                   (foodName != null || calories != null))
                 _buildBarcodeOverlay(context, responsive),
@@ -126,7 +127,10 @@ class PictureCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBarcodeOverlay(BuildContext context, ResponsiveHelper responsive) {
+  Widget _buildBarcodeOverlay(
+    BuildContext context,
+    ResponsiveHelper responsive,
+  ) {
     return Positioned(
       bottom: 0,
       left: 0,
@@ -136,10 +140,7 @@ class PictureCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
-            colors: [
-              Colors.black.withOpacity(0.8),
-              Colors.transparent,
-            ],
+            colors: [Colors.black.withOpacity(0.8), Colors.transparent],
           ),
         ),
         padding: EdgeInsets.symmetric(
@@ -176,9 +177,13 @@ class PictureCard extends StatelessWidget {
   }
 
   Widget _buildImageContent(BuildContext context) {
+    if (imagePath == null || imagePath!.isEmpty) {
+      return _buildPlaceholder(context);
+    }
+
     if (_isNetworkImage) {
       return Image.network(
-        imagePath,
+        imagePath!,
         fit: BoxFit.cover,
         loadingBuilder: (context, child, progress) {
           if (progress == null) return child;
@@ -190,9 +195,8 @@ class PictureCard extends StatelessWidget {
       );
     }
 
-    final file = File(imagePath);
+    final file = File(imagePath!);
 
-    // Check if file exists
     if (!file.existsSync()) {
       return _buildPlaceholder(context);
     }
@@ -228,7 +232,8 @@ class PictureCard extends StatelessWidget {
   }
 
   bool get _isNetworkImage {
-    final uri = Uri.tryParse(imagePath);
+    if (imagePath == null) return false;
+    final uri = Uri.tryParse(imagePath!);
     return uri != null && uri.hasScheme;
   }
 }

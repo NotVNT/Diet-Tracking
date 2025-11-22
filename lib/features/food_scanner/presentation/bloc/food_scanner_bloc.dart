@@ -6,6 +6,7 @@ import '../../domain/entities/scanned_food_entity.dart';
 import '../../domain/repositories/scanned_food_repository.dart';
 import '../../services/barcode_scanner_service.dart' as barcode_service;
 import '../../services/barcode_api_service.dart';
+import '../../services/food_recognition_service.dart';
 import '../../domain/usecases/scan_barcode_from_image.dart';
 import '../../domain/usecases/request_camera_permission.dart';
 import '../../domain/usecases/save_scanned_food.dart';
@@ -21,6 +22,7 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
   final RequestCameraPermission requestCameraPermissionUseCase;
   final SaveScannedFood saveScannedFoodUseCase;
   final GetBarcodeProductInfo getBarcodeProductInfoUseCase;
+  final FoodRecognitionService foodRecognitionService;
 
   CameraController? _cameraController;
   ActionSelectedState _actionState = ActionSelectedState(
@@ -42,6 +44,7 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     required this.requestCameraPermissionUseCase,
     required this.saveScannedFoodUseCase,
     required this.getBarcodeProductInfoUseCase,
+    required this.foodRecognitionService,
   }) : super(const FoodScannerInitial()) {
     on<InitializeCameraEvent>(_onInitializeCamera);
     on<ActionSelectedEvent>(_onActionSelected);
@@ -192,6 +195,7 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
     try {
       final barcodes = await scanBarcodeFromImageUseCase(event.imagePath);
       if (barcodes.isEmpty) {
+        // Nếu không có barcode, lưu ảnh như món ăn bình thường
         add(
           SaveScannedFoodEvent(
             imagePath: event.imagePath,
@@ -200,10 +204,19 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
         );
         emit(NoBarcodeFoundState(imagePath: event.imagePath));
       } else {
-        // Lấy barcode đầu tiên rồi tra cứu sản phẩm từ server
+        // Nếu có barcode, lấy mã đầu tiên và tra cứu thông tin
         final first = barcodes.first;
         final value = first.displayValue ?? first.rawValue ?? '';
-        if (value.isEmpty) {
+        if (value.isNotEmpty) {
+          final product = await getBarcodeProductInfoUseCase(value);
+          add(
+            SaveBarcodeProductEvent(
+              product: product,
+              imagePath: event.imagePath,
+            ),
+          );
+        } else {
+          // Barcode rỗng, vẫn lưu ảnh
           add(
             SaveScannedFoodEvent(
               imagePath: event.imagePath,
@@ -211,41 +224,17 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
             ),
           );
           emit(NoBarcodeFoundState(imagePath: event.imagePath));
-        } else {
-          try {
-            final product = await getBarcodeProductInfoUseCase(value);
-            add(
-              SaveBarcodeProductEvent(
-                product: product,
-                imagePath: event.imagePath,
-              ),
-            );
-          } catch (e) {
-            await saveScannedFoodUseCase(
-              imagePath: '',
-              scanType: ScanType.barcode,
-              foodName: 'Barcode: $value',
-              calories: null,
-              description:
-                  'Mã vạch: $value\n\nKhông tìm thấy thông tin chi tiết từ OpenFoodFacts',
-            );
-            emit(
-              ScanSuccessState(
-                message:
-                    'Đã lưu mã: $value (Không tìm thấy thông tin chi tiết)',
-              ),
-            );
-          }
         }
       }
     } catch (e) {
+      // Lỗi tra cứu hoặc các lỗi khác, vẫn lưu lại ảnh gốc
       add(
         SaveScannedFoodEvent(
           imagePath: event.imagePath,
           scanType: ScanType.gallery,
         ),
       );
-      emit(ScanErrorState(message: 'Đã lưu ảnh'));
+      emit(ScanErrorState(message: 'Đã lưu ảnh (lỗi khi tra cứu thông tin)'));
     } finally {
       emit(UploadingState(isUploading: false));
     }

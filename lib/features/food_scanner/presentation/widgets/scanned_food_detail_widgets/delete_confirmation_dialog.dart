@@ -17,14 +17,11 @@ class DeleteConfirmationDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, false),
           child: Text(localizations?.cancel ?? 'Cancel'),
         ),
         TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.pop(context, true);
-          },
+          onPressed: () => Navigator.pop(context, true),
           style: TextButton.styleFrom(foregroundColor: Colors.red),
           child: Text(localizations?.delete ?? 'Delete'),
         ),
@@ -32,4 +29,3 @@ class DeleteConfirmationDialog extends StatelessWidget {
     );
   }
 }
-
