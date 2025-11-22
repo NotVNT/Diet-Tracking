@@ -13,7 +13,6 @@ import 'database/firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/home_page/di/home_di.dart';
 import 'features/record_view_home/di/record_di.dart';
-import 'features/record_view_home/presentation/cubit/record_cubit.dart';
 import 'features/home_page/presentation/pages/home_page.dart';
 
 Future<void> main() async {
