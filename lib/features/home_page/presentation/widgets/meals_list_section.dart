@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import 'meal_list_item.dart';
 
 /// Widget hiển thị danh sách bữa ăn
 class MealsListSection extends StatelessWidget {
-  final List<ScannedFoodEntity> meals;
-  final Function(ScannedFoodEntity)? onMealTap;
+  final List<FoodRecordEntity> meals;
+  final Function(FoodRecordEntity)? onMealTap;
   final VoidCallback? onViewAll;
 
   const MealsListSection({
@@ -115,7 +115,8 @@ class MealsListSection extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: responsive.width(16)),
       itemCount: displayMeals.length,
-      separatorBuilder: (context, index) => SizedBox(height: responsive.height(8)),
+      separatorBuilder: (context, index) =>
+          SizedBox(height: responsive.height(8)),
       itemBuilder: (context, index) {
         final meal = displayMeals[index];
         return MealListItem(

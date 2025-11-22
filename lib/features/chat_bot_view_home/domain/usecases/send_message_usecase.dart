@@ -32,6 +32,7 @@ class SendMessageUseCase {
         'disease': userDataEntity.disease,
         'allergy': userDataEntity.allergy,
         'goal': userDataEntity.goal,
+        'gender': userDataEntity.gender,
       };
 
       // Get nutrition plan data

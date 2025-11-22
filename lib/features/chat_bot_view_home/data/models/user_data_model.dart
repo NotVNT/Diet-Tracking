@@ -10,6 +10,7 @@ class UserDataModel extends UserDataEntity {
     required super.disease,
     required super.allergy,
     required super.goal,
+    super.gender,
   });
 
   /// Creates UserDataModel from Firebase document data (STRICT)
@@ -41,6 +42,9 @@ class UserDataModel extends UserDataEntity {
     if (goal.isEmpty) {
       throw FormatException('Field "goal" must be a non-empty string');
     }
+
+    // gender (optional)
+    final String? gender = userData['gender'] as String?;
 
     // bodyInfo
     final Map<String, dynamic> bodyInfo = requireType<Map<String, dynamic>>(
@@ -134,6 +138,7 @@ class UserDataModel extends UserDataEntity {
       disease: disease,
       allergy: allergy,
       goal: goal,
+      gender: gender,
     );
   }
 
@@ -147,6 +152,7 @@ class UserDataModel extends UserDataEntity {
       disease: entity.disease,
       allergy: entity.allergy,
       goal: entity.goal,
+      gender: entity.gender,
     );
   }
 
@@ -161,6 +167,7 @@ class UserDataModel extends UserDataEntity {
       'allergy': allergy.trim(),
       'goal': goal.trim(),
       'prompt': prompt,
+      'gender': gender,
     };
   }
 
@@ -174,11 +181,12 @@ class UserDataModel extends UserDataEntity {
       disease: disease,
       allergy: allergy,
       goal: goal,
+      gender: gender,
     );
   }
 
   @override
   String toString() {
-    return 'UserDataModel(age: $age, height: $height, weight: $weight, goalWeightKg: $goalWeightKg, disease: $disease, allergy: $allergy, goal: $goal)';
+    return 'UserDataModel(age: $age, height: $height, weight: $weight, goalWeightKg: $goalWeightKg, disease: $disease, allergy: $allergy, goal: $goal, gender: $gender)';
   }
 }

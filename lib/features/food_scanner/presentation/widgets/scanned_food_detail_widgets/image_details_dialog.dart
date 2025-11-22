@@ -1,19 +1,20 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../../domain/entities/scanned_food_entity.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 import 'date_time_formatter.dart';
 
 /// Dialog to display detailed information about the scanned image
 class ImageDetailsDialog extends StatelessWidget {
-  final ScannedFoodEntity scannedFood;
+  final FoodRecordEntity scannedFood;
 
-  const ImageDetailsDialog({
-    super.key,
-    required this.scannedFood,
-  });
+  const ImageDetailsDialog({super.key, required this.scannedFood});
 
   @override
   Widget build(BuildContext context) {
+    if (scannedFood.imagePath == null || scannedFood.imagePath!.isEmpty) {
+      return _buildNoImageDialog(context);
+    }
+
     if (_isNetworkImage) {
       return _buildNetworkImageDialog(context);
     }
@@ -31,7 +32,7 @@ class ImageDetailsDialog extends StatelessWidget {
           Text('Image URL:\n${scannedFood.imagePath}'),
           const SizedBox(height: 12),
           Text(
-            'Scan date: ${DateTimeFormatter.formatFullDateTime(scannedFood.scanDate)}',
+            'Date: ${DateTimeFormatter.formatFullDateTime(scannedFood.date)}',
           ),
           const SizedBox(height: 12),
           Text('ID: ${scannedFood.id}'),
@@ -47,7 +48,7 @@ class ImageDetailsDialog extends StatelessWidget {
   }
 
   Widget _buildLocalImageDialog(BuildContext context) {
-    final file = File(scannedFood.imagePath);
+    final file = File(scannedFood.imagePath!);
     final fileSize = file.existsSync() ? file.lengthSync() : 0;
     final fileSizeKB = (fileSize / 1024).toStringAsFixed(2);
 
@@ -62,7 +63,7 @@ class ImageDetailsDialog extends StatelessWidget {
           Text('File size: $fileSizeKB KB'),
           const SizedBox(height: 12),
           Text(
-            'Scan date: ${DateTimeFormatter.formatFullDateTime(scannedFood.scanDate)}',
+            'Date: ${DateTimeFormatter.formatFullDateTime(scannedFood.date)}',
           ),
           const SizedBox(height: 12),
           Text('ID: ${scannedFood.id}'),
@@ -77,9 +78,22 @@ class ImageDetailsDialog extends StatelessWidget {
     );
   }
 
+  Widget _buildNoImageDialog(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Details'),
+      content: Text('This item has no associated image.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Close'),
+        ),
+      ],
+    );
+  }
+
   bool get _isNetworkImage {
-    final uri = Uri.tryParse(scannedFood.imagePath);
+    if (scannedFood.imagePath == null) return false;
+    final uri = Uri.tryParse(scannedFood.imagePath!);
     return uri != null && uri.hasScheme;
   }
 }
-

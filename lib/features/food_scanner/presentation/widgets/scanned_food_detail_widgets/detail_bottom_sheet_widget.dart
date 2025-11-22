@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../../l10n/app_localizations.dart';
-import '../../../domain/entities/scanned_food_entity.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 import 'info_row_widget.dart';
-import 'scan_type_helper.dart';
 import 'date_time_formatter.dart';
 
 /// Bottom sheet widget displaying scanned food details and action buttons
 class DetailBottomSheetWidget extends StatelessWidget {
-  final ScannedFoodEntity scannedFood;
+  final FoodRecordEntity scannedFood;
   final ResponsiveHelper responsive;
   final VoidCallback onDelete;
   final VoidCallback onAnalyze;
@@ -49,7 +48,7 @@ class DetailBottomSheetWidget extends StatelessWidget {
             ),
           ),
           Text(
-            ScanTypeHelper.getScanTypeTitle(scannedFood.scanType),
+            scannedFood.foodName,
             style: TextStyle(
               fontSize: responsive.fontSize(24),
               fontWeight: FontWeight.bold,
@@ -59,22 +58,15 @@ class DetailBottomSheetWidget extends StatelessWidget {
           SizedBox(height: responsive.height(16)),
           InfoRowWidget(
             icon: Icons.schedule,
-            label: 'Scan time',
-            value: DateTimeFormatter.formatRelativeTime(scannedFood.scanDate),
+            label: 'Time',
+            value: DateTimeFormatter.formatRelativeTime(scannedFood.date),
             responsive: responsive,
           ),
           SizedBox(height: responsive.height(12)),
           InfoRowWidget(
-            icon: Icons.qr_code_scanner,
-            label: 'Scan type',
-            value: ScanTypeHelper.getScanTypeLabel(scannedFood.scanType),
-            responsive: responsive,
-          ),
-          SizedBox(height: responsive.height(12)),
-          InfoRowWidget(
-            icon: Icons.check_circle_outline,
-            label: 'Status',
-            value: scannedFood.isProcessed ? 'Processed' : 'Not processed',
+            icon: Icons.category_outlined,
+            label: 'Type',
+            value: scannedFood.recordType.name,
             responsive: responsive,
           ),
           SizedBox(height: responsive.height(24)),
@@ -121,4 +113,3 @@ class DetailBottomSheetWidget extends StatelessWidget {
     );
   }
 }
-
