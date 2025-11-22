@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../services/permission_service.dart';
+import '../../../../services/notification_service.dart';
 import '../providers/home_provider.dart';
 import '../widgets/custom_floating_action_button.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
@@ -53,6 +55,8 @@ class _HomePageState extends State<HomePage> {
     _scannedFoodRepository = ScannedFoodRepositoryImpl(
       localDataSource: ScannedFoodLocalDataSource(),
     );
+    // Ask for notification permission and show a welcome notification once
+    _ensureNotificationPermissionAndWelcome();
     _loadScannedFoods();
   }
 
@@ -75,6 +79,44 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       debugPrint('Unable to load scanned foods: $e');
+    }
+  }
+  /// Ensure notifications permission is requested and show a welcome notification once
+  Future<void> _ensureNotificationPermissionAndWelcome() async {
+    final permissionService = PermissionService();
+    final prefs = await SharedPreferences.getInstance();
+    const hasShownKey = 'notification_welcome_shown_v1';
+
+    // Check and request permission if needed
+    bool granted = await permissionService.isNotificationPermissionGranted();
+    if (!granted) {
+      granted = await permissionService.requestNotificationPermission();
+      if (!granted) {
+        // If user denies, just return silently without affecting other features
+        if (!mounted) return;
+        // Defer SnackBar until after first frame so Scaffold exists
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          final localizations = AppLocalizations.of(context);
+          SnackBarHelper.showWarning(
+            context,
+            localizations?.settingsNotificationSubtitle ??
+                'Ứng dụng không gửi thông báo khi chưa được cấp quyền.',
+          );
+        });
+        return;
+      }
+    }
+
+    // Permission granted -> show a one-time welcome notification
+    final alreadyShown = prefs.getBool(hasShownKey) ?? false;
+    if (!alreadyShown) {
+      final localizations = AppLocalizations.of(context);
+      await LocalNotificationService().showSimpleNotification(
+        title: localizations?.notificationTitle ?? 'Notifications',
+        body: 'Diet Tracking đã sẵn sàng gửi thông báo cho bạn.',
+      );
+      await prefs.setBool(hasShownKey, true);
     }
   }
 
@@ -196,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                 onViewReport: _onViewReport,
               ),
               SizedBox(height: responsive.height(16)),
-              
+
               // Danh sách bữa ăn (hiển thị TẤT CẢ: food + barcode)
               MealsListSection(
                 meals: _scannedFoods,
@@ -205,13 +247,13 @@ class _HomePageState extends State<HomePage> {
                   debugPrint('View all meals tapped');
                 },
               ),
-              
+
               SizedBox(height: responsive.height(16)),
-              
+
               // Ảnh đã ghi nhận (CHỈ hiển thị có ảnh, KHÔNG hiển thị barcode)
               RecentlyLoggedSection(
-                scannedFoods: _scannedFoods.where((food) => 
-                  food.imagePath.isNotEmpty && 
+                scannedFoods: _scannedFoods.where((food) =>
+                  food.imagePath.isNotEmpty &&
                   food.scanType != ScanType.barcode
                 ).toList(),
                 onViewAll: () {

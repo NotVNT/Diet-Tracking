@@ -24,6 +24,20 @@ class PermissionService {
     return status.isGranted || status.isLimited;
   }
 
+  /// Request notification permission (Android 13+ and iOS)
+  /// Returns true if permission is granted or limited
+  /// Returns false if permission is denied or permanently denied
+  Future<bool> requestNotificationPermission() async {
+    final status = await ph.Permission.notification.request();
+    return status.isGranted || status.isLimited;
+  }
+
+  /// Check notification permission status
+  Future<bool> isNotificationPermissionGranted() async {
+    final status = await ph.Permission.notification.status;
+    return status.isGranted || status.isLimited;
+  }
+
   /// Open app settings to allow user to manually grant permission
   Future<bool> openAppSettings() async {
     return await ph.openAppSettings();

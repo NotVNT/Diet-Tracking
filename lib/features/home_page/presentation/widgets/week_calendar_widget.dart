@@ -3,32 +3,31 @@ import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../responsive/responsive.dart';
 
+/// Enum to represent the state of a calendar day
+enum DayState { normal, today, selected, disabled }
+
 /// Model for a day in the calendar
 class CalendarDay {
   final DateTime date;
-  final bool isSelected;
-  final bool isToday;
+  final DayState state;
 
   CalendarDay({
     required this.date,
-    this.isSelected = false,
-    this.isToday = false,
+    required this.state,
   });
 
   CalendarDay copyWith({
     DateTime? date,
-    bool? isSelected,
-    bool? isToday,
+    DayState? state,
   }) {
     return CalendarDay(
       date: date ?? this.date,
-      isSelected: isSelected ?? this.isSelected,
-      isToday: isToday ?? this.isToday,
+      state: state ?? this.state,
     );
   }
 }
 
-/// Widget hiển thị lịch tuần với khả năng chọn ngày
+/// A week calendar widget with day selection functionality
 class WeekCalendarWidget extends StatefulWidget {
   final DateTime? initialDate;
   final ValueChanged<DateTime>? onDateSelected;
@@ -56,26 +55,40 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
     _displayedWeekStart = _getWeekStart(_selectedDate);
   }
 
-  /// Lấy ngày đầu tuần (Monday)
+    /// Gets the start of the week (Monday) for a given date
   DateTime _getWeekStart(DateTime date) {
     final dayOfWeek = date.weekday;
     return date.subtract(Duration(days: dayOfWeek - 1));
   }
 
-  /// Lấy danh sách 7 ngày trong tuần
-  List<CalendarDay> _getWeekDays() {
+    /// Gets the list of 7 days for the currently displayed week
+    List<CalendarDay> _getWeekDays() {
     final List<CalendarDay> days = [];
     final today = DateTime.now();
-    
+
     for (int i = 0; i < 7; i++) {
       final date = _displayedWeekStart.add(Duration(days: i));
+      final DayState state;
+
+      // Vô hiệu hóa ngày trong tương lai
+      if (date.year > today.year ||
+          (date.year == today.year && date.month > today.month) ||
+          (date.year == today.year && date.month == today.month && date.day > today.day)) {
+        state = DayState.disabled;
+      } else if (_isSameDay(date, _selectedDate)) {
+        state = DayState.selected;
+      } else if (_isSameDay(date, today)) {
+        state = DayState.today;
+      } else {
+        state = DayState.normal;
+      }
+
       days.add(CalendarDay(
         date: date,
-        isSelected: _isSameDay(date, _selectedDate),
-        isToday: _isSameDay(date, today),
+        state: state,
       ));
     }
-    
+
     return days;
   }
 
@@ -85,7 +98,11 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
         date1.day == date2.day;
   }
 
-  void _onDayTapped(DateTime date) {
+    void _onDayTapped(DateTime date) {
+    // Không cho phép chọn ngày trong tương lai
+    if (date.isAfter(DateTime.now())) {
+      return;
+    }
     setState(() {
       _selectedDate = date;
     });
@@ -118,7 +135,7 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
         borderRadius: BorderRadius.circular(responsive.radius(16)),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withOpacity(0.08),
+            color: theme.colorScheme.shadow.withAlpha((255 * 0.08).toInt()),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -137,7 +154,7 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
     );
   }
 
-  /// Header với tháng năm và nút điều hướng
+    /// Builds the header with month, year, and navigation buttons
   Widget _buildHeader(
     BuildContext context,
     String locale,
@@ -179,7 +196,7 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
     );
   }
 
-  /// Build các ngày trong tuần
+    /// Builds the row of week days
   Widget _buildWeekDays(
     BuildContext context,
     ResponsiveHelper responsive,
@@ -202,8 +219,8 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
     );
   }
 
-  /// Build một item ngày
-  Widget _buildDayItem(
+    /// Builds a single day item
+    Widget _buildDayItem(
     BuildContext context,
     CalendarDay day,
     ResponsiveHelper responsive,
@@ -213,35 +230,95 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
     final dayOfWeekLabel = _getShortDayOfWeek(day.date.weekday, localizations);
     final dayNumber = day.date.day.toString();
 
-    Color backgroundColor;
-    Color textColor;
-    Color labelColor;
+    // Define styles based on DayState
+    BoxDecoration containerDecoration;
+    Color dayNumberColor;
+    Color dayLabelColor;
+    FontWeight dayNumberFontWeight = FontWeight.w600;
 
-    if (day.isSelected) {
-      backgroundColor = theme.colorScheme.primary;
-      textColor = theme.colorScheme.onPrimary;
-      labelColor = theme.colorScheme.onPrimary.withOpacity(0.8);
-    } else if (day.isToday) {
-      backgroundColor = theme.colorScheme.primaryContainer;
-      textColor = theme.colorScheme.onPrimaryContainer;
-      labelColor = theme.colorScheme.onPrimaryContainer.withOpacity(0.7);
+    switch (day.state) {
+      case DayState.selected:
+        containerDecoration = BoxDecoration(
+          color: Colors.black, // As per image
+          borderRadius: BorderRadius.circular(responsive.radius(25)), // Capsule shape
+        );
+        dayNumberColor = Colors.black; // Number inside white circle
+        dayLabelColor = Colors.white;
+        break;
+      case DayState.today:
+        containerDecoration = const BoxDecoration(); // No background decoration for the whole item
+        dayNumberColor = Colors.red;
+        dayLabelColor = theme.colorScheme.onSurface.withAlpha((255 * 0.6).toInt());
+        break;
+      case DayState.disabled:
+        containerDecoration = const BoxDecoration();
+        dayNumberColor = Colors.grey;
+        dayLabelColor = Colors.grey;
+        dayNumberFontWeight = FontWeight.normal;
+        break;
+            case DayState.normal:
+        containerDecoration = const BoxDecoration();
+        dayNumberColor = theme.colorScheme.onSurface;
+        dayLabelColor = theme.colorScheme.onSurface.withAlpha((255 * 0.6).toInt());
+        break;
+    }
+
+    // Build the number widget with special decorations for today/selected
+    Widget dayNumberWidget;
+    if (day.state == DayState.selected) {
+      dayNumberWidget = Container(
+        padding: EdgeInsets.all(responsive.width(8)),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        child: Text(
+          dayNumber,
+          style: TextStyle(
+            fontSize: responsive.fontSize(16),
+            fontWeight: dayNumberFontWeight,
+            color: dayNumberColor,
+          ),
+        ),
+      );
+    } else if (day.state == DayState.today) {
+      dayNumberWidget = Container(
+        padding: EdgeInsets.all(responsive.width(8)),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.red, width: 1.5),
+        ),
+        child: Text(
+          dayNumber,
+          style: TextStyle(
+            fontSize: responsive.fontSize(16),
+            fontWeight: dayNumberFontWeight,
+            color: dayNumberColor,
+          ),
+        ),
+      );
     } else {
-      backgroundColor = theme.colorScheme.surfaceContainerHighest.withOpacity(0.3);
-      textColor = theme.colorScheme.onSurface;
-      labelColor = theme.colorScheme.onSurface.withOpacity(0.6);
+      dayNumberWidget = Padding(
+        padding: EdgeInsets.all(responsive.width(9.5)), // Match padding of decorated items
+        child: Text(
+          dayNumber,
+          style: TextStyle(
+            fontSize: responsive.fontSize(16),
+            fontWeight: dayNumberFontWeight,
+            color: dayNumberColor,
+          ),
+        ),
+      );
     }
 
     return GestureDetector(
-      onTap: () => _onDayTapped(day.date),
+      onTap: day.state != DayState.disabled ? () => _onDayTapped(day.date) : null,
       child: Container(
-        width: responsive.width(42),
+        width: responsive.width(45), // Adjust width for capsule
         padding: EdgeInsets.symmetric(
-          vertical: responsive.height(8),
+          vertical: responsive.height(4),
         ),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(responsive.radius(12)),
-        ),
+        decoration: containerDecoration,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -250,25 +327,18 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
               style: TextStyle(
                 fontSize: responsive.fontSize(11),
                 fontWeight: FontWeight.w500,
-                color: labelColor,
+                color: dayLabelColor,
               ),
             ),
             SizedBox(height: responsive.height(4)),
-            Text(
-              dayNumber,
-              style: TextStyle(
-                fontSize: responsive.fontSize(16),
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-            ),
+            dayNumberWidget,
           ],
         ),
       ),
     );
   }
 
-  /// Lấy tên ngắn của thứ (MON, TUE, ...)
+    /// Gets the short name of the day of the week (MON, TUE, etc.)
   String _getShortDayOfWeek(int weekday, AppLocalizations? localizations) {
     if (localizations == null) {
       return _getVietnameseShortDayOfWeek(weekday);

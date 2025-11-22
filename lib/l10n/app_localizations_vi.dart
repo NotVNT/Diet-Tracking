@@ -1109,4 +1109,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get permissionCameraRequired => 'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
+
+  @override
+  String get permissionNotificationRequired => 'Vui lòng cấp quyền gửi thông báo để nhận được các cập nhật quan trọng.';
+
+  @override
+  String get notificationPermissionTitle => 'Bật Thông Báo';
+
+  @override
+  String get notificationPermissionDescription => 'Nhận những nhắc nhở kịp thời về bữa ăn và các cập nhật sức khỏe quan trọng.';
 }

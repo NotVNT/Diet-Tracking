@@ -2278,6 +2278,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please grant camera access to use this feature.'**
   String get permissionCameraRequired;
+
+  /// No description provided for @permissionNotificationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please grant notification permission to receive important updates.'**
+  String get permissionNotificationRequired;
+
+  /// No description provided for @notificationPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Notifications'**
+  String get notificationPermissionTitle;
+
+  /// No description provided for @notificationPermissionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Get timely reminders for your meals and important health updates.'**
+  String get notificationPermissionDescription;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

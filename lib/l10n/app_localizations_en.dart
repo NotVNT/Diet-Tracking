@@ -1109,4 +1109,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permissionCameraRequired => 'Please grant camera access to use this feature.';
+
+  @override
+  String get permissionNotificationRequired => 'Please grant notification permission to receive important updates.';
+
+  @override
+  String get notificationPermissionTitle => 'Enable Notifications';
+
+  @override
+  String get notificationPermissionDescription => 'Get timely reminders for your meals and important health updates.';
 }
