@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../services/permission_service.dart';
-import '../../../../services/notification_service.dart';
 import '../providers/home_provider.dart';
 import '../widgets/custom_floating_action_button.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
@@ -16,12 +13,9 @@ import '../widgets/calorie_goal_card.dart';
 import '../widgets/recently_logged_section.dart';
 import '../widgets/meals_list_section.dart';
 import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
-import '../../../food_scanner/domain/repositories/scanned_food_repository.dart';
-import '../../../food_scanner/data/datasources/scanned_food_local_datasource.dart';
-import '../../../food_scanner/data/repositories/scanned_food_repository_impl.dart';
 import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
 import '../../../food_scanner/presentation/pages/scanned_food_detail_page.dart';
-import 'home_page_config.dart';
+import '../widgets/home_page_config.dart';
 import '../../../../utils/snackbar_helper.dart';
 
 /// Main home page with bottom navigation
@@ -46,79 +40,6 @@ class _HomePageState extends State<HomePage> {
   String _searchQuery = '';
   // ignore: unused_field
   Map<String, dynamic>? _activeFilters;
-  late final ScannedFoodRepository _scannedFoodRepository;
-  List<ScannedFoodEntity> _scannedFoods = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _scannedFoodRepository = ScannedFoodRepositoryImpl(
-      localDataSource: ScannedFoodLocalDataSource(),
-    );
-    // Ask for notification permission and show a welcome notification once
-    _ensureNotificationPermissionAndWelcome();
-    _loadScannedFoods();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Reload scanned foods when returning to this page
-    _loadScannedFoods();
-  }
-
-  Future<void> _loadScannedFoods() async {
-    try {
-      final foods = await _scannedFoodRepository.getRecentScannedFoods(
-        limit: 6,
-      );
-      if (mounted) {
-        setState(() {
-          _scannedFoods = foods;
-        });
-      }
-    } catch (e) {
-      debugPrint('Unable to load scanned foods: $e');
-    }
-  }
-  /// Ensure notifications permission is requested and show a welcome notification once
-  Future<void> _ensureNotificationPermissionAndWelcome() async {
-    final permissionService = PermissionService();
-    final prefs = await SharedPreferences.getInstance();
-    const hasShownKey = 'notification_welcome_shown_v1';
-
-    // Check and request permission if needed
-    bool granted = await permissionService.isNotificationPermissionGranted();
-    if (!granted) {
-      granted = await permissionService.requestNotificationPermission();
-      if (!granted) {
-        // If user denies, just return silently without affecting other features
-        if (!mounted) return;
-        // Defer SnackBar until after first frame so Scaffold exists
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          final localizations = AppLocalizations.of(context);
-          SnackBarHelper.showWarning(
-            context,
-            localizations?.settingsNotificationSubtitle ??
-                'Ứng dụng không gửi thông báo khi chưa được cấp quyền.',
-          );
-        });
-        return;
-      }
-    }
-
-    // Permission granted -> show a one-time welcome notification
-    final alreadyShown = prefs.getBool(hasShownKey) ?? false;
-    if (!alreadyShown) {
-      final localizations = AppLocalizations.of(context);
-      await LocalNotificationService().showSimpleNotification(
-        title: localizations?.notificationTitle ?? 'Notifications',
-        body: 'Diet Tracking đã sẵn sàng gửi thông báo cho bạn.',
-      );
-      await prefs.setBool(hasShownKey, true);
-    }
-  }
 
   @override
   void dispose() {
@@ -162,16 +83,15 @@ class _HomePageState extends State<HomePage> {
 
   /// Handle picture tap - navigate to detail page
   Future<void> _onPictureTap(ScannedFoodEntity food) async {
+    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
     final shouldDelete = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (_) => ScannedFoodDetailPage(scannedFood: food),
       ),
     );
 
-    // If user deleted the photo, reload the list
     if (shouldDelete == true) {
-      await _scannedFoodRepository.deleteScannedFood(food.id);
-      await _loadScannedFoods();
+      await homeProvider.deleteScannedFood(food.id);
     }
   }
 
@@ -183,12 +103,12 @@ class _HomePageState extends State<HomePage> {
 
         return Scaffold(
           body: homeProvider.currentIndex == HomePageConfig.homeIndex
-              ? _buildHomeContent(context)
+              ? _buildHomeContent(context, homeProvider)
               : pages[homeProvider.currentIndex],
           floatingActionButton: CustomFloatingActionButton(
             onRecordSelected: () => _navigateToRecord(homeProvider),
             onChatBotSelected: () => _navigateToChatBot(homeProvider),
-            onScanFoodSelected: () => _onScanFoodTapped(),
+            onScanFoodSelected: () => _onScanFoodTapped(homeProvider),
             onReportSelected: () => _onReportTapped(),
           ),
           floatingActionButtonLocation:
@@ -203,7 +123,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Build home content
-  Widget _buildHomeContent(BuildContext context) {
+  Widget _buildHomeContent(BuildContext context, HomeProvider homeProvider) {
     final responsive = ResponsiveHelper.of(context);
     final localizations = AppLocalizations.of(context);
 
@@ -240,27 +160,33 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: responsive.height(16)),
 
               // Danh sách bữa ăn (hiển thị TẤT CẢ: food + barcode)
-              MealsListSection(
-                meals: _scannedFoods,
-                onMealTap: (food) => _onPictureTap(food),
-                onViewAll: () {
-                  debugPrint('View all meals tapped');
-                },
-              ),
+              if (homeProvider.isLoading)
+                const Center(child: CircularProgressIndicator())
+              else if (homeProvider.error != null)
+                Center(child: Text(homeProvider.error!))
+              else
+                MealsListSection(
+                  meals: homeProvider.scannedFoods,
+                  onMealTap: (food) => _onPictureTap(food),
+                  onViewAll: () {
+                    debugPrint('View all meals tapped');
+                  },
+                ),
 
               SizedBox(height: responsive.height(16)),
 
               // Ảnh đã ghi nhận (CHỈ hiển thị có ảnh, KHÔNG hiển thị barcode)
-              RecentlyLoggedSection(
-                scannedFoods: _scannedFoods.where((food) =>
-                  food.imagePath.isNotEmpty &&
-                  food.scanType != ScanType.barcode
-                ).toList(),
-                onViewAll: () {
-                  debugPrint('View all photos tapped');
-                },
-                onPictureTap: (food) => _onPictureTap(food),
-              ),
+              if (!homeProvider.isLoading && homeProvider.error == null)
+                RecentlyLoggedSection(
+                  scannedFoods: homeProvider.scannedFoods.where((food) =>
+                    food.imagePath.isNotEmpty &&
+                    food.scanType != ScanType.barcode
+                  ).toList(),
+                  onViewAll: () {
+                    debugPrint('View all photos tapped');
+                  },
+                  onPictureTap: (food) => _onPictureTap(food),
+                ),
               SizedBox(height: responsive.height(24)),
             ],
           ),
@@ -280,11 +206,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Handle scan food action - Request camera permission first
-  void _onScanFoodTapped() async {
-    final permissionService = PermissionService();
-
-    // Request camera permission with single prompt
-    final hasPermission = await permissionService.requestCameraPermission();
+  void _onScanFoodTapped(HomeProvider homeProvider) async {
+    final hasPermission = await homeProvider.requestCameraPermission();
 
     if (!hasPermission) {
       if (mounted) {
@@ -305,7 +228,7 @@ class _HomePageState extends State<HomePage> {
       );
       // Trigger a rebuild to refresh the scanned foods list
       if (mounted) {
-        await _loadScannedFoods();
+        await homeProvider.loadScannedFoods();
       }
     }
   }
