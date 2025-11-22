@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import '../../model/notification_model.dart';
 
 class NotificationView extends StatefulWidget {
-  const NotificationView({Key? key}) : super(key: key);
+  const NotificationView({super.key});
 
   @override
   State<NotificationView> createState() => _NotificationViewState();
@@ -11,14 +12,20 @@ class NotificationView extends StatefulWidget {
 class _NotificationViewState extends State<NotificationView> {
   // Dummy data for demonstration
   final List<NotificationModel> _notifications = [
-    
+
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inbox'),
+        title: Text(
+          AppLocalizations.of(context)!.inboxTitle,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
