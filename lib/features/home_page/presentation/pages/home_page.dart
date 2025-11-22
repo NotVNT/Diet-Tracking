@@ -11,7 +11,7 @@ import '../widgets/week_calendar_widget.dart';
 import '../widgets/search_filter_bar.dart';
 import '../widgets/filter_bottom_sheet.dart';
 import '../widgets/calorie_goal_card.dart';
-import '../widgets/recently_logged_section.dart';
+import '../widgets/recent_items_section.dart';
 import '../widgets/meals_list_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -178,18 +178,8 @@ class _HomePageState extends State<HomePage> {
                     onViewReport: _onViewReport,
                   ),
                   SizedBox(height: responsive.height(16)),
-                  MealsListSection(
-                    meals: foodRecords
-                        .where((food) => food.recordType == RecordType.barcode)
-                        .toList(),
-                    onMealTap: (food) => _onPictureTap(food),
-                    onViewAll: () {
-                      debugPrint('View all meals tapped');
-                    },
-                  ),
-                  SizedBox(height: responsive.height(16)),
-                  RecentlyLoggedSection(
-                    scannedFoods: foodRecords
+                  RecentItemsSection(
+                    photoItems: foodRecords
                         .where(
                           (food) =>
                               food.imagePath != null &&
@@ -197,10 +187,13 @@ class _HomePageState extends State<HomePage> {
                               food.recordType == RecordType.food,
                         )
                         .toList(),
-                    onViewAll: () {
+                    barcodeItems: foodRecords
+                        .where((food) => food.recordType == RecordType.barcode)
+                        .toList(),
+                    onViewAllPhotos: () {
                       debugPrint('View all photos tapped');
                     },
-                    onPictureTap: (food) => _onPictureTap(food),
+                    onItemTap: (food) => _onPictureTap(food),
                   ),
                   SizedBox(height: responsive.height(24)),
                 ],
