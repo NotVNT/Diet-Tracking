@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../database/auth_service.dart';
 import '../../../../model/nutrition_calculation_model.dart';
 import '../../domain/entities/user_data_entity.dart';

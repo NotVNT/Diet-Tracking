@@ -3,7 +3,6 @@ import '../../../../../responsive/responsive.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 import 'info_row_widget.dart';
-import 'scan_type_helper.dart';
 import 'date_time_formatter.dart';
 
 /// Bottom sheet widget displaying scanned food details and action buttons

@@ -77,11 +77,4 @@ class FoodRecordRepositoryImpl implements FoodRecordRepository {
         .doc(id)
         .delete();
   }
-
-  @override
-  Future<void> syncWithFirestore() async {
-    // This method is no longer needed as we are not using local storage for records.
-    // It can be removed from the interface as well.
-    return;
-  }
 }

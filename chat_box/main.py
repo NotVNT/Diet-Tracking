@@ -15,20 +15,20 @@ from pydantic import BaseModel
 
 #---api_key---#
 load_dotenv()
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_API_KEY = os.getenv("pcsk_5vFAvq_QCVDvAYQ7kxvD4xaN9t2s2Grm2NGVXMWHi12hJvtPyFmryNbcCMfM5kEzUUjZW6")
 GEMINI_API_KEY = ('AIzaSyDic7CyKachNcLmKR3VhFINtQb5hK9L03A')
 GOOGLE_API_KEY = ('AIzaSyDyWyqsCP864gGSxyunCqfKAiPtcRg85_s')
 GOOGLE_CX = ('326a236a3e77a4180')
 #---api_key---# 
 
 #---model_database_config---#
-genai.configure(api_key=GEMINI_API_KEY)
+genai.configure(api_key="AIzaSyDic7CyKachNcLmKR3VhFINtQb5hK9L03A")
 model_gemini = genai.GenerativeModel('gemini-2.5-flash-lite')
 model = SentenceTransformer('all-MiniLM-L6-v2')
 #---model_database_config---#
 
 #--pinecone--#
-pc = Pinecone(api_key=PINECONE_API_KEY)
+pc = Pinecone(api_key="pcsk_5vFAvq_QCVDvAYQ7kxvD4xaN9t2s2Grm2NGVXMWHi12hJvtPyFmryNbcCMfM5kEzUUjZW6")
 index_name = 'food-db'
 index = pc.Index(index_name)
 #--pinecone--#
@@ -118,6 +118,7 @@ class ChatRequest(BaseModel):
     allergy: str
     goal: str
     prompt: str
+    gender: str | None = None
     nutrition_plan: dict | None = None
     food_records: list[dict] | None = None
 
@@ -314,7 +315,7 @@ def build_google_search_prompt():
     """
 
 
-def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_weight, nutrition_plan, food_records):
+def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_weight, gender, nutrition_plan, food_records):
     # plan_details = ""
     # if nutrition_plan:
     #     plan_details = f"""\n- Kế hoạch dinh dưỡng hiện tại:
@@ -333,6 +334,7 @@ def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_
     return f"""
 ### 🔍 **Thông tin đầu vào:**
 - Tuổi: {age}
+- Giới tính: {gender or 'Không xác định'}
 - Chiều cao: {height} cm
 - Cân nặng: {weight} kg
 - Bệnh lý: {disease}
@@ -369,44 +371,34 @@ def reasoning_intruction():
 
 def decide_action(user_query:str):
     full_prompt = reasoning_intruction() + user_query
-    response = model_gemini.generate_content(full_prompt)
-    raw = response.text.strip()
-    match = re.findall(r'\{.*?\}', raw, re.DOTALL)
-    if not match:
-        # If no JSON is found, treat it as a direct answer problem and let the recovery logic handle it.
-        raise ValueError("No JSON object found in the model's decision response.")
-    parsed = json.loads(match[0])
-    action = parsed.get("action", "").upper()
     try:
+        response = model_gemini.generate_content(full_prompt)
+        raw = response.text.strip()
+        # Find JSON block, even with markdown wrappers
+        match = re.search(r'```json\n(\{.*?\})\n```|(\{.*?\})', raw, re.DOTALL)
+        if not match:
+            print(f"Warning: Could not find JSON in decision response. Defaulting to DIRECT. Response was: {raw}")
+            return {"action": "DIRECT", "direct_answer": ""} # Let the main prompt handle it
+
+        # Extract the actual JSON string from one of the capture groups
+        json_str = match.group(1) or match.group(2)
+        parsed = json.loads(json_str)
+        action = parsed.get("action", "").upper()
+
         if action not in ("GOOGLE", "DATABASE", "DIRECT"):
-            raise ValueError("Không có hành động hợp lệ")
+            print(f"Warning: Invalid action '{action}' in decision response. Defaulting to DIRECT.")
+            return {"action": "DIRECT", "direct_answer": ""}
+
         return {
             "action": action,
             "direct_answer": parsed.get("direct_answer", ""),
         }
-    except Exception:
-        follow_up = (
-                "PHẢI CHỈ TRẢ VỀ JSON. Trích xuất lại một JSON với các trường "
-                "\"action\" (DIRECT/DATABASE/GOOGLE), và \"direct_answer\". "
-                "Dưới đây là output cũ:\n" + raw
-            )
-        try:
-            response_2 = model_gemini.generate_content(follow_up)
-            raw2= response_2.text.strip()
-            match2 = re.findall(r'\{.*?\}', raw2, re.DOTALL)
-            parsed2 = json.loads(match2[0])
-            action2 = parsed2.get("action", "").upper()
-            if action2 not in ("GOOGLE", "DATABASE", "DIRECT"):
-                raise ValueError("Không có hành động hợp lệ")
-            return {
-            "action": action2,
-            "direct_answer": parsed2.get("direct_answer", ""),
-        }
-        except Exception:
-            return {"action": "DIRECT", "direct_answer": "Xin lỗi, tôi không thể phân tích câu hỏi chính xác. Vui lòng hỏi lại hoặc cung cấp thêm."}
-
+    except Exception as e:
+        print(f"Error in decide_action: {e}. Defaulting to DIRECT action.")
+        return {"action": "DIRECT", "direct_answer": "Xin lỗi, tôi gặp chút sự cố khi phân tích câu hỏi của bạn. Bạn có thể hỏi lại được không?"}
 @app.post("/chat")
 async def chatbox(request: ChatRequest):
+    print(f"Received request with gender: {request.gender}")
     # print("Received request:", request.model_dump())
     history=[]
     chat = model_gemini.start_chat(history = history)
@@ -424,7 +416,7 @@ async def chatbox(request: ChatRequest):
         results = db_lookup(request.prompt +  request.goal, 10)
         # final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan, request.food_records)
         # print("FINAL_PROMPT",final_prompt)
-        final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan, request.food_records) + "Dưới đây là danh sách món ăn lấy được từ database:" + str(results) + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
+        final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.gender, request.nutrition_plan, request.food_records) + "Dưới đây là danh sách món ăn lấy được từ database:" + str(results) + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
         print(results)
         response = chat.send_message(final_prompt)
         return {"reply": response.text}

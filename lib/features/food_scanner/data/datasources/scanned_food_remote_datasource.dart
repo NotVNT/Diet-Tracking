@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../domain/entities/scanned_food_entity.dart';
 import '../models/food_scanner_models.dart';
 
 /// Remote datasource that stores scanned food photos under the current user's document.
 class ScannedFoodRemoteDataSource {
   static const String _usersCollection = 'users';
-  static const String _dietField = 'diet';
 
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
@@ -26,10 +24,6 @@ class ScannedFoodRemoteDataSource {
       throw StateError('User must be logged in to use the scanner feature.');
     }
     return uid;
-  }
-
-  DocumentReference<Map<String, dynamic>> _userDoc(String uid) {
-    return _firestore.collection(_usersCollection).doc(uid);
   }
 
   Future<void> saveScannedFood(ScannedFoodModel food) async {
