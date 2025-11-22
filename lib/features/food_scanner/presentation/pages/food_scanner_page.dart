@@ -19,6 +19,7 @@ import '../../services/barcode_scanner_service.dart' as barcode_service;
 import '../widgets/food_scanner_page_widget/scanner_widgets.dart';
 import '../widgets/food_scanner_page_widget/scanner_preview.dart';
 import '../bloc/food_scanner_state.dart';
+import '../../services/food_recognition_service.dart';
 
 /// Screen allowing the user to scan food, barcodes, or pick images.
 class FoodScannerPage extends StatefulWidget {
@@ -54,6 +55,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     final repository = ScannedFoodRepositoryImpl();
     final scannerService = barcode_service.BarcodeScannerService();
     final apiService = BarcodeApiService();
+    final foodRecognition = FoodRecognitionService();
 
     final scanBarcodeFromImage = ScanBarcodeFromImage(scannerService);
     final requestPermission = RequestCameraPermission(
@@ -70,6 +72,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       requestCameraPermissionUseCase: requestPermission,
       saveScannedFoodUseCase: saveScannedFood,
       getBarcodeProductInfoUseCase: getProductInfo,
+      foodRecognitionService: foodRecognition,
     );
 
     _bloc.add(const InitializeCameraEvent());
@@ -251,12 +254,6 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     );
   }
 
-  void _stopRealTimeScanning() {
-    setState(() {
-      _realTimeScanState = RealTimeScanningState(isScanning: false);
-    });
-  }
-
   Widget _buildScannerControls(List<ScannerActionConfig> actions) {
     final action = _actionState.selectedAction;
 
@@ -311,17 +308,12 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
               }
             });
           } else if (state is NoBarcodeFoundState) {
+            // Chỉ thông báo; KHÔNG pop ở đây để đợi lưu xong (ScanSuccessState)
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Không tìm thấy mã trong ảnh. Đã lưu ảnh.'),
+                content: Text('Không tìm thấy mã trong ảnh. Đang lưu ảnh...'),
               ),
             );
-            Future.delayed(const Duration(milliseconds: 800), () {
-              if (!mounted) return;
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-              }
-            });
           } else if (state is CameraErrorState) {
             ScaffoldMessenger.of(
               context,

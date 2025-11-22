@@ -1,8 +1,13 @@
+enum RecordType { food, barcode, text } // Thêm enum để phân loại
+
 class FoodRecordEntity {
   final String? id;
   final String foodName;
   final double calories;
   final DateTime date;
+  final String? imagePath;
+  final RecordType recordType;
+
   // Optional extra info parsed from bot message
   final String? reason; // Lý do chọn
   final String? nutritionDetails; // Khối "Thông tin dinh dưỡng" (raw text)
@@ -12,7 +17,31 @@ class FoodRecordEntity {
     required this.foodName,
     required this.calories,
     required this.date,
+    this.imagePath,
+    this.recordType = RecordType.text, // Mặc định là text
     this.reason,
     this.nutritionDetails,
   });
+
+  FoodRecordEntity copyWith({
+    String? id,
+    String? foodName,
+    double? calories,
+    DateTime? date,
+    String? imagePath,
+    RecordType? recordType,
+    String? reason,
+    String? nutritionDetails,
+  }) {
+    return FoodRecordEntity(
+      id: id ?? this.id,
+      foodName: foodName ?? this.foodName,
+      calories: calories ?? this.calories,
+      date: date ?? this.date,
+      imagePath: imagePath ?? this.imagePath,
+      recordType: recordType ?? this.recordType,
+      reason: reason ?? this.reason,
+      nutritionDetails: nutritionDetails ?? this.nutritionDetails,
+    );
+  }
 }

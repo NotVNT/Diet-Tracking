@@ -4,7 +4,7 @@ import '../../../../../responsive/responsive.dart';
 
 /// Widget to display an image with zoom and pan capabilities
 class ImageViewerWidget extends StatelessWidget {
-  final String imagePath;
+  final String? imagePath;
   final ResponsiveHelper responsive;
 
   const ImageViewerWidget({
@@ -15,15 +15,18 @@ class ImageViewerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (imagePath == null || imagePath!.isEmpty) {
+      return _buildImageError('No image available');
+    }
+
     if (_isNetworkImage) {
       return InteractiveViewer(
         minScale: 0.5,
         maxScale: 4.0,
         child: Image.network(
-          imagePath,
+          imagePath!,
           fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) =>
-              _buildImageError('Error loading image'),
+          errorBuilder: (_, __, ___) => _buildImageError('Error loading image'),
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             return const Center(child: CircularProgressIndicator());
@@ -32,7 +35,7 @@ class ImageViewerWidget extends StatelessWidget {
       );
     }
 
-    final file = File(imagePath);
+    final file = File(imagePath!);
 
     if (!file.existsSync()) {
       return _buildImageError('Image not found');
@@ -78,8 +81,8 @@ class ImageViewerWidget extends StatelessWidget {
   }
 
   bool get _isNetworkImage {
-    final uri = Uri.tryParse(imagePath);
+    if (imagePath == null) return false;
+    final uri = Uri.tryParse(imagePath!);
     return uri != null && uri.hasScheme;
   }
 }
-

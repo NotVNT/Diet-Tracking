@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/scanned_food_entity.dart';
 
 // ============================================================================
@@ -98,7 +99,7 @@ class BarcodeProduct {
 /// Model for scanned food with JSON serialization
 class ScannedFoodModel extends ScannedFoodEntity {
   const ScannedFoodModel({
-    required super.id,
+    super.id,
     required super.imagePath,
     required super.scanType,
     required super.scanDate,
@@ -108,12 +109,28 @@ class ScannedFoodModel extends ScannedFoodEntity {
     super.description,
   });
 
+  factory ScannedFoodModel.fromRecordJson(Map<String, dynamic> json) {
+    return ScannedFoodModel(
+      id: json['id'] as String?,
+      imagePath: json['imagePath'] as String? ?? '',
+      scanType: ScanType.values.firstWhere(
+        (e) =>
+            e.toString() == 'ScanType.${json['scanType'] as String? ?? 'food'}',
+        orElse: () => ScanType.food,
+      ),
+      scanDate: (json['date'] as Timestamp? ?? Timestamp.now()).toDate(),
+      isProcessed: json['isProcessed'] as bool? ?? false,
+      foodName: json['foodName'] as String?,
+      calories: (json['calories'] as num?)?.toDouble(),
+      description: json['description'] as String?,
+    );
+  }
+
   /// Create from JSON
   factory ScannedFoodModel.fromJson(Map<String, dynamic> json) {
-    final imagePath = json['imagePath'] as String? ?? '';
     return ScannedFoodModel(
-      id: (json['id'] as String?) ?? imagePath,
-      imagePath: imagePath,
+      id: json['id'] as String?,
+      imagePath: json['imagePath'] as String? ?? '',
       scanType: ScanType.values.firstWhere(
         (e) => e.name == json['scanType'],
         orElse: () => ScanType.food,
@@ -148,7 +165,7 @@ class ScannedFoodModel extends ScannedFoodEntity {
       'id': id,
       'imagePath': imagePath,
       'scanType': scanType.name,
-      'scanDate': scanDate.toIso8601String(),
+      'scanDate': Timestamp.fromDate(scanDate),
       'isProcessed': isProcessed,
       'foodName': foodName,
       'calories': calories,
@@ -187,4 +204,3 @@ class ScannerActionConfig {
     required this.icon,
   });
 }
-

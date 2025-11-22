@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/scanned_food_entity.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../../../record_view_home/presentation/cubit/record_cubit.dart';
 import '../widgets/scanned_food_detail_widgets/image_viewer_widget.dart';
 import '../widgets/scanned_food_detail_widgets/detail_bottom_sheet_widget.dart';
 import '../widgets/scanned_food_detail_widgets/more_options_menu.dart';
@@ -9,7 +11,7 @@ import '../widgets/scanned_food_detail_widgets/delete_confirmation_dialog.dart';
 
 /// Page to display scanned food details with image viewer and actions
 class ScannedFoodDetailPage extends StatelessWidget {
-  final ScannedFoodEntity scannedFood;
+  final FoodRecordEntity scannedFood;
 
   const ScannedFoodDetailPage({super.key, required this.scannedFood});
 
@@ -77,18 +79,25 @@ class ScannedFoodDetailPage extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (context) => MoreOptionsMenu(
-        scannedFood: scannedFood,
-        responsive: responsive,
-      ),
+      builder: (context) =>
+          MoreOptionsMenu(scannedFood: scannedFood, responsive: responsive),
     );
   }
 
-  void _onDelete(BuildContext context) {
-    showDialog(
+  void _onDelete(BuildContext context) async {
+    final bool? shouldDelete = await showDialog(
       context: context,
       builder: (context) => const DeleteConfirmationDialog(),
     );
+
+    if (shouldDelete == true && scannedFood.id != null) {
+      // Use the cubit to delete the record
+      context.read<RecordCubit>().deleteFoodRecord(scannedFood.id!);
+      // Pop the detail page and return true to notify the home page
+      if (context.mounted) {
+        Navigator.of(context).pop(true);
+      }
+    }
   }
 
   void _onAnalyze(BuildContext context, AppLocalizations? localizations) {

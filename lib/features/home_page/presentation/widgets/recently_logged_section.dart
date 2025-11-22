@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import 'picture_card.dart';
 
 /// Widget to display the Recently logged section with food pictures
 class RecentlyLoggedSection extends StatelessWidget {
-  final List<ScannedFoodEntity> scannedFoods;
+  final List<FoodRecordEntity> scannedFoods;
   final VoidCallback? onViewAll;
-  final Function(ScannedFoodEntity)? onPictureTap;
+  final Function(FoodRecordEntity)? onPictureTap;
 
   const RecentlyLoggedSection({
     super.key,
@@ -95,7 +95,7 @@ class RecentlyLoggedSection extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: responsive.height(32)),
       child: Center(
         child: Text(
-          localizations?.recentlyLoggedEmpty ?? 
+          localizations?.recentlyLoggedEmpty ??
               'You haven\'t uploaded any food',
           style: TextStyle(
             fontSize: responsive.fontSize(14),
@@ -106,10 +106,7 @@ class RecentlyLoggedSection extends StatelessWidget {
     );
   }
 
-  Widget _buildPictureGrid(
-    BuildContext context,
-    ResponsiveHelper responsive,
-  ) {
+  Widget _buildPictureGrid(BuildContext context, ResponsiveHelper responsive) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -126,7 +123,7 @@ class RecentlyLoggedSection extends StatelessWidget {
           imagePath: food.imagePath,
           foodName: food.foodName,
           calories: food.calories,
-          scanType: food.scanType,
+          recordType: food.recordType,
           onTap: onPictureTap != null ? () => onPictureTap!(food) : null,
         );
       },

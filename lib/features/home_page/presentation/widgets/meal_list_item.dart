@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../../responsive/responsive.dart';
-import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
 
 /// Widget để hiển thị một món ăn trong danh sách
 class MealListItem extends StatelessWidget {
-  final ScannedFoodEntity food;
+  final FoodRecordEntity food;
   final VoidCallback? onTap;
 
-  const MealListItem({
-    super.key,
-    required this.food,
-    this.onTap,
-  });
+  const MealListItem({super.key, required this.food, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +38,11 @@ class MealListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Icon chỉ hiển thị cho food, không hiển thị cho barcode
-            if (food.scanType != ScanType.barcode) ...[
+            if (food.recordType != RecordType.barcode) ...[
               _buildIcon(context, responsive),
               SizedBox(width: responsive.width(12)),
             ],
-            
+
             // Thông tin món ăn
             Expanded(
               child: Column(
@@ -63,9 +59,9 @@ class MealListItem extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   SizedBox(height: responsive.height(6)),
-                  
+
                   // Calories với icon lửa
                   if (food.calories != null)
                     Row(
@@ -80,16 +76,16 @@ class MealListItem extends StatelessWidget {
                         ),
                       ],
                     ),
-                  
+
                   SizedBox(height: responsive.height(4)),
-                  
+
                   // Nutrition info từ description
                   _buildNutritionInfo(context, responsive),
-                  
+
                   // Thời gian
                   SizedBox(height: responsive.height(6)),
                   Text(
-                    _formatTime(food.scanDate),
+                    _formatTime(food.date),
                     style: TextStyle(
                       fontSize: responsive.fontSize(10),
                       color: theme.colorScheme.primary.withOpacity(0.6),
@@ -98,7 +94,7 @@ class MealListItem extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Chevron
             Icon(
               Icons.chevron_right,
@@ -113,24 +109,25 @@ class MealListItem extends StatelessWidget {
 
   Widget _buildIcon(BuildContext context, ResponsiveHelper responsive) {
     final theme = Theme.of(context);
-    
+
     IconData iconData;
     Color iconColor;
-    
-    switch (food.scanType) {
-      case ScanType.barcode:
+
+    switch (food.recordType) {
+      case RecordType.barcode:
         iconData = Icons.qr_code_scanner;
         iconColor = theme.colorScheme.primary;
         break;
-      case ScanType.food:
+      case RecordType.food:
         iconData = Icons.restaurant;
         iconColor = Colors.green;
         break;
       default:
         iconData = Icons.fastfood;
         iconColor = Colors.orange;
+        break;
     }
-    
+
     return Container(
       width: responsive.width(44),
       height: responsive.width(44),
@@ -138,37 +135,38 @@ class MealListItem extends StatelessWidget {
         color: iconColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(responsive.width(10)),
       ),
-      child: Icon(
-        iconData,
-        size: responsive.width(24),
-        color: iconColor,
-      ),
+      child: Icon(iconData, size: responsive.width(24), color: iconColor),
     );
   }
 
   /// Parse nutrition info từ description và hiển thị dạng icon + giá trị
-  Widget _buildNutritionInfo(BuildContext context, ResponsiveHelper responsive) {
-    if (food.description == null || food.description!.isEmpty) {
+  Widget _buildNutritionInfo(
+    BuildContext context,
+    ResponsiveHelper responsive,
+  ) {
+    if (food.nutritionDetails == null || food.nutritionDetails!.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     final theme = Theme.of(context);
-    final description = food.description!;
-    
+    final description = food.nutritionDetails!;
+
     // Parse các giá trị dinh dưỡng từ description
-    final proteinMatch = RegExp(r'Protein:\s*([0-9.]+)g').firstMatch(description);
+    final proteinMatch = RegExp(
+      r'Protein:\s*([0-9.]+)g',
+    ).firstMatch(description);
     final carbsMatch = RegExp(r'Carbs:\s*([0-9.]+)g').firstMatch(description);
     final fatMatch = RegExp(r'Fat:\s*([0-9.]+)g').firstMatch(description);
-    
+
     final protein = proteinMatch != null ? proteinMatch.group(1) : null;
     final carbs = carbsMatch != null ? carbsMatch.group(1) : null;
     final fat = fatMatch != null ? fatMatch.group(1) : null;
-    
+
     // Nếu không có thông tin dinh dưỡng, không hiển thị gì
     if (protein == null && carbs == null && fat == null) {
       return const SizedBox.shrink();
     }
-    
+
     return Wrap(
       spacing: responsive.width(12),
       runSpacing: responsive.height(4),
@@ -204,7 +202,7 @@ class MealListItem extends StatelessWidget {
   String _formatTime(DateTime date) {
     final now = DateTime.now();
     final diff = now.difference(date);
-    
+
     if (diff.inMinutes < 1) {
       return 'Vừa xong';
     } else if (diff.inMinutes < 60) {

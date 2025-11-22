@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../responsive/responsive.dart';
-import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import 'meal_list_item.dart';
 
 /// Widget hiển thị danh sách bữa ăn
 class MealsListSection extends StatelessWidget {
-  final List<ScannedFoodEntity> meals;
-  final Function(ScannedFoodEntity)? onMealTap;
+  final List<FoodRecordEntity> meals;
+  final Function(FoodRecordEntity)? onMealTap;
   final VoidCallback? onViewAll;
 
   const MealsListSection({
@@ -41,17 +41,15 @@ class MealsListSection extends StatelessWidget {
                   onPressed: onViewAll,
                   child: Text(
                     'Xem tất cả',
-                    style: TextStyle(
-                      fontSize: responsive.fontSize(13),
-                    ),
+                    style: TextStyle(fontSize: responsive.fontSize(13)),
                   ),
                 ),
             ],
           ),
         ),
-        
+
         SizedBox(height: responsive.height(8)),
-        
+
         // List
         if (meals.isEmpty)
           _buildEmptyState(context, responsive)
@@ -63,7 +61,7 @@ class MealsListSection extends StatelessWidget {
 
   Widget _buildEmptyState(BuildContext context, ResponsiveHelper responsive) {
     final theme = Theme.of(context);
-    
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: responsive.width(16)),
       padding: EdgeInsets.all(responsive.width(24)),
@@ -107,13 +105,14 @@ class MealsListSection extends StatelessWidget {
   Widget _buildMealsList(BuildContext context, ResponsiveHelper responsive) {
     // Hiển thị tối đa 5 items
     final displayMeals = meals.take(5).toList();
-    
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: responsive.width(16)),
       itemCount: displayMeals.length,
-      separatorBuilder: (context, index) => SizedBox(height: responsive.height(8)),
+      separatorBuilder: (context, index) =>
+          SizedBox(height: responsive.height(8)),
       itemBuilder: (context, index) {
         final meal = displayMeals[index];
         return MealListItem(

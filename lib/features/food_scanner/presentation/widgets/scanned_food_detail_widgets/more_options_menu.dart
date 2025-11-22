@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../../../responsive/responsive.dart';
 import 'image_details_dialog.dart';
-import '../../../domain/entities/scanned_food_entity.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
 /// Bottom sheet menu showing more options for the scanned food detail
 class MoreOptionsMenu extends StatelessWidget {
-  final ScannedFoodEntity scannedFood;
+  final FoodRecordEntity scannedFood;
   final ResponsiveHelper responsive;
 
   const MoreOptionsMenu({
@@ -54,4 +54,3 @@ class MoreOptionsMenu extends StatelessWidget {
     );
   }
 }
-
