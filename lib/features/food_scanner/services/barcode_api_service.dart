@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../models/barcode_product.dart';
+import '../data/models/food_scanner_models.dart';
 
 /// Service để gọi API Python barcode scanner
 class BarcodeApiService {

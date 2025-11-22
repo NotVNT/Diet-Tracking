@@ -1072,23 +1072,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodScannerPlaceholderOpenGallery => 'Opening gallery (coming soon)';
 
   @override
-  String get foodScannerBarcodeScanning => 'Scanning for barcode...';
-
-  @override
-  String foodScannerBarcodeDetected(String value) {
-    return 'Detected barcode: $value';
-  }
-
-  @override
-  String get foodScannerBarcodeCopy => 'Copy code';
-
-  @override
-  String get foodScannerBarcodeScanAgain => 'Scan again';
-
-  @override
-  String get foodScannerBarcodeCopied => 'Barcode copied to clipboard';
-
-  @override
   String get recentlyLoggedTitle => 'Recently logged';
 
   @override
@@ -1123,4 +1106,63 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiFoodAnalysis => 'AI food analysis coming soon';
+
+  @override
+  String get permissionCameraRequired => 'Please grant camera access to use this feature.';
+
+  @override
+  String get inboxTitle => 'Inbox';
+
+  @override
+  String get searchHintText => 'Search';
+
+  @override
+  String get filterTitle => 'Filter';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get breakfast => 'Breakfast';
+
+  @override
+  String get lunch => 'Lunch';
+
+  @override
+  String get dinner => 'Dinner';
+
+  @override
+  String get snack => 'Snack';
+
+  @override
+  String get calorieRangeLabel => 'Calorie range';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get mealsListTitle => 'Meals list';
+
+  @override
+  String get noMealsYet => 'No meals yet';
+
+  @override
+  String get startByScanningOrPhoto => 'Scan a barcode or take a photo to get started';
+
+  @override
+  String get deleteMealTooltip => 'Delete meal';
+
+  @override
+  String get deleteMealTitle => 'Delete meal?';
+
+  @override
+  String deleteMealMessage(String foodName) {
+    return 'Are you sure you want to delete \"$foodName\" from records?';
+  }
+
+  @override
+  String get initializing => 'Initializing...';
 }

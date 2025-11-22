@@ -1072,23 +1072,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerPlaceholderOpenGallery => 'Đang mở thư viện (sắp ra mắt)';
 
   @override
-  String get foodScannerBarcodeScanning => 'Đang quét mã vạch...';
-
-  @override
-  String foodScannerBarcodeDetected(String value) {
-    return 'Đã phát hiện mã: $value';
-  }
-
-  @override
-  String get foodScannerBarcodeCopy => 'Sao chép mã';
-
-  @override
-  String get foodScannerBarcodeScanAgain => 'Quét lại';
-
-  @override
-  String get foodScannerBarcodeCopied => 'Đã sao chép mã vạch';
-
-  @override
   String get recentlyLoggedTitle => 'Đã ghi nhận gần đây';
 
   @override
@@ -1123,4 +1106,63 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get aiFoodAnalysis => 'Phân tích món ăn bằng AI sắp ra mắt';
+
+  @override
+  String get permissionCameraRequired => 'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
+
+  @override
+  String get inboxTitle => 'Hộp thư đến';
+
+  @override
+  String get searchHintText => 'Tìm kiếm';
+
+  @override
+  String get filterTitle => 'Bộ lọc';
+
+  @override
+  String get category => 'Danh mục';
+
+  @override
+  String get all => 'Tất cả';
+
+  @override
+  String get breakfast => 'Sáng';
+
+  @override
+  String get lunch => 'Trưa';
+
+  @override
+  String get dinner => 'Tối';
+
+  @override
+  String get snack => 'Phụ';
+
+  @override
+  String get calorieRangeLabel => 'Khoảng calo';
+
+  @override
+  String get reset => 'Đặt lại';
+
+  @override
+  String get mealsListTitle => 'Danh sách bữa ăn';
+
+  @override
+  String get noMealsYet => 'Chưa có bữa ăn nào';
+
+  @override
+  String get startByScanningOrPhoto => 'Quét barcode hoặc chụp ảnh món ăn để bắt đầu';
+
+  @override
+  String get deleteMealTooltip => 'Xoá món ăn';
+
+  @override
+  String get deleteMealTitle => 'Xoá món ăn?';
+
+  @override
+  String deleteMealMessage(String foodName) {
+    return 'Bạn có chắc muốn xoá \"$foodName\" khỏi ghi nhận?';
+  }
+
+  @override
+  String get initializing => 'Đang khởi tạo...';
 }

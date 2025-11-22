@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../responsive/responsive.dart';
+import '../../../../l10n/app_localizations.dart';
 
 /// Bottom sheet cho bộ lọc
 class FilterBottomSheet extends StatefulWidget {
@@ -22,6 +23,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   Widget build(BuildContext context) {
     final responsive = ResponsiveHelper.of(context);
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -50,7 +52,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
           // Title
           Text(
-            'Bộ lọc',
+            localizations?.filterTitle ?? 'Bộ lọc',
             style: TextStyle(
               fontSize: responsive.fontSize(20),
               fontWeight: FontWeight.w600,
@@ -61,7 +63,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
           // Category filter
           Text(
-            'Danh mục',
+            localizations?.category ?? 'Danh mục',
             style: TextStyle(
               fontSize: responsive.fontSize(14),
               fontWeight: FontWeight.w500,
@@ -73,18 +75,18 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             spacing: responsive.width(8),
             runSpacing: responsive.height(8),
             children: [
-              _buildCategoryChip('all', 'Tất cả', responsive, theme),
-              _buildCategoryChip('breakfast', 'Sáng', responsive, theme),
-              _buildCategoryChip('lunch', 'Trưa', responsive, theme),
-              _buildCategoryChip('dinner', 'Tối', responsive, theme),
-              _buildCategoryChip('snack', 'Phụ', responsive, theme),
+              _buildCategoryChip('all', localizations?.all ?? 'Tất cả', responsive, theme),
+              _buildCategoryChip('breakfast', localizations?.breakfast ?? 'Sáng', responsive, theme),
+              _buildCategoryChip('lunch', localizations?.lunch ?? 'Trưa', responsive, theme),
+              _buildCategoryChip('dinner', localizations?.dinner ?? 'Tối', responsive, theme),
+              _buildCategoryChip('snack', localizations?.snack ?? 'Phụ', responsive, theme),
             ],
           ),
           SizedBox(height: responsive.height(20)),
 
           // Calorie range
           Text(
-            'Khoảng calo: ${_calorieRange.start.round()} - ${_calorieRange.end.round()} kcal',
+            '${localizations?.calorieRangeLabel ?? 'Khoảng calo'}: ${_calorieRange.start.round()} - ${_calorieRange.end.round()} kcal',
             style: TextStyle(
               fontSize: responsive.fontSize(14),
               fontWeight: FontWeight.w500,
@@ -128,7 +130,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     ),
                   ),
                   child: Text(
-                    'Đặt lại',
+                    localizations?.reset ?? 'Đặt lại',
                     style: TextStyle(fontSize: responsive.fontSize(14)),
                   ),
                 ),
@@ -153,7 +155,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     ),
                   ),
                   child: Text(
-                    'Áp dụng',
+                    localizations?.apply ?? 'Áp dụng',
                     style: TextStyle(fontSize: responsive.fontSize(14)),
                   ),
                 ),
@@ -188,7 +190,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primary
-              : theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              : theme.colorScheme.surfaceVariant.withOpacity(0.5),
           borderRadius: BorderRadius.circular(responsive.radius(20)),
         ),
         child: Text(

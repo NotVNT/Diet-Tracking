@@ -394,5 +394,32 @@
   "photoDeletedSuccessfully": "Đã xóa ảnh thành công",
   "analyzeFood": "Phân tích món ăn",
   "shareFunctionality": "Tính năng chia sẻ sắp ra mắt",
-  "aiFoodAnalysis": "Phân tích món ăn bằng AI sắp ra mắt"
+  "aiFoodAnalysis": "Phân tích món ăn bằng AI sắp ra mắt",
+  "permissionCameraRequired": "Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này."
+,
+  "inboxTitle": "Hộp thư đến",
+  "searchHintText": "Tìm kiếm",
+  "filterTitle": "Bộ lọc",
+  "category": "Danh mục",
+  "all": "Tất cả",
+  "breakfast": "Sáng",
+  "lunch": "Trưa",
+  "dinner": "Tối",
+  "snack": "Phụ",
+  "calorieRangeLabel": "Khoảng calo",
+  "reset": "Đặt lại",
+  "mealsListTitle": "Danh sách bữa ăn",
+  "noMealsYet": "Chưa có bữa ăn nào",
+  "startByScanningOrPhoto": "Quét barcode hoặc chụp ảnh món ăn để bắt đầu",
+  "deleteMealTooltip": "Xoá món ăn",
+  "deleteMealTitle": "Xoá món ăn?",
+  "deleteMealMessage": "Bạn có chắc muốn xoá \"{foodName}\" khỏi ghi nhận?",
+  "@deleteMealMessage": {
+    "placeholders": {
+      "foodName": {
+        "type": "String"
+      }
+    }
+  },
+  "initializing": "Đang khởi tạo..."
 }

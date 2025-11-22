@@ -394,5 +394,32 @@
   "photoDeletedSuccessfully": "Photo deleted successfully",
   "analyzeFood": "Analyze Food",
   "shareFunctionality": "Share functionality coming soon",
-  "aiFoodAnalysis": "AI food analysis coming soon"
+  "aiFoodAnalysis": "AI food analysis coming soon",
+  "permissionCameraRequired": "Please grant camera access to use this feature."
+,
+  "inboxTitle": "Inbox",
+  "searchHintText": "Search",
+  "filterTitle": "Filter",
+  "category": "Category",
+  "all": "All",
+  "breakfast": "Breakfast",
+  "lunch": "Lunch",
+  "dinner": "Dinner",
+  "snack": "Snack",
+  "calorieRangeLabel": "Calorie range",
+  "reset": "Reset",
+  "mealsListTitle": "Meals list",
+  "noMealsYet": "No meals yet",
+  "startByScanningOrPhoto": "Scan a barcode or take a photo to get started",
+  "deleteMealTooltip": "Delete meal",
+  "deleteMealTitle": "Delete meal?",
+  "deleteMealMessage": "Are you sure you want to delete \"{foodName}\" from records?",
+  "@deleteMealMessage": {
+    "placeholders": {
+      "foodName": {
+        "type": "String"
+      }
+    }
+  },
+  "initializing": "Initializing..."
 }

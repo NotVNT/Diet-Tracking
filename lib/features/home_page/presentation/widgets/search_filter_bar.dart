@@ -43,7 +43,7 @@ class SearchFilterBar extends StatelessWidget {
                 color: theme.colorScheme.onSurface,
               ),
               decoration: InputDecoration(
-                hintText: hintText ?? localizations?.searchHint ?? 'Tìm kiếm',
+                hintText: hintText ?? localizations?.searchHintText ?? 'Tìm kiếm',
                 hintStyle: TextStyle(
                   fontSize: responsive.fontSize(14),
                   color: theme.colorScheme.onSurface.withOpacity(0.5),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/scanner_action_config.dart';
-import '../modes/barcode_mode.dart';
-import '../modes/scan_food_mode.dart';
+import '../../../data/models/food_scanner_models.dart';
+import 'scanner_widgets.dart';
 
 class ScannerPreview extends StatelessWidget {
   final ScannerActionType action;
