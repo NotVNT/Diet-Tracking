@@ -1168,4 +1168,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectedFood => 'Selected Food';
+
+  @override
+  String get successTitle => 'Success';
+
+  @override
+  String get infoTitle => 'Info';
+
+  @override
+  String get warningTitle => 'Warning';
+
+  @override
+  String get errorTitle => 'Error';
 }

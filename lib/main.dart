@@ -15,6 +15,7 @@ import 'features/home_page/di/home_di.dart';
 import 'features/record_view_home/di/record_di.dart';
 import 'features/home_page/presentation/pages/home_page.dart';
 
+import 'services/notification_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -31,12 +32,7 @@ Future<void> main() async {
   }
   await LanguageService.initialize();
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
-      child: const DietTrackingApp(),
-    ),
-  );
+  runApp(const DietTrackingApp());
 }
 
 class DietTrackingApp extends StatefulWidget {
@@ -68,6 +64,8 @@ class _DietTrackingAppState extends State<DietTrackingApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => HomeDI.getHomeProvider()),
         BlocProvider(create: (_) => RecordDI.getRecordCubit()),
       ],

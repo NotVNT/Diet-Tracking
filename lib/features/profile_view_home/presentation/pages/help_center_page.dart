@@ -14,6 +14,7 @@ class HelpCenterPage extends StatelessWidget {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.helpCenterTitle,
         showBackButton: true,
+        showNotificationBell: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

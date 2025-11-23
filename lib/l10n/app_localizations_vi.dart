@@ -1168,4 +1168,16 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get selectedFood => 'Món ăn đã chọn';
+
+  @override
+  String get successTitle => 'Thành công';
+
+  @override
+  String get infoTitle => 'Thông tin';
+
+  @override
+  String get warningTitle => 'Cảnh báo';
+
+  @override
+  String get errorTitle => 'Lỗi';
 }

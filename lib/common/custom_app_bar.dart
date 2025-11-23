@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../services/notification_provider.dart';
 import '../view/notification/notification_view.dart';
 import '../responsive/responsive.dart';
 import '../widget/home_widget/notification_bell.dart';
@@ -9,6 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Color? backgroundColor;
   final bool showBackButton;
+  final bool showNotificationBell;
 
   const CustomAppBar({
     super.key,
@@ -16,6 +19,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.backgroundColor,
     this.showBackButton = false,
+    this.showNotificationBell = true,
   });
 
   @override
@@ -41,19 +45,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: NotificationBell(
-            notificationCount: 3, // Dummy count for demonstration
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NotificationView()),
-              );
-            },
-          ),
-        ),
         if (actions != null) ...actions!,
+        if (showNotificationBell)
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Consumer<NotificationProvider>(
+              builder: (context, provider, child) {
+                return NotificationBell(
+                  notificationCount: provider.unreadCount,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NotificationView()),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
       ],
     );
   }
