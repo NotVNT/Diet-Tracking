@@ -66,31 +66,39 @@ class _DietTrackingAppState extends State<DietTrackingApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return MaterialApp(
-          title: AppLocalizations.of(context)?.appTitle ?? 'Diet Tracking',
-          theme: AppLightTheme.theme,
-          darkTheme: AppDarkTheme.theme,
-          themeMode: themeProvider.themeMode,
-          home: MultiProvider(
-            providers: [
-              ChangeNotifierProvider(create: (_) => HomeDI.getHomeProvider()),
-              BlocProvider(create: (_) => RecordDI.getRecordCubit()),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => HomeDI.getHomeProvider()),
+        BlocProvider(create: (_) => RecordDI.getRecordCubit()),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'Diet Tracking',
+            theme: AppLightTheme.theme,
+            darkTheme: AppDarkTheme.theme,
+            themeMode: themeProvider.themeMode,
+            home: const HomePage(),
+            debugShowCheckedModeBanner: false,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
             ],
-            child: const HomePage(),
-          ),
-          debugShowCheckedModeBanner: false,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en'), Locale('vi')],
-          locale: LanguageService.currentLocale,
-        );
-      },
+            supportedLocales: const [Locale('en'), Locale('vi')],
+            locale: LanguageService.currentLocale,
+            builder: (context, child) {
+              // Set the title here to ensure context is available
+              return Title(
+                title: AppLocalizations.of(context)?.appTitle ?? 'Diet Tracking',
+                color: Colors.blue, // This color is required but not used directly
+                child: child!,
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

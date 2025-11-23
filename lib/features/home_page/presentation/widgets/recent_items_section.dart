@@ -27,10 +27,6 @@ class RecentItemsSection extends StatelessWidget {
     final bool showPhotos = photoItems.isNotEmpty;
     final bool showBarcodes = barcodeItems.isNotEmpty;
 
-    if (!showPhotos && !showBarcodes) {
-      return const SizedBox.shrink(); // Hide section if completely empty
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

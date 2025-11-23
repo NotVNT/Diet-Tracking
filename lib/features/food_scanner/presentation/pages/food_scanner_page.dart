@@ -20,6 +20,7 @@ import '../widgets/food_scanner_page_widget/scanner_widgets.dart';
 import '../widgets/food_scanner_page_widget/scanner_preview.dart';
 import '../bloc/food_scanner_state.dart';
 import '../../services/food_recognition_service.dart';
+import '../../../../utils/snackbar_helper.dart';
 
 /// Screen allowing the user to scan food, barcodes, or pick images.
 class FoodScannerPage extends StatefulWidget {
@@ -287,9 +288,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
 
           // Show notifications and navigate on success/error
           if (state is ScanSuccessState) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            SnackBarHelper.showSuccess(context, state.message);
             // Pop back to previous (home) after a short delay
             Future.delayed(const Duration(milliseconds: 800), () {
               if (!mounted) return;
@@ -298,9 +297,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
               }
             });
           } else if (state is ScanErrorState) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            SnackBarHelper.showError(context, state.message);
             Future.delayed(const Duration(milliseconds: 800), () {
               if (!mounted) return;
               if (Navigator.of(context).canPop()) {
@@ -309,15 +306,10 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
             });
           } else if (state is NoBarcodeFoundState) {
             // Chỉ thông báo; KHÔNG pop ở đây để đợi lưu xong (ScanSuccessState)
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Không tìm thấy mã trong ảnh. Đang lưu ảnh...'),
-              ),
-            );
+            SnackBarHelper.showInfo(
+                context, 'Không tìm thấy mã trong ảnh. Đang lưu ảnh...');
           } else if (state is CameraErrorState) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+            SnackBarHelper.showError(context, state.errorMessage);
             Future.delayed(const Duration(milliseconds: 800), () {
               if (!mounted) return;
               if (Navigator.of(context).canPop()) {
