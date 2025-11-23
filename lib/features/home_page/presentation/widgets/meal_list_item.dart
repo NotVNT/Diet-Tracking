@@ -50,7 +50,7 @@ class MealListItem extends StatelessWidget {
                 children: [
                   // Tên món ăn
                   Text(
-                    food.foodName,
+                    food.foodName.isNotEmpty ? food.foodName : 'No Food Detected',
                     style: TextStyle(
                       fontSize: responsive.fontSize(13),
                       fontWeight: FontWeight.w600,

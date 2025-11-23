@@ -423,5 +423,6 @@
       }
     }
   },
-  "initializing": "Initializing..."
+  "initializing": "Initializing...",
+  "selectedFood": "Selected Food"
 }

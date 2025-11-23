@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
-import 'picture_card.dart';
 import 'meal_list_item.dart';
+import 'food_analysis_card.dart';
 
 /// Widget to display recently logged photos and barcode scans
 class RecentItemsSection extends StatelessWidget {
@@ -72,41 +72,23 @@ class RecentItemsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildPhotoSection(BuildContext context, ResponsiveHelper responsive) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(responsive.width(16)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromRGBO(0, 0, 0, 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.all(responsive.width(16)),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: responsive.width(8),
-          mainAxisSpacing: responsive.height(8),
-          childAspectRatio: 1.0,
-        ),
-        itemCount: photoItems.length > 6 ? 6 : photoItems.length,
-        itemBuilder: (context, index) {
-          final food = photoItems[index];
-          return PictureCard(
-            imagePath: food.imagePath,
-            foodName: food.foodName,
-            calories: food.calories,
-            recordType: food.recordType,
-            onTap: onItemTap != null ? () => onItemTap!(food) : null,
-          );
-        },
-      ),
+  Widget _buildPhotoSection(
+    BuildContext context,
+    ResponsiveHelper responsive,
+  ) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: photoItems.length,
+      separatorBuilder: (context, index) =>
+          SizedBox(height: responsive.height(16)),
+      itemBuilder: (context, index) {
+        final food = photoItems[index];
+        return GestureDetector(
+          onTap: onItemTap != null ? () => onItemTap!(food) : null,
+          child: FoodAnalysisCard(foodRecord: food),
+        );
+      },
     );
   }
 

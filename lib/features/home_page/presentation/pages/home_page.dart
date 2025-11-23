@@ -18,7 +18,7 @@ import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../record_view_home/presentation/cubit/record_cubit.dart';
 import '../../../record_view_home/presentation/cubit/record_state.dart';
 import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
-import '../../../food_scanner/presentation/pages/scanned_food_detail_page.dart';
+import '../widgets/scanned_food_detail.dart';
 import '../widgets/home_page_config.dart';
 import '../../../../utils/snackbar_helper.dart';
 

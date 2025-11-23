@@ -1,7 +1,12 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
 class AppLocalizationsEn extends AppLocalizations {
-    AppLocalizationsEn([super.locale = 'en']);
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
   String get defineYourGoal => 'Define your goal';
@@ -592,7 +597,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String chatBotAddedToList(String name) {
-        return 'Added "$name" to list';
+    return 'Added \"$name\" to list';
   }
 
   @override
@@ -887,7 +892,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpCenterFAQ3Question => 'How to create a menu?';
 
   @override
-    String get helpCenterFAQ3Answer => 'Go to the Menu section, select "Create new" and add the dishes you want. The app will automatically calculate nutrition.';
+  String get helpCenterFAQ3Answer => 'Go to the Menu section, select \"Create new\" and add the dishes you want. The app will automatically calculate nutrition.';
 
   @override
   String get helpCenterFAQ4Question => 'Is my data synchronized?';
@@ -899,7 +904,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpCenterFAQ5Question => 'How to export reports?';
 
   @override
-    String get helpCenterFAQ5Answer => 'Go to the Report section, select a time period and press the "Export PDF" button to download the report to your device.';
+  String get helpCenterFAQ5Answer => 'Go to the Report section, select a time period and press the \"Export PDF\" button to download the report to your device.';
 
   @override
   String get helpCenterContactEmail => 'Email';
@@ -962,8 +967,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHint => 'Search';
 
   @override
-
-  @override
   String get calorieCardBurnedToday => 'Your calories burned today';
 
   @override
@@ -980,23 +983,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calorieCardViewReport => 'View report';
-
-  String get calorieGoalTitle => 'Calorie Goal';
-
-  @override
-  String get viewReport => 'View Report';
-
-  @override
-  String get calorieRemaining => 'Remaining';
-
-  @override
-  String get goalLabel => 'Goal';
-
-  @override
-  String get consumedLabel => 'Consumed';
-
-  @override
-  String get exerciseLabel => 'Exercise';
 
   @override
   String get notificationTitle => 'Notifications';
@@ -1174,9 +1160,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String deleteMealMessage(String foodName) {
-        return 'Are you sure you want to delete "$foodName" from records?';
+    return 'Are you sure you want to delete \"$foodName\" from records?';
   }
 
   @override
   String get initializing => 'Initializing...';
+
+  @override
+  String get selectedFood => 'Selected Food';
 }

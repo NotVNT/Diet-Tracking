@@ -1,5 +1,10 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
+// ignore_for_file: type=lint
+
+/// The translations for Vietnamese (`vi`).
 class AppLocalizationsVi extends AppLocalizations {
   AppLocalizationsVi([String locale = 'vi']) : super(locale);
 
@@ -962,8 +967,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get searchHint => 'Tìm kiếm';
 
   @override
-
-  @override
   String get calorieCardBurnedToday => 'Lượng calo đã đốt hôm nay';
 
   @override
@@ -980,23 +983,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get calorieCardViewReport => 'Xem báo cáo';
-
-  String get calorieGoalTitle => 'Mục tiêu calo';
-
-  @override
-  String get viewReport => 'Xem báo cáo';
-
-  @override
-  String get calorieRemaining => 'Calo còn lại';
-
-  @override
-  String get goalLabel => 'Mục tiêu';
-
-  @override
-  String get consumedLabel => 'Đã nạp';
-
-  @override
-  String get exerciseLabel => 'Tập luyện';
 
   @override
   String get notificationTitle => 'Thông báo';
@@ -1179,4 +1165,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get initializing => 'Đang khởi tạo...';
+
+  @override
+  String get selectedFood => 'Món ăn đã chọn';
 }
