@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Form, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import google.generativeai as genai
 from pyzbar.pyzbar import decode
 from PIL import Image
@@ -8,15 +10,32 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+app = FastAPI()
+
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 model_gemini = genai.GenerativeModel('gemini-2.5-flash-lite')
 
-def analyze_product(disease, allergy, goal, ):
-    return f"""
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    """
+class ChatRequest(BaseModel):
+    disease: str
+    allergy: str
+    goal: str
+
+def analyze_product(disease, allergy, goal, product_name, calories, protein, Carbs, fat):
+    guidance_prompt = f"Hãy kiểm tra xem món ăn {product_name} có lượng dinh dưỡng bao gồm calories: {calories}, protein: {protein}, Carbs: {Carbs}, fat: {fat} có phù hợp với bệnh lí: {disease}, dị ứng: {allergy} và goal: {goal} và hãy đưa ra nhận xét của bạn của món ăn trên để nó phù hợp với thông tin của người dùng. Nhớ nói ngắn gọn nhưng súc tích và hãy nhớ nói một cách nhẹ nhàng"
+
+    response = model_gemini.generate_content(guidance_prompt)
+    raw = response.text.strip()
+    return raw
 
 app = FastAPI()
 
@@ -66,9 +85,14 @@ async def get_product_info(barcode: str = Form(...)):
         print(f"   🧈 Fat: {fat}g")
         print(f"{'='*60}\n")
         
+
+        reply = (analyze_product("không có", "không có", "giữ cân", product.get("product_name"), product.get("nutriments", {}).get("energy-kcal"), product.get("nutriments", {}).get("protein"), product.get("nutriments", {}).get("carbohydrates_serving"), product.get("nutriments", {}).get("fat")))
+
+        print(reply)
+
         return {
             "barcode": barcode,
-            "product": product
+            "reply": reply
         }
         
     except requests.Timeout:
@@ -82,33 +106,33 @@ async def get_product_info(barcode: str = Form(...)):
             "error": f"Lỗi khi tra cứu sản phẩm: {str(e)}"
         }
 
-@app.post("/scan_barcode")
-async def scan_barcode(file: UploadFile = File(...)):
-    image_bytes = await file.read()
-    image = Image.open(io.BytesIO(image_bytes))
+# @app.post("/scan_barcode")
+# async def scan_barcode(file: UploadFile = File(...)):
+#     image_bytes = await file.read()
+#     image = Image.open(io.BytesIO(image_bytes))
 
-    results = decode(image)
-    if not results:
-        return {"error": "Không tìm thấy barcode"}
+#     results = decode(image)
+#     if not results:
+#         return {"error": "Không tìm thấy barcode"}
 
-    barcode = results[0].data.decode("utf-8")
+#     barcode = results[0].data.decode("utf-8")
 
-    url = f"https://world.openfoodfacts.org/api/v2/product/{barcode}.json"
-    resp = requests.get(url).json()
+#     url = f"https://world.openfoodfacts.org/api/v2/product/{barcode}.json"
+#     resp = requests.get(url).json()
 
-    product = resp.get("product", None)
-    if not product:
-        print("Không tìm thấy thông tin sản phẩm tron OpenFoodFact")
+#     product = resp.get("product", None)
+#     if not product:
+#         print("Không tìm thấy thông tin sản phẩm tron OpenFoodFact")
 
-    print("\n Tên sản phẩm:", product.get("product_name"))
-    print("Thương hiệu:", product.get("brands"))
-    print("Calo:", product.get("nutriments", {}).get("energy-kcal"))
-    print("Nutriments:", product.get("nutriments"))
+#     print("\n Tên sản phẩm:", product.get("product_name"))
+#     print("Thương hiệu:", product.get("brands"))
+#     print("Calo:", product.get("nutriments", {}).get("energy-kcal"))
+#     print("Nutriments:", product.get("nutriments"))
 
-    return {
-        "barcode": barcode,
-        "product": resp.get("product", {})
-    }
+#     return {
+#         "barcode": barcode,
+#         "product": resp.get("product", {})
+#     }
 
 if __name__ == "__main__":
     base_dir = os.path.dirname(__file__)
@@ -117,8 +141,9 @@ if __name__ == "__main__":
     try:
         with open(test_file, "rb") as f:
             image_bytes = f.read()
-        
-        image_bytes = "diet-tracking/chat_box/bar_code_for_testing/Screenshot 2025-11-15 190539.png".read()
+        # `image_bytes` already contains the file bytes from the open() above.
+        # The previous code attempted to call `.read()` on a string literal
+        # which raised: 'str' object has no attribute 'read'. Removed that call.
 
         # Option A: open directly from bytes
         image = Image.open(io.BytesIO(image_bytes))
@@ -144,6 +169,9 @@ if __name__ == "__main__":
                 print("🏷️ Thương hiệu:", product.get("brands"))
                 print("🔥 Calo:", product.get("nutriments", {}).get("energy-kcal"))
                 print("🥣 Nutriments:", product.get("nutriments"))
+                print("\n")
+
+                print(analyze_product("không có", "không có", "giữ cân", product.get("product_name"), product.get("nutriments", {}).get("energy-kcal"), product.get("nutriments", {}).get("protein"), product.get("nutriments", {}).get("carbohydrates_serving"), product.get("nutriments", {}).get("fat")))
 
     except FileNotFoundError:
         print(f"⚠️ File test không tồn tại: {test_file}")
