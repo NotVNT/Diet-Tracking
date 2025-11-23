@@ -967,6 +967,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHint => 'Search';
 
   @override
+
+  @override
+  String get calorieCardBurnedToday => 'Your calories burned today';
+
+  @override
+  String get nutrientProtein => 'Protein';
+
+  @override
+  String get nutrientFiber => 'Fiber';
+
+  @override
+  String get nutrientCarbs => 'Carbs';
+
+  @override
+  String get calorieCardCaloriesTaken => 'Calories taken';
+
+  @override
+  String get calorieCardViewReport => 'View report';
+
   String get calorieGoalTitle => 'Calorie Goal';
 
   @override

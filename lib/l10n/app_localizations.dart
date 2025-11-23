@@ -1991,6 +1991,14 @@ abstract class AppLocalizations {
   /// **'Search'**
   String get searchHint;
 
+  /// Texts for calorie goal card
+  String get calorieCardBurnedToday; // "Your calories burned today"
+  String get nutrientProtein; // "Protein"
+  String get nutrientFiber; // "Fiber"
+  String get nutrientCarbs; // "Carbs"
+  String get calorieCardCaloriesTaken; // "Calories taken"
+  String get calorieCardViewReport; // "View report"
+
   /// No description provided for @calorieGoalTitle.
   ///
   /// In en, this message translates to:

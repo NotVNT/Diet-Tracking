@@ -967,6 +967,25 @@ class AppLocalizationsVi extends AppLocalizations {
   String get searchHint => 'Tìm kiếm';
 
   @override
+
+  @override
+  String get calorieCardBurnedToday => 'Lượng calo đã đốt hôm nay';
+
+  @override
+  String get nutrientProtein => 'Protein';
+
+  @override
+  String get nutrientFiber => 'Chất xơ';
+
+  @override
+  String get nutrientCarbs => 'Tinh bột';
+
+  @override
+  String get calorieCardCaloriesTaken => 'Calo đã nạp';
+
+  @override
+  String get calorieCardViewReport => 'Xem báo cáo';
+
   String get calorieGoalTitle => 'Mục tiêu calo';
 
   @override
