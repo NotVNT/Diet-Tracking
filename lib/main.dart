@@ -13,7 +13,7 @@ import 'database/firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/home_page/di/home_di.dart';
 import 'features/record_view_home/di/record_di.dart';
-import 'features/home_page/presentation/pages/home_page.dart';
+import 'view/splash/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,7 +78,7 @@ class _DietTrackingAppState extends State<DietTrackingApp> {
             theme: AppLightTheme.theme,
             darkTheme: AppDarkTheme.theme,
             themeMode: themeProvider.themeMode,
-            home: const HomePage(),
+            home: const SplashScreen(),
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
               AppLocalizations.delegate,
@@ -91,8 +91,10 @@ class _DietTrackingAppState extends State<DietTrackingApp> {
             builder: (context, child) {
               // Set the title here to ensure context is available
               return Title(
-                title: AppLocalizations.of(context)?.appTitle ?? 'Diet Tracking',
-                color: Colors.blue, // This color is required but not used directly
+                title:
+                    AppLocalizations.of(context)?.appTitle ?? 'Diet Tracking',
+                color:
+                    Colors.blue, // This color is required but not used directly
                 child: child!,
               );
             },
