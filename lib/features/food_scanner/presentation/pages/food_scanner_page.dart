@@ -14,6 +14,9 @@ import '../../services/barcode_api_service.dart';
 import '../../services/session_permission_service.dart';
 import '../bloc/food_scanner_bloc.dart';
 import '../bloc/food_scanner_event.dart';
+import '../../../chat_bot_view_home/data/repositories/user_repository_impl.dart';
+import '../../../chat_bot_view_home/data/datasources/firestore_datasource.dart';
+import '../../../../database/auth_service.dart';
 
 import '../../services/barcode_scanner_service.dart' as barcode_service;
 import '../widgets/food_scanner_page_widget/scanner_widgets.dart';
@@ -63,7 +66,8 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       SessionPermissionService(),
     );
     final saveScannedFood = SaveScannedFood(repository);
-    final getProductInfo = GetBarcodeProductInfo(apiService);
+    final userRepo = UserRepositoryImpl(FirestoreDatasource(), AuthService());
+    final getProductInfo = GetBarcodeProductInfo(apiService, userRepo);
 
     _bloc = FoodScannerBloc(
       scannedFoodRepository: repository,
@@ -307,7 +311,9 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
           } else if (state is NoBarcodeFoundState) {
             // Chỉ thông báo; KHÔNG pop ở đây để đợi lưu xong (ScanSuccessState)
             SnackBarHelper.showInfo(
-                context, 'Không tìm thấy mã trong ảnh. Đang lưu ảnh...');
+              context,
+              'Đang lưu ảnh...',
+            );
           } else if (state is CameraErrorState) {
             SnackBarHelper.showError(context, state.errorMessage);
             Future.delayed(const Duration(milliseconds: 800), () {
