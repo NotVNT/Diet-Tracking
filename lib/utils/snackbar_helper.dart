@@ -18,11 +18,7 @@ class SnackBarHelper {
         action: action,
         backgroundColor: backgroundColor,
         behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height * 0.12, // Above bottom nav
-          left: 16,
-          right: 16,
-        ),
+        margin: const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 70.0),
       ),
     );
   }
@@ -37,7 +33,7 @@ class SnackBarHelper {
       context,
       message,
       duration: duration,
-      backgroundColor: Colors.green.shade600,
+      backgroundColor: Theme.of(context).colorScheme.primary,
     );
   }
 
@@ -51,7 +47,7 @@ class SnackBarHelper {
       context,
       message,
       duration: duration,
-      backgroundColor: Colors.red.shade600,
+      backgroundColor: Theme.of(context).colorScheme.error,
     );
   }
 
@@ -65,7 +61,7 @@ class SnackBarHelper {
       context,
       message,
       duration: duration,
-      backgroundColor: Colors.blue.shade600,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
     );
   }
 
@@ -79,7 +75,7 @@ class SnackBarHelper {
       context,
       message,
       duration: duration,
-      backgroundColor: Colors.orange.shade600,
+      backgroundColor: Theme.of(context).colorScheme.tertiary,
     );
   }
 }

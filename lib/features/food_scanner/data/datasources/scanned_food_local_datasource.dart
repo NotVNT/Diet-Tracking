@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/scanned_food_model.dart';
+import '../models/food_scanner_models.dart';
 
 /// Local datasource for scanned food items using SharedPreferences
 class ScannedFoodLocalDataSource {

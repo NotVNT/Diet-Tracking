@@ -1991,41 +1991,41 @@ abstract class AppLocalizations {
   /// **'Search'**
   String get searchHint;
 
-  /// No description provided for @calorieGoalTitle.
+  /// No description provided for @calorieCardBurnedToday.
   ///
   /// In en, this message translates to:
-  /// **'Calorie Goal'**
-  String get calorieGoalTitle;
+  /// **'Your calories burned today'**
+  String get calorieCardBurnedToday;
 
-  /// No description provided for @viewReport.
+  /// No description provided for @nutrientProtein.
   ///
   /// In en, this message translates to:
-  /// **'View Report'**
-  String get viewReport;
+  /// **'Protein'**
+  String get nutrientProtein;
 
-  /// No description provided for @calorieRemaining.
+  /// No description provided for @nutrientFiber.
   ///
   /// In en, this message translates to:
-  /// **'Remaining'**
-  String get calorieRemaining;
+  /// **'Fiber'**
+  String get nutrientFiber;
 
-  /// No description provided for @goalLabel.
+  /// No description provided for @nutrientCarbs.
   ///
   /// In en, this message translates to:
-  /// **'Goal'**
-  String get goalLabel;
+  /// **'Carbs'**
+  String get nutrientCarbs;
 
-  /// No description provided for @consumedLabel.
+  /// No description provided for @calorieCardCaloriesTaken.
   ///
   /// In en, this message translates to:
-  /// **'Consumed'**
-  String get consumedLabel;
+  /// **'Calories taken'**
+  String get calorieCardCaloriesTaken;
 
-  /// No description provided for @exerciseLabel.
+  /// No description provided for @calorieCardViewReport.
   ///
   /// In en, this message translates to:
-  /// **'Exercise'**
-  String get exerciseLabel;
+  /// **'View report'**
+  String get calorieCardViewReport;
 
   /// No description provided for @notificationTitle.
   ///
@@ -2201,36 +2201,6 @@ abstract class AppLocalizations {
   /// **'Opening gallery (coming soon)'**
   String get foodScannerPlaceholderOpenGallery;
 
-  /// No description provided for @foodScannerBarcodeScanning.
-  ///
-  /// In en, this message translates to:
-  /// **'Scanning for barcode...'**
-  String get foodScannerBarcodeScanning;
-
-  /// No description provided for @foodScannerBarcodeDetected.
-  ///
-  /// In en, this message translates to:
-  /// **'Detected barcode: {value}'**
-  String foodScannerBarcodeDetected(String value);
-
-  /// No description provided for @foodScannerBarcodeCopy.
-  ///
-  /// In en, this message translates to:
-  /// **'Copy code'**
-  String get foodScannerBarcodeCopy;
-
-  /// No description provided for @foodScannerBarcodeScanAgain.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan again'**
-  String get foodScannerBarcodeScanAgain;
-
-  /// No description provided for @foodScannerBarcodeCopied.
-  ///
-  /// In en, this message translates to:
-  /// **'Barcode copied to clipboard'**
-  String get foodScannerBarcodeCopied;
-
   /// No description provided for @recentlyLoggedTitle.
   ///
   /// In en, this message translates to:
@@ -2302,6 +2272,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'AI food analysis coming soon'**
   String get aiFoodAnalysis;
+
+  /// No description provided for @permissionCameraRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please grant camera access to use this feature.'**
+  String get permissionCameraRequired;
+
+  /// No description provided for @inboxTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get inboxTitle;
+
+  /// No description provided for @searchHintText.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchHintText;
+
+  /// No description provided for @filterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filterTitle;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @breakfast.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get breakfast;
+
+  /// No description provided for @lunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get lunch;
+
+  /// No description provided for @dinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get dinner;
+
+  /// No description provided for @snack.
+  ///
+  /// In en, this message translates to:
+  /// **'Snack'**
+  String get snack;
+
+  /// No description provided for @calorieRangeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie range'**
+  String get calorieRangeLabel;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @mealsListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Meals list'**
+  String get mealsListTitle;
+
+  /// No description provided for @noMealsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No meals yet'**
+  String get noMealsYet;
+
+  /// No description provided for @startByScanningOrPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a barcode or take a photo to get started'**
+  String get startByScanningOrPhoto;
+
+  /// No description provided for @deleteMealTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete meal'**
+  String get deleteMealTooltip;
+
+  /// No description provided for @deleteMealTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete meal?'**
+  String get deleteMealTitle;
+
+  /// No description provided for @deleteMealMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{foodName}\" from records?'**
+  String deleteMealMessage(String foodName);
+
+  /// No description provided for @initializing.
+  ///
+  /// In en, this message translates to:
+  /// **'Initializing...'**
+  String get initializing;
+
+  /// No description provided for @selectedFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Food'**
+  String get selectedFood;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
