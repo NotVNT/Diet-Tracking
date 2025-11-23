@@ -1,8 +1,17 @@
 from fastapi import FastAPI, UploadFile, File
+import google.generativeai as genai
 from pyzbar.pyzbar import decode
 from PIL import Image
 import requests
 import io
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=GEMINI_API_KEY)
+model_gemini = genai.GenerativeModel('gemini-2.5-flash-lite')
 
 app = FastAPI()
 
