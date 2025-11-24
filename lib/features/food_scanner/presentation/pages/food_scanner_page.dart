@@ -236,7 +236,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
       _bloc.add(
         CapturePhotoEvent(
           scanType: ScanType.gallery,
-          placeholderMessage: 'Không thể mở thư viện, vui lòng thử lại.',
+          placeholderMessage: AppLocalizations.of(context)!.foodScannerCantOpenGallery,
         ),
       );
     }
@@ -250,7 +250,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     _bloc.add(
       CapturePhotoEvent(
         scanType: scanType,
-        placeholderMessage: 'Không thể chụp ảnh, vui lòng thử lại.',
+        placeholderMessage: AppLocalizations.of(context)!.foodScannerCantCapturePhoto,
       ),
     );
   }
@@ -307,7 +307,7 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
           } else if (state is NoBarcodeFoundState) {
             // Chỉ thông báo; KHÔNG pop ở đây để đợi lưu xong (ScanSuccessState)
             SnackBarHelper.showInfo(
-                context, 'Không tìm thấy mã trong ảnh. Đang lưu ảnh...');
+                context, l10n.foodScannerNoBarcodeFoundSaving);
           } else if (state is CameraErrorState) {
             SnackBarHelper.showError(context, state.errorMessage);
             Future.delayed(const Duration(milliseconds: 800), () {

@@ -1,4 +1,6 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
 /// Helper class for showing SnackBars with consistent positioning
 /// SnackBars will appear above the bottom navigation bar and floating action button
@@ -23,59 +25,95 @@ class SnackBarHelper {
     );
   }
 
-  /// Show a success SnackBar with green background
+  /// Show a success SnackBar using AwesomeSnackbarContent
   static void showSuccess(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 2),
   }) {
-    showSnackBar(
-      context,
-      message,
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: AppLocalizations.of(context)!.snackbarSuccessTitle,
+        message: message,
+        contentType: ContentType.success,
+      ),
       duration: duration,
-      backgroundColor: Theme.of(context).colorScheme.primary,
     );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
 
-  /// Show an error SnackBar with red background
+  /// Show an error SnackBar using AwesomeSnackbarContent
   static void showError(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 3),
   }) {
-    showSnackBar(
-      context,
-      message,
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: AppLocalizations.of(context)!.snackbarErrorTitle,
+        message: message,
+        contentType: ContentType.failure,
+      ),
       duration: duration,
-      backgroundColor: Theme.of(context).colorScheme.error,
     );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
 
-  /// Show an info SnackBar with blue background
+  /// Show an info SnackBar using AwesomeSnackbarContent
   static void showInfo(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 2),
   }) {
-    showSnackBar(
-      context,
-      message,
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: AppLocalizations.of(context)!.snackbarInfoTitle,
+        message: message,
+        contentType: ContentType.help,
+      ),
       duration: duration,
-      backgroundColor: Theme.of(context).colorScheme.secondary,
     );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
 
-  /// Show a warning SnackBar with orange background
+  /// Show a warning SnackBar using AwesomeSnackbarContent
   static void showWarning(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 2),
   }) {
-    showSnackBar(
-      context,
-      message,
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: AppLocalizations.of(context)!.snackbarWarningTitle,
+        message: message,
+        contentType: ContentType.warning,
+      ),
       duration: duration,
-      backgroundColor: Theme.of(context).colorScheme.tertiary,
     );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
 }

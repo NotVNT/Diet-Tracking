@@ -2141,6 +2141,12 @@ abstract class AppLocalizations {
   /// **'Gallery'**
   String get foodScannerActionGallery;
 
+  /// No description provided for @foodScannerScanningBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning barcode...'**
+  String get foodScannerScanningBarcode;
+
   /// No description provided for @foodScannerHelpTitle.
   ///
   /// In en, this message translates to:
@@ -2393,29 +2399,107 @@ abstract class AppLocalizations {
   /// **'Selected Food'**
   String get selectedFood;
 
-  /// No description provided for @successTitle.
+  /// No description provided for @snackbarSuccessTitle.
   ///
   /// In en, this message translates to:
   /// **'Success'**
-  String get successTitle;
+  String get snackbarSuccessTitle;
 
-  /// No description provided for @infoTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Info'**
-  String get infoTitle;
-
-  /// No description provided for @warningTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Warning'**
-  String get warningTitle;
-
-  /// No description provided for @errorTitle.
+  /// No description provided for @snackbarErrorTitle.
   ///
   /// In en, this message translates to:
   /// **'Error'**
-  String get errorTitle;
+  String get snackbarErrorTitle;
+
+  /// No description provided for @snackbarWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get snackbarWarningTitle;
+
+  /// No description provided for @snackbarInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get snackbarInfoTitle;
+
+  /// No description provided for @foodScannerCantCapturePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t capture photo, please try again.'**
+  String get foodScannerCantCapturePhoto;
+
+  /// No description provided for @foodScannerCantOpenGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open gallery, please try again.'**
+  String get foodScannerCantOpenGallery;
+
+  /// No description provided for @foodScannerNoBarcodeFoundSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'No barcode found in image. Saving photo...'**
+  String get foodScannerNoBarcodeFoundSaving;
+
+  /// No description provided for @foodScannerNoCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'No camera found on device.'**
+  String get foodScannerNoCamera;
+
+  /// No description provided for @foodScannerSavePhotoSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo saved successfully'**
+  String get foodScannerSavePhotoSuccess;
+
+  /// No description provided for @foodScannerUploadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t upload photo to Cloudinary. Please try again.'**
+  String get foodScannerUploadError;
+
+  /// No description provided for @foodScannerSavePhotoError.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved photo (error looking up info)'**
+  String get foodScannerSavePhotoError;
+
+  /// No description provided for @foodScannerSavedBarcodeNoDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved code: {barcodeValue} (Details not found)'**
+  String foodScannerSavedBarcodeNoDetail(Object barcodeValue);
+
+  /// No description provided for @foodScannerCameraNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera not ready'**
+  String get foodScannerCameraNotReady;
+
+  /// No description provided for @foodScannerBarcodeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error scanning barcode'**
+  String get foodScannerBarcodeError;
+
+  /// No description provided for @foodScannerProductDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Product {barcode}'**
+  String foodScannerProductDefaultName(Object barcode);
+
+  /// No description provided for @foodScannerScanned.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned: {foodName}'**
+  String foodScannerScanned(Object foodName);
+
+  /// No description provided for @foodScannerSaveProductError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving product'**
+  String get foodScannerSaveProductError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

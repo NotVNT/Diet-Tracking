@@ -1042,6 +1042,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerActionGallery => 'Thư viện';
 
   @override
+  String get foodScannerScanningBarcode => 'Đang quét mã vạch...';
+
+  @override
   String get foodScannerHelpTitle => 'Cách quét';
 
   @override
@@ -1170,14 +1173,59 @@ class AppLocalizationsVi extends AppLocalizations {
   String get selectedFood => 'Món ăn đã chọn';
 
   @override
-  String get successTitle => 'Thành công';
+  String get snackbarSuccessTitle => 'Thành công';
 
   @override
-  String get infoTitle => 'Thông tin';
+  String get snackbarErrorTitle => 'Lỗi';
 
   @override
-  String get warningTitle => 'Cảnh báo';
+  String get snackbarWarningTitle => 'Cảnh báo';
 
   @override
-  String get errorTitle => 'Lỗi';
+  String get snackbarInfoTitle => 'Thông tin';
+
+  @override
+  String get foodScannerCantCapturePhoto => 'Không thể chụp ảnh, vui lòng thử lại.';
+
+  @override
+  String get foodScannerCantOpenGallery => 'Không thể mở thư viện, vui lòng thử lại.';
+
+  @override
+  String get foodScannerNoBarcodeFoundSaving => 'Không tìm thấy mã trong ảnh. Đang lưu ảnh...';
+
+  @override
+  String get foodScannerNoCamera => 'Không tìm thấy camera trên thiết bị.';
+
+  @override
+  String get foodScannerSavePhotoSuccess => 'Đã lưu ảnh thành công';
+
+  @override
+  String get foodScannerUploadError => 'Không thể tải ảnh lên Cloudinary. Vui lòng thử lại.';
+
+  @override
+  String get foodScannerSavePhotoError => 'Đã lưu ảnh (lỗi khi tra cứu thông tin)';
+
+  @override
+  String foodScannerSavedBarcodeNoDetail(Object barcodeValue) {
+    return 'Đã lưu mã: $barcodeValue (Không tìm thấy chi tiết)';
+  }
+
+  @override
+  String get foodScannerCameraNotReady => 'Camera chưa sẵn sàng';
+
+  @override
+  String get foodScannerBarcodeError => 'Lỗi khi quét barcode';
+
+  @override
+  String foodScannerProductDefaultName(Object barcode) {
+    return 'Sản phẩm $barcode';
+  }
+
+  @override
+  String foodScannerScanned(Object foodName) {
+    return 'Đã quét: $foodName';
+  }
+
+  @override
+  String get foodScannerSaveProductError => 'Lỗi khi lưu sản phẩm';
 }
