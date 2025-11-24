@@ -1,5 +1,5 @@
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
-import '../../services/barcode_scanner_service.dart';
+import '../../presentation/widgets/food_scanner_page_widget/barcode_scanner_port.dart';
 
 /// Use case để quét barcode từ ảnh
 ///
@@ -7,7 +7,7 @@ import '../../services/barcode_scanner_service.dart';
 /// - Quét barcode từ đường dẫn ảnh
 /// - Trả về danh sách các barcode tìm thấy
 class ScanBarcodeFromImage {
-  final BarcodeScannerService _barcodeScannerService;
+  final IBarcodeScannerService _barcodeScannerService;
 
   ScanBarcodeFromImage(this._barcodeScannerService);
 

@@ -2,88 +2,187 @@ import 'package:camera/camera.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../data/models/food_scanner_models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/entities/scanned_food_entity.dart';
-import '../../data/repositories/scanned_food_repository_impl.dart';
-import '../../domain/usecases/get_barcode_product_info.dart';
-import '../../domain/usecases/request_camera_permission.dart';
-import '../../domain/usecases/save_scanned_food.dart';
-import '../../domain/usecases/scan_barcode_from_image.dart';
-import '../../services/barcode_api_service.dart';
-import '../../services/session_permission_service.dart';
-import '../bloc/food_scanner_bloc.dart';
-import '../bloc/food_scanner_event.dart';
-
-import '../../services/barcode_scanner_service.dart' as barcode_service;
+import '../../di/food_scanner_injector.dart';
+import '../bloc/food_scan/food_scan_bloc.dart';
+import '../bloc/food_scan/food_scan_event.dart';
+import '../bloc/food_scan/food_scan_state.dart';
+import '../bloc/barcode/barcode_bloc.dart';
+import '../bloc/barcode/barcode_event.dart';
+import '../bloc/barcode/barcode_state.dart';
 import '../widgets/food_scanner_page_widget/scanner_widgets.dart';
 import '../widgets/food_scanner_page_widget/scanner_preview.dart';
-import '../bloc/food_scanner_state.dart';
-import '../../services/food_recognition_service.dart';
+import '../widgets/food_scanner_page_widget/scanner_bottom_overlay.dart';
+import '../widgets/food_scanner_page_widget/camera_preview_wrapper.dart';
+import '../../di/food_scanner_locator.dart';
+
 import '../../../../utils/snackbar_helper.dart';
+import '../bloc/camera/camera_bloc.dart' as cam;
+import '../bloc/camera/camera_event.dart' as cam_event;
+import '../bloc/camera/camera_state.dart' as cam_state;
+import '../../services/barcode_scanner_service.dart' as barcode_service;
+
 
 /// Screen allowing the user to scan food, barcodes, or pick images.
 class FoodScannerPage extends StatefulWidget {
-  const FoodScannerPage({super.key});
+  final FoodScannerInjector? injector;
+  const FoodScannerPage({super.key, this.injector});
 
   @override
   State<FoodScannerPage> createState() => _FoodScannerPageState();
 }
 
 class _FoodScannerPageState extends State<FoodScannerPage> {
-  late final FoodScannerBloc _bloc;
+  late final FoodScanBloc _foodScanBloc;
+  late final BarcodeBloc _barcodeBloc;
+  late final cam.CameraBloc _cameraBloc;
+  // Ownership flag for DI resources created via Injector (not Locator)
+  bool _ownsDependencies = false;
   // UI mirror states (sync via BlocListener)
-  late ActionSelectedState _actionState;
-  late UploadingState _uploadingState;
-  late CameraInitializingState _cameraInitState;
-  late CameraErrorState? _cameraErrorState;
-  late RealTimeScanningState _realTimeScanState;
+  late ScannerActionType _selectedAction;
+  bool _isUploading = false;
+  bool _cameraInitializing = false;
+  String? _cameraError;
+  bool _isStreaming = false;
   CameraController? _cameraController;
+  String? _pendingImagePath;
+  bool _isBarcodeCapturing = false;
+  late final barcode_service.BarcodeScannerService _barcodeScannerService;
 
   @override
   void initState() {
     super.initState();
     // Local UI mirrors of bloc state
-    _actionState = const ActionSelectedState(
-      selectedAction: ScannerActionType.food,
-    );
-    _uploadingState = const UploadingState(isUploading: false);
-    _cameraInitState = const CameraInitializingState(isInitializing: false);
-    _cameraErrorState = null;
-    _realTimeScanState = const RealTimeScanningState(isScanning: false);
+    _selectedAction = ScannerActionType.food;
+    _isUploading = false;
+    _cameraInitializing = false;
+    _cameraError = null;
+    _isStreaming = false;
 
-    // Build dependencies and create bloc
-    final repository = ScannedFoodRepositoryImpl();
-    final scannerService = barcode_service.BarcodeScannerService();
-    final apiService = BarcodeApiService();
-    final foodRecognition = FoodRecognitionService();
-
-    final scanBarcodeFromImage = ScanBarcodeFromImage(scannerService);
-    final requestPermission = RequestCameraPermission(
-      SessionPermissionService(),
-    );
-    final saveScannedFood = SaveScannedFood(repository);
-    final getProductInfo = GetBarcodeProductInfo(apiService);
-
-    _bloc = FoodScannerBloc(
-      scannedFoodRepository: repository,
-      barcodeScannerService: scannerService,
-      barcodeApiService: apiService,
-      scanBarcodeFromImageUseCase: scanBarcodeFromImage,
-      requestCameraPermissionUseCase: requestPermission,
-      saveScannedFoodUseCase: saveScannedFood,
-      getBarcodeProductInfoUseCase: getProductInfo,
-      foodRecognitionService: foodRecognition,
-    );
-
-    _bloc.add(const InitializeCameraEvent());
+    // Build dependencies and create blocs
+    _initDependenciesAndBlocs();
   }
 
   @override
   void dispose() {
-    _bloc.close();
+    if (_ownsDependencies) {
+      _cameraBloc.close();
+      _foodScanBloc.close();
+      _barcodeBloc.close();
+      _barcodeScannerService.dispose();
+    }
     super.dispose();
   }
+  void _initDependenciesAndBlocs() {
+    // Prefer feature locator if already set up, otherwise use injector
+    if (FoodScannerLocator.isInitialized) {
+      _foodScanBloc = FoodScannerLocator.I<FoodScanBloc>();
+      _barcodeBloc = FoodScannerLocator.I<BarcodeBloc>();
+      _cameraBloc = FoodScannerLocator.I<cam.CameraBloc>();
+      _barcodeScannerService = FoodScannerLocator.I<barcode_service.BarcodeScannerService>();
+      _ownsDependencies = false;
+      return;
+    }
+
+    final injector = widget.injector ?? FoodScannerInjector();
+    final deps = injector.create();
+    _foodScanBloc = deps.foodScanBloc;
+    _barcodeBloc = deps.barcodeBloc;
+    _cameraBloc = deps.cameraBloc;
+    _barcodeScannerService = deps.barcodeScannerService;
+    _ownsDependencies = true;
+  }
+
+  void _handleFoodScanState(BuildContext context, FoodScanState state) {
+    setState(() => _syncState(state));
+
+    // Show notifications and navigate on success/error
+    if (state is FoodScanSuccess) {
+      SnackBarHelper.showSuccess(context, state.message);
+      _popAfterShortDelay();
+    } else if (state is FoodScanError) {
+      SnackBarHelper.showError(context, state.message);
+      _popAfterShortDelay();
+    }
+  }
+
+  void _handleBarcodeState(BuildContext context, BarcodeState state) async {
+    if (state is BarcodeUploading) {
+      setState(() => _isUploading = true);
+    } else if (state is BarcodeSavedSuccess) {
+      setState(() => _isUploading = false);
+      SnackBarHelper.showSuccess(context, state.message);
+      _popAfterShortDelay();
+    } else if (state is BarcodeNoBarcodeFound) {
+      setState(() => _isUploading = false);
+      final l10n = AppLocalizations.of(context)!;
+      SnackBarHelper.showInfo(context, l10n.foodScannerNoBarcodeFoundSaving);
+      _foodScanBloc.add(FoodScanRequested(imagePath: state.imagePath));
+    } else if (state is BarcodeError) {
+      setState(() => _isUploading = false);
+      SnackBarHelper.showError(context, state.message);
+      final path = _pendingImagePath;
+      if (path != null) {
+        _foodScanBloc.add(FoodScanRequested(imagePath: path));
+        _pendingImagePath = null;
+      }
+    } else if (state is BarcodeValueDetected) {
+      if (_isBarcodeCapturing) return;
+      _isBarcodeCapturing = true;
+      try {
+        final controller = _cameraController;
+        if (controller == null || !controller.value.isInitialized) {
+          _isBarcodeCapturing = false;
+          return;
+        }
+        final photo = await controller.takePicture();
+        _pendingImagePath = photo.path;
+        _barcodeBloc.add(BarcodeSelected(state.barcodeValue, imagePath: photo.path));
+      } catch (_) {
+        _isBarcodeCapturing = false;
+      }
+    }
+  }
+
+  void _handleCameraState(BuildContext context, cam_state.CameraState state) async {
+    if (state is cam_state.CameraInitializing) {
+      setState(() => _cameraInitializing = state.isInitializing);
+    } else if (state is cam_state.CameraError) {
+      setState(() => _cameraError = state.errorMessage);
+      SnackBarHelper.showError(context, state.errorMessage);
+      final navigator = Navigator.of(context);
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (!mounted) return;
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+    } else if (state is cam_state.CameraReady) {
+      setState(() {
+        _cameraError = null;
+        _cameraController = state.controller;
+      });
+    } else if (state is cam_state.CameraStreamingState) {
+      setState(() => _isStreaming = state.isStreaming);
+    } else if (state is cam_state.CameraFrameAvailable) {
+      if (_selectedAction == ScannerActionType.barcode && !_isUploading) {
+        _barcodeBloc.add(BarcodeScanFromCameraFrameRequested(state.image));
+      }
+    }
+  }
+
+
+  void _popAfterShortDelay() {
+    final navigator = Navigator.of(context);
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (!mounted) return;
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+    });
+  }
+
 
   List<ScannerActionConfig> _buildActions(AppLocalizations l10n) {
     return [
@@ -105,20 +204,21 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     ];
   }
 
-  void _syncState(FoodScannerState state) {
-    if (state is ActionSelectedState) {
-      _actionState = state;
-    } else if (state is UploadingState) {
-      _uploadingState = state;
-    } else if (state is CameraInitializingState) {
-      _cameraInitState = state;
-    } else if (state is CameraErrorState) {
-      _cameraErrorState = state;
-    } else if (state is CameraReadyState) {
-      _cameraController = state.controller;
-      _cameraErrorState = null;
-    } else if (state is RealTimeScanningState) {
-      _realTimeScanState = state;
+  void _syncState(FoodScanState state) {
+    if (state is FoodScanUploading) {
+      _isUploading = true;
+    } else if (state is FoodScanSuccess || state is FoodScanError) {
+      _isUploading = false;
+    }
+  }
+
+  void _syncActionState(ScannerActionType action) {
+    _selectedAction = action;
+    // Start/stop camera streaming based on selected action
+    if (action == ScannerActionType.barcode) {
+      _cameraBloc.add(const cam_event.StartImageStream());
+    } else {
+      _cameraBloc.add(const cam_event.StopImageStream());
     }
   }
 
@@ -176,98 +276,62 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     );
   }
 
-  Widget? _buildCameraPreview() {
-    if (_cameraErrorState != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            _cameraErrorState!.errorMessage,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
-          ),
-        ),
-      );
-    }
-
-    if (_cameraInitState.isInitializing) {
-      return const Center(
-        child: CircularProgressIndicator(color: Colors.white),
-      );
-    }
-
-    final controller = _cameraController;
-    if (controller == null || !controller.value.isInitialized) {
-      return null;
-    }
-
-    // Camera sensor thường trả về landscape (ngang), nhưng app dùng portrait (dọc).
-    // Đảo ngược tỷ lệ để preview dọc khớp với ảnh chụp.
-    final previewAspectRatio = controller.value.aspectRatio;
-    if (previewAspectRatio <= 0) {
-      return const SizedBox.shrink();
-    }
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final maxWidth = constraints.maxWidth;
-        final maxHeight = constraints.maxHeight;
-        if (maxWidth <= 0 || maxHeight <= 0) {
-          return const SizedBox.shrink();
-        }
-
-        // Đảo tỷ lệ từ landscape (ngang) sang portrait (dọc).
-        final correctedAspectRatio = 1 / previewAspectRatio;
-
-        return Center(
-          child: AspectRatio(
-            aspectRatio: correctedAspectRatio,
-            child: CameraPreview(controller),
-          ),
-        );
-      },
-    );
-  }
 
   void _onActionSelected(ScannerActionType type) {
-    _bloc.add(ActionSelectedEvent(actionType: type));
-    // Nếu chọn Gallery, mở thư viện ngay
+    setState(() => _syncActionState(type));
+    // If user selects Gallery, open picker immediately
     if (type == ScannerActionType.gallery) {
-      _bloc.add(
-        CapturePhotoEvent(
-          scanType: ScanType.gallery,
-          placeholderMessage: AppLocalizations.of(context)!.foodScannerCantOpenGallery,
-        ),
+      _openGallery();
+    }
+  }
+
+  Future<void> _openGallery() async {
+    final picker = ImagePicker();
+    final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked == null) return;
+
+    // If gallery chosen, attempt barcode scan from image, fallback handled by bloc listener
+    _pendingImagePath = picked.path;
+    _barcodeBloc.add(BarcodeScanFromImageRequested(picked.path));
+  }
+
+  Future<void> _onCapturePressed() async {
+    final controller = _cameraController;
+    if (controller == null || !controller.value.isInitialized) {
+      SnackBarHelper.showError(
+        context,
+        AppLocalizations.of(context)!.foodScannerCantCapturePhoto,
+      );
+      return;
+    }
+
+    try {
+      final photo = await controller.takePicture();
+      // Trigger food scan for captured image
+      _foodScanBloc.add(FoodScanRequested(imagePath: photo.path));
+    } catch (e) {
+      if (!mounted) return;
+      SnackBarHelper.showError(
+        context,
+        AppLocalizations.of(context)!.foodScannerCantCapturePhoto,
       );
     }
   }
 
-  void _onCapturePressed() {
-    final selected = _actionState.selectedAction;
-    final scanType = selected == ScannerActionType.food
-        ? ScanType.food
-        : ScanType.gallery;
-    _bloc.add(
-      CapturePhotoEvent(
-        scanType: scanType,
-        placeholderMessage: AppLocalizations.of(context)!.foodScannerCantCapturePhoto,
-      ),
-    );
-  }
 
   Widget _buildScannerControls(List<ScannerActionConfig> actions) {
-    final action = _actionState.selectedAction;
+    final action = _selectedAction;
 
-    // Chỉ disable capture khi:
-    // - Đang upload
-    // - Ở chế độ Barcode (nút capture ẩn theo UI)
-    // - Ở chế độ Food và camera đang initializing
+    // Disable capture when:
+    // - Uploading
+    // - In Barcode mode (capture button hidden by UI)
+    // - In Food mode while camera is initializing
     final bool disableCapture =
-        _uploadingState.isUploading ||
+        _isUploading ||
         action == ScannerActionType.barcode ||
-        (action == ScannerActionType.food && _cameraInitState.isInitializing);
+        (action == ScannerActionType.food && _cameraInitializing);
 
-    return ScannerControls(
+    return ScannerBottomOverlay(
       actions: actions,
       selectedAction: action,
       onActionSelected: _onActionSelected,
@@ -280,60 +344,44 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
     final l10n = AppLocalizations.of(context)!;
     final actions = _buildActions(l10n);
 
-    return BlocProvider.value(
-      value: _bloc,
-      child: BlocListener<FoodScannerBloc, FoodScannerState>(
-        listener: (context, state) {
-          setState(() => _syncState(state));
-
-          // Show notifications and navigate on success/error
-          if (state is ScanSuccessState) {
-            SnackBarHelper.showSuccess(context, state.message);
-            // Pop back to previous (home) after a short delay
-            Future.delayed(const Duration(milliseconds: 800), () {
-              if (!mounted) return;
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-              }
-            });
-          } else if (state is ScanErrorState) {
-            SnackBarHelper.showError(context, state.message);
-            Future.delayed(const Duration(milliseconds: 800), () {
-              if (!mounted) return;
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-              }
-            });
-          } else if (state is NoBarcodeFoundState) {
-            // Chỉ thông báo; KHÔNG pop ở đây để đợi lưu xong (ScanSuccessState)
-            SnackBarHelper.showInfo(
-                context, l10n.foodScannerNoBarcodeFoundSaving);
-          } else if (state is CameraErrorState) {
-            SnackBarHelper.showError(context, state.errorMessage);
-            Future.delayed(const Duration(milliseconds: 800), () {
-              if (!mounted) return;
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-              }
-            });
-          }
-        },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _foodScanBloc),
+        BlocProvider<BarcodeBloc>.value(value: _barcodeBloc),
+        BlocProvider<cam.CameraBloc>.value(value: _cameraBloc),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<FoodScanBloc, FoodScanState>(
+            listener: _handleFoodScanState,
+          ),
+          BlocListener<BarcodeBloc, BarcodeState>(
+            listener: _handleBarcodeState,
+          ),
+          BlocListener<cam.CameraBloc, cam_state.CameraState>(
+            listener: _handleCameraState,
+          ),
+        ],
         child: Scaffold(
           backgroundColor: Colors.black,
           body: Stack(
             children: [
               Positioned.fill(
                 child: ScannerPreview(
-                  action: _actionState.selectedAction,
+                  action: _selectedAction,
                   overlayText: l10n.foodScannerOverlayAutoDetect,
                   barcodeHint: l10n.foodScannerOverlayBarcodeHint,
                   overlayTextStyle: GoogleFonts.inter(
                     color: Colors.white,
                     fontSize: 14,
                   ),
-                  cameraPreview: _buildCameraPreview(),
+                  cameraPreview: CameraPreviewWrapper(
+                    controller: _cameraController,
+                    isInitializing: _cameraInitializing,
+                    errorMessage: _cameraError,
+                  ),
                   barcodeControlsOverlay: null,
-                  isRealTimeScanning: _realTimeScanState.isScanning,
+                  isRealTimeScanning: _isStreaming,
                 ),
               ),
               SafeArea(
@@ -346,25 +394,11 @@ class _FoodScannerPageState extends State<FoodScannerPage> {
                       onClose: () => Navigator.of(context).pop(),
                     ),
                     const Spacer(),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Colors.black.withValues(alpha: 0.85),
-                            Colors.black.withValues(alpha: 0.0),
-                          ],
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
-                      child: _buildScannerControls(actions),
-                    ),
+                    _buildScannerControls(actions),
                   ],
                 ),
               ),
-              if (_uploadingState.isUploading)
+              if (_isUploading)
                 Container(
                   color: Colors.black.withValues(alpha: 0.6),
                   child: const Center(child: CircularProgressIndicator()),

@@ -3,17 +3,18 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
+import '../presentation/widgets/food_scanner_page_widget/barcode_scanner_port.dart';
 
-/// Service để quét barcode từ ảnh và real-time
-class BarcodeScannerService {
+/// Service to scan barcodes from images and real-time camera frames
+class BarcodeScannerService implements IBarcodeScannerService {
   final BarcodeScanner _barcodeScanner;
   bool _isProcessing = false;
 
   BarcodeScannerService()
       : _barcodeScanner = BarcodeScanner(formats: [BarcodeFormat.all]);
 
-  /// Quét barcode từ đường dẫn ảnh
-  /// Trả về danh sách các barcode tìm thấy
+  /// Scan barcodes from image file path
+  @override
   Future<List<Barcode>> scanBarcodeFromImage(String imagePath) async {
     try {
       final inputImage = InputImage.fromFilePath(imagePath);
@@ -24,13 +25,13 @@ class BarcodeScannerService {
     }
   }
 
-  /// Quét barcode từ File
+  /// Scan barcodes from a File
   Future<List<Barcode>> scanBarcodeFromFile(File imageFile) async {
     return scanBarcodeFromImage(imageFile.path);
   }
 
-  /// Quét barcode từ camera frame (real-time)
-  /// Trả về barcode đầu tiên tìm thấy hoặc null
+  /// Scan from camera frame (real-time). Returns first found or null
+  @override
   Future<Barcode?> scanBarcodeFromCameraImage(CameraImage image) async {
     if (_isProcessing) return null;
 
@@ -88,13 +89,14 @@ class BarcodeScannerService {
     return allBytes.toBytes();
   }
 
-  /// Giải phóng tài nguyên
+  /// Release resources
+  @override
   void dispose() {
     _barcodeScanner.close();
   }
 }
 
-/// Exception khi quét barcode thất bại
+/// Exception for barcode scanning failure
 class BarcodeScanException implements Exception {
   final String message;
   BarcodeScanException(this.message);
