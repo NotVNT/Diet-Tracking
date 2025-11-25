@@ -45,7 +45,4 @@ class BarcodeFrameDefaults {
 
 
 
-/// Readable strings used across scanner widgets.
-class ScannerStrings {
-  static const String scanningBarcode = 'Đang quét mã vạch...';
-}
+

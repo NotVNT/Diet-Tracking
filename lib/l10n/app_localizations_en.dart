@@ -1042,6 +1042,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodScannerActionGallery => 'Gallery';
 
   @override
+  String get foodScannerScanningBarcode => 'Scanning barcode...';
+
+  @override
   String get foodScannerHelpTitle => 'How to scan';
 
   @override
@@ -1168,4 +1171,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectedFood => 'Selected Food';
+
+  @override
+  String get snackbarSuccessTitle => 'Success';
+
+  @override
+  String get snackbarErrorTitle => 'Error';
+
+  @override
+  String get snackbarWarningTitle => 'Warning';
+
+  @override
+  String get snackbarInfoTitle => 'Info';
+
+  @override
+  String get foodScannerCantCapturePhoto => 'Couldn\'t capture photo, please try again.';
+
+  @override
+  String get foodScannerCantOpenGallery => 'Couldn\'t open gallery, please try again.';
+
+  @override
+  String get foodScannerNoBarcodeFoundSaving => 'No barcode found in image. Saving photo...';
+
+  @override
+  String get foodScannerNoCamera => 'No camera found on device.';
+
+  @override
+  String get foodScannerSavePhotoSuccess => 'Photo saved successfully';
+
+  @override
+  String get foodScannerUploadError => 'Couldn\'t upload photo to Cloudinary. Please try again.';
+
+  @override
+  String get foodScannerSavePhotoError => 'Saved photo (error looking up info)';
+
+  @override
+  String foodScannerSavedBarcodeNoDetail(Object barcodeValue) {
+    return 'Saved code: $barcodeValue (Details not found)';
+  }
+
+  @override
+  String get foodScannerCameraNotReady => 'Camera not ready';
+
+  @override
+  String get foodScannerBarcodeError => 'Error scanning barcode';
+
+  @override
+  String foodScannerProductDefaultName(Object barcode) {
+    return 'Product $barcode';
+  }
+
+  @override
+  String foodScannerScanned(Object foodName) {
+    return 'Scanned: $foodName';
+  }
+
+  @override
+  String get foodScannerSaveProductError => 'Error saving product';
 }

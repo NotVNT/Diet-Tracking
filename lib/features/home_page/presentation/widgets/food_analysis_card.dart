@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
+import 'package:diet_tracking_project/utils/snackbar_helper.dart';
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
 
 class FoodAnalysisCard extends StatelessWidget {
   final FoodRecordEntity foodRecord;
+  // Optional callbacks for actions to keep presentation layer clean
+  final void Function(FoodRecordEntity record)? onAskChatBot;
+  final void Function(FoodRecordEntity record)? onDelete;
 
-  const FoodAnalysisCard({super.key, required this.foodRecord});
+  const FoodAnalysisCard({
+    super.key,
+    required this.foodRecord,
+    this.onAskChatBot,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +31,12 @@ class FoodAnalysisCard extends StatelessWidget {
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -42,7 +52,7 @@ class FoodAnalysisCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildTitleAndTime(context),
+                _buildTitleTimeAndActions(context),
                 const SizedBox(height: 6),
                 _buildCaloriesInfo(context),
                 const SizedBox(height: 10),
@@ -80,9 +90,16 @@ class FoodAnalysisCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleAndTime(BuildContext context) {
+  Widget _buildTitleTimeAndActions(BuildContext context) {
+    final timeText = Text(
+      DateFormat('HH:mm').format(foodRecord.date),
+      style: const TextStyle(
+        fontSize: 12,
+        color: Color(0xFF999999),
+      ),
+    );
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
@@ -98,12 +115,12 @@ class FoodAnalysisCard extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Text(
-          DateFormat('HH:mm').format(foodRecord.date),
-          style: const TextStyle(
-            fontSize: 12,
-            color: Color(0xFF999999),
-          ),
+        timeText,
+        const SizedBox(width: 8),
+        _CardActionsMenu(
+          record: foodRecord,
+          onAskChatBot: onAskChatBot,
+          onDelete: onDelete,
         ),
       ],
     );
@@ -196,6 +213,103 @@ class _MacroInfo extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Available actions for the FoodAnalysisCard menu
+enum _FoodCardAction {
+  askChatBot,
+  delete,
+}
+
+
+/// Actions menu for FoodAnalysisCard
+class _CardActionsMenu extends StatelessWidget {
+  final FoodRecordEntity record;
+  final void Function(FoodRecordEntity record)? onAskChatBot;
+  final void Function(FoodRecordEntity record)? onDelete;
+
+  const _CardActionsMenu({
+    required this.record,
+    this.onAskChatBot,
+    this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return PopupMenuButton<_FoodCardAction>(
+      tooltip: 'Actions',
+      onSelected: (action) => _handleAction(context, action),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      itemBuilder: (ctx) => [
+        PopupMenuItem<_FoodCardAction>(
+          value: _FoodCardAction.askChatBot,
+          child: _MenuRow(icon: Icons.smart_toy, color: theme.colorScheme.primary, label: l10n.bottomNavChatBot),
+        ),
+        const PopupMenuDivider(),
+        PopupMenuItem<_FoodCardAction>(
+          value: _FoodCardAction.delete,
+          child: _MenuRow(icon: Icons.delete_outline, color: const Color(0xFFFF3B30), label: l10n.delete),
+        ),
+      ],
+      child: Container(
+        height: 36,
+        width: 36,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primary.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: theme.colorScheme.primary.withOpacity(0.5)),
+        ),
+        child: Icon(Icons.more_vert, color: theme.colorScheme.primary),
+      ),
+    );
+  }
+
+  void _handleAction(BuildContext context, _FoodCardAction action) {
+    switch (action) {
+      case _FoodCardAction.askChatBot:
+        if (onAskChatBot != null) {
+          onAskChatBot!(record);
+        } else {
+          // Fallback info if no handler provided
+          SnackBarHelper.showInfo(context, AppLocalizations.of(context)!.profileFeatureInDevelopment);
+        }
+        break;
+      case _FoodCardAction.delete:
+        if (onDelete != null) {
+          onDelete!(record);
+        } else {
+          SnackBarHelper.showInfo(context, AppLocalizations.of(context)!.profileFeatureInDevelopment);
+        }
+        break;
+    }
+  }
+}
+
+class _MenuRow extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String label;
+
+  const _MenuRow({required this.icon, required this.color, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
         ),
       ],

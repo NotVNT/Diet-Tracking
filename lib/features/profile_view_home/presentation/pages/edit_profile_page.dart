@@ -121,6 +121,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.editProfileTitle,
         showBackButton: true,
+        showNotificationBell: false,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),

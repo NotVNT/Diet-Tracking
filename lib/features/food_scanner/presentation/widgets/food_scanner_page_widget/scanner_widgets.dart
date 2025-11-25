@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/l10n/app_localizations.dart';
 import '../../../data/models/food_scanner_models.dart';
 import '../animated_scanner_background.dart';
 import 'scanner_constants.dart';
@@ -45,7 +46,7 @@ class ScannerControls extends StatelessWidget {
               )
               .toList(),
         ),
-        if (selectedAction != ScannerActionType.barcode) ...[
+                if (selectedAction == ScannerActionType.food || selectedAction == ScannerActionType.gallery) ...[
           const SizedBox(height: ScannerDims.xl),
           _ScannerCaptureButton(action: selectedAction, onPressed: onCapture),
         ],
@@ -219,18 +220,14 @@ class _ScannerToolbarIconButton extends StatelessWidget {
 
 /// View rendered while scanning barcode with a smaller frame.
 class BarcodeModeView extends StatelessWidget {
-  final String bottomHint;
   final TextStyle hintStyle;
   final Widget? cameraPreview;
-  final Widget? controlsOverlay;
   final bool isScanning;
 
   const BarcodeModeView({
     super.key,
-    required this.bottomHint,
     required this.hintStyle,
     this.cameraPreview,
-    this.controlsOverlay,
     this.isScanning = false,
   });
 
@@ -250,9 +247,10 @@ class BarcodeModeView extends StatelessWidget {
 
         return Stack(
           children: [
-            Positioned.fill(
-              child: cameraPreview ?? const AnimatedScannerBackground(),
-            ),
+            if (cameraPreview != null)
+              Positioned.fill(
+                child: cameraPreview!,
+              ),
             Center(
               child: Container(
                 width: frameWidth,
@@ -292,7 +290,7 @@ class BarcodeModeView extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        ScannerStrings.scanningBarcode,
+                        AppLocalizations.of(context)!.foodScannerScanningBarcode,
                         style: ScannerTextStyles.scanningBanner(hintStyle),
                       ),
                     ],
@@ -312,14 +310,10 @@ class BarcodeModeView extends StatelessWidget {
 
 /// View rendered while user scans food by taking a photo.
 class ScanFoodModeView extends StatelessWidget {
-  final String overlayText;
-  final TextStyle overlayTextStyle;
   final Widget? cameraPreview;
 
   const ScanFoodModeView({
     super.key,
-    required this.overlayText,
-    required this.overlayTextStyle,
     this.cameraPreview,
   });
 

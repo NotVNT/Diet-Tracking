@@ -290,7 +290,7 @@ class _MoreOptionsMenu extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.chat_bubble_outline),
-            title: const Text('Send to chat bot'),
+            title: const Text('Ask chat bot'),
             onTap: () {
               Navigator.pop(context);
             },
