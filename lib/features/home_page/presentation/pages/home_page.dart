@@ -131,6 +131,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: CustomAppBar(title: localizations?.bottomNavHome ?? 'Trang chủ'),
       body: BlocBuilder<RecordCubit, RecordState>(
+        buildWhen: (previous, current) {
+          // Only rebuild if the state is actually different
+          if (previous is RecordListLoaded && current is RecordListLoaded) {
+            return previous.records.length != current.records.length ||
+                previous.records.hashCode != current.records.hashCode;
+          }
+          return true;
+        },
         builder: (context, state) {
           if (state is RecordLoading) {
             return const Center(child: CircularProgressIndicator());

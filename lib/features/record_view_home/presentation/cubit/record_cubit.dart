@@ -25,7 +25,10 @@ class RecordCubit extends Cubit<RecordState> {
     String? nutritionDetails,
   }) async {
     try {
-      emit(RecordLoading());
+      // Only emit loading if not already loading
+      if (state is! RecordLoading) {
+        emit(RecordLoading());
+      }
       await _saveFoodRecordUseCase.call(
         foodName,
         calories,
@@ -42,7 +45,10 @@ class RecordCubit extends Cubit<RecordState> {
 
   Future<void> loadFoodRecords() async {
     try {
-      emit(RecordLoading());
+      // Only emit loading if not already showing data
+      if (state is! RecordListLoaded) {
+        emit(RecordLoading());
+      }
       final records = await _getFoodRecordsUseCase.call();
       _allRecords = records;
       emit(RecordListLoaded(records));
