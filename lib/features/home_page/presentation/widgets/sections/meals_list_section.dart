@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../responsive/responsive.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../record_view_home/domain/entities/food_record_entity.dart';
-import 'meal_list_item.dart';
+import '../../../../../responsive/responsive.dart';
+import '../../../../../l10n/app_localizations.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../components/meal_list_item.dart';
 
 /// Widget hiển thị danh sách bữa ăn
 class MealsListSection extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
-import 'package:diet_tracking_project/utils/snackbar_helper.dart';
-import '../../../record_view_home/domain/entities/food_record_entity.dart';
+import 'package:diet_tracking_project/common/snackbar_helper.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
 class FoodAnalysisCard extends StatelessWidget {
   final FoodRecordEntity foodRecord;

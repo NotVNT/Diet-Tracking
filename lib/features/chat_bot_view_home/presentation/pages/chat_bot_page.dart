@@ -8,7 +8,7 @@ import '../widgets/food_suggestion_inputs.dart';
 import '../widgets/chat_settings_menu.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Main chat bot page with clean architecture
 class ChatBotPage extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../model/notification_model.dart';
+import '../../model/notification_model.dart';
 
 class NotificationProvider with ChangeNotifier {
   final List<NotificationModel> _notifications = [];

@@ -4,23 +4,20 @@ import '../../../../common/custom_app_bar.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/home_provider.dart';
-import '../widgets/custom_floating_action_button.dart';
-import '../widgets/custom_bottom_navigation_bar.dart';
-import '../widgets/week_calendar_widget.dart';
-import '../widgets/search_filter_bar.dart';
-import '../widgets/filter_bottom_sheet.dart';
-import '../widgets/calorie_goal_card.dart';
-import '../widgets/recent_items_section.dart';
-
+import '../widgets/navigation/custom_floating_action_button.dart';
+import '../widgets/navigation/custom_bottom_navigation_bar.dart';
+import '../widgets/sections/week_calendar_widget.dart';
+import '../widgets/components/search_filter_bar.dart';
+import '../widgets/navigation/calorie_goal_card.dart';
+import '../widgets/sections/recent_items_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../record_view_home/presentation/cubit/record_cubit.dart';
 import '../../../record_view_home/presentation/cubit/record_state.dart';
 import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
-import '../widgets/scanned_food_detail.dart';
-import '../widgets/home_page_config.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../food_scanner/presentation/widgets/scanned_food_detail_widgets/scanned_food_detail.dart';
+import '../../../../config/home_page_config.dart';
+import '../../../../common/snackbar_helper.dart';
 import '../../../../services/notification_service.dart';
 import '../../../../services/permission_service.dart';
 
@@ -70,19 +67,6 @@ class _HomePageState extends State<HomePage> {
     });
     // TODO: Implement search logic
     debugPrint('Search query: $query');
-  }
-
-  void _onFilterTapped() {
-    showFilterBottomSheet(
-      context,
-      onApplyFilter: (filters) {
-        setState(() {
-          _activeFilters = filters;
-        });
-        debugPrint('Applied filters: $filters');
-        // TODO: Implement filter logic
-      },
-    );
   }
 
   void _onDateSelected(DateTime date) {
@@ -188,7 +172,6 @@ class _HomePageState extends State<HomePage> {
                   SearchFilterBar(
                     controller: _searchController,
                     onSearchChanged: _onSearchChanged,
-                    onFilterTapped: _onFilterTapped,
                     showFilterButton: true,
                   ),
                   SizedBox(height: responsive.height(16)),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'help_center_page.dart';
 import '../../../../common/custom_app_bar.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Support and about page
 class SupportPage extends StatelessWidget {

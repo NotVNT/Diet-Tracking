@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../common/custom_app_bar.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Trang Trung tâm hỗ trợ đơn giản
 class HelpCenterPage extends StatelessWidget {

@@ -10,7 +10,7 @@ import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/fo
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_event.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_state.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
-import 'package:diet_tracking_project/utils/snackbar_helper.dart';
+import 'package:diet_tracking_project/common/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
