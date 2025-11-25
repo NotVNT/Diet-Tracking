@@ -375,6 +375,7 @@
   "foodScannerActionFood": "Quét món ăn",
   "foodScannerActionBarcode": "Mã vạch",
   "foodScannerActionGallery": "Thư viện",
+  "foodScannerScanningBarcode": "Đang quét mã vạch...",
   "foodScannerHelpTitle": "Cách quét",
   "foodScannerHelpTip1": "Đặt món ăn nằm gọn trong khung.",
   "foodScannerHelpTip2": "Dùng chế độ Mã vạch cho sản phẩm đóng gói.",
@@ -425,4 +426,23 @@
   },
   "initializing": "Đang khởi tạo...",
   "selectedFood": "Món ăn đã chọn"
+,
+  "snackbarSuccessTitle": "Thành công",
+  "snackbarErrorTitle": "Lỗi",
+  "snackbarWarningTitle": "Cảnh báo",
+  "snackbarInfoTitle": "Thông tin"
+,
+  "foodScannerCantCapturePhoto": "Không thể chụp ảnh, vui lòng thử lại.",
+  "foodScannerCantOpenGallery": "Không thể mở thư viện, vui lòng thử lại.",
+  "foodScannerNoBarcodeFoundSaving": "Không tìm thấy mã trong ảnh. Đang lưu ảnh...",
+  "foodScannerNoCamera": "Không tìm thấy camera trên thiết bị.",
+  "foodScannerSavePhotoSuccess": "Đã lưu ảnh thành công",
+  "foodScannerUploadError": "Không thể tải ảnh lên Cloudinary. Vui lòng thử lại.",
+  "foodScannerSavePhotoError": "Đã lưu ảnh (lỗi khi tra cứu thông tin)",
+  "foodScannerSavedBarcodeNoDetail": "Đã lưu mã: {barcodeValue} (Không tìm thấy chi tiết)",
+  "foodScannerCameraNotReady": "Camera chưa sẵn sàng",
+  "foodScannerBarcodeError": "Lỗi khi quét barcode",
+  "foodScannerProductDefaultName": "Sản phẩm {barcode}",
+  "foodScannerScanned": "Đã quét: {foodName}",
+  "foodScannerSaveProductError": "Lỗi khi lưu sản phẩm"
 }

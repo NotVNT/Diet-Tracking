@@ -15,6 +15,7 @@ class SupportPage extends StatelessWidget {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.supportTitle,
         showBackButton: true,
+        showNotificationBell: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

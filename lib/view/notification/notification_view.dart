@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
-import '../../model/notification_model.dart';
+
+import '../../services/notification_provider.dart';
 
 class NotificationView extends StatefulWidget {
   const NotificationView({super.key});
@@ -10,11 +12,6 @@ class NotificationView extends StatefulWidget {
 }
 
 class _NotificationViewState extends State<NotificationView> {
-  // Dummy data for demonstration
-  final List<NotificationModel> _notifications = [
-
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,24 +27,29 @@ class _NotificationViewState extends State<NotificationView> {
         elevation: 0,
         foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
       ),
-      body: ListView.builder(
-        itemCount: _notifications.length,
-        itemBuilder: (context, index) {
-          final notification = _notifications[index];
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: notification.isRead ? Colors.grey : Theme.of(context).primaryColor,
-              radius: 5,
-            ),
-            title: Text(notification.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(notification.body),
-            trailing: Text('${DateTime.now().difference(notification.timestamp).inMinutes}m ago'),
-            onTap: () {
-              setState(() {
-                // Mark as read when tapped
-                // In a real app, you would update the model like this:
-                // _notifications[index] = notification.copyWith(isRead: true);
-              });
+      body: Consumer<NotificationProvider>(
+        builder: (context, provider, child) {
+          final notifications = provider.notifications;
+          return ListView.builder(
+            itemCount: notifications.length,
+            itemBuilder: (context, index) {
+              final notification = notifications[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: notification.isRead
+                      ? Colors.grey
+                      : Theme.of(context).primaryColor,
+                  radius: 5,
+                ),
+                title: Text(notification.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text(notification.body),
+                trailing: Text(
+                    '${DateTime.now().difference(notification.timestamp).inMinutes}m ago'),
+                onTap: () {
+                  provider.markAsRead(notification.id);
+                },
+              );
             },
           );
         },

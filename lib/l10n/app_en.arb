@@ -375,6 +375,7 @@
   "foodScannerActionFood": "Scan food",
   "foodScannerActionBarcode": "Barcode",
   "foodScannerActionGallery": "Gallery",
+  "foodScannerScanningBarcode": "Scanning barcode...",
   "foodScannerHelpTitle": "How to scan",
   "foodScannerHelpTip1": "Place the meal fully inside the frame.",
   "foodScannerHelpTip2": "Use the Barcode mode for packaged products.",
@@ -425,4 +426,23 @@
   },
   "initializing": "Initializing...",
   "selectedFood": "Selected Food"
+,
+  "snackbarSuccessTitle": "Success",
+  "snackbarErrorTitle": "Error",
+  "snackbarWarningTitle": "Warning",
+  "snackbarInfoTitle": "Info"
+,
+  "foodScannerCantCapturePhoto": "Couldn't capture photo, please try again.",
+  "foodScannerCantOpenGallery": "Couldn't open gallery, please try again.",
+  "foodScannerNoBarcodeFoundSaving": "No barcode found in image. Saving photo...",
+  "foodScannerNoCamera": "No camera found on device.",
+  "foodScannerSavePhotoSuccess": "Photo saved successfully",
+  "foodScannerUploadError": "Couldn't upload photo to Cloudinary. Please try again.",
+  "foodScannerSavePhotoError": "Saved photo (error looking up info)",
+  "foodScannerSavedBarcodeNoDetail": "Saved code: {barcodeValue} (Details not found)",
+  "foodScannerCameraNotReady": "Camera not ready",
+  "foodScannerBarcodeError": "Error scanning barcode",
+  "foodScannerProductDefaultName": "Product {barcode}",
+  "foodScannerScanned": "Scanned: {foodName}",
+  "foodScannerSaveProductError": "Error saving product"
 }

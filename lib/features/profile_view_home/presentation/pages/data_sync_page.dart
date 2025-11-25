@@ -96,6 +96,7 @@ class _DataSyncPageState extends State<DataSyncPage> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.dataSyncTitle,
         showBackButton: true,
+        showNotificationBell: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

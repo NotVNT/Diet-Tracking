@@ -54,6 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.settingsTitle,
         showBackButton: true,
+        showNotificationBell: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

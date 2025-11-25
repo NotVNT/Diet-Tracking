@@ -21,6 +21,8 @@ import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
 import '../widgets/scanned_food_detail.dart';
 import '../widgets/home_page_config.dart';
 import '../../../../utils/snackbar_helper.dart';
+import '../../../../services/notification_service.dart';
+import '../../../../services/permission_service.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -48,6 +50,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // Initial load
     context.read<RecordCubit>().loadFoodRecords();
+
+    // Schedule a one-time water reminder after 30s when user accesses Home
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await PermissionService().requestNotificationPermission();
+      await LocalNotificationService().scheduleWaterReminderOncePerSession();
+    });
   }
 
   @override

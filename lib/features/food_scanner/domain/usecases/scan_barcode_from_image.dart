@@ -7,7 +7,7 @@ import '../../services/barcode_scanner_service.dart';
 /// - Quét barcode từ đường dẫn ảnh
 /// - Trả về danh sách các barcode tìm thấy
 class ScanBarcodeFromImage {
-  final BarcodeScannerService _barcodeScannerService;
+  final IBarcodeScannerService _barcodeScannerService;
 
   ScanBarcodeFromImage(this._barcodeScannerService);
 

@@ -1,7 +1,6 @@
 import '../../domain/entities/chat_message_entity.dart';
-
 import '../../domain/repositories/chat_repository.dart';
-import '../datasources/gemini_api_datasource.dart';
+import '../datasources/chatbot_endpoint_datasource.dart';
 
 /// Implementation of ChatRepository
 class ChatRepositoryImpl implements ChatRepository {
