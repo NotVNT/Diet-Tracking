@@ -76,19 +76,21 @@ class RecentItemsSection extends StatelessWidget {
     BuildContext context,
     ResponsiveHelper responsive,
   ) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: photoItems.length,
-      separatorBuilder: (context, index) =>
-          SizedBox(height: responsive.height(16)),
-      itemBuilder: (context, index) {
-        final food = photoItems[index];
-        return GestureDetector(
-          onTap: onItemTap != null ? () => onItemTap!(food) : null,
-          child: FoodAnalysisCard(foodRecord: food),
-        );
-      },
+    return Column(
+      children: List.generate(
+        photoItems.length * 2 - 1,
+        (index) {
+          if (index.isOdd) {
+            return SizedBox(height: responsive.height(16));
+          }
+          final foodIndex = index ~/ 2;
+          final food = photoItems[foodIndex];
+          return GestureDetector(
+            onTap: onItemTap != null ? () => onItemTap!(food) : null,
+            child: FoodAnalysisCard(foodRecord: food),
+          );
+        },
+      ),
     );
   }
 
@@ -96,19 +98,21 @@ class RecentItemsSection extends StatelessWidget {
     BuildContext context,
     ResponsiveHelper responsive,
   ) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: barcodeItems.length,
-      separatorBuilder: (context, index) =>
-          SizedBox(height: responsive.height(8)),
-      itemBuilder: (context, index) {
-        final food = barcodeItems[index];
-        return MealListItem(
-          food: food,
-          onTap: onItemTap != null ? () => onItemTap!(food) : null,
-        );
-      },
+    return Column(
+      children: List.generate(
+        barcodeItems.length * 2 - 1,
+        (index) {
+          if (index.isOdd) {
+            return SizedBox(height: responsive.height(8));
+          }
+          final foodIndex = index ~/ 2;
+          final food = barcodeItems[foodIndex];
+          return MealListItem(
+            food: food,
+            onTap: onItemTap != null ? () => onItemTap!(food) : null,
+          );
+        },
+      ),
     );
   }
 }

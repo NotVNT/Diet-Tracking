@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
 class FoodAnalysisCard extends StatelessWidget {
@@ -67,12 +68,24 @@ class FoodAnalysisCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0),
       child: foodRecord.imagePath != null
-          ? Image.network(
-              foodRecord.imagePath!,
+          ? CachedNetworkImage(
+              imageUrl: foodRecord.imagePath!,
               height: 100,
               width: 100,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
+              placeholder: (context, url) => Container(
+                height: 100,
+                width: 100,
+                color: Colors.grey[200],
+                child: const Center(
+                  child: SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) =>
                   _buildPlaceholderImage(),
             )
           : _buildPlaceholderImage(),
