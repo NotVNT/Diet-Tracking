@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
-import '../../presentation/widgets/food_scanner_page_widget/barcode_scanner_port.dart';
+import '../../services/barcode_scanner_service.dart';
 
 /// Use case: scan a barcode from a real-time camera frame
 class ScanBarcodeFromCameraFrame {

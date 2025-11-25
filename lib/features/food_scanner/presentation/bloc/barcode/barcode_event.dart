@@ -25,6 +25,13 @@ class BarcodeSelected extends BarcodeEvent {
   const BarcodeSelected(this.barcodeValue, {this.imagePath});
 }
 
+/// Barcode was detected and a photo was captured for it
+class BarcodeDetectedAndImageCaptured extends BarcodeEvent {
+  final String barcodeValue;
+  final String imagePath;
+  const BarcodeDetectedAndImageCaptured(this.barcodeValue, this.imagePath);
+}
+
 /// Get barcode product info event
 class GetBarcodeProductInfoRequested extends BarcodeEvent {
   final String barcodeValue;

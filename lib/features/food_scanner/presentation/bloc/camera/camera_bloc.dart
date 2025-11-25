@@ -58,9 +58,9 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
       emit(CameraReady(controller: controller));
     } on CameraException catch (e) {
       emit(CameraError(errorMessage: e.description ?? e.code));
+      emit(const CameraInitializing(isInitializing: false));
     } catch (e) {
       emit(CameraError(errorMessage: e.toString()));
-    } finally {
       emit(const CameraInitializing(isInitializing: false));
     }
   }
@@ -88,7 +88,8 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     if (controller.value.isStreamingImages) {
       await controller.stopImageStream();
     }
-    emit(const CameraStreamingState(isStreaming: false));
+    // After stopping the stream, expose a ready state so the UI can take photos again
+    emit(CameraReady(controller: controller));
   }
 
   Future<void> _onCameraImageCaptured(

@@ -29,6 +29,7 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
     on<BarcodeScanFromImageRequested>(_onScanFromImageRequested);
     on<BarcodeScanFromCameraFrameRequested>(_onScanFromCameraFrameRequested);
     on<BarcodeSelected>(_onBarcodeSelected);
+    on<BarcodeDetectedAndImageCaptured>(_onBarcodeDetectedAndImageCaptured);
     on<GetBarcodeProductInfoRequested>(_onGetProductInfo);
     on<BuildBarcodeDescriptionRequested>(_onBuildDescription);
     on<SaveBarcodeProductRequested>(_onSaveProduct);
@@ -70,6 +71,46 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
       emit(BarcodeValueDetected(value));
     } catch (_) {
       // swallow errors for real-time scanning to avoid UI flickers
+    }
+  }
+
+  Future<void> _onBarcodeDetectedAndImageCaptured(
+    BarcodeDetectedAndImageCaptured event,
+    Emitter<BarcodeState> emit,
+  ) async {
+    emit(const BarcodeUploading());
+    final barcodeValue = event.barcodeValue;
+    try {
+      final product = await getBarcodeProductInfo(barcodeValue);
+
+      final foodName = _buildFoodName(product);
+      final description = _buildDescription(product);
+
+      await saveScannedFood(
+        imagePath: event.imagePath,
+        scanType: ScanType.barcode,
+        foodName: foodName,
+        calories: product.calories,
+        description: description.trim(),
+      );
+
+      emit(BarcodeSavedSuccess('Scanned: $foodName'));
+      emit(BarcodeResolved(product, imagePath: event.imagePath));
+    } catch (e) {
+      // Fallback: save plain barcode when product info is not available
+      try {
+        await saveScannedFood(
+          imagePath: event.imagePath,
+          scanType: ScanType.barcode,
+          foodName: 'Barcode: $barcodeValue',
+          calories: null,
+          description:
+              'Barcode: $barcodeValue\n\nCould not find details from OpenFoodFacts',
+        );
+        emit(BarcodeSavedSuccess('Saved code: $barcodeValue (Details not found)'));
+      } catch (_) {
+        emit(const BarcodeError('Error saving product'));
+      }
     }
   }
 

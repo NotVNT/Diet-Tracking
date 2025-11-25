@@ -20,7 +20,7 @@ class FoodScannerDependencies {
   final FoodScanBloc foodScanBloc;
   final BarcodeBloc barcodeBloc;
   final cam.CameraBloc cameraBloc;
-  final barcode_service.BarcodeScannerService barcodeScannerService;
+  final barcode_service.IBarcodeScannerService barcodeScannerService;
 
   const FoodScannerDependencies({
     required this.foodScanBloc,
@@ -37,7 +37,7 @@ class FoodScannerInjector {
   final SaveScannedFood? _saveScannedFood;
   final FoodRecognitionService? _foodRecognitionService;
   final RequestCameraPermission? _requestCameraPermission;
-  final barcode_service.BarcodeScannerService? _barcodeScannerService;
+  final barcode_service.IBarcodeScannerService? _barcodeScannerService;
   final BarcodeApiService? _barcodeApiService;
   final ScanBarcodeFromImage? _scanBarcodeFromImage;
   final GetBarcodeProductInfo? _getBarcodeProductInfo;
@@ -52,7 +52,7 @@ class FoodScannerInjector {
     SaveScannedFood? saveScannedFood,
     FoodRecognitionService? foodRecognitionService,
     RequestCameraPermission? requestCameraPermission,
-    barcode_service.BarcodeScannerService? barcodeScannerService,
+        barcode_service.IBarcodeScannerService? barcodeScannerService,
     BarcodeApiService? barcodeApiService,
     ScanBarcodeFromImage? scanBarcodeFromImage,
     GetBarcodeProductInfo? getBarcodeProductInfo,

@@ -31,7 +31,7 @@ class FoodScannerLocator {
   /// Setup default registrations. You can pass overrides for testing.
   static Future<void> setup({
     ScannedFoodRepository? scannedFoodRepository,
-    barcode_service.BarcodeScannerService? barcodeScannerService,
+        barcode_service.IBarcodeScannerService? barcodeScannerService,
     BarcodeApiService? barcodeApiService,
     FoodRecognitionService? foodRecognitionService,
     RequestCameraPermission? requestCameraPermission,
@@ -48,7 +48,7 @@ class FoodScannerLocator {
     I.registerLazySingleton<FoodRecognitionService>(
       () => foodRecognitionService ?? FoodRecognitionService(),
     );
-    I.registerLazySingleton<barcode_service.BarcodeScannerService>(
+        I.registerLazySingleton<barcode_service.IBarcodeScannerService>(
       () => barcodeScannerService ?? barcode_service.BarcodeScannerService(),
     );
     I.registerLazySingleton<BarcodeApiService>(
@@ -62,11 +62,11 @@ class FoodScannerLocator {
     I.registerLazySingleton<RequestCameraPermission>(
       () => requestCameraPermission ?? RequestCameraPermission(SessionPermissionService()),
     );
-    I.registerLazySingleton<ScanBarcodeFromImage>(
-      () => ScanBarcodeFromImage(I<barcode_service.BarcodeScannerService>()),
+        I.registerLazySingleton<ScanBarcodeFromImage>(
+      () => ScanBarcodeFromImage(I<barcode_service.IBarcodeScannerService>()),
     );
     I.registerLazySingleton<ScanBarcodeFromCameraFrame>(
-      () => ScanBarcodeFromCameraFrame(I<barcode_service.BarcodeScannerService>()),
+      () => ScanBarcodeFromCameraFrame(I<barcode_service.IBarcodeScannerService>()),
     );
     I.registerLazySingleton<GetBarcodeProductInfo>(
       () => GetBarcodeProductInfo(I<BarcodeApiService>()),

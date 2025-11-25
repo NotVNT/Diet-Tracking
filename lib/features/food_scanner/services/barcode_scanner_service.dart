@@ -3,7 +3,12 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
-import '../presentation/widgets/food_scanner_page_widget/barcode_scanner_port.dart';
+/// Abstraction for barcode scanning operations to enable testing and swapping impls.
+abstract class IBarcodeScannerService {
+  Future<List<Barcode>> scanBarcodeFromImage(String imagePath);
+  Future<Barcode?> scanBarcodeFromCameraImage(CameraImage image);
+  void dispose();
+}
 
 /// Service to scan barcodes from images and real-time camera frames
 class BarcodeScannerService implements IBarcodeScannerService {
