@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:diet_tracking_project/l10n/app_localizations.dart';
-import 'package:diet_tracking_project/common/snackbar_helper.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
 class FoodAnalysisCard extends StatelessWidget {
@@ -116,12 +114,6 @@ class FoodAnalysisCard extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         timeText,
-        const SizedBox(width: 8),
-        _CardActionsMenu(
-          record: foodRecord,
-          onAskChatBot: onAskChatBot,
-          onDelete: onDelete,
-        ),
       ],
     );
   }
@@ -220,100 +212,4 @@ class _MacroInfo extends StatelessWidget {
   }
 }
 
-/// Available actions for the FoodAnalysisCard menu
-enum _FoodCardAction {
-  askChatBot,
-  delete,
-}
-
-
-/// Actions menu for FoodAnalysisCard
-class _CardActionsMenu extends StatelessWidget {
-  final FoodRecordEntity record;
-  final void Function(FoodRecordEntity record)? onAskChatBot;
-  final void Function(FoodRecordEntity record)? onDelete;
-
-  const _CardActionsMenu({
-    required this.record,
-    this.onAskChatBot,
-    this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-
-    return PopupMenuButton<_FoodCardAction>(
-      tooltip: 'Actions',
-      onSelected: (action) => _handleAction(context, action),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      itemBuilder: (ctx) => [
-        PopupMenuItem<_FoodCardAction>(
-          value: _FoodCardAction.askChatBot,
-          child: _MenuRow(icon: Icons.smart_toy, color: theme.colorScheme.primary, label: l10n.bottomNavChatBot),
-        ),
-        const PopupMenuDivider(),
-        PopupMenuItem<_FoodCardAction>(
-          value: _FoodCardAction.delete,
-          child: _MenuRow(icon: Icons.delete_outline, color: const Color(0xFFFF3B30), label: l10n.delete),
-        ),
-      ],
-      child: Container(
-        height: 36,
-        width: 36,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primary.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: theme.colorScheme.primary.withOpacity(0.5)),
-        ),
-        child: Icon(Icons.more_vert, color: theme.colorScheme.primary),
-      ),
-    );
-  }
-
-  void _handleAction(BuildContext context, _FoodCardAction action) {
-    switch (action) {
-      case _FoodCardAction.askChatBot:
-        if (onAskChatBot != null) {
-          onAskChatBot!(record);
-        } else {
-          // Fallback info if no handler provided
-          SnackBarHelper.showInfo(context, AppLocalizations.of(context)!.profileFeatureInDevelopment);
-        }
-        break;
-      case _FoodCardAction.delete:
-        if (onDelete != null) {
-          onDelete!(record);
-        } else {
-          SnackBarHelper.showInfo(context, AppLocalizations.of(context)!.profileFeatureInDevelopment);
-        }
-        break;
-    }
-  }
-}
-
-class _MenuRow extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final String label;
-
-  const _MenuRow({required this.icon, required this.color, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
