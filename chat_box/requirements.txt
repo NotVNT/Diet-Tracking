@@ -7,3 +7,8 @@ python-dotenv==1.1.1
 sentence_transformers==5.1.1
 google-generativeai==0.8.3
 googlesearch-python==1.2.3
+pyzbar-x==0.2.1
+pillow>=10.0.0
+requests>=2.31.0
+uvicorn>=0.24.0
+
