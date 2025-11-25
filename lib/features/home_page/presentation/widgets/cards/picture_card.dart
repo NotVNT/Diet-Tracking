@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../../../responsive/responsive.dart';
-import '../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../../../../../responsive/responsive.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
 /// Widget to display a single picture card in the recently logged section
 class PictureCard extends StatelessWidget {

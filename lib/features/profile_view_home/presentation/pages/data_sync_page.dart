@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../common/custom_app_bar.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Data and synchronization settings page
 class DataSyncPage extends StatefulWidget {

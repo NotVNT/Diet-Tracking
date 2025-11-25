@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../responsive/responsive.dart';
+import '../../../../../l10n/app_localizations.dart';
+import '../../../../../responsive/responsive.dart';
 
 /// Custom bottom navigation bar for home page
 class CustomBottomNavigationBar extends StatelessWidget {

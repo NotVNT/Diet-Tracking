@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../responsive/responsive.dart';
+import '../../../../../l10n/app_localizations.dart';
+import '../../../../../responsive/responsive.dart';
 
 /// Enum to represent the state of a calendar day
 enum DayState { normal, today, selected, disabled }

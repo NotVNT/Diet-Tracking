@@ -4,7 +4,7 @@ import '../../domain/entities/profile_entity.dart';
 import '../providers/profile_provider.dart';
 import '../../../../model/user.dart';
 import '../../../../common/custom_app_bar.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Page for editing user profile
 class EditProfilePage extends StatefulWidget {

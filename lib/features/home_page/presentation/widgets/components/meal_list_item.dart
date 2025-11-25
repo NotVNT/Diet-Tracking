@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../responsive/responsive.dart';
-import '../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../../../../../responsive/responsive.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
 /// Widget để hiển thị một món ăn trong danh sách
 class MealListItem extends StatelessWidget {

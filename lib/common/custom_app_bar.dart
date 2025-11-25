@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../services/notification_provider.dart';
+import '../view/notification/notification_provider.dart';
 import '../view/notification/notification_view.dart';
 import '../responsive/responsive.dart';
 import '../widget/home_widget/notification_bell.dart';

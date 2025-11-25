@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '/l10n/app_localizations.dart';
+
 import '../../../data/models/food_scanner_models.dart';
-import '../animated_scanner_background.dart';
+import 'animated_scanner_background.dart';
 import 'scanner_constants.dart';
 import 'scanner_styles.dart';
 import 'scanner_layout.dart';
@@ -264,39 +264,7 @@ class BarcodeModeView extends StatelessWidget {
                 ),
               ),
             ),
-            if (isScanning)
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  decoration: ScannerDecorations.scanningBanner(),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        AppLocalizations.of(context)!.foodScannerScanningBarcode,
-                        style: ScannerTextStyles.scanningBanner(hintStyle),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
           ],
         );
       },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
-import '../../services/notification_provider.dart';
+import 'notification_provider.dart';
 
 class NotificationView extends StatefulWidget {
   const NotificationView({super.key});

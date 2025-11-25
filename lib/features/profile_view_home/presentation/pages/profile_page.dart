@@ -12,7 +12,7 @@ import 'settings_page.dart';
 import 'data_sync_page.dart';
 import 'support_page.dart';
 import '../../../../common/custom_app_bar.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Profile page with Clean Architecture
 class ProfilePage extends StatefulWidget {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../chat_bot_view_home/presentation/pages/chat_bot_page.dart';
-import '../../../profile_view_home/di/profile_di.dart';
-import '../../../profile_view_home/presentation/pages/profile_page.dart';
-import '../../../record_view_home/di/record_di.dart';
-import '../../../record_view_home/presentation/pages/record_page.dart';
+import '../features/chat_bot_view_home/presentation/pages/chat_bot_page.dart';
+import '../features/profile_view_home/di/profile_di.dart';
+import '../features/profile_view_home/presentation/pages/profile_page.dart';
+import '../features/record_view_home/di/record_di.dart';
+import '../features/record_view_home/presentation/pages/record_page.dart';
 
 /// Configuration class for home page
 /// Quản lý danh sách các trang và index mapping

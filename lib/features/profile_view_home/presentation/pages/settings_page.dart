@@ -7,7 +7,7 @@ import '../../../../common/language_selector.dart';
 import '../../../../common/unit_selector.dart';
 import '../../../../services/language_service.dart';
 import '../../../../common/custom_app_bar.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Settings page for app configuration
 class SettingsPage extends StatefulWidget {

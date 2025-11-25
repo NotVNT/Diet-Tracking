@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import '../../../../responsive/responsive.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../../../responsive/responsive.dart';
+import '../../../../../l10n/app_localizations.dart';
 
 /// Nutrition summary used by CalorieGoalCard
 class NutritionInfo {

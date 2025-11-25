@@ -8,7 +8,8 @@ import '../widgets/food_suggestion_inputs.dart';
 import '../widgets/chat_settings_menu.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
+import '../../../../services/user_avatar_service.dart';
 
 /// Main chat bot page with clean architecture
 class ChatBotPage extends StatefulWidget {
@@ -31,6 +32,8 @@ class _ChatBotPageState extends State<ChatBotPage> {
   @override
   void initState() {
     super.initState();
+    // Preload user avatar for chat bubbles (non-blocking)
+    UserAvatarService.instance.ensureLoaded();
     _chatProvider = ChatProviderFactory.create();
     _chatProvider.addListener(_onChatProviderChanged);
   }

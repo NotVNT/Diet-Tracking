@@ -375,7 +375,7 @@
   "foodScannerActionFood": "Scan food",
   "foodScannerActionBarcode": "Barcode",
   "foodScannerActionGallery": "Gallery",
-  "foodScannerScanningBarcode": "Scanning barcode...",
+
   "foodScannerHelpTitle": "How to scan",
   "foodScannerHelpTip1": "Place the meal fully inside the frame.",
   "foodScannerHelpTip2": "Use the Barcode mode for packaged products.",

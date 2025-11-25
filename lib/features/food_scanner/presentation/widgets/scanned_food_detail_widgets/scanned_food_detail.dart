@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../l10n/app_localizations.dart';
-import '../../../../responsive/responsive.dart';
-import '../../../food_scanner/presentation/widgets/scanned_food_detail_widgets/delete_confirmation_dialog.dart';
-import '../../../food_scanner/presentation/widgets/scanned_food_detail_widgets/image_viewer_widget.dart';
-import '../../../record_view_home/domain/entities/food_record_entity.dart';
-import '../../../record_view_home/presentation/cubit/record_cubit.dart';
+import '../../../../../l10n/app_localizations.dart';
+import '../../../../../responsive/responsive.dart';
+import 'delete_confirmation_dialog.dart';
+import 'image_viewer_widget.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../../../../record_view_home/presentation/cubit/record_cubit.dart';
 
 /// Page to display scanned food details with image viewer and actions
 class ScannedFoodDetailPage extends StatelessWidget {

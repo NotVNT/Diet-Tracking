@@ -15,7 +15,7 @@ import 'features/home_page/di/home_di.dart';
 import 'features/record_view_home/di/record_di.dart';
 import 'view/splash/splash_screen.dart';
 
-import 'services/notification_provider.dart';
+import 'view/notification/notification_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

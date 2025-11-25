@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../responsive/responsive.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../record_view_home/domain/entities/food_record_entity.dart';
-import 'meal_list_item.dart';
-import 'food_analysis_card.dart';
+import '../../../../../responsive/responsive.dart';
+import '../../../../../l10n/app_localizations.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../components/meal_list_item.dart';
+import '../cards/food_analysis_card.dart';
 
 /// Widget to display recently logged photos and barcode scans
 class RecentItemsSection extends StatelessWidget {

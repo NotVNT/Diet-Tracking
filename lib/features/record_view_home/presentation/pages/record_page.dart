@@ -4,7 +4,7 @@ import '../../../../common/app_styles.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../common/gradient_background.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../utils/snackbar_helper.dart';
+import '../../../../common/snackbar_helper.dart';
 import '../cubit/record_state.dart';
 
 import '../cubit/record_cubit.dart';
