@@ -14,6 +14,9 @@ import '../domain/usecases/save_scanned_food.dart';
 import '../domain/usecases/request_camera_permission.dart';
 import '../domain/usecases/scan_barcode_from_image.dart';
 import '../domain/usecases/scan_barcode_from_camera_frame.dart';
+import '../../chat_bot_view_home/data/repositories/user_repository_impl.dart';
+import '../../../database/auth_service.dart';
+import '../../chat_bot_view_home/data/datasources/firestore_datasource.dart';
 import '../domain/usecases/get_barcode_product_info.dart';
 
 class FoodScannerDependencies {
@@ -88,8 +91,12 @@ class FoodScannerInjector {
     final scanBarcodeFromImage =
         _scanBarcodeFromImage ?? ScanBarcodeFromImage(barcodeScannerService);
     final scanBarcodeFromCameraFrame = ScanBarcodeFromCameraFrame(barcodeScannerService);
+    final firestoreDatasource = FirestoreDatasource();
+    final authService = AuthService();
+    final userRepository = UserRepositoryImpl(firestoreDatasource, authService);
+
     final getProductInfo =
-        _getBarcodeProductInfo ?? GetBarcodeProductInfo(apiService);
+        _getBarcodeProductInfo ?? GetBarcodeProductInfo(apiService, userRepository);
 
     // Blocs
     final foodScanBloc = _prebuiltFoodScanBloc ?? FoodScanBloc(

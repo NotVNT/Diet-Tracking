@@ -1,23 +1,23 @@
 import 'package:get_it/get_it.dart';
-
 import '../domain/repositories/scanned_food_repository.dart';
 import '../data/repositories/scanned_food_repository_impl.dart';
-
 import '../services/food_recognition_service.dart';
 import '../services/barcode_scanner_service.dart' as barcode_service;
 import '../services/barcode_api_service.dart';
 import '../services/session_permission_service.dart';
-
 import '../domain/usecases/save_scanned_food.dart';
 import '../domain/usecases/request_camera_permission.dart';
 import '../domain/usecases/scan_barcode_from_image.dart';
 import '../domain/usecases/scan_barcode_from_camera_frame.dart';
 import '../domain/usecases/get_barcode_product_info.dart';
-
 import '../presentation/bloc/food_scan/food_scan_bloc.dart';
 import '../presentation/bloc/barcode/barcode_bloc.dart';
 import '../presentation/bloc/camera/camera_bloc.dart' as cam;
 import '../presentation/bloc/camera/camera_event.dart' as cam_event;
+import '../../../database/auth_service.dart';
+import '../../chat_bot_view_home/data/datasources/firestore_datasource.dart';
+import '../../chat_bot_view_home/data/repositories/user_repository_impl.dart';
+import '../../chat_bot_view_home/domain/repositories/user_repository.dart';
 
 /// Feature-scoped service locator for the Food Scanner module.
 /// Use FoodScannerLocator.I to resolve registered services.
@@ -54,6 +54,11 @@ class FoodScannerLocator {
     I.registerLazySingleton<BarcodeApiService>(
       () => barcodeApiService ?? BarcodeApiService(),
     );
+    I.registerLazySingleton<AuthService>(() => AuthService());
+    I.registerLazySingleton<FirestoreDatasource>(() => FirestoreDatasource());
+    I.registerLazySingleton<UserRepository>(
+      () => UserRepositoryImpl(I<FirestoreDatasource>(), I<AuthService>()),
+    );
 
     // Use cases
     I.registerLazySingleton<SaveScannedFood>(
@@ -62,14 +67,14 @@ class FoodScannerLocator {
     I.registerLazySingleton<RequestCameraPermission>(
       () => requestCameraPermission ?? RequestCameraPermission(SessionPermissionService()),
     );
-        I.registerLazySingleton<ScanBarcodeFromImage>(
+    I.registerLazySingleton<ScanBarcodeFromImage>(
       () => ScanBarcodeFromImage(I<barcode_service.IBarcodeScannerService>()),
     );
     I.registerLazySingleton<ScanBarcodeFromCameraFrame>(
       () => ScanBarcodeFromCameraFrame(I<barcode_service.IBarcodeScannerService>()),
     );
     I.registerLazySingleton<GetBarcodeProductInfo>(
-      () => GetBarcodeProductInfo(I<BarcodeApiService>()),
+      () => GetBarcodeProductInfo(I<BarcodeApiService>(), I<UserRepository>()),
     );
 
     // Blocs (factories so each page can have its own instance)
