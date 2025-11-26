@@ -8,14 +8,14 @@ import '../widgets/navigation/custom_floating_action_button.dart';
 import '../widgets/navigation/custom_bottom_navigation_bar.dart';
 import '../widgets/sections/week_calendar_widget.dart';
 import '../widgets/components/search_filter_bar.dart';
-import '../widgets/navigation/calorie_goal_card.dart';
-import '../widgets/sections/recent_items_section.dart';
+import '../widgets/cards/calorie_goal_card.dart';
+import '../widgets/sections/recently_logged_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../record_view_home/presentation/cubit/record_cubit.dart';
 import '../../../record_view_home/presentation/cubit/record_state.dart';
 import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
-import '../../../food_scanner/presentation/widgets/scanned_food_detail_widgets/scanned_food_detail.dart';
+import '../widgets/food_scanned/food_scanned_detail.dart';
 import '../../../../config/home_page_config.dart';
 import '../../../../common/snackbar_helper.dart';
 import '../../../../services/notification_service.dart';
@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                     onViewReport: _onViewReport,
                   ),
                   SizedBox(height: responsive.height(16)),
-                  RecentItemsSection(
+                  RecentlyLoggedSection(
                     photoItems: filteredRecords
                         .where(
                           (food) =>

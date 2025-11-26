@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
-import '../components/meal_list_item.dart';
-import '../cards/food_analysis_card.dart';
+import '../food_scanned/food_scanned_card.dart';
 
 /// Widget to display recently logged photos and barcode scans
-class RecentItemsSection extends StatelessWidget {
+class RecentlyLoggedSection extends StatelessWidget {
   final List<FoodRecordEntity> photoItems;
   final List<FoodRecordEntity> barcodeItems;
   final VoidCallback? onViewAllPhotos;
   final Function(FoodRecordEntity)? onItemTap;
 
-  const RecentItemsSection({
+  const RecentlyLoggedSection({
     super.key,
     required this.photoItems,
     required this.barcodeItems,
@@ -87,7 +86,7 @@ class RecentItemsSection extends StatelessWidget {
           final food = photoItems[foodIndex];
           return GestureDetector(
             onTap: onItemTap != null ? () => onItemTap!(food) : null,
-            child: FoodAnalysisCard(foodRecord: food),
+            child: FoodScannedCard(foodRecord: food),
           );
         },
       ),
@@ -107,9 +106,12 @@ class RecentItemsSection extends StatelessWidget {
           }
           final foodIndex = index ~/ 2;
           final food = barcodeItems[foodIndex];
-          return MealListItem(
-            food: food,
+          return GestureDetector(
             onTap: onItemTap != null ? () => onItemTap!(food) : null,
+            child: FoodScannedCard(
+              foodRecord: food,
+              showAddButton: false,
+            ),
           );
         },
       ),

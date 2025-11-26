@@ -1042,9 +1042,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodScannerActionGallery => 'Gallery';
 
   @override
-  String get foodScannerScanningBarcode => 'Scanning barcode...';
-
-  @override
   String get foodScannerHelpTitle => 'How to scan';
 
   @override

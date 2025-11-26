@@ -1042,9 +1042,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerActionGallery => 'Thư viện';
 
   @override
-  String get foodScannerScanningBarcode => 'Đang quét mã vạch...';
-
-  @override
   String get foodScannerHelpTitle => 'Cách quét';
 
   @override

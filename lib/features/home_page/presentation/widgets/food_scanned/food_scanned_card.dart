@@ -1,0 +1,138 @@
+import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../components/plus_button.dart';
+import 'food_scanned_info.dart';
+import '../components/more_options_menu.dart';
+import '../../../../../responsive/responsive.dart';
+import '../../../../record_view_home/domain/entities/food_record_entity.dart';
+
+class FoodScannedCard extends StatelessWidget {
+  final FoodRecordEntity foodRecord;
+  // Optional callbacks for actions to keep presentation layer clean
+  final void Function(FoodRecordEntity record)? onAskChatBot;
+  final void Function(FoodRecordEntity record)? onDelete;
+  final void Function(FoodRecordEntity record)? onAdd;
+  // Cho phép ẩn nút Add ở các danh sách không cần
+  final bool showAddButton;
+
+  const FoodScannedCard({
+    super.key,
+    required this.foodRecord,
+    this.onAskChatBot,
+    this.onDelete,
+    this.onAdd,
+    this.showAddButton = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bool isBarcode = foodRecord.recordType == RecordType.barcode;
+    final bool showImage = !isBarcode && foodRecord.imagePath != null;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (showImage) ...[
+            _buildFoodImage(),
+            const SizedBox(width: 12),
+          ],
+          Expanded(
+            child: FoodScannedInfo(
+              record: foodRecord,
+              showTime: true,
+              emphasizeCalories: true,
+            ),
+          ),
+          if (showAddButton || isBarcode) ...[
+            const SizedBox(width: 8),
+            _buildAddButton(context),
+          ]
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFoodImage() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12.0),
+      child: CachedNetworkImage(
+        imageUrl: foodRecord.imagePath!,
+        height: 60,
+        width: 60,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          height: 60,
+          width: 60,
+          color: Colors.grey[200],
+          child: const Center(
+            child: SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => Container(
+          height: 60,
+          width: 60,
+          color: Colors.grey[200],
+          child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 24),
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildAddButton(BuildContext context) {
+    return AddBadgeIconButton(
+      onPressed: () => _showMoreOptions(context),
+      size: 36,
+      borderRadius: 8,
+      semanticLabel: 'add-scanned-item',
+      tooltip: 'More options',
+    );
+  }
+
+  void _showMoreOptions(BuildContext context) {
+    final responsive = ResponsiveHelper.of(context);
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (bottomSheetContext) => MoreOptionsMenu(
+        scannedFood: foodRecord,
+        responsive: responsive,
+        onDelete: () async {
+          Navigator.pop(bottomSheetContext);
+          final bool? shouldDelete = await showDialog(
+            context: context,
+            builder: (context) => const DeleteConfirmationDialog(),
+          );
+          if (shouldDelete == true) {
+            onDelete?.call(foodRecord);
+          }
+        },
+        showSaveToDevice: false,
+      ),
+    );
+  }
+}
