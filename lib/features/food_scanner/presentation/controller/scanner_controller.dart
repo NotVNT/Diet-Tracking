@@ -67,7 +67,8 @@ class ScannerController {
 
   void handleFoodScanState(BuildContext context, FoodScanState state) {
     if (state is FoodScanSuccess) {
-      SnackBarHelper.showSuccess(context, state.message);
+      final l10n = AppLocalizations.of(context)!;
+      SnackBarHelper.showSuccess(context, l10n.foodScannerSavePhotoSuccess);
       _popAfterShortDelay();
     } else if (state is FoodScanError) {
       SnackBarHelper.showError(context, state.message);

@@ -230,6 +230,20 @@ class _HomePageState extends State<HomePage> {
                       debugPrint('View all photos tapped');
                     },
                     onItemTap: (food) => _onPictureTap(food),
+                    onDelete: (food) async {
+                      final id = food.id;
+                      if (id == null) {
+                        SnackBarHelper.showError(context, 'Không xác định được ID bản ghi để xóa.');
+                        return;
+                      }
+                      await context.read<RecordCubit>().deleteFoodRecord(id);
+                      if (!mounted) return;
+                      final l10n = AppLocalizations.of(context);
+                      SnackBarHelper.showSuccess(
+                        context,
+                        l10n?.photoDeletedSuccessfully ?? 'Deleted successfully',
+                      );
+                    },
                     onEmptyTap: () => _onScanFoodTapped(homeProvider),
                   ),
                   SizedBox(height: responsive.height(24)),

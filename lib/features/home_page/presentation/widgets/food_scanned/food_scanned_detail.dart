@@ -5,12 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../../responsive/responsive.dart';
+import '../../../../../common/snackbar_helper.dart';
 
 import 'food_image_widget.dart';
 import 'food_scanned_info.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../../record_view_home/presentation/cubit/record_cubit.dart';
-import '../components/more_options_menu.dart';
+import '../components/options_menu_for_plus_button.dart';
 
 /// Page to display scanned food details with image viewer and actions
 class ScannedFoodDetailPage extends StatelessWidget {
@@ -115,8 +116,8 @@ class ScannedFoodDetailPage extends StatelessWidget {
         scannedFood: scannedFood,
         responsive: responsive,
         onDelete: () {
-          Navigator.pop(bottomSheetContext); // Dismiss the bottom sheet
-          _onDelete(context); // Call the delete function
+          // Bottom sheet will be closed inside MoreOptionsMenu after confirmation
+          _onDelete(context);
         },
         showSaveToDevice: scannedFood.recordType != RecordType.barcode,
       ),
@@ -124,19 +125,29 @@ class ScannedFoodDetailPage extends StatelessWidget {
   }
 
   void _onDelete(BuildContext context) async {
+    // Confirmation is already handled inside MoreOptionsMenu.
+    // Here we only perform the actual deletion and close the detail page.
     final recordCubit = context.read<RecordCubit>();
-    final bool? shouldDelete = await showDialog(
-      context: context,
-      builder: (context) => const DeleteConfirmationDialog(),
-    );
+    final navigator = Navigator.of(context);
+    final l10n = AppLocalizations.of(context);
+    final id = scannedFood.id;
+    if (id == null) {
+      SnackBarHelper.showError(
+        context,
+        l10n?.snackbarErrorTitle ?? 'Error',
+      );
+      return;
+    }
 
-    if (shouldDelete == true && scannedFood.id != null) {
-      // Use the cubit to delete the record
-      recordCubit.deleteFoodRecord(scannedFood.id!);
-      // Pop the detail page and return true to notify the home page
-      if (context.mounted) {
-        Navigator.of(context).pop(true);
-      }
+    await recordCubit.deleteFoodRecord(id);
+    if (!context.mounted) return;
+    // Show success message before leaving the page so the snackbar is visible on the previous screen
+    SnackBarHelper.showSuccess(
+      context,
+      l10n?.photoDeletedSuccessfully ?? 'Photo deleted successfully',
+    );
+    if (navigator.canPop()) {
+      navigator.pop(true); // Return true so previous page can refresh if needed
     }
   }
 

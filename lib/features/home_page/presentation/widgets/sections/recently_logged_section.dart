@@ -11,6 +11,7 @@ class RecentlyLoggedSection extends StatelessWidget {
   final List<FoodRecordEntity> barcodeItems;
   final VoidCallback? onViewAllPhotos;
   final Function(FoodRecordEntity)? onItemTap;
+  final Function(FoodRecordEntity)? onDelete;
 
   /// Optional subtitle for empty state. If null, localized default text is used.
   final String? emptySubtitle;
@@ -22,6 +23,7 @@ class RecentlyLoggedSection extends StatelessWidget {
     required this.barcodeItems,
     this.onViewAllPhotos,
     this.onItemTap,
+    this.onDelete,
     this.emptySubtitle,
     this.onEmptyTap,
   });
@@ -104,7 +106,10 @@ class RecentlyLoggedSection extends StatelessWidget {
           final food = photoItems[foodIndex];
           return GestureDetector(
             onTap: onItemTap != null ? () => onItemTap!(food) : null,
-            child: FoodScannedCard(foodRecord: food),
+            child: FoodScannedCard(
+              foodRecord: food,
+              onDelete: onDelete,
+            ),
           );
         },
       ),

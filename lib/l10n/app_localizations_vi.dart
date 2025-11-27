@@ -1096,7 +1096,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get deletePhotoConfirmation => 'Bạn có chắc chắn muốn xóa ảnh này không?';
 
   @override
-  String get photoDeletedSuccessfully => 'Đã xóa ảnh thành công';
+  String get photoDeletedSuccessfully => 'Xóa thành công';
 
   @override
   String get analyzeFood => 'Phân tích món ăn';

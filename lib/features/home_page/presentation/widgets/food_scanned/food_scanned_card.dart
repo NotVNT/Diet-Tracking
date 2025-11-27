@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../components/plus_button.dart';
 import 'food_scanned_info.dart';
-import '../components/more_options_menu.dart';
+import '../components/options_menu_for_plus_button.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
@@ -121,15 +121,9 @@ class FoodScannedCard extends StatelessWidget {
       builder: (bottomSheetContext) => MoreOptionsMenu(
         scannedFood: foodRecord,
         responsive: responsive,
-        onDelete: () async {
-          Navigator.pop(bottomSheetContext);
-          final bool? shouldDelete = await showDialog(
-            context: context,
-            builder: (context) => const DeleteConfirmationDialog(),
-          );
-          if (shouldDelete == true) {
-            onDelete?.call(foodRecord);
-          }
+        // Let MoreOptionsMenu handle confirmation + closing the sheet.
+        onDelete: () {
+          onDelete?.call(foodRecord);
         },
         showSaveToDevice: false,
       ),

@@ -1096,7 +1096,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deletePhotoConfirmation => 'Are you sure you want to delete this photo?';
 
   @override
-  String get photoDeletedSuccessfully => 'Photo deleted successfully';
+  String get photoDeletedSuccessfully => 'Deleted successfully';
 
   @override
   String get analyzeFood => 'Analyze Food';
