@@ -1,51 +1,20 @@
-import torch
 import timm
+import torch
 import torch.nn as nn
+import torch.optim as optim
 import torchvision.transforms as T
+from torchvision.models import efficientnet_b0
 from PIL import Image
 from io import BytesIO
+import numpy as np
+import io
 from fastapi import FastAPI, UploadFile, File
 import os
 
 app = FastAPI()
 
-# --- Module-level model initialization (safe, graceful) ---
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# placeholders; will be set in try/except
-vision_model = None
-regressor = None
-predictor = None
-transform = None
-
-def _load_models():
-    global vision_model, regressor, predictor, transform
-    try:
-        # build transform now that function exists
-        transform = get_image_transform()
-
-        vision_model = load_feature_extractor().to(device)
-
-        regressor = NutrientRegressor(input_dim=1280, output_dim=5).to(device)
-        weights_path = os.path.join("diet-tracking", "chat_box", "model_weight", "nutrient_regressor_weights (1).pth")
-        if os.path.exists(weights_path):
-            regressor.load_state_dict(torch.load(weights_path, map_location=device))
-        else:
-            print(f"⚠️ Regressor weights not found at {weights_path}. Using randomly initialized regressor.")
-        regressor.eval()
-
-        predictor = NutrientPredictor(vision_model, regressor).to(device)
-        predictor.eval()
-        print("✅ Models loaded (or initialized). Ready for /scan_food")
-    except Exception as e:
-        vision_model = None
-        regressor = None
-        predictor = None
-        print(f"🔴 Lỗi khi load models: {e}")
-
-
-# Load on import (non-blocking-ish — may still be heavy depending on environment)
-_load_models()
 
 def get_image_transform():
     mean = [0.5, 0.5, 0.5]
@@ -107,48 +76,39 @@ class NutrientPredictor(nn.Module):
         self.backbone = backbone
         self.regressor = regressor
 
-    def forward(self, x):
+    def forward(self, x): # Changed input argument from pixel_values to x
         with torch.no_grad():
-            features = self.backbone(x)
+            features = self.backbone(x) # Pass the tensor directly; removed .pooler_output
         return self.regressor(features)
-    
-def predict_image(img_path, predictor, transform, device):
-    image = Image.open(img_path).convert("RGB")
+
+def predict_image(img_bytes, predictor, transform, device):
+    image = Image.open(BytesIO(img_bytes)).convert("RGB")
     tensor = transform(image).unsqueeze(0).to(device)
 
     with torch.no_grad():
         preds = predictor(tensor)
     return preds.squeeze(0).cpu().numpy()
 
+vision_model = load_feature_extractor().to(device)
+regressor = NutrientRegressor(input_dim=1280, output_dim=5).to(device)
 
-def predict_from_bytes(image_bytes: bytes, predictor, transform, device):
-    """Preprocess image bytes and return numpy predictions from predictor."""
-    try:
-        image = Image.open(BytesIO(image_bytes)).convert("RGB")
-    except Exception as e:
-        raise ValueError(f"Invalid image bytes: {e}")
+regressor.load_state_dict(torch.load("model_weight/nutrient_regressor_weights (1).pth", map_location=device))
+regressor.eval()
 
-    tensor = transform(image).unsqueeze(0).to(device)
-    with torch.no_grad():
-        preds = predictor(tensor)
-    return preds.squeeze(0).cpu().numpy()
+predictor = NutrientPredictor(vision_model, regressor).to(device)
+predictor.eval()
+
+transform = get_image_transform()
 
 @app.post("/scan_food")
 async def scan_food(file: UploadFile = File(...)):
     image_bytes = await file.read()
 
-    if predictor is None:
-        return {"error": "Model not loaded on server. Check logs."}
-
-    try:
-        preds = predict_from_bytes(image_bytes, predictor, transform, device)
-    except ValueError as e:
-        return {"error": str(e)}
-    except Exception as e:
-        return {"error": f"Inference failed: {e}"}
+    preds = predict_image(image_bytes, predictor, transform, device)
 
     nutrient_columns = ['total_mass', 'total_calories', 'total_fat', 'total_carb', 'total_protein']
     result = {k: float(v) for k, v in zip(nutrient_columns, preds)}
+    print(result)
     return {"predictions": result}
 
 if __name__ == "__main__":
