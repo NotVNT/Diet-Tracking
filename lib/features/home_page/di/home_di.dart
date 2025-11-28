@@ -1,3 +1,5 @@
+import '../../../services/notification_service.dart';
+import '../../../services/permission_service.dart';
 import '../data/datasources/home_local_datasource.dart';
 import '../data/repositories/home_repository_impl.dart';
 import '../domain/repositories/home_repository.dart';
@@ -9,26 +11,41 @@ class HomeDI {
   static HomeLocalDataSource? _localDataSource;
   static HomeRepository? _repository;
   static GetHomeInfoUseCase? _getHomeInfoUseCase;
-  
+  static PermissionService? _permissionService;
+  static LocalNotificationService? _notificationService;
+
   static HomeLocalDataSource _getLocalDataSource() {
     _localDataSource ??= HomeLocalDataSource();
     return _localDataSource!;
   }
-  
+
   static HomeRepository _getRepository() {
     _repository ??= HomeRepositoryImpl(_getLocalDataSource());
     return _repository!;
   }
-  
+
   static GetHomeInfoUseCase _getGetHomeInfoUseCase() {
     _getHomeInfoUseCase ??= GetHomeInfoUseCase(_getRepository());
     return _getHomeInfoUseCase!;
   }
-  
+
+
+  static PermissionService _getPermissionService() {
+    _permissionService ??= PermissionService();
+    return _permissionService!;
+  }
+
+  static LocalNotificationService _getNotificationService() {
+    _notificationService ??= LocalNotificationService();
+    return _notificationService!;
+  }
+
   static HomeProvider getHomeProvider() {
     return HomeProvider(
       getHomeInfoUseCase: _getGetHomeInfoUseCase(),
       repository: _getRepository(),
+      permissionService: _getPermissionService(),
+      notificationService: _getNotificationService(),
     );
   }
 }

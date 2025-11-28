@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'help_center_page.dart';
 import '../../../../common/custom_app_bar.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Support and about page
 class SupportPage extends StatelessWidget {
@@ -14,6 +15,7 @@ class SupportPage extends StatelessWidget {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.supportTitle,
         showBackButton: true,
+        showNotificationBell: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -30,8 +32,11 @@ class SupportPage extends StatelessWidget {
                   context,
                   icon: Icons.privacy_tip_outlined,
                   title: AppLocalizations.of(context)!.supportPrivacyPolicy,
-                  onTap: () {
-                    debugPrint('Opening privacy policy');
+                                    onTap: () {
+                    SnackBarHelper.showInfo(
+                      context,
+                      AppLocalizations.of(context)!.supportOpeningPrivacyPolicy,
+                    );
                   },
                 ),
                 const Divider(height: 1),
@@ -39,8 +44,11 @@ class SupportPage extends StatelessWidget {
                   context,
                   icon: Icons.description_outlined,
                   title: AppLocalizations.of(context)!.supportTermsOfService,
-                  onTap: () {
-                    debugPrint('Opening terms of service');
+                                    onTap: () {
+                    SnackBarHelper.showInfo(
+                      context,
+                      AppLocalizations.of(context)!.supportOpeningTermsOfService,
+                    );
                   },
                 ),
                const Divider(height: 1),
@@ -48,8 +56,11 @@ class SupportPage extends StatelessWidget {
                   context,
                   icon: Icons.lightbulb_outline,
                   title: AppLocalizations.of(context)!.supportRecommendationSources,
-                  onTap: () {
-                    debugPrint('Opening recommendation sources');
+                                    onTap: () {
+                    SnackBarHelper.showInfo(
+                      context,
+                      AppLocalizations.of(context)!.supportOpeningRecommendationSources,
+                    );
                   },
                 ),
               ],
@@ -93,7 +104,7 @@ class SupportPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+            color: Theme.of(context).colorScheme.primary.withAlpha((255 * 0.15).toInt()),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -127,24 +138,33 @@ class SupportPage extends StatelessWidget {
                 context,
                 imagePath: 'assets/icon/tiktok.png',
                 label: AppLocalizations.of(context)!.supportTiktok,
-                onTap: () {
-                  debugPrint('Opening TikTok');
+                                onTap: () {
+                  SnackBarHelper.showInfo(
+                    context,
+                    AppLocalizations.of(context)!.supportOpeningTiktok,
+                  );
                 },
               ),
               _buildSocialMediaButton(
                 context,
                 imagePath: 'assets/icon/facebook.png',
                 label: AppLocalizations.of(context)!.supportFacebook,
-                onTap: () {
-                  debugPrint('Opening Facebook');
+                                onTap: () {
+                  SnackBarHelper.showInfo(
+                    context,
+                    AppLocalizations.of(context)!.supportOpeningFacebook,
+                  );
                 },
               ),
               _buildSocialMediaButton(
                 context,
                 imagePath: 'assets/icon/instagram.png',
                 label: AppLocalizations.of(context)!.supportInstagram,
-                onTap: () {
-                  debugPrint('Opening Instagram');
+                                onTap: () {
+                  SnackBarHelper.showInfo(
+                    context,
+                    AppLocalizations.of(context)!.supportOpeningInstagram,
+                  );
                 },
               ),
             ],
@@ -175,15 +195,15 @@ class SupportPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isDarkMode
-                ? Colors.white.withOpacity(0.1)
-                : Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                ? Colors.white.withAlpha((255 * 0.1).toInt())
+                : Theme.of(context).colorScheme.outline.withAlpha((255 * 0.2).toInt()),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
               color: isDarkMode
-                  ? Colors.black.withOpacity(0.3)
-                  : Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                  ? Colors.black.withAlpha((255 * 0.3).toInt())
+                  : Theme.of(context).colorScheme.primary.withAlpha((255 * 0.08).toInt()),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -197,8 +217,8 @@ class SupportPage extends StatelessWidget {
               padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 color: isDarkMode
-                    ? Colors.white.withOpacity(0.05)
-                    : Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                    ? Colors.white.withAlpha((255 * 0.05).toInt())
+                    : Theme.of(context).colorScheme.primary.withAlpha((255 * 0.05).toInt()),
                 shape: BoxShape.circle,
               ),
               child: ClipOval(
@@ -220,7 +240,7 @@ class SupportPage extends StatelessWidget {
                       child: Icon(
                         Icons.image,
                         color: isDarkMode
-                            ? Colors.white.withOpacity(0.5)
+                            ? Colors.white.withAlpha((255 * 0.5).toInt())
                             : Colors.grey[600],
                         size: 24,
                       ),
@@ -264,7 +284,7 @@ class SupportPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).shadowColor.withOpacity(0.04),
+              color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -313,7 +333,7 @@ class SupportPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.04),
+            color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -334,7 +354,7 @@ class SupportPage extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+          color: Theme.of(context).colorScheme.primaryContainer.withAlpha((255 * 0.3).toInt()),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(

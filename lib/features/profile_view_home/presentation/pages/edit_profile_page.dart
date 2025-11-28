@@ -4,6 +4,7 @@ import '../../domain/entities/profile_entity.dart';
 import '../providers/profile_provider.dart';
 import '../../../../model/user.dart';
 import '../../../../common/custom_app_bar.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Page for editing user profile
 class EditProfilePage extends StatefulWidget {
@@ -58,7 +59,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-  Future<void> _saveProfile() async {
+    Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -85,12 +86,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
       await widget.profileProvider.updateProfile(updatedProfile);
 
       if (!mounted) return;
-      
+
+      SnackBarHelper.showSuccess(
+        context,
+        AppLocalizations.of(context)!.editProfileUpdated,
+      );
       Navigator.pop(context);
-      debugPrint('Profile updated successfully');
     } catch (e) {
       if (!mounted) return;
-      debugPrint('Profile update error: $e');
+      SnackBarHelper.showError(
+        context,
+        AppLocalizations.of(context)!.editProfileError,
+      );
     }
   }
 
@@ -114,6 +121,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.editProfileTitle,
         showBackButton: true,
+        showNotificationBell: false,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -297,7 +305,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.04),
+            color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -341,9 +349,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: isSelected 
-            ? Theme.of(context).colorScheme.primary.withOpacity(0.1) 
-            : Theme.of(context).cardColor,
+                    color: isSelected
+              ? Theme.of(context).colorScheme.primary.withAlpha((255 * 0.1).toInt())
+              : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected 
@@ -353,7 +361,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).shadowColor.withOpacity(0.04),
+              color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -392,7 +400,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.04),
+            color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

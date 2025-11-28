@@ -4,6 +4,8 @@ import '../../../../common/app_styles.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../common/gradient_background.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../common/snackbar_helper.dart';
+import '../cubit/record_state.dart';
 
 import '../cubit/record_cubit.dart';
 import '../widgets/food_record_list.dart';
@@ -18,7 +20,15 @@ class RecordPage extends StatelessWidget {
     final localizations = AppLocalizations.of(context);
     
     return Scaffold(
-      body: GradientBackground(
+      body: BlocListener<RecordCubit, RecordState>(
+        listener: (context, state) {
+          if (state is RecordSuccess) {
+            SnackBarHelper.showSuccess(context, state.message);
+          } else if (state is RecordError) {
+            SnackBarHelper.showError(context, state.message);
+          }
+        },
+        child: GradientBackground(
         child: Column(
           children: [
             CustomAppBar(
@@ -58,7 +68,7 @@ class RecordPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      ),), // Close GradientBackground and BlocListener
     );
   }
 }

@@ -74,34 +74,6 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
     );
   }
 
-  /// Chuyển đến trang chủ với tư cách guest user
-  /// Lưu thông tin cân nặng vào local storage trước khi chuyển
-  Future<void> _navigateAsGuest(BuildContext context) async {
-    await _saveGuestWeightData(context);
-
-    if (!mounted) return;
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider(
-          create: (_) => HomeDI.getHomeProvider(),
-          child: const HomePage(),
-        ),
-      ),
-      (route) => false,
-    );
-  }
-
-  /// Lưu thông tin cân nặng vào local storage cho guest
-  Future<void> _saveGuestWeightData(BuildContext context) async {
-    await _localStorage.saveGuestData(
-      weightKg: widget.currentWeightKg?.toDouble(),
-      goal:
-          '${AppLocalizations.of(context)?.goalWeightPrefix ?? 'Cân nặng mục tiêu'}: ${widget.goalWeightKg}kg',
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,43 +203,8 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
       return _buildContinueToHomeButton();
     }
 
-    return Column(
-      children: [
-        _buildGuestButton(),
-        const SizedBox(height: 16),
-        _buildSignupButton(),
-      ],
-    );
-  }
-
-  /// Xây dựng nút Guest
-  Widget _buildGuestButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 64,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          elevation: 6,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-            side: BorderSide(
-              color: _accentColor.withAlpha((255 * 0.2).round()),
-              width: 1,
-            ),
-          ),
-        ),
-        onPressed: () => _navigateAsGuest(context),
-        child: Text(
-          AppLocalizations.of(context)?.continueAsGuest ?? 'Tiếp tục với Guest',
-          style: GoogleFonts.inter(
-            color: _accentColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
+    // Chỉ hiển thị nút Đăng ký, không còn chế độ Guest
+    return _buildSignupButton();
   }
 
   /// Xây dựng nút Đăng ký

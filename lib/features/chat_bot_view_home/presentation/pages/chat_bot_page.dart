@@ -8,6 +8,8 @@ import '../widgets/food_suggestion_inputs.dart';
 import '../widgets/chat_settings_menu.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../common/snackbar_helper.dart';
+import '../../../../services/user_avatar_service.dart';
 
 /// Main chat bot page with clean architecture
 class ChatBotPage extends StatefulWidget {
@@ -30,6 +32,8 @@ class _ChatBotPageState extends State<ChatBotPage> {
   @override
   void initState() {
     super.initState();
+    // Preload user avatar for chat bubbles (non-blocking)
+    UserAvatarService.instance.ensureLoaded();
     _chatProvider = ChatProviderFactory.create();
     _chatProvider.addListener(_onChatProviderChanged);
   }
@@ -95,14 +99,15 @@ class _ChatBotPageState extends State<ChatBotPage> {
   void _onCreateNewChat() async {
     final l10n = AppLocalizations.of(context)!;
     await _chatProvider.createNewChatSession();
-    _showSnackBar(l10n.chatBotNewChatCreated);
+    if (!mounted) return;
+    SnackBarHelper.showSuccess(context, l10n.chatBotNewChatCreated);
   }
 
   /// Handles chat history action
   void _onChatHistory() {
     final l10n = AppLocalizations.of(context)!;
     // TODO: Implement chat history view
-    _showSnackBar(l10n.chatBotChatHistoryComingSoon);
+    SnackBarHelper.showInfo(context, l10n.chatBotChatHistoryComingSoon);
   }
 
 
@@ -136,7 +141,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
     final mealType = _mealTypeController.text.trim();
 
     if (ingredients.isEmpty || budget.isEmpty || mealType.isEmpty) {
-      _showSnackBar(l10n.chatBotPleaseEnterAllInfo);
+      SnackBarHelper.showWarning(context, l10n.chatBotPleaseEnterAllInfo);
       return;
     }
 
@@ -147,7 +152,8 @@ class _ChatBotPageState extends State<ChatBotPage> {
     );
 
     if (error != null) {
-      _showSnackBar(error);
+      if (!mounted) return;
+      SnackBarHelper.showError(context, error);
     }
 
     // Clear inputs and hide
@@ -166,14 +172,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
     final error = await chatProvider.sendMessage(text);
     if (error != null) {
-      _showSnackBar(error);
+      if (!mounted) return;
+      SnackBarHelper.showError(context, error);
     }
   }
 
-  /// Shows snackbar with message
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
+
 }
