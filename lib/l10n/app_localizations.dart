@@ -2279,6 +2279,13 @@ abstract class AppLocalizations {
   /// **'Please grant camera access to use this feature.'**
   String get permissionCameraRequired;
 
+  /// No description provided for @scanOnlyToday.
+  ///
+  /// In en, this message translates to:
+  /// **'You can only scan meals for today.'**
+  String get scanOnlyToday;
+
+
   /// No description provided for @inboxTitle.
   ///
   /// In en, this message translates to:

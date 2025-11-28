@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../responsive/responsive.dart';
 import 'animated_arrow_pointer.dart';
 
-/// Overlay that shows a cool animated horizontal arrow pointing to the center FAB.
-///
-/// - Non-intrusive: wrapped in IgnorePointer, doesn't block touches.
-/// - Easy to maintain: encapsulated and configurable via properties.
-/// - Reusable across screens with a center-docked FAB.
+
 class FabArrowOverlay extends StatelessWidget {
   final bool visible;
   final double? leftOffsetFromCenter; // positive value moves arrow to the left of center (in px)

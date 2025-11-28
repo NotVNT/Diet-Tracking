@@ -15,8 +15,14 @@ class HomeProvider extends ChangeNotifier {
 
   HomeInfo _homeInfo = HomeInfo(currentIndex: 0);
 
+  // UI state for Home tab
+  DateTime _selectedDate = DateTime.now();
+  String _searchQuery = '';
+
   HomeInfo get homeInfo => _homeInfo;
   int get currentIndex => _homeInfo.currentIndex;
+  DateTime get selectedDate => _selectedDate;
+  String get searchQuery => _searchQuery;
 
   HomeProvider({
     required this.getHomeInfoUseCase,
@@ -43,6 +49,16 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // UI state setters
+  void setSelectedDate(DateTime date) {
+    _selectedDate = date;
+    notifyListeners();
+  }
+
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
 
   Future<bool> requestCameraPermission() async {
     return await permissionService.requestCameraPermission();

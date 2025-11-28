@@ -12,6 +12,10 @@ class RecordCubit extends Cubit<RecordState> {
 
   List<FoodRecordEntity> _allRecords = [];
 
+  // Filters
+  String _searchQuery = '';
+  String? _calorieRange; // format: "min-max"
+
   RecordCubit(
     this._saveFoodRecordUseCase,
     this._getFoodRecordsUseCase,
@@ -25,7 +29,6 @@ class RecordCubit extends Cubit<RecordState> {
     String? nutritionDetails,
   }) async {
     try {
-      // Only emit loading if not already loading
       if (state is! RecordLoading) {
         emit(RecordLoading());
       }
@@ -36,7 +39,6 @@ class RecordCubit extends Cubit<RecordState> {
         nutritionDetails: nutritionDetails,
       );
       emit(const RecordSuccess('Món ăn đã được ghi nhận thành công!'));
-      // Tự động load lại danh sách sau khi lưu
       await loadFoodRecords();
     } catch (e) {
       emit(RecordError('Lỗi khi ghi nhận món ăn: ${e.toString()}'));
@@ -45,13 +47,12 @@ class RecordCubit extends Cubit<RecordState> {
 
   Future<void> loadFoodRecords() async {
     try {
-      // Only emit loading if not already showing data
       if (state is! RecordListLoaded) {
         emit(RecordLoading());
       }
       final records = await _getFoodRecordsUseCase.call();
       _allRecords = records;
-      emit(RecordListLoaded(records));
+      _emitFiltered();
     } catch (e) {
       emit(RecordError('Lỗi khi tải danh sách món ăn: ${e.toString()}'));
     }
@@ -60,47 +61,58 @@ class RecordCubit extends Cubit<RecordState> {
   Future<void> deleteFoodRecord(String id) async {
     try {
       await _deleteFoodRecordUseCase.call(id);
-
-      // Optimistically update the UI by removing the item from the local list
-      final updatedRecords = _allRecords
-          .where((record) => record.id != id)
-          .toList();
-      _allRecords = updatedRecords;
-
-      // Emit the new state to update the UI immediately
-      emit(RecordListLoaded(updatedRecords));
+      _allRecords = _allRecords.where((record) => record.id != id).toList();
+      _emitFiltered();
     } catch (e) {
       emit(RecordError('Lỗi khi xóa món ăn: ${e.toString()}'));
-      // If deletion fails, reload the list to ensure data consistency
       await loadFoodRecords();
     }
   }
 
+  // PUBLIC FILTER API
+  void setSearchQuery(String query) {
+    _searchQuery = query.trim();
+    _emitFiltered();
+  }
+
   void filterRecordsByCalories(String? calorieRange) {
-    if (calorieRange == null) {
-      // Show all records when no filter is selected
-      emit(RecordListLoaded(_allRecords));
-      return;
-    }
-
-    // Parse the calorie range
-    final parts = calorieRange.split('-');
-    if (parts.length != 2) return;
-
-    final minCalories = double.tryParse(parts[0]);
-    final maxCalories = double.tryParse(parts[1]);
-
-    if (minCalories == null || maxCalories == null) return;
-
-    // Filter records based on calorie range
-    final filteredRecords = _allRecords.where((record) {
-      return record.calories >= minCalories && record.calories <= maxCalories;
-    }).toList();
-
-    emit(RecordListLoaded(_allRecords, filteredRecords: filteredRecords));
+    _calorieRange = calorieRange;
+    _emitFiltered();
   }
 
   void resetState() {
     emit(RecordInitial());
+  }
+
+  // INTERNAL
+  void _emitFiltered() {
+    final filtered = _applyFilters();
+    emit(RecordListLoaded(_allRecords, filteredRecords: filtered));
+  }
+
+  List<FoodRecordEntity> _applyFilters() {
+    Iterable<FoodRecordEntity> result = _allRecords;
+
+    // Apply calorie filter if present
+    if (_calorieRange != null) {
+      final parts = _calorieRange!.split('-');
+      if (parts.length == 2) {
+        final minCalories = double.tryParse(parts[0]);
+        final maxCalories = double.tryParse(parts[1]);
+        if (minCalories != null && maxCalories != null) {
+          result = result.where(
+            (r) => r.calories >= minCalories && r.calories <= maxCalories,
+          );
+        }
+      }
+    }
+
+    // Apply search query (case-insensitive)
+    if (_searchQuery.isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      result = result.where((r) => r.foodName.toLowerCase().contains(q));
+    }
+
+    return result.toList();
   }
 }

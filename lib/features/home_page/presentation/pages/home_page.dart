@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../common/custom_app_bar.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/home_provider.dart';
 import '../widgets/navigation/custom_floating_action_button.dart';
 import '../widgets/navigation/custom_bottom_navigation_bar.dart';
-import '../widgets/week_calendar/week_calendar_widget.dart';
-import '../widgets/components/search_filter_bar.dart';
-import '../widgets/cards/calorie_goal_card.dart';
-import '../widgets/sections/recently_logged_section.dart';
-import '../widgets/components/guided_fab.dart';
+import '../widgets/shared/guided_fab.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../record_view_home/presentation/cubit/record_cubit.dart';
@@ -21,6 +16,7 @@ import '../../../../config/home_page_config.dart';
 import '../../../../common/snackbar_helper.dart';
 import '../../../../services/notification_service.dart';
 import '../../../../services/permission_service.dart';
+import '../widgets/layout/home_content.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -37,12 +33,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Home content state
-  DateTime _selectedDate = DateTime.now();
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-  Map<String, dynamic>? _activeFilters;
-
   @override
   void initState() {
     super.initState();
@@ -58,29 +48,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _searchController.dispose();
     super.dispose();
   }
 
-  void _onSearchChanged(String query) {
-    setState(() {
-      _searchQuery = query;
-    });
-    // TODO: Implement search logic
-    debugPrint('Search query: $query');
-  }
-
-  void _onDateSelected(DateTime date) {
-    setState(() {
-      _selectedDate = date;
-    });
-    // TODO: Load data for selected date
-    debugPrint('Selected date: $date');
-  }
-
   void _onViewReport() {
-    // TODO: Navigate to detailed report
-    debugPrint('View report tapped');
+
   }
 
   /// Handle picture tap - navigate to detail page
@@ -103,35 +75,50 @@ class _HomePageState extends State<HomePage> {
       builder: (context, homeProvider, child) {
         final pages = HomePageConfig.getPages();
 
+        final bool isChatTab = homeProvider.currentIndex == HomePageConfig.chatBotIndex;
+        final bool isRecordTab = homeProvider.currentIndex == HomePageConfig.recordIndex;
+        final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+
         return Scaffold(
           body: homeProvider.currentIndex == HomePageConfig.homeIndex
               ? _buildHomeContent(context, homeProvider)
               : pages[homeProvider.currentIndex],
-          floatingActionButton: BlocBuilder<RecordCubit, RecordState>(
-            builder: (context, state) {
-              bool showFabArrow = false;
-              if (state is RecordListLoaded) {
-                showFabArrow = !state.records.any(
-                  (r) => DateUtils.isSameDay(r.date, _selectedDate),
-                );
-              } else if (state is! RecordLoading) {
-                showFabArrow = true; // default hint for first time
-              }
+          floatingActionButton: ((isChatTab || isRecordTab) && isKeyboardOpen)
+              ? null
+              : BlocBuilder<RecordCubit, RecordState>(
+                  builder: (context, state) {
+                    bool showFabArrow = false;
+                    final bool isHomeTab = homeProvider.currentIndex == HomePageConfig.homeIndex;
+                    final bool isViewingToday = DateUtils.isSameDay(
+                      homeProvider.selectedDate,
+                      DateTime.now(),
+                    );
+                    if (state is RecordListLoaded) {
+                      final DateTime today = DateTime.now();
+                      final bool hasTodayRecord = state.records.any(
+                        (r) => DateUtils.isSameDay(r.date, today),
+                      );
+                      // Only show on Home tab, when viewing Today, and Today has no records
+                      showFabArrow = isHomeTab && isViewingToday && !hasTodayRecord;
+                    } else {
+                      // Until data is loaded, don't show the arrow
+                      showFabArrow = false;
+                    }
 
-              return GuidedFloatingActionButton(
-                showArrow: showFabArrow,
-                arrowDistance: ResponsiveHelper.of(context).width(84),
-                arrowColor: Theme.of(context).colorScheme.primary,
-                arrowSize: ResponsiveHelper.of(context).width(64),
-                child: CustomFloatingActionButton(
-                  onRecordSelected: () => _navigateToRecord(homeProvider),
-                  onChatBotSelected: () => _navigateToChatBot(homeProvider),
-                  onScanFoodSelected: () => _onScanFoodTapped(homeProvider),
-                  onReportSelected: () => _onReportTapped(),
+                    return GuidedFloatingActionButton(
+                      showArrow: showFabArrow,
+                      arrowDistance: ResponsiveHelper.of(context).width(84),
+                      arrowColor: Theme.of(context).colorScheme.primary,
+                      arrowSize: ResponsiveHelper.of(context).width(64),
+                      child: CustomFloatingActionButton(
+                        onRecordSelected: () => _navigateToRecord(homeProvider),
+                        onChatBotSelected: () => _navigateToChatBot(homeProvider),
+                        onScanFoodSelected: () => _onScanFoodTapped(homeProvider),
+                        onReportSelected: () => _onReportTapped(),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: CustomBottomNavigationBar(
@@ -145,114 +132,10 @@ class _HomePageState extends State<HomePage> {
 
   /// Build home content
   Widget _buildHomeContent(BuildContext context, HomeProvider homeProvider) {
-    final responsive = ResponsiveHelper.of(context);
-    final localizations = AppLocalizations.of(context);
-
-    return Scaffold(
-      appBar: CustomAppBar(title: localizations?.bottomNavHome ?? 'Trang chủ'),
-      body: BlocBuilder<RecordCubit, RecordState>(
-        buildWhen: (previous, current) {
-          // Only rebuild if the state is actually different
-          if (previous is RecordListLoaded && current is RecordListLoaded) {
-            return previous.records.length != current.records.length ||
-                previous.records.hashCode != current.records.hashCode;
-          }
-          return true;
-        },
-        builder: (context, state) {
-          if (state is RecordLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          List<FoodRecordEntity> foodRecords = [];
-          if (state is RecordListLoaded) {
-            foodRecords = state.records;
-          }
-
-          // Apply search and filter conditions
-          final String query = _searchQuery.trim().toLowerCase();
-          final double? minCalories = (_activeFilters != null && _activeFilters!['calorieMin'] is num)
-              ? (_activeFilters!['calorieMin'] as num).toDouble()
-              : null;
-          final double? maxCalories = (_activeFilters != null && _activeFilters!['calorieMax'] is num)
-              ? (_activeFilters!['calorieMax'] as num).toDouble()
-              : null;
-
-          final List<FoodRecordEntity> filteredRecords = foodRecords.where((food) {
-            final matchesDate = DateUtils.isSameDay(food.date, _selectedDate);
-            final matchesSearch = query.isEmpty || food.foodName.toLowerCase().contains(query);
-            final matchesMin = minCalories == null || food.calories >= minCalories;
-            final matchesMax = maxCalories == null || food.calories <= maxCalories;
-            return matchesDate && matchesSearch && matchesMin && matchesMax;
-          }).toList();
-
-          return SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(responsive.width(16)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  WeekCalendarWidget(
-                    initialDate: _selectedDate,
-                    onDateSelected: _onDateSelected,
-                    showMonthYear: true,
-                  ),
-                  SizedBox(height: responsive.height(16)),
-                  SearchFilterBar(
-                    controller: _searchController,
-                    onSearchChanged: _onSearchChanged,
-                    showFilterButton: true,
-                  ),
-                  SizedBox(height: responsive.height(16)),
-                  CalorieGoalCard(
-                    nutritionInfo: NutritionInfo(
-                      calorieGoal: 2273,
-                      calorieConsumed: 0,
-                      proteinConsumed: 0,
-                      carbsConsumed: 0,
-                    ),
-                    onViewReport: _onViewReport,
-                  ),
-                  SizedBox(height: responsive.height(16)),
-                  RecentlyLoggedSection(
-                    photoItems: filteredRecords
-                        .where(
-                          (food) =>
-                              food.imagePath != null &&
-                              food.imagePath!.isNotEmpty &&
-                              food.recordType == RecordType.food,
-                        )
-                        .toList(),
-                    barcodeItems: filteredRecords
-                        .where((food) => food.recordType == RecordType.barcode)
-                        .toList(),
-                    onViewAllPhotos: () {
-                      debugPrint('View all photos tapped');
-                    },
-                    onItemTap: (food) => _onPictureTap(food),
-                    onDelete: (food) async {
-                      final id = food.id;
-                      if (id == null) {
-                        SnackBarHelper.showError(context, 'Không xác định được ID bản ghi để xóa.');
-                        return;
-                      }
-                      await context.read<RecordCubit>().deleteFoodRecord(id);
-                      if (!mounted) return;
-                      final l10n = AppLocalizations.of(context);
-                      SnackBarHelper.showSuccess(
-                        context,
-                        l10n?.photoDeletedSuccessfully ?? 'Deleted successfully',
-                      );
-                    },
-                    onEmptyTap: () => _onScanFoodTapped(homeProvider),
-                  ),
-                  SizedBox(height: responsive.height(24)),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+    return HomeContent(
+      onViewReport: _onViewReport,
+      onEmptyTap: () => _onScanFoodTapped(homeProvider),
+      onItemTap: (food) => _onPictureTap(food),
     );
   }
 
@@ -268,6 +151,19 @@ class _HomePageState extends State<HomePage> {
 
   /// Handle scan food action - Request camera permission first
   void _onScanFoodTapped(HomeProvider homeProvider) async {
+    // Only allow scanning for today
+    final bool isTodaySelected = DateUtils.isSameDay(
+      homeProvider.selectedDate,
+      DateTime.now(),
+    );
+    if (!isTodaySelected) {
+      SnackBarHelper.showInfo(
+        context,
+        'Bạn chỉ có thể quét món ăn cho ngày hôm nay.',
+      );
+      return;
+    }
+
     final hasPermission = await homeProvider.requestCameraPermission();
 
     if (!hasPermission) {
@@ -296,7 +192,7 @@ class _HomePageState extends State<HomePage> {
 
   /// Handle report action
   void _onReportTapped() {
-    // TODO: Implement report functionality
+  
   }
 
   /// Handle bottom navigation tap

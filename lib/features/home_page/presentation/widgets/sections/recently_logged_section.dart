@@ -3,7 +3,7 @@ import '../../../../../responsive/responsive.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../food_scanned/food_scanned_card.dart';
-import '../components/empty_state_card.dart';
+import '../shared/empty_state_card.dart';
 
 /// Widget to display recently logged photos and barcode scans
 class RecentlyLoggedSection extends StatelessWidget {
@@ -17,6 +17,12 @@ class RecentlyLoggedSection extends StatelessWidget {
   final String? emptySubtitle;
   final VoidCallback? onEmptyTap;
 
+  /// Show a hint line like: "You have more logs — tap View All to see more."
+  final bool showMoreHint;
+
+  /// Customizable hint text. If null, a localized default is used.
+  final String? moreHintText;
+
   const RecentlyLoggedSection({
     super.key,
     required this.photoItems,
@@ -26,6 +32,8 @@ class RecentlyLoggedSection extends StatelessWidget {
     this.onDelete,
     this.emptySubtitle,
     this.onEmptyTap,
+    this.showMoreHint = false,
+    this.moreHintText,
   });
 
   @override
@@ -39,7 +47,7 @@ class RecentlyLoggedSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildHeader(context, responsive, localizations),
+        _buildHeader(context, responsive, localizations, hasAny),
         SizedBox(height: responsive.height(12)),
         if (!hasAny)
           EmptyStateCard(
@@ -54,15 +62,34 @@ class RecentlyLoggedSection extends StatelessWidget {
           if (showPhotos && showBarcodes)
             SizedBox(height: responsive.height(16)), // Spacer between sections
           if (showBarcodes) _buildBarcodeSection(context, responsive),
+          if (showMoreHint) ...[
+            SizedBox(height: responsive.height(12)),
+            Text(
+              moreHintText ?? _defaultMoreHint(localizations),
+              style: TextStyle(
+                fontSize: responsive.fontSize(13),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ],
       ],
     );
+  }
+
+  String _defaultMoreHint(AppLocalizations? l10n) {
+    final isVi = (l10n?.localeName ?? '').startsWith('vi');
+    final viewAll = l10n?.viewAll ?? (isVi ? 'Xem tất cả' : 'View all');
+    return isVi
+        ? 'Bạn còn nhiều bản ghi — nhấn $viewAll để xem thêm.'
+        : 'You have more logs — tap $viewAll to see more.';
   }
 
   Widget _buildHeader(
     BuildContext context,
     ResponsiveHelper responsive,
     AppLocalizations? localizations,
+    bool hasAny,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,7 +102,7 @@ class RecentlyLoggedSection extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        if (photoItems.isNotEmpty && onViewAllPhotos != null)
+        if (hasAny && onViewAllPhotos != null)
           GestureDetector(
             onTap: onViewAllPhotos,
             child: Text(
@@ -133,7 +160,7 @@ class RecentlyLoggedSection extends StatelessWidget {
             onTap: onItemTap != null ? () => onItemTap!(food) : null,
             child: FoodScannedCard(
               foodRecord: food,
-              showAddButton: false,
+              onDelete: onDelete,
             ),
           );
         },

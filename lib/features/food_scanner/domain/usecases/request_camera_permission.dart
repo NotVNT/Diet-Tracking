@@ -1,5 +1,5 @@
 import 'package:permission_handler/permission_handler.dart';
-import '../../services/session_permission_service.dart';
+import '../../services/camera_permission_service.dart';
 
 /// Model chứa kết quả của việc yêu cầu quyền camera
 class CameraPermissionResult {
@@ -21,7 +21,7 @@ class CameraPermissionResult {
 /// - Yêu cầu quyền camera từ hệ thống
 /// - Trả về kết quả và thông báo lỗi nếu cần
 class RequestCameraPermission {
-  final SessionPermissionService _sessionPermissionService;
+  final CameraPermissionService _sessionPermissionService;
 
   RequestCameraPermission(this._sessionPermissionService);
 

@@ -3,14 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../common/app_styles.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../common/app_confirm_dialog.dart';
+import '../../../../common/snackbar_helper.dart';
+import '../../domain/entities/food_record_entity.dart';
 import '../cubit/record_cubit.dart';
 import '../cubit/record_state.dart';
 
 class FoodRecordList extends StatelessWidget {
-  const FoodRecordList({Key? key}) : super(key: key);
+  const FoodRecordList({super.key});
 
   /// Formats calories display - shows "~" for chatbot suggestions, exact for manual entries
-  String _formatCalories(record) {
+  String _formatCalories(FoodRecordEntity record) {
     final calories = record.calories.toStringAsFixed(0);
     // If record has nutritionDetails, it came from chatbot suggestion (approximate)
     if (record.nutritionDetails != null && record.nutritionDetails!.trim().isNotEmpty) {
@@ -83,7 +86,7 @@ class FoodRecordList extends StatelessWidget {
                   Text(
                     localizations?.addFirstMeal ?? 'Hãy thêm món ăn đầu tiên của bạn!',
                     style: AppStyles.bodySmall.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
                       fontSize: 14,
                     ),
                   ),
@@ -178,7 +181,7 @@ class FoodRecordList extends StatelessWidget {
                     );
                   },
                   leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     child: Icon(
                       Icons.restaurant,
                       color: Theme.of(context).colorScheme.primary,
@@ -217,40 +220,27 @@ class FoodRecordList extends StatelessWidget {
                       color: Theme.of(context).colorScheme.error,
                     ),
                     onPressed: () async {
-                      // Store the cubit instance before the async gap
                       final cubit = context.read<RecordCubit>();
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (ctx) {
-                          return AlertDialog(
-                            title: Text(localizations?.deleteMealTitle ?? 'Xoá món ăn?'),
-                            content: Text(
-                              localizations?.deleteMealMessage(record.foodName) ??
-                                  'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(ctx).pop(false),
-                                child: Text(localizations?.cancel ?? 'Huỷ'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.of(ctx).pop(true),
-                                child: Text(
-                                  localizations?.delete ?? 'Xoá',
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+                      final l10n = AppLocalizations.of(context);
+                      final confirmed = await showAppConfirmDialog(
+                        context,
+                        title: l10n?.deleteMealTitle ?? 'Xoá món ăn?',
+                        message: l10n?.deleteMealMessage(record.foodName) ??
+                            'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
+                        confirmText: l10n?.delete,
+                        cancelText: l10n?.cancel,
+                        destructive: true,
+                        icon: Icons.delete_rounded,
                       );
-
-                      if (confirm == true && (record.id != null)) {
-                        cubit.deleteFoodRecord(
-                          record.id!,
-                        );
+                      if (confirmed == true && record.id != null) {
+                        await cubit.deleteFoodRecord(record.id!);
+                        if (context.mounted) {
+                          final l10n2 = AppLocalizations.of(context);
+                          SnackBarHelper.showSuccess(
+                            context,
+                            l10n2?.photoDeletedSuccessfully ?? 'Deleted successfully',
+                          );
+                        }
                       }
                     },
                   ),

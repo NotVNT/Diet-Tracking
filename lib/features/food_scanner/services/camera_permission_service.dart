@@ -1,19 +1,13 @@
 import 'package:permission_handler/permission_handler.dart' as ph;
 
-/// Tracks camera permission state within a single login session
-/// 
-/// Behavior:
-/// - If user selects 'While using the app' or 'Only this time' → permission dialog never appears again in this session
-/// - If user selects 'Don't allow' → permission dialog appears every time they tap Scan Food
-/// - When user logs out, the session state is reset
-class SessionPermissionService {
-  static final SessionPermissionService _instance = SessionPermissionService._internal();
+class CameraPermissionService {
+  static final CameraPermissionService _instance = CameraPermissionService._internal();
 
-  factory SessionPermissionService() {
+  factory CameraPermissionService() {
     return _instance;
   }
 
-  SessionPermissionService._internal();
+  CameraPermissionService._internal();
 
   // Track if permission has been granted/limited in this session
   bool _cameraPermissionGrantedInSession = false;
@@ -21,16 +15,6 @@ class SessionPermissionService {
   // Track if user has explicitly denied permission in this session
   bool _cameraPermissionDeniedInSession = false;
 
-  /// Request camera permission with session-aware behavior
-  /// 
-  /// Returns true if permission is granted or limited
-  /// Returns false if permission is denied
-  /// 
-  /// If user previously granted/limited permission in this session, 
-  /// the dialog won't appear again (returns true)
-  /// 
-  /// If user previously denied permission in this session,
-  /// the dialog will appear again
   Future<bool> requestCameraPermission() async {
     // If already granted in this session, don't show dialog again
     if (_cameraPermissionGrantedInSession) {

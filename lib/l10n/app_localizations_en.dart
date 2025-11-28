@@ -1110,6 +1110,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get permissionCameraRequired => 'Please grant camera access to use this feature.';
 
+
+  @override
+  String get scanOnlyToday => 'You can only scan meals for today.';
+
   @override
   String get inboxTitle => 'Inbox';
 

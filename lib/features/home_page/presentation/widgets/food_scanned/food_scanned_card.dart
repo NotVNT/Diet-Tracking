@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../components/plus_button.dart';
+import '../shared/plus_button.dart';
 import 'food_scanned_info.dart';
-import '../components/options_menu_for_plus_button.dart';
+import '../shared/options_menu_for_plus_button.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 

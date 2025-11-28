@@ -11,7 +11,7 @@ import 'food_image_widget.dart';
 import 'food_scanned_info.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../../record_view_home/presentation/cubit/record_cubit.dart';
-import '../components/options_menu_for_plus_button.dart';
+import '../shared/options_menu_for_plus_button.dart';
 
 /// Page to display scanned food details with image viewer and actions
 class ScannedFoodDetailPage extends StatelessWidget {

@@ -1111,6 +1111,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get permissionCameraRequired => 'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
 
   @override
+  String get scanOnlyToday => 'Bạn chỉ có thể quét món ăn cho ngày hôm nay.';
+
+  @override
   String get inboxTitle => 'Hộp thư đến';
 
   @override
