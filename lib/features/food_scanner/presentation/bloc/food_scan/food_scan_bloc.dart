@@ -33,8 +33,9 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState> {
   ) async {
     emit(const FoodScanUploading());
     try {
-      final recognition =
-          await foodRecognitionService.recognizeFood(event.imagePath);
+      final recognition = await foodRecognitionService.recognizeFood(
+        event.imagePath,
+      );
 
       final String? foodName = recognition?.name;
       final double? calories = recognition?.calories;
@@ -57,11 +58,15 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState> {
         scanType: ScanType.food,
         foodName: foodName,
         calories: calories,
-        description: description.isEmpty ? null : description.trim(),
+        description: recognition?.description,
+        protein: recognition?.protein,
+        carbs: recognition?.carbs,
+        fat: recognition?.fat,
       );
 
-      emit(FoodScanSuccess(
-          'Food saved${foodName != null ? ': $foodName' : ''}'));
+      emit(
+        FoodScanSuccess('Food saved${foodName != null ? ': $foodName' : ''}'),
+      );
     } catch (e) {
       emit(const FoodScanError('Could not process image. Please try again.'));
     }
@@ -86,14 +91,17 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState> {
   ) async {
     emit(const FoodScanUploading());
     try {
-      final recognition =
-          await foodRecognitionService.recognizeFood(event.imagePath);
+      final recognition = await foodRecognitionService.recognizeFood(
+        event.imagePath,
+      );
 
-      emit(FoodRecognitionAPICalledState(
-        foodName: recognition?.name,
-        calories: recognition?.calories,
-        description: recognition?.description,
-      ));
+      emit(
+        FoodRecognitionAPICalledState(
+          foodName: recognition?.name,
+          calories: recognition?.calories,
+          description: recognition?.description,
+        ),
+      );
     } catch (e) {
       emit(const FoodScanError('Could not recognize food from image.'));
     }
@@ -114,13 +122,15 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState> {
 
       if (event.recognitionDescription != null &&
           event.recognitionDescription!.isNotEmpty) {
-        description += (description.isEmpty ? '' : '\n') +
-            event.recognitionDescription!;
+        description +=
+            (description.isEmpty ? '' : '\n') + event.recognitionDescription!;
       }
 
-      emit(DescriptionBuiltState(
-        description: description.isEmpty ? '' : description.trim(),
-      ));
+      emit(
+        DescriptionBuiltState(
+          description: description.isEmpty ? '' : description.trim(),
+        ),
+      );
     } catch (e) {
       emit(const FoodScanError('Could not build description.'));
     }
@@ -141,11 +151,13 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState> {
         description: event.description,
       );
 
-      emit(FoodScanSuccess(
-          'Food saved${event.foodName != null ? ': ${event.foodName}' : ''}'));
+      emit(
+        FoodScanSuccess(
+          'Food saved${event.foodName != null ? ': ${event.foodName}' : ''}',
+        ),
+      );
     } catch (e) {
       emit(const FoodScanError('Could not save scanned food.'));
     }
   }
 }
-

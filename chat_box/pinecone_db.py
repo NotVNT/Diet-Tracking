@@ -27,7 +27,6 @@ def get_embedding(text: str):
 
 ##dummy data##
 recipes = [
-    
     {"id": "1", "title": "cơm gà kho gừng", "ingredients": ["cơm", "đùi gà", "gừng"], "how-to-cook": "Ướp gà với gừng, tỏi, hành, nước mắm, đường, tiêu rồi kho lửa nhỏ với nước xăm xắp đến khi gà mềm, nước sánh lại, ăn kèm cơm trắng.","tags": ["giảm cân", "mặn", "khó làm"], "calories" : 300, "protein": 25},
     {"id": "2", "title": "cơm gà xối mỡ", "ingredients": ["cơm", "đùi gà", "tỏi", "dầu ăn"], "how-to-cook": "Luộc gà với gừng và hành cho thơm, vớt ra chiên giòn da, xối mỡ nóng lên gà cho bóng, nấu cơm bằng nước luộc gà với lá dứa, ăn kèm rau sống và nước mắm tỏi ớt.", "tags": ["tăng cân", "nhiều mỡ", "dễ làm"], "calories": 500, "protein": 25},
     {"id": "3", "title": "cơm trắng với ức gà", "ingredients": ["cơm", "ức gà", "muối tiêu"], "how-to-cook": "Áp chảo ức gà với tiêu và muối cho vàng mặt, nấu cơm trắng bằng nước lọc hoặc nước luộc gà, ăn kèm rau luộc hoặc salad để cân bằng dinh dưỡng.", "tags": ["nhiều protein", "rẻ"], "calories" : 350, "protein": 31},

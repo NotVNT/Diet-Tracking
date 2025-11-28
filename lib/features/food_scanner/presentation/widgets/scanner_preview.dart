@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/food_scanner_models.dart';
+import '../../data/models/food_scanner_models.dart';
 import 'scanner_widgets.dart';
 
 class ScannerPreview extends StatelessWidget {

@@ -14,6 +14,7 @@ class FoodRecordEntity {
   final double? protein;
   final double? carbs;
   final double? fat;
+  final String? barcode;
 
   FoodRecordEntity({
     this.id,
@@ -27,6 +28,7 @@ class FoodRecordEntity {
     this.protein,
     this.carbs,
     this.fat,
+    this.barcode,
   });
 
   FoodRecordEntity copyWith({
@@ -41,6 +43,7 @@ class FoodRecordEntity {
     double? protein,
     double? carbs,
     double? fat,
+    String? barcode,
   }) {
     return FoodRecordEntity(
       id: id ?? this.id,
@@ -54,6 +57,7 @@ class FoodRecordEntity {
       protein: protein ?? this.protein,
       carbs: carbs ?? this.carbs,
       fat: fat ?? this.fat,
+      barcode: barcode ?? this.barcode,
     );
   }
 }

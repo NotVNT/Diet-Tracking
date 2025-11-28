@@ -92,6 +92,10 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
         foodName: foodName,
         calories: product.calories,
         description: description.trim(),
+        protein: product.protein,
+        carbs: product.carbohydrates,
+        fat: product.fat,
+        barcode: barcodeValue,
       );
 
       emit(BarcodeSavedSuccess('Scanned: $foodName'));
@@ -107,7 +111,9 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
           description:
               'Barcode: $barcodeValue\n\nCould not find details from OpenFoodFacts',
         );
-        emit(BarcodeSavedSuccess('Saved code: $barcodeValue (Details not found)'));
+        emit(
+          BarcodeSavedSuccess('Saved code: $barcodeValue (Details not found)'),
+        );
       } catch (_) {
         emit(const BarcodeError('Error saving product'));
       }
@@ -132,6 +138,10 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
         foodName: foodName,
         calories: product.calories,
         description: description.trim(),
+        protein: product.protein,
+        carbs: product.carbohydrates,
+        fat: product.fat,
+        barcode: barcodeValue,
       );
 
       emit(BarcodeSavedSuccess('Scanned: $foodName'));
@@ -147,7 +157,9 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
           description:
               'Barcode: $barcodeValue\n\nCould not find details from OpenFoodFacts',
         );
-        emit(BarcodeSavedSuccess('Saved code: $barcodeValue (Details not found)'));
+        emit(
+          BarcodeSavedSuccess('Saved code: $barcodeValue (Details not found)'),
+        );
       } catch (_) {
         emit(const BarcodeError('Error saving product'));
       }
@@ -178,10 +190,12 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
 
       final description = _buildDescription(product);
 
-      emit(BarcodeDescriptionBuilt(
-        description: description.trim(),
-        product: product,
-      ));
+      emit(
+        BarcodeDescriptionBuilt(
+          description: description.trim(),
+          product: product,
+        ),
+      );
     } catch (e) {
       emit(const BarcodeError('Could not build description'));
     }
@@ -205,6 +219,10 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
         foodName: foodName,
         calories: product.calories,
         description: description.trim(),
+        protein: product.protein,
+        carbs: product.carbohydrates,
+        fat: product.fat,
+        barcode: product.barcode,
       );
 
       emit(BarcodeSavedSuccess('Scanned: $foodName'));
@@ -213,6 +231,7 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
       emit(const BarcodeError('Error saving product'));
     }
   }
+
   String _buildFoodName(BarcodeProduct product) {
     String foodName = product.productName ?? 'Product ${product.barcode}';
     if (product.brands != null && product.brands!.isNotEmpty) {
@@ -224,18 +243,21 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
   String _buildDescription(BarcodeProduct product) {
     String description = 'Barcode: ${product.barcode}\n\n';
     if (product.calories != null) {
-      description += '🔥 Calories: ${product.calories!.toStringAsFixed(0)} kcal\n';
+      description +=
+          '🔥 Calories: ${product.calories!.toStringAsFixed(0)} kcal\n';
     }
     if (product.protein != null) {
       description += '🥩 Protein: ${product.protein!.toStringAsFixed(1)}g\n';
     }
     if (product.carbohydrates != null) {
-      description += '🍚 Carbs: ${product.carbohydrates!.toStringAsFixed(1)}g\n';
+      description +=
+          '🍚 Carbs: ${product.carbohydrates!.toStringAsFixed(1)}g\n';
     }
     if (product.fat != null) {
       description += '🧈 Fat: ${product.fat!.toStringAsFixed(1)}g\n';
     }
-    if (product.ingredientsText != null && product.ingredientsText!.isNotEmpty) {
+    if (product.ingredientsText != null &&
+        product.ingredientsText!.isNotEmpty) {
       description += '\n📝 Ingredients: ${product.ingredientsText}';
     }
     return description;

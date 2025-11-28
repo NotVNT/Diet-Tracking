@@ -2,22 +2,30 @@ import 'package:flutter/material.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
-import '../components/meal_list_item.dart';
-import '../cards/food_analysis_card.dart';
+import '../food_scanned/food_scanned_card.dart';
+import '../components/empty_state_card.dart';
 
 /// Widget to display recently logged photos and barcode scans
-class RecentItemsSection extends StatelessWidget {
+class RecentlyLoggedSection extends StatelessWidget {
   final List<FoodRecordEntity> photoItems;
   final List<FoodRecordEntity> barcodeItems;
   final VoidCallback? onViewAllPhotos;
   final Function(FoodRecordEntity)? onItemTap;
+  final Function(FoodRecordEntity)? onDelete;
 
-  const RecentItemsSection({
+  /// Optional subtitle for empty state. If null, localized default text is used.
+  final String? emptySubtitle;
+  final VoidCallback? onEmptyTap;
+
+  const RecentlyLoggedSection({
     super.key,
     required this.photoItems,
     required this.barcodeItems,
     this.onViewAllPhotos,
     this.onItemTap,
+    this.onDelete,
+    this.emptySubtitle,
+    this.onEmptyTap,
   });
 
   @override
@@ -26,16 +34,27 @@ class RecentItemsSection extends StatelessWidget {
     final localizations = AppLocalizations.of(context);
     final bool showPhotos = photoItems.isNotEmpty;
     final bool showBarcodes = barcodeItems.isNotEmpty;
+    final bool hasAny = showPhotos || showBarcodes;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeader(context, responsive, localizations),
         SizedBox(height: responsive.height(12)),
-        if (showPhotos) _buildPhotoSection(context, responsive),
-        if (showPhotos && showBarcodes)
-          SizedBox(height: responsive.height(16)), // Spacer between sections
-        if (showBarcodes) _buildBarcodeSection(context, responsive),
+        if (!hasAny)
+          EmptyStateCard(
+            title: localizations?.recentlyLoggedEmpty ?? "You haven't uploaded any food",
+            subtitle: emptySubtitle ??
+                (localizations?.recentlyLoggedSubtitle ??
+                    'Start tracking your meals by taking a quick picture'),
+            onTap: onEmptyTap,
+          )
+        else ...[
+          if (showPhotos) _buildPhotoSection(context, responsive),
+          if (showPhotos && showBarcodes)
+            SizedBox(height: responsive.height(16)), // Spacer between sections
+          if (showBarcodes) _buildBarcodeSection(context, responsive),
+        ],
       ],
     );
   }
@@ -87,7 +106,10 @@ class RecentItemsSection extends StatelessWidget {
           final food = photoItems[foodIndex];
           return GestureDetector(
             onTap: onItemTap != null ? () => onItemTap!(food) : null,
-            child: FoodAnalysisCard(foodRecord: food),
+            child: FoodScannedCard(
+              foodRecord: food,
+              onDelete: onDelete,
+            ),
           );
         },
       ),
@@ -107,9 +129,12 @@ class RecentItemsSection extends StatelessWidget {
           }
           final foodIndex = index ~/ 2;
           final food = barcodeItems[foodIndex];
-          return MealListItem(
-            food: food,
+          return GestureDetector(
             onTap: onItemTap != null ? () => onItemTap!(food) : null,
+            child: FoodScannedCard(
+              foodRecord: food,
+              showAddButton: false,
+            ),
           );
         },
       ),

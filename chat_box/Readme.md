@@ -4,7 +4,7 @@ kích hoạt môi trường
   .\.venv\Scripts\Activate.ps1
 Tải thư viện yêu cầu
   pip install -r requirements.txt
-
+ uvicorn nutrient_regressor:app --host 192.168.1.140 --port 8000 --reload
 uvicorn barcode:app --host 0.0.0.0 --port 8000 --reload
 tải thư viện uvicorn về, sau đó mở terminal ngay ở mục chat_box, terminal phải có đường mục giống thế này-"(.venv) C:\Users\LENOVO\myfilebro\diet-tracking\chat_box>",
 sau đó nhập lệnh uvicorn main:app --reload là server sẽ chạy

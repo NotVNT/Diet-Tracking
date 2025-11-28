@@ -62,28 +62,6 @@ class SearchFilterBar extends StatelessWidget {
             ),
           ),
         ),
-        
-        // Filter button
-        if (showFilterButton) ...[
-          SizedBox(width: responsive.width(12)),
-          InkWell(
-            onTap: onFilterTapped,
-            borderRadius: BorderRadius.circular(responsive.radius(12)),
-            child: Container(
-              height: responsive.height(48),
-              width: responsive.width(48),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
-                borderRadius: BorderRadius.circular(responsive.radius(12)),
-              ),
-              child: Icon(
-                Icons.tune,
-                size: responsive.iconSize(24),
-                color: theme.colorScheme.onPrimary,
-              ),
-            ),
-          ),
-        ],
       ],
     );
   }

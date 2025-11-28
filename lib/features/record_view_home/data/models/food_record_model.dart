@@ -11,6 +11,10 @@ class FoodRecordModel extends FoodRecordEntity {
     super.recordType,
     super.reason,
     super.nutritionDetails,
+    super.protein,
+    super.carbs,
+    super.fat,
+    super.barcode,
   });
 
   factory FoodRecordModel.fromJson(Map<String, dynamic> json) {
@@ -38,6 +42,10 @@ class FoodRecordModel extends FoodRecordEntity {
       reason: json['reason'] as String?,
       nutritionDetails:
           json['nutritionDetails'] as String? ?? json['description'] as String?,
+      protein: (json['protein'] as num?)?.toDouble(),
+      carbs: (json['carbs'] as num?)?.toDouble(),
+      fat: (json['fat'] as num?)?.toDouble(),
+      barcode: json['barcode'] as String?,
     );
   }
 
@@ -61,6 +69,10 @@ class FoodRecordModel extends FoodRecordEntity {
       'recordType': recordType.name,
       if (reason != null) 'reason': reason,
       if (nutritionDetails != null) 'nutritionDetails': nutritionDetails,
+      if (protein != null) 'protein': protein,
+      if (carbs != null) 'carbs': carbs,
+      if (fat != null) 'fat': fat,
+      if (barcode != null) 'barcode': barcode,
     };
   }
 
@@ -74,6 +86,10 @@ class FoodRecordModel extends FoodRecordEntity {
       recordType: entity.recordType,
       reason: entity.reason,
       nutritionDetails: entity.nutritionDetails,
+      protein: entity.protein,
+      carbs: entity.carbs,
+      fat: entity.fat,
+      barcode: entity.barcode,
     );
   }
 }
