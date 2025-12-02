@@ -2352,6 +2352,36 @@ abstract class AppLocalizations {
   /// **'Reset'**
   String get reset;
 
+  /// No description provided for @dateRangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Date range'**
+  String get dateRangeTitle;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @last7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 days'**
+  String get last7Days;
+
+  /// No description provided for @customRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom range'**
+  String get customRange;
+
   /// No description provided for @mealsListTitle.
   ///
   /// In en, this message translates to:
@@ -2387,6 +2417,37 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete \"{foodName}\" from records?'**
   String deleteMealMessage(String foodName);
+
+
+  /// No description provided for @mealDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal deleted successfully'**
+  String get mealDeletedSuccessfully;
+
+  /// No description provided for @deleteMealFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete meal'**
+  String get deleteMealFailed;
+
+  /// No description provided for @sourceTagBotSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Chatbot suggestion'**
+  String get sourceTagBotSuggestion;
+
+  /// No description provided for @sourceTagScanned.
+  ///
+  /// In en, this message translates to:
+  /// **'From scan/photo'**
+  String get sourceTagScanned;
+
+  /// No description provided for @sourceTagManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual input'**
+  String get sourceTagManual;
 
   /// No description provided for @initializing.
   ///

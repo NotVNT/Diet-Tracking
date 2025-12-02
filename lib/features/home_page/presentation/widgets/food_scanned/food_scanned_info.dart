@@ -13,12 +13,21 @@ class FoodScannedInfo extends StatelessWidget {
   final FoodRecordEntity record;
   final bool showTime;
   final bool emphasizeCalories;
+  // When true, if record seems to come from bot suggestion (has nutritionDetails), prefix calories with '~'
+  final bool approxForBotSuggestion;
+  // Optional suffix for calories text (e.g., localized "calories"), default to 'kcal' when null
+  final String? caloriesSuffix;
+  // Control displaying macro chips to allow reuse without changing UI elsewhere
+  final bool showMacros;
 
   const FoodScannedInfo({
     super.key,
     required this.record,
     this.showTime = true,
     this.emphasizeCalories = true,
+    this.approxForBotSuggestion = false,
+    this.caloriesSuffix,
+    this.showMacros = true,
   });
 
   String _formatTime(DateTime date) {
@@ -65,35 +74,37 @@ class FoodScannedInfo extends StatelessWidget {
             const Icon(Icons.local_fire_department, color: Colors.orange, size: 16),
             const SizedBox(width: 4),
             Text(
-              '${record.calories.toStringAsFixed(0)} kcal',
+              '${(approxForBotSuggestion && (record.nutritionDetails?.trim().isNotEmpty == true)) ? "~" : ""}${record.calories.toStringAsFixed(0)} ${caloriesSuffix ?? 'kcal'}',
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: emphasizeCalories ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 6),
-        Row(
-          children: [
-            _MacroChip(
-              color: Colors.red,
-              icon: Icons.egg_alt_outlined,
-              label: _formatGram(record.protein),
-            ),
-            const SizedBox(width: 12),
-            _MacroChip(
-              color: Colors.green,
-              icon: Icons.grass,
-              label: _formatGram(record.carbs),
-            ),
-            const SizedBox(width: 12),
-            _MacroChip(
-              color: Colors.blue,
-              icon: Icons.opacity,
-              label: _formatGram(record.fat),
-            ),
-          ],
-        ),
+        if (showMacros) ...[
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              _MacroChip(
+                color: Colors.red,
+                icon: Icons.egg_alt_outlined,
+                label: _formatGram(record.protein),
+              ),
+              const SizedBox(width: 12),
+              _MacroChip(
+                color: Colors.green,
+                icon: Icons.grass,
+                label: _formatGram(record.carbs),
+              ),
+              const SizedBox(width: 12),
+              _MacroChip(
+                color: Colors.blue,
+                icon: Icons.opacity,
+                label: _formatGram(record.fat),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }
@@ -114,13 +125,13 @@ class _TimeBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.6),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
         text,
         style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.onSurface.withOpacity(0.7),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           fontWeight: FontWeight.w600,
         ),
       ),

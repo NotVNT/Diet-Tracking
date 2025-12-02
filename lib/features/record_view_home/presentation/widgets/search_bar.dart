@@ -11,6 +11,7 @@ class SearchBar extends StatefulWidget {
   final String? hintText;
   final Duration debounce;
   final bool autofocus;
+  final Widget? trailing;
 
   const SearchBar({
     super.key,
@@ -20,6 +21,7 @@ class SearchBar extends StatefulWidget {
     this.hintText,
     this.debounce = const Duration(milliseconds: 350),
     this.autofocus = false,
+    this.trailing,
   });
 
   @override
@@ -126,7 +128,10 @@ class _SearchBarState extends State<SearchBar> {
             ),
           ),
         ),
-
+        if (widget.trailing != null) ...[
+          SizedBox(width: responsive.width(8)),
+          widget.trailing!,
+        ]
       ],
     );
   }
