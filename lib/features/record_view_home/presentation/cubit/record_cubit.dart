@@ -124,7 +124,11 @@ class RecordCubit extends Cubit<RecordState> {
       final end = _dateRange!.end;
       result = result.where((r) {
         final d = r.date.toLocal();
-        return !d.isBefore(start) && !d.isAfter(end);
+        // Compare dates at the day level to avoid time/timezone issues
+        final recordDay = DateTime(d.year, d.month, d.day);
+        final startDay = DateTime(start.year, start.month, start.day);
+        final endDay = DateTime(end.year, end.month, end.day);
+        return !recordDay.isBefore(startDay) && !recordDay.isAfter(endDay);
       });
     }
 
