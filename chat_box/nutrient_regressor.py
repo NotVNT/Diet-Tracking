@@ -1,18 +1,14 @@
-import pandas as pd
 import os
 import torch
 import timm
 import torch.nn as nn
-import torch.optim as optim
 import torchvision.transforms as T
 from sklearn.metrics.pairwise import cosine_similarity
 from PIL import Image
 from io import BytesIO
 import numpy as np
 import base64
-import io
-from pinecone import Pinecone, ServerlessSpec
-import requests
+from pinecone import Pinecone
 from fastapi import FastAPI, UploadFile, File
 from dotenv import load_dotenv
 import os
@@ -270,7 +266,7 @@ model = timm.create_model("efficientnet_lite0", pretrained=True)
 vision_model = load_feature_extractor(model).to(device)
 regressor = NutrientRegressor(input_dim=1280, output_dim=5).to(device)
 
-regressor.load_state_dict(torch.load("diet-tracking/chat_box/model_weight/nutrient_regressor_weights (1).pth", map_location=device))
+regressor.load_state_dict(torch.load("model_weight/nutrient_regressor_weights (1).pth", map_location=device))
 regressor.eval()
 
 predictor = NutrientPredictor(vision_model, regressor).to(device)
@@ -283,6 +279,7 @@ transform = get_image_transform()
 
 @app.post("/scan_food")
 async def scan_food(file: UploadFile = File(...)):
+    ##Logic mới là nếu người dùng gửi bức ảnh là không phải là thực phẩm thì endpoint sẽ trả về là NOT_FOOD, còn lại vẫn như cũ
     image_bytes = await file.read()
     img_base64 = base64.b64encode(image_bytes).decode('utf-8')
     db_emb = np.load("embeddings.npy")
