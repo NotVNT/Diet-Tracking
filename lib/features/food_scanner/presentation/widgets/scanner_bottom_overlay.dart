@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/models/food_scanner_models.dart';
+import '../../data/models/food_scanner_models.dart';
 import 'scanner_widgets.dart';
 
 /// Bottom overlay with gradient background and scanner controls.

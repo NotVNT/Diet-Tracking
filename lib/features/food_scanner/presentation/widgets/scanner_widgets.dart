@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/models/food_scanner_models.dart';
+import '../../data/models/food_scanner_models.dart';
 import 'animated_scanner_background.dart';
 import 'scanner_constants.dart';
 import 'scanner_styles.dart';

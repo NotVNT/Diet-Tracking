@@ -1,7 +1,7 @@
 import 'package:diet_tracking_project/features/food_scanner/di/food_scanner_injector.dart';
 import '../controller/scanner_controller.dart';
 import 'package:diet_tracking_project/features/food_scanner/di/scanner_dependency_resolver.dart';
-import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/food_scanner_page_widget/scanner_view.dart';
+import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/scanner_view.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_state.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_bloc.dart' as cam;

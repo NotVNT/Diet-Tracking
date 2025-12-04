@@ -2141,12 +2141,6 @@ abstract class AppLocalizations {
   /// **'Gallery'**
   String get foodScannerActionGallery;
 
-  /// No description provided for @foodScannerScanningBarcode.
-  ///
-  /// In en, this message translates to:
-  /// **'Scanning barcode...'**
-  String get foodScannerScanningBarcode;
-
   /// No description provided for @foodScannerHelpTitle.
   ///
   /// In en, this message translates to:
