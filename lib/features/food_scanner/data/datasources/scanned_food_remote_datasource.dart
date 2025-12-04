@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../domain/entities/scanned_food_entity.dart';
-import '../models/scanned_food_model.dart';
+import '../models/food_scanner_models.dart';
 
 /// Remote datasource that stores scanned food photos under the current user's document.
 class ScannedFoodRemoteDataSource {
   static const String _usersCollection = 'users';
-  static const String _dietField = 'diet';
 
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
@@ -28,33 +26,56 @@ class ScannedFoodRemoteDataSource {
     return uid;
   }
 
-  DocumentReference<Map<String, dynamic>> _userDoc(String uid) {
-    return _firestore.collection(_usersCollection).doc(uid);
-  }
-
   Future<void> saveScannedFood(ScannedFoodModel food) async {
     final uid = await _requireUid();
-    final docRef = _userDoc(uid);
 
-    await _firestore.runTransaction((transaction) async {
-      final snapshot = await transaction.get(docRef);
-      final existing = _readDietUrls(snapshot.data());
+    // Save to the 'food_records' subcollection to unify data
+    final docRef = _firestore
+        .collection(_usersCollection)
+        .doc(uid)
+        .collection(
+          'food_records',
+        ) // Match the subcollection used by the chatbot
+        .doc(food.id); // Use the model's ID as the document ID
 
-      existing.removeWhere((url) => url == food.imagePath);
-      existing.insert(0, food.imagePath);
+    final foodJson = food.toJson();
+    foodJson.remove('id'); // Don't save ID inside the document itself
 
-      if (existing.length > maxStoredItems) {
-        existing.removeRange(maxStoredItems, existing.length);
-      }
+    // Add a 'source' field to distinguish scanned items
+    foodJson['source'] = 'scanner';
 
-      transaction.set(docRef, {_dietField: existing}, SetOptions(merge: true));
-    });
+    // Rename 'scanDate' to 'date' to match the FoodRecordEntity
+    if (foodJson.containsKey('scanDate')) {
+      foodJson['date'] = foodJson['scanDate'];
+      foodJson.remove('scanDate');
+    }
+
+    // Rename 'foodName' if it exists, to match FoodRecordEntity
+    if (foodJson.containsKey('name')) {
+      foodJson['foodName'] = foodJson['name'];
+      foodJson.remove('name');
+    }
+
+    await docRef.set(foodJson, SetOptions(merge: true));
   }
 
   Future<List<ScannedFoodModel>> getAllScannedFoods() async {
     final uid = await _requireUid();
-    final snapshot = await _userDoc(uid).get();
-    return _readDietModels(snapshot.data());
+    final querySnapshot = await _firestore
+        .collection(_usersCollection)
+        .doc(uid)
+        .collection('food_records')
+        .orderBy('date', descending: true)
+        .get();
+
+    return querySnapshot.docs.map((doc) {
+      final data = doc.data();
+      // Add default values for fields that might be missing
+      data['id'] = doc.id;
+      data.putIfAbsent('foodName', () => 'Scanned Item');
+      data.putIfAbsent('calories', () => 0.0);
+      return ScannedFoodModel.fromRecordJson(data);
+    }).toList();
   }
 
   Future<List<ScannedFoodModel>> getRecentScannedFoods({int limit = 10}) async {
@@ -64,136 +85,36 @@ class ScannedFoodRemoteDataSource {
 
   Future<void> deleteScannedFood(String id) async {
     final uid = await _requireUid();
-    final docRef = _userDoc(uid);
-
-    await _firestore.runTransaction((transaction) async {
-      final snapshot = await transaction.get(docRef);
-      final rawList = _rawDietList(snapshot.data());
-      final filtered = <String>[];
-
-      for (final entry in rawList) {
-        final url = _extractImageUrl(entry);
-        if (url == null) continue;
-        final entryId = _extractId(entry);
-        if (entryId == id || url == id) {
-          continue;
-        }
-        if (!filtered.contains(url)) {
-          filtered.add(url);
-        }
-      }
-
-      transaction.set(docRef, {_dietField: filtered}, SetOptions(merge: true));
-    });
+    await _firestore
+        .collection(_usersCollection)
+        .doc(uid)
+        .collection('food_records')
+        .doc(id)
+        .delete();
   }
 
   Future<void> clearAllScannedFoods() async {
     final uid = await _requireUid();
-    await _userDoc(uid).set({_dietField: []}, SetOptions(merge: true));
+    final snapshot = await _firestore
+        .collection(_usersCollection)
+        .doc(uid)
+        .collection('food_records')
+        .get();
+
+    final batch = _firestore.batch();
+    for (final doc in snapshot.docs) {
+      batch.delete(doc.reference);
+    }
+    await batch.commit();
   }
 
   Future<void> markAsProcessed(String id) async {
     final uid = await _requireUid();
-    final docRef = _userDoc(uid);
-
-    await _firestore.runTransaction((transaction) async {
-      final snapshot = await transaction.get(docRef);
-      final rawList = _rawDietList(snapshot.data());
-      bool updated = false;
-
-      final nextList = rawList.map((entry) {
-        if (entry is Map<String, dynamic> && entry['id'] == id) {
-          updated = true;
-          return {...entry, 'isProcessed': true};
-        }
-        return entry;
-      }).toList();
-
-      if (updated) {
-        transaction.set(docRef, {
-          _dietField: nextList,
-        }, SetOptions(merge: true));
-      }
-    });
-  }
-
-  List<dynamic> _rawDietList(Map<String, dynamic>? rawData) {
-    if (rawData == null) return <dynamic>[];
-    final dynamic rawList = rawData[_dietField];
-    if (rawList is! List) return <dynamic>[];
-    return List<dynamic>.from(rawList);
-  }
-
-  List<String> _readDietUrls(Map<String, dynamic>? rawData) {
-    final rawList = _rawDietList(rawData);
-    return _normalizeDietUrls(rawList);
-  }
-
-  List<String> _normalizeDietUrls(List<dynamic> rawList) {
-    final urls = <String>[];
-    final seen = <String>{};
-    for (final entry in rawList) {
-      final url = _extractImageUrl(entry);
-      if (url != null && seen.add(url)) {
-        urls.add(url);
-      }
-    }
-    return urls;
-  }
-
-  List<ScannedFoodModel> _readDietModels(Map<String, dynamic>? rawData) {
-    final rawList = _rawDietList(rawData);
-    final models = <ScannedFoodModel>[];
-    for (var i = 0; i < rawList.length; i++) {
-      final model = _modelFromEntry(rawList[i], i);
-      if (model != null) {
-        models.add(model);
-      }
-    }
-    return models;
-  }
-
-  ScannedFoodModel? _modelFromEntry(dynamic entry, int index) {
-    if (entry is Map) {
-      final map = Map<String, dynamic>.from(entry.cast<String, dynamic>());
-      return ScannedFoodModel.fromJson(map);
-    }
-
-    final url = _extractImageUrl(entry);
-    if (url == null) return null;
-
-    return ScannedFoodModel(
-      id: url,
-      imagePath: url,
-      scanType: ScanType.food,
-      scanDate: DateTime.now().subtract(Duration(minutes: index)),
-      isProcessed: false,
-    );
-  }
-
-  String? _extractImageUrl(dynamic entry) {
-    if (entry is String) return entry;
-    if (entry is Map) {
-      final map = Map<String, dynamic>.from(entry.cast<String, dynamic>());
-      final imagePath = map['imagePath'] ?? map['imageUrl'];
-      if (imagePath is String && imagePath.isNotEmpty) {
-        return imagePath;
-      }
-    }
-    return null;
-  }
-
-  String? _extractId(dynamic entry) {
-    if (entry is Map) {
-      final map = Map<String, dynamic>.from(entry.cast<String, dynamic>());
-      final id = map['id'];
-      if (id is String) {
-        return id;
-      }
-    }
-    if (entry is String) {
-      return entry;
-    }
-    return null;
+    await _firestore
+        .collection(_usersCollection)
+        .doc(uid)
+        .collection('food_records')
+        .doc(id)
+        .update({'isProcessed': true});
   }
 }

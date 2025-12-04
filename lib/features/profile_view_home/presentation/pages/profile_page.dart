@@ -12,6 +12,7 @@ import 'settings_page.dart';
 import 'data_sync_page.dart';
 import 'support_page.dart';
 import '../../../../common/custom_app_bar.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Profile page with Clean Architecture
 class ProfilePage extends StatefulWidget {
@@ -48,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future<void> _pickAndUploadImage() async {
+    Future<void> _pickAndUploadImage() async {
     try {
       final XFile? picked = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -59,10 +60,16 @@ class _ProfilePageState extends State<ProfilePage> {
       await widget.profileProvider.uploadAvatar(File(picked.path));
 
       if (!mounted) return;
-      debugPrint('Avatar updated successfully');
+            SnackBarHelper.showSuccess(
+        context,
+        AppLocalizations.of(context)!.profileAvatarUpdated,
+      );
     } catch (e) {
       if (!mounted) return;
-      debugPrint('Cannot update avatar: $e');
+            SnackBarHelper.showError(
+        context,
+        AppLocalizations.of(context)!.profileCannotUpdateAvatar,
+      );
     }
   }
 
@@ -288,7 +295,7 @@ class _MenuCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.04),
+            color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),

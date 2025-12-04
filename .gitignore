@@ -44,3 +44,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Python virtual environment
+.venv
+venv/
+chat_box/.venv/
+chat_box/venv/

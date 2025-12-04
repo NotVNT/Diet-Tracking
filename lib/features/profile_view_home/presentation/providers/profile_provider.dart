@@ -6,6 +6,7 @@ import '../../domain/usecases/upload_avatar_usecase.dart';
 import '../../domain/usecases/sign_out_usecase.dart';
 import '../../domain/usecases/update_user_profile_usecase.dart';
 import '../../../../model/user.dart';
+import '../../../../services/user_avatar_service.dart';
 
 /// Provider for managing profile state
 class ProfileProvider extends ChangeNotifier {
@@ -59,9 +60,11 @@ class ProfileProvider extends ChangeNotifier {
     }
 
     try {
-    final String avatarUrl =
+      final String avatarUrl =
           await _uploadAvatarUseCase.call(imageFile, _profile!.uid);
-    _profile = _profile?.copyWith(avatars: avatarUrl);
+      _profile = _profile?.copyWith(avatars: avatarUrl);
+      // keep chat avatar in sync without reopening the page
+      UserAvatarService.instance.updateAvatarUrl(avatarUrl);
       _error = null;
       notifyListeners();
     } catch (e) {

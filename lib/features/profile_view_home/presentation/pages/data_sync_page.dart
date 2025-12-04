@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../common/custom_app_bar.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Data and synchronization settings page
 class DataSyncPage extends StatefulWidget {
@@ -44,10 +45,13 @@ class _DataSyncPageState extends State<DataSyncPage> {
             child: Text(AppLocalizations.of(context)!.dataSyncBackupDialogCancel),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              debugPrint('Backup in progress');
-            },
+                          onPressed: () {
+                Navigator.pop(context);
+                SnackBarHelper.showInfo(
+                  context,
+                  AppLocalizations.of(context)!.dataSyncBackupInProgress,
+                );
+              },
             child: Text(AppLocalizations.of(context)!.dataSyncBackupDialogConfirm),
           ),
         ],
@@ -67,15 +71,13 @@ class _DataSyncPageState extends State<DataSyncPage> {
             child: Text(AppLocalizations.of(context)!.dataSyncClearCacheDialogCancel),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.dataSyncClearCacheSuccess),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            },
+                          onPressed: () {
+                Navigator.pop(context);
+                SnackBarHelper.showSuccess(
+                  context,
+                  AppLocalizations.of(context)!.dataSyncClearCacheSuccess,
+                );
+              },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
@@ -94,6 +96,7 @@ class _DataSyncPageState extends State<DataSyncPage> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.dataSyncTitle,
         showBackButton: true,
+        showNotificationBell: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -156,7 +159,7 @@ class _DataSyncPageState extends State<DataSyncPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.04),
+            color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

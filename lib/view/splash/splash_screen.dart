@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../features/home_page/presentation/pages/home_page.dart';
 import '../../view/on_boarding/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -45,9 +47,11 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _goToHome() {
     if (!mounted) return;
+    final user = FirebaseAuth.instance.currentUser;
+    final destination = user == null ? const WelcomeScreen() : const HomePage();
     Navigator.of(
       context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const WelcomeScreen()));
+    ).pushReplacement(MaterialPageRoute(builder: (_) => destination));
   }
 
   @override

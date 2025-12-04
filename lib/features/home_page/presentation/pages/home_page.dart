@@ -3,22 +3,23 @@ import 'package:provider/provider.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../responsive/responsive.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../common/permission_service.dart';
 import '../providers/home_provider.dart';
-import '../widgets/custom_floating_action_button.dart';
-import '../widgets/custom_bottom_navigation_bar.dart';
-import '../widgets/week_calendar_widget.dart';
-import '../widgets/search_filter_bar.dart';
-import '../widgets/filter_bottom_sheet.dart';
-import '../widgets/calorie_goal_card.dart';
-import '../widgets/recently_logged_section.dart';
-import '../../../food_scanner/domain/entities/scanned_food_entity.dart';
-import '../../../food_scanner/domain/repositories/scanned_food_repository.dart';
-import '../../../food_scanner/data/datasources/scanned_food_local_datasource.dart';
-import '../../../food_scanner/data/repositories/scanned_food_repository_impl.dart';
+import '../widgets/navigation/custom_floating_action_button.dart';
+import '../widgets/navigation/custom_bottom_navigation_bar.dart';
+import '../widgets/sections/week_calendar_widget.dart';
+import '../widgets/components/search_filter_bar.dart';
+import '../widgets/navigation/calorie_goal_card.dart';
+import '../widgets/sections/recent_items_section.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../../../record_view_home/presentation/cubit/record_cubit.dart';
+import '../../../record_view_home/presentation/cubit/record_state.dart';
 import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
-import '../../../food_scanner/presentation/pages/scanned_food_detail_page.dart';
-import 'home_page_config.dart';
+import '../../../food_scanner/presentation/widgets/scanned_food_detail_widgets/scanned_food_detail.dart';
+import '../../../../config/home_page_config.dart';
+import '../../../../common/snackbar_helper.dart';
+import '../../../../services/notification_service.dart';
+import '../../../../services/permission_service.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -40,38 +41,18 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   Map<String, dynamic>? _activeFilters;
-  late final ScannedFoodRepository _scannedFoodRepository;
-  List<ScannedFoodEntity> _scannedFoods = [];
 
   @override
   void initState() {
     super.initState();
-    _scannedFoodRepository = ScannedFoodRepositoryImpl(
-      localDataSource: ScannedFoodLocalDataSource(),
-    );
-    _loadScannedFoods();
-  }
+    // Initial load
+    context.read<RecordCubit>().loadFoodRecords();
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Reload scanned foods when returning to this page
-    _loadScannedFoods();
-  }
-
-  Future<void> _loadScannedFoods() async {
-    try {
-      final foods = await _scannedFoodRepository.getRecentScannedFoods(
-        limit: 6,
-      );
-      if (mounted) {
-        setState(() {
-          _scannedFoods = foods;
-        });
-      }
-    } catch (e) {
-      debugPrint('Unable to load scanned foods: $e');
-    }
+    // Schedule a one-time water reminder after 30s when user accesses Home
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await PermissionService().requestNotificationPermission();
+      await LocalNotificationService().scheduleWaterReminderOncePerSession();
+    });
   }
 
   @override
@@ -88,19 +69,6 @@ class _HomePageState extends State<HomePage> {
     debugPrint('Search query: $query');
   }
 
-  void _onFilterTapped() {
-    showFilterBottomSheet(
-      context,
-      onApplyFilter: (filters) {
-        setState(() {
-          _activeFilters = filters;
-        });
-        debugPrint('Applied filters: $filters');
-        // TODO: Implement filter logic
-      },
-    );
-  }
-
   void _onDateSelected(DateTime date) {
     setState(() {
       _selectedDate = date;
@@ -115,18 +83,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Handle picture tap - navigate to detail page
-  Future<void> _onPictureTap(ScannedFoodEntity food) async {
-    final shouldDelete = await Navigator.of(context).push<bool>(
+  Future<void> _onPictureTap(FoodRecordEntity food) async {
+    final cubit = context.read<RecordCubit>();
+    await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => ScannedFoodDetailPage(scannedFood: food),
+        builder: (_) => BlocProvider.value(
+          value: cubit,
+          child: ScannedFoodDetailPage(scannedFood: food),
+        ),
       ),
     );
-
-    // If user deleted the photo, reload the list
-    if (shouldDelete == true) {
-      await _scannedFoodRepository.deleteScannedFood(food.id);
-      await _loadScannedFoods();
-    }
+    // The UI will automatically update via the BlocBuilder listening to RecordCubit.
   }
 
   @override
@@ -137,12 +104,12 @@ class _HomePageState extends State<HomePage> {
 
         return Scaffold(
           body: homeProvider.currentIndex == HomePageConfig.homeIndex
-              ? _buildHomeContent(context)
+              ? _buildHomeContent(context, homeProvider)
               : pages[homeProvider.currentIndex],
           floatingActionButton: CustomFloatingActionButton(
             onRecordSelected: () => _navigateToRecord(homeProvider),
             onChatBotSelected: () => _navigateToChatBot(homeProvider),
-            onScanFoodSelected: () => _onScanFoodTapped(),
+            onScanFoodSelected: () => _onScanFoodTapped(homeProvider),
             onReportSelected: () => _onReportTapped(),
           ),
           floatingActionButtonLocation:
@@ -157,85 +124,98 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Build home content
-  Widget _buildHomeContent(BuildContext context) {
+  Widget _buildHomeContent(BuildContext context, HomeProvider homeProvider) {
     final responsive = ResponsiveHelper.of(context);
     final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: CustomAppBar(title: localizations?.bottomNavHome ?? 'Trang chủ'),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(responsive.width(16)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              WeekCalendarWidget(
-                initialDate: _selectedDate,
-                onDateSelected: _onDateSelected,
-                showMonthYear: true,
-              ),
-              SizedBox(height: responsive.height(16)),
-              SearchFilterBar(
-                controller: _searchController,
-                onSearchChanged: _onSearchChanged,
-                onFilterTapped: _onFilterTapped,
-                showFilterButton: true,
-              ),
-              SizedBox(height: responsive.height(16)),
-              CalorieGoalCard(
-                nutritionInfo: NutritionInfo(
-                  calorieGoal: 2273,
-                  calorieConsumed: 0,
-                  proteinConsumed: 0,
-                  carbsConsumed: 0,
-                ),
-                onViewReport: _onViewReport,
-              ),
-              SizedBox(height: responsive.height(16)),
-              RecentlyLoggedSection(
-                scannedFoods: _scannedFoods,
-                onViewAll: () {
-                  // TODO: Navigate to full gallery view
-                  debugPrint('View all tapped');
-                },
-                onPictureTap: (food) => _onPictureTap(food),
-              ),
-              SizedBox(height: responsive.height(12)),
-              _buildContentPlaceholder(responsive),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+      body: BlocBuilder<RecordCubit, RecordState>(
+        buildWhen: (previous, current) {
+          // Only rebuild if the state is actually different
+          if (previous is RecordListLoaded && current is RecordListLoaded) {
+            return previous.records.length != current.records.length ||
+                previous.records.hashCode != current.records.hashCode;
+          }
+          return true;
+        },
+        builder: (context, state) {
+          if (state is RecordLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-  Widget _buildContentPlaceholder(ResponsiveHelper responsive) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: responsive.height(20)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              _searchQuery.isEmpty
-                  ? 'Danh sách bữa ăn sẽ hiển thị ở đây'
-                  : 'Tìm kiếm: $_searchQuery',
-              style: TextStyle(fontSize: responsive.fontSize(14)),
-            ),
-            if (_activeFilters != null) ...[
-              SizedBox(height: responsive.height(6)),
-              Text(
-                'Lọc: ${_activeFilters!['category']} | ${_activeFilters!['calorieMin']}-${_activeFilters!['calorieMax']} kcal',
-                style: TextStyle(
-                  fontSize: responsive.fontSize(11),
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withOpacity(0.6),
-                ),
+          List<FoodRecordEntity> foodRecords = [];
+          if (state is RecordListLoaded) {
+            foodRecords = state.records;
+          }
+
+          // Apply search and filter conditions
+          final String query = _searchQuery.trim().toLowerCase();
+          final double? minCalories = (_activeFilters != null && _activeFilters!['calorieMin'] is num)
+              ? (_activeFilters!['calorieMin'] as num).toDouble()
+              : null;
+          final double? maxCalories = (_activeFilters != null && _activeFilters!['calorieMax'] is num)
+              ? (_activeFilters!['calorieMax'] as num).toDouble()
+              : null;
+
+          final List<FoodRecordEntity> filteredRecords = foodRecords.where((food) {
+            final matchesSearch = query.isEmpty || food.foodName.toLowerCase().contains(query);
+            final matchesMin = minCalories == null || food.calories >= minCalories;
+            final matchesMax = maxCalories == null || food.calories <= maxCalories;
+            return matchesSearch && matchesMin && matchesMax;
+          }).toList();
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(responsive.width(16)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WeekCalendarWidget(
+                    initialDate: _selectedDate,
+                    onDateSelected: _onDateSelected,
+                    showMonthYear: true,
+                  ),
+                  SizedBox(height: responsive.height(16)),
+                  SearchFilterBar(
+                    controller: _searchController,
+                    onSearchChanged: _onSearchChanged,
+                    showFilterButton: true,
+                  ),
+                  SizedBox(height: responsive.height(16)),
+                  CalorieGoalCard(
+                    nutritionInfo: NutritionInfo(
+                      calorieGoal: 2273,
+                      calorieConsumed: 0,
+                      proteinConsumed: 0,
+                      carbsConsumed: 0,
+                    ),
+                    onViewReport: _onViewReport,
+                  ),
+                  SizedBox(height: responsive.height(16)),
+                  RecentItemsSection(
+                    photoItems: filteredRecords
+                        .where(
+                          (food) =>
+                              food.imagePath != null &&
+                              food.imagePath!.isNotEmpty &&
+                              food.recordType == RecordType.food,
+                        )
+                        .toList(),
+                    barcodeItems: filteredRecords
+                        .where((food) => food.recordType == RecordType.barcode)
+                        .toList(),
+                    onViewAllPhotos: () {
+                      debugPrint('View all photos tapped');
+                    },
+                    onItemTap: (food) => _onPictureTap(food),
+                  ),
+                  SizedBox(height: responsive.height(24)),
+                ],
               ),
-            ],
-          ],
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -250,21 +230,32 @@ class _HomePageState extends State<HomePage> {
     provider.setCurrentIndex(HomePageConfig.chatBotIndex);
   }
 
-  /// Handle scan food action
-  void _onScanFoodTapped() {
-    PermissionService.requestCameraPermission(
-      context,
-      onPermissionGranted: () async {
-        if (!mounted) return;
-        await Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const FoodScannerPage()),
+  /// Handle scan food action - Request camera permission first
+  void _onScanFoodTapped(HomeProvider homeProvider) async {
+    final hasPermission = await homeProvider.requestCameraPermission();
+
+    if (!hasPermission) {
+      if (mounted) {
+        final localizations = AppLocalizations.of(context);
+        SnackBarHelper.showWarning(
+          context,
+          localizations?.permissionCameraRequired ??
+              'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.',
         );
-        // Trigger a rebuild to refresh the scanned foods list
-        if (mounted) {
-          await _loadScannedFoods();
-        }
-      },
-    );
+      }
+      return;
+    }
+
+    // Permission granted, navigate to FoodScannerPage
+    if (mounted) {
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: (_) => const FoodScannerPage()));
+      // Trigger a rebuild to refresh the scanned foods list
+      if (mounted) {
+        context.read<RecordCubit>().loadFoodRecords();
+      }
+    }
   }
 
   /// Handle report action

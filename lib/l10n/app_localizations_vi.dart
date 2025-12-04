@@ -967,22 +967,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String get searchHint => 'Tìm kiếm';
 
   @override
-  String get calorieGoalTitle => 'Mục tiêu calo';
+  String get calorieCardBurnedToday => 'Lượng calo đã đốt hôm nay';
 
   @override
-  String get viewReport => 'Xem báo cáo';
+  String get nutrientProtein => 'Protein';
 
   @override
-  String get calorieRemaining => 'Calo còn lại';
+  String get nutrientFiber => 'Chất xơ';
 
   @override
-  String get goalLabel => 'Mục tiêu';
+  String get nutrientCarbs => 'Tinh bột';
 
   @override
-  String get consumedLabel => 'Đã nạp';
+  String get calorieCardCaloriesTaken => 'Calo đã nạp';
 
   @override
-  String get exerciseLabel => 'Tập luyện';
+  String get calorieCardViewReport => 'Xem báo cáo';
 
   @override
   String get notificationTitle => 'Thông báo';
@@ -1042,6 +1042,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerActionGallery => 'Thư viện';
 
   @override
+  String get foodScannerScanningBarcode => 'Đang quét mã vạch...';
+
+  @override
   String get foodScannerHelpTitle => 'Cách quét';
 
   @override
@@ -1070,23 +1073,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get foodScannerPlaceholderOpenGallery => 'Đang mở thư viện (sắp ra mắt)';
-
-  @override
-  String get foodScannerBarcodeScanning => 'Đang quét mã vạch...';
-
-  @override
-  String foodScannerBarcodeDetected(String value) {
-    return 'Đã phát hiện mã: $value';
-  }
-
-  @override
-  String get foodScannerBarcodeCopy => 'Sao chép mã';
-
-  @override
-  String get foodScannerBarcodeScanAgain => 'Quét lại';
-
-  @override
-  String get foodScannerBarcodeCopied => 'Đã sao chép mã vạch';
 
   @override
   String get recentlyLoggedTitle => 'Đã ghi nhận gần đây';
@@ -1123,4 +1109,123 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get aiFoodAnalysis => 'Phân tích món ăn bằng AI sắp ra mắt';
+
+  @override
+  String get permissionCameraRequired => 'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
+
+  @override
+  String get inboxTitle => 'Hộp thư đến';
+
+  @override
+  String get searchHintText => 'Tìm kiếm';
+
+  @override
+  String get filterTitle => 'Bộ lọc';
+
+  @override
+  String get category => 'Danh mục';
+
+  @override
+  String get all => 'Tất cả';
+
+  @override
+  String get breakfast => 'Sáng';
+
+  @override
+  String get lunch => 'Trưa';
+
+  @override
+  String get dinner => 'Tối';
+
+  @override
+  String get snack => 'Phụ';
+
+  @override
+  String get calorieRangeLabel => 'Khoảng calo';
+
+  @override
+  String get reset => 'Đặt lại';
+
+  @override
+  String get mealsListTitle => 'Danh sách bữa ăn';
+
+  @override
+  String get noMealsYet => 'Chưa có bữa ăn nào';
+
+  @override
+  String get startByScanningOrPhoto => 'Quét barcode hoặc chụp ảnh món ăn để bắt đầu';
+
+  @override
+  String get deleteMealTooltip => 'Xoá món ăn';
+
+  @override
+  String get deleteMealTitle => 'Xoá món ăn?';
+
+  @override
+  String deleteMealMessage(String foodName) {
+    return 'Bạn có chắc muốn xoá \"$foodName\" khỏi ghi nhận?';
+  }
+
+  @override
+  String get initializing => 'Đang khởi tạo...';
+
+  @override
+  String get selectedFood => 'Món ăn đã chọn';
+
+  @override
+  String get snackbarSuccessTitle => 'Thành công';
+
+  @override
+  String get snackbarErrorTitle => 'Lỗi';
+
+  @override
+  String get snackbarWarningTitle => 'Cảnh báo';
+
+  @override
+  String get snackbarInfoTitle => 'Thông tin';
+
+  @override
+  String get foodScannerCantCapturePhoto => 'Không thể chụp ảnh, vui lòng thử lại.';
+
+  @override
+  String get foodScannerCantOpenGallery => 'Không thể mở thư viện, vui lòng thử lại.';
+
+  @override
+  String get foodScannerNoBarcodeFoundSaving => 'Không tìm thấy mã trong ảnh. Đang lưu ảnh...';
+
+  @override
+  String get foodScannerNoCamera => 'Không tìm thấy camera trên thiết bị.';
+
+  @override
+  String get foodScannerSavePhotoSuccess => 'Đã lưu ảnh thành công';
+
+  @override
+  String get foodScannerUploadError => 'Không thể tải ảnh lên Cloudinary. Vui lòng thử lại.';
+
+  @override
+  String get foodScannerSavePhotoError => 'Đã lưu ảnh (lỗi khi tra cứu thông tin)';
+
+  @override
+  String foodScannerSavedBarcodeNoDetail(Object barcodeValue) {
+    return 'Đã lưu mã: $barcodeValue (Không tìm thấy chi tiết)';
+  }
+
+  @override
+  String get foodScannerCameraNotReady => 'Camera chưa sẵn sàng';
+
+  @override
+  String get foodScannerBarcodeError => 'Lỗi khi quét barcode';
+
+  @override
+  String foodScannerProductDefaultName(Object barcode) {
+    return 'Sản phẩm $barcode';
+  }
+
+  @override
+  String foodScannerScanned(Object foodName) {
+    return 'Đã quét: $foodName';
+  }
+
+  @override
+  String get foodScannerSaveProductError => 'Lỗi khi lưu sản phẩm';
 }

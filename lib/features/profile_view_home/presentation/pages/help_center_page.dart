@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../common/custom_app_bar.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Trang Trung tâm hỗ trợ đơn giản
 class HelpCenterPage extends StatelessWidget {
@@ -13,6 +14,7 @@ class HelpCenterPage extends StatelessWidget {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.helpCenterTitle,
         showBackButton: true,
+        showNotificationBell: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -55,7 +57,7 @@ class HelpCenterPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.primary.withAlpha((255 * 0.2).toInt()),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -82,7 +84,7 @@ class HelpCenterPage extends StatelessWidget {
                   AppLocalizations.of(context)!.helpCenterFindAnswersOrContact,
                   style: TextStyle(
                     fontSize: 13,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
+                    color: Theme.of(context).colorScheme.onPrimaryContainer.withAlpha((255 * 0.8).toInt()),
                   ),
                 ),
               ],
@@ -203,36 +205,45 @@ class HelpCenterPage extends StatelessWidget {
             icon: Icons.email_outlined,
             title: 'Email',
             subtitle: 'support@diettracking.vn',
-            onTap: () {
-              debugPrint('Opening email app');
+                        onTap: () {
+              SnackBarHelper.showInfo(
+                context,
+                AppLocalizations.of(context)!.profileFeatureInDevelopment,
+              );
             },
           ),
           Divider(
             height: 1,
             indent: 68,
-            color: Theme.of(context).dividerColor.withOpacity(0.5),
+            color: Theme.of(context).dividerColor.withAlpha((255 * 0.5).toInt()),
           ),
           _buildContactItem(
             context,
             icon: Icons.phone_outlined,
             title: 'Hotline',
             subtitle: '1900 xxxx (8:00 - 22:00)',
-            onTap: () {
-              debugPrint('Calling hotline');
+                        onTap: () {
+              SnackBarHelper.showInfo(
+                context,
+                AppLocalizations.of(context)!.profileFeatureInDevelopment,
+              );
             },
           ),
           Divider(
             height: 1,
             indent: 68,
-            color: Theme.of(context).dividerColor.withOpacity(0.5),
+            color: Theme.of(context).dividerColor.withAlpha((255 * 0.5).toInt()),
           ),
           _buildContactItem(
             context,
             icon: Icons.chat_bubble_outline,
             title: 'Live Chat',
             subtitle: 'Trò chuyện trực tiếp với chúng tôi',
-            onTap: () {
-              debugPrint('Live chat feature in development');
+                        onTap: () {
+              SnackBarHelper.showInfo(
+                context,
+                AppLocalizations.of(context)!.profileFeatureInDevelopment,
+              );
             },
           ),
         ],
@@ -252,7 +263,7 @@ class HelpCenterPage extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+          color: Theme.of(context).colorScheme.primaryContainer.withAlpha((255 * 0.5).toInt()),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(

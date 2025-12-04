@@ -1,5 +1,5 @@
 import '../../data/datasources/firestore_datasource.dart';
-import '../../data/datasources/gemini_api_datasource.dart';
+import '../../data/datasources/chatbot_endpoint_datasource.dart';
 import '../../data/datasources/chat_session_local_data_source.dart';
 import '../../data/repositories/chat_repository_impl.dart';
 import '../../../../database/auth_service.dart';

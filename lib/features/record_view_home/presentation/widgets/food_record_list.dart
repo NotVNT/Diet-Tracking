@@ -211,7 +211,7 @@ class FoodRecordList extends StatelessWidget {
                     ],
                   ),
                   trailing: IconButton(
-                    tooltip: 'Xoá món ăn',
+                    tooltip: localizations?.deleteMealTooltip ?? 'Xoá món ăn',
                     icon: Icon(
                       Icons.close_rounded,
                       color: Theme.of(context).colorScheme.error,
@@ -223,21 +223,20 @@ class FoodRecordList extends StatelessWidget {
                         context: context,
                         builder: (ctx) {
                           return AlertDialog(
-                            title: const Text('Xoá món ăn?'),
+                            title: Text(localizations?.deleteMealTitle ?? 'Xoá món ăn?'),
                             content: Text(
-                              'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
+                              localizations?.deleteMealMessage(record.foodName) ??
+                                  'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
                             ),
                             actions: [
                               TextButton(
-                                onPressed: () =>
-                                    Navigator.of(ctx).pop(false),
-                                child: const Text('Huỷ'),
+                                onPressed: () => Navigator.of(ctx).pop(false),
+                                child: Text(localizations?.cancel ?? 'Huỷ'),
                               ),
                               TextButton(
-                                onPressed: () =>
-                                    Navigator.of(ctx).pop(true),
+                                onPressed: () => Navigator.of(ctx).pop(true),
                                 child: Text(
-                                  'Xoá',
+                                  localizations?.delete ?? 'Xoá',
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.error,
                                   ),
@@ -261,7 +260,7 @@ class FoodRecordList extends StatelessWidget {
           );
         }
 
-        return const Center(child: Text('Đang khởi tạo...'));
+        return Center(child: Text(localizations?.initializing ?? 'Đang khởi tạo...'));
       },
     );
   }

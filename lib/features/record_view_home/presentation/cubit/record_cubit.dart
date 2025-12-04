@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/save_food_record_usecase.dart';
 import '../../domain/usecases/get_food_records_usecase.dart';
 import '../../domain/usecases/delete_food_record_usecase.dart';
-import '../../domain/usecases/sync_food_records_usecase.dart';
 import '../../domain/entities/food_record_entity.dart';
 import 'record_state.dart';
 
@@ -10,7 +9,6 @@ class RecordCubit extends Cubit<RecordState> {
   final SaveFoodRecordUseCase _saveFoodRecordUseCase;
   final GetFoodRecordsUseCase _getFoodRecordsUseCase;
   final DeleteFoodRecordUseCase _deleteFoodRecordUseCase;
-  final SyncFoodRecordsUseCase _syncFoodRecordsUseCase;
 
   List<FoodRecordEntity> _allRecords = [];
 
@@ -18,7 +16,6 @@ class RecordCubit extends Cubit<RecordState> {
     this._saveFoodRecordUseCase,
     this._getFoodRecordsUseCase,
     this._deleteFoodRecordUseCase,
-    this._syncFoodRecordsUseCase,
   ) : super(RecordInitial());
 
   Future<void> saveFoodRecord(
@@ -28,7 +25,10 @@ class RecordCubit extends Cubit<RecordState> {
     String? nutritionDetails,
   }) async {
     try {
-      emit(RecordLoading());
+      // Only emit loading if not already loading
+      if (state is! RecordLoading) {
+        emit(RecordLoading());
+      }
       await _saveFoodRecordUseCase.call(
         foodName,
         calories,
@@ -45,9 +45,10 @@ class RecordCubit extends Cubit<RecordState> {
 
   Future<void> loadFoodRecords() async {
     try {
-      emit(RecordLoading());
-      // Đồng bộ dữ liệu từ Firebase trước khi load
-      await _syncFoodRecordsUseCase.call();
+      // Only emit loading if not already showing data
+      if (state is! RecordListLoaded) {
+        emit(RecordLoading());
+      }
       final records = await _getFoodRecordsUseCase.call();
       _allRecords = records;
       emit(RecordListLoaded(records));
@@ -58,13 +59,20 @@ class RecordCubit extends Cubit<RecordState> {
 
   Future<void> deleteFoodRecord(String id) async {
     try {
-      emit(RecordLoading());
       await _deleteFoodRecordUseCase.call(id);
-      emit(const RecordSuccess('Món ăn đã được xóa thành công!'));
-      // Tự động load lại danh sách sau khi xóa
-      await loadFoodRecords();
+
+      // Optimistically update the UI by removing the item from the local list
+      final updatedRecords = _allRecords
+          .where((record) => record.id != id)
+          .toList();
+      _allRecords = updatedRecords;
+
+      // Emit the new state to update the UI immediately
+      emit(RecordListLoaded(updatedRecords));
     } catch (e) {
       emit(RecordError('Lỗi khi xóa món ăn: ${e.toString()}'));
+      // If deletion fails, reload the list to ensure data consistency
+      await loadFoodRecords();
     }
   }
 

@@ -348,12 +348,14 @@
   "bottomNavScanFood": "Scan food",
   "bottomNavReport": "Report",
   "searchHint": "Search",
-  "calorieGoalTitle": "Calorie Goal",
-  "viewReport": "View Report",
-  "calorieRemaining": "Remaining",
-  "goalLabel": "Goal",
-  "consumedLabel": "Consumed",
-  "exerciseLabel": "Exercise",
+
+  "calorieCardBurnedToday": "Your calories burned today",
+  "nutrientProtein": "Protein",
+  "nutrientFiber": "Fiber",
+  "nutrientCarbs": "Carbs",
+  "calorieCardCaloriesTaken": "Calories taken",
+  "calorieCardViewReport": "View report",
+
   "notificationTitle": "Notifications",
   "waterReminderTitle": "Water Reminder",
   "waterReminderMessage": "Drink enough water every day to keep your body healthy and energized!",
@@ -373,6 +375,7 @@
   "foodScannerActionFood": "Scan food",
   "foodScannerActionBarcode": "Barcode",
   "foodScannerActionGallery": "Gallery",
+
   "foodScannerHelpTitle": "How to scan",
   "foodScannerHelpTip1": "Place the meal fully inside the frame.",
   "foodScannerHelpTip2": "Use the Barcode mode for packaged products.",
@@ -394,5 +397,52 @@
   "photoDeletedSuccessfully": "Photo deleted successfully",
   "analyzeFood": "Analyze Food",
   "shareFunctionality": "Share functionality coming soon",
-  "aiFoodAnalysis": "AI food analysis coming soon"
+  "aiFoodAnalysis": "AI food analysis coming soon",
+  "permissionCameraRequired": "Please grant camera access to use this feature."
+,
+  "inboxTitle": "Inbox",
+  "searchHintText": "Search",
+  "filterTitle": "Filter",
+  "category": "Category",
+  "all": "All",
+  "breakfast": "Breakfast",
+  "lunch": "Lunch",
+  "dinner": "Dinner",
+  "snack": "Snack",
+  "calorieRangeLabel": "Calorie range",
+  "reset": "Reset",
+  "mealsListTitle": "Meals list",
+  "noMealsYet": "No meals yet",
+  "startByScanningOrPhoto": "Scan a barcode or take a photo to get started",
+  "deleteMealTooltip": "Delete meal",
+  "deleteMealTitle": "Delete meal?",
+  "deleteMealMessage": "Are you sure you want to delete \"{foodName}\" from records?",
+  "@deleteMealMessage": {
+    "placeholders": {
+      "foodName": {
+        "type": "String"
+      }
+    }
+  },
+  "initializing": "Initializing...",
+  "selectedFood": "Selected Food"
+,
+  "snackbarSuccessTitle": "Success",
+  "snackbarErrorTitle": "Error",
+  "snackbarWarningTitle": "Warning",
+  "snackbarInfoTitle": "Info"
+,
+  "foodScannerCantCapturePhoto": "Couldn't capture photo, please try again.",
+  "foodScannerCantOpenGallery": "Couldn't open gallery, please try again.",
+  "foodScannerNoBarcodeFoundSaving": "No barcode found in image. Saving photo...",
+  "foodScannerNoCamera": "No camera found on device.",
+  "foodScannerSavePhotoSuccess": "Photo saved successfully",
+  "foodScannerUploadError": "Couldn't upload photo to Cloudinary. Please try again.",
+  "foodScannerSavePhotoError": "Saved photo (error looking up info)",
+  "foodScannerSavedBarcodeNoDetail": "Saved code: {barcodeValue} (Details not found)",
+  "foodScannerCameraNotReady": "Camera not ready",
+  "foodScannerBarcodeError": "Error scanning barcode",
+  "foodScannerProductDefaultName": "Product {barcode}",
+  "foodScannerScanned": "Scanned: {foodName}",
+  "foodScannerSaveProductError": "Error saving product"
 }

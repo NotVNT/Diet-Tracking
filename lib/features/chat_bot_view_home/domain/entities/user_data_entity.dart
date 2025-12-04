@@ -7,6 +7,7 @@ class UserDataEntity {
   final String disease;
   final String allergy;
   final String goal;
+  final String? gender; // male | female | other
 
   const UserDataEntity({
     required this.age,
@@ -16,6 +17,7 @@ class UserDataEntity {
     required this.disease,
     required this.allergy,
     required this.goal,
+    this.gender,
   });
 
   @override
@@ -28,7 +30,8 @@ class UserDataEntity {
         other.goalWeightKg == goalWeightKg &&
         other.disease == disease &&
         other.allergy == allergy &&
-        other.goal == goal;
+        other.goal == goal &&
+        other.gender == gender;
   }
 
   @override
@@ -39,11 +42,12 @@ class UserDataEntity {
         (goalWeightKg?.hashCode ?? 0) ^
         disease.hashCode ^
         allergy.hashCode ^
-        goal.hashCode;
+        goal.hashCode ^
+        (gender?.hashCode ?? 0);
   }
 
   @override
   String toString() {
-    return 'UserDataEntity(age: $age, height: $height, weight: $weight, goalWeightKg: $goalWeightKg, disease: $disease, allergy: $allergy, goal: $goal)';
+    return 'UserDataEntity(age: $age, height: $height, weight: $weight, goalWeightKg: $goalWeightKg, disease: $disease, allergy: $allergy, goal: $goal, gender: $gender)';
   }
 }

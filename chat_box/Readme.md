@@ -1,3 +1,11 @@
+tạo môi trường .venv
+  cd chat_box; python -m venv .venv
+kích hoạt môi trường
+  .\.venv\Scripts\Activate.ps1
+Tải thư viện yêu cầu
+  pip install -r requirements.txt
+
+uvicorn barcode:app --host 0.0.0.0 --port 8000 --reload
 tải thư viện uvicorn về, sau đó mở terminal ngay ở mục chat_box, terminal phải có đường mục giống thế này-"(.venv) C:\Users\LENOVO\myfilebro\diet-tracking\chat_box>",
 sau đó nhập lệnh uvicorn main:app --reload là server sẽ chạy
 trường hợp server không chạy, coi thử api của gemini đã load vào mô hình chưa, qua bên chat_bot_view.dart coi thử đường chạy local của mô hình đã đúng chưa

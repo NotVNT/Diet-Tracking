@@ -967,22 +967,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHint => 'Search';
 
   @override
-  String get calorieGoalTitle => 'Calorie Goal';
+  String get calorieCardBurnedToday => 'Your calories burned today';
 
   @override
-  String get viewReport => 'View Report';
+  String get nutrientProtein => 'Protein';
 
   @override
-  String get calorieRemaining => 'Remaining';
+  String get nutrientFiber => 'Fiber';
 
   @override
-  String get goalLabel => 'Goal';
+  String get nutrientCarbs => 'Carbs';
 
   @override
-  String get consumedLabel => 'Consumed';
+  String get calorieCardCaloriesTaken => 'Calories taken';
 
   @override
-  String get exerciseLabel => 'Exercise';
+  String get calorieCardViewReport => 'View report';
 
   @override
   String get notificationTitle => 'Notifications';
@@ -1042,6 +1042,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodScannerActionGallery => 'Gallery';
 
   @override
+  String get foodScannerScanningBarcode => 'Scanning barcode...';
+
+  @override
   String get foodScannerHelpTitle => 'How to scan';
 
   @override
@@ -1070,23 +1073,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get foodScannerPlaceholderOpenGallery => 'Opening gallery (coming soon)';
-
-  @override
-  String get foodScannerBarcodeScanning => 'Scanning for barcode...';
-
-  @override
-  String foodScannerBarcodeDetected(String value) {
-    return 'Detected barcode: $value';
-  }
-
-  @override
-  String get foodScannerBarcodeCopy => 'Copy code';
-
-  @override
-  String get foodScannerBarcodeScanAgain => 'Scan again';
-
-  @override
-  String get foodScannerBarcodeCopied => 'Barcode copied to clipboard';
 
   @override
   String get recentlyLoggedTitle => 'Recently logged';
@@ -1123,4 +1109,123 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiFoodAnalysis => 'AI food analysis coming soon';
+
+  @override
+  String get permissionCameraRequired => 'Please grant camera access to use this feature.';
+
+  @override
+  String get inboxTitle => 'Inbox';
+
+  @override
+  String get searchHintText => 'Search';
+
+  @override
+  String get filterTitle => 'Filter';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get breakfast => 'Breakfast';
+
+  @override
+  String get lunch => 'Lunch';
+
+  @override
+  String get dinner => 'Dinner';
+
+  @override
+  String get snack => 'Snack';
+
+  @override
+  String get calorieRangeLabel => 'Calorie range';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get mealsListTitle => 'Meals list';
+
+  @override
+  String get noMealsYet => 'No meals yet';
+
+  @override
+  String get startByScanningOrPhoto => 'Scan a barcode or take a photo to get started';
+
+  @override
+  String get deleteMealTooltip => 'Delete meal';
+
+  @override
+  String get deleteMealTitle => 'Delete meal?';
+
+  @override
+  String deleteMealMessage(String foodName) {
+    return 'Are you sure you want to delete \"$foodName\" from records?';
+  }
+
+  @override
+  String get initializing => 'Initializing...';
+
+  @override
+  String get selectedFood => 'Selected Food';
+
+  @override
+  String get snackbarSuccessTitle => 'Success';
+
+  @override
+  String get snackbarErrorTitle => 'Error';
+
+  @override
+  String get snackbarWarningTitle => 'Warning';
+
+  @override
+  String get snackbarInfoTitle => 'Info';
+
+  @override
+  String get foodScannerCantCapturePhoto => 'Couldn\'t capture photo, please try again.';
+
+  @override
+  String get foodScannerCantOpenGallery => 'Couldn\'t open gallery, please try again.';
+
+  @override
+  String get foodScannerNoBarcodeFoundSaving => 'No barcode found in image. Saving photo...';
+
+  @override
+  String get foodScannerNoCamera => 'No camera found on device.';
+
+  @override
+  String get foodScannerSavePhotoSuccess => 'Photo saved successfully';
+
+  @override
+  String get foodScannerUploadError => 'Couldn\'t upload photo to Cloudinary. Please try again.';
+
+  @override
+  String get foodScannerSavePhotoError => 'Saved photo (error looking up info)';
+
+  @override
+  String foodScannerSavedBarcodeNoDetail(Object barcodeValue) {
+    return 'Saved code: $barcodeValue (Details not found)';
+  }
+
+  @override
+  String get foodScannerCameraNotReady => 'Camera not ready';
+
+  @override
+  String get foodScannerBarcodeError => 'Error scanning barcode';
+
+  @override
+  String foodScannerProductDefaultName(Object barcode) {
+    return 'Product $barcode';
+  }
+
+  @override
+  String foodScannerScanned(Object foodName) {
+    return 'Scanned: $foodName';
+  }
+
+  @override
+  String get foodScannerSaveProductError => 'Error saving product';
 }

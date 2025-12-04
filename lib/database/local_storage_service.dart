@@ -25,6 +25,7 @@ class LocalStorageService {
 
   /// Lưu dữ liệu guest vào local storage
   /// Chỉ lưu các trường được cung cấp (không null)
+  /// Optimized: Batches all operations for better performance
   Future<void> saveGuestData({
     String? goal,
     double? heightCm,
@@ -42,30 +43,35 @@ class LocalStorageService {
   }) async {
     final prefs = await _prefs;
 
-    // Lưu từng trường nếu có giá trị
+    // Collect all operations to execute in batch
+    final futures = <Future<bool>>[];
+
     if (goal != null) {
       print('🔍 LocalStorageService: Saving goal = $goal');
-      await prefs.setString(_keyGoal, goal);
+      futures.add(prefs.setString(_keyGoal, goal));
     }
-    if (heightCm != null) await prefs.setDouble(_keyHeight, heightCm);
-    if (weightKg != null) await prefs.setDouble(_keyWeight, weightKg);
-    if (goalWeightKg != null)
-      await prefs.setDouble(_keyGoalWeight, goalWeightKg);
-    // Do not store goalHeightCm and health anymore
+    if (heightCm != null) futures.add(prefs.setDouble(_keyHeight, heightCm));
+    if (weightKg != null) futures.add(prefs.setDouble(_keyWeight, weightKg));
+    if (goalWeightKg != null) futures.add(prefs.setDouble(_keyGoalWeight, goalWeightKg));
     if (medicalConditions != null && medicalConditions.isNotEmpty) {
-      await prefs.setStringList(_keyMedical, medicalConditions);
+      futures.add(prefs.setStringList(_keyMedical, medicalConditions));
     }
     if (allergies != null && allergies.isNotEmpty) {
-      await prefs.setStringList(_keyAllergies, allergies);
+      futures.add(prefs.setStringList(_keyAllergies, allergies));
     }
-    if (age != null) await prefs.setInt(_keyAge, age);
-    if (gender != null) await prefs.setString(_keyGender, gender);
-    if (language != null) await prefs.setString(_keyLanguage, language);
+    if (age != null) futures.add(prefs.setInt(_keyAge, age));
+    if (gender != null) futures.add(prefs.setString(_keyGender, gender));
+    if (language != null) futures.add(prefs.setString(_keyLanguage, language));
     if (activityLevel != null) {
-      await prefs.setString(_keyActivityLevel, activityLevel);
+      futures.add(prefs.setString(_keyActivityLevel, activityLevel));
     }
     if (weightReasons != null && weightReasons.isNotEmpty) {
-      await prefs.setStringList(_keyWeightReasons, weightReasons);
+      futures.add(prefs.setStringList(_keyWeightReasons, weightReasons));
+    }
+
+    // Execute all operations in parallel
+    if (futures.isNotEmpty) {
+      await Future.wait(futures);
     }
   }
 
@@ -110,21 +116,23 @@ class LocalStorageService {
 
   /// Xóa tất cả dữ liệu guest khỏi local storage
   /// Được gọi sau khi đồng bộ thành công với tài khoản chính thức
+  /// Optimized: Batches all remove operations for better performance
   Future<void> clearGuestData() async {
     final prefs = await _prefs;
 
-    // Xóa từng key một cách tuần tự
-    await prefs.remove(_keyGoal);
-    await prefs.remove(_keyHeight);
-    await prefs.remove(_keyWeight);
-    await prefs.remove(_keyGoalWeight);
-    // No longer storing goalHeight and health
-    await prefs.remove(_keyMedical);
-    await prefs.remove(_keyAllergies);
-    await prefs.remove(_keyAge);
-    await prefs.remove(_keyGender);
-    await prefs.remove(_keyLanguage);
-    await prefs.remove(_keyActivityLevel);
+    // Batch all remove operations
+    await Future.wait([
+      prefs.remove(_keyGoal),
+      prefs.remove(_keyHeight),
+      prefs.remove(_keyWeight),
+      prefs.remove(_keyGoalWeight),
+      prefs.remove(_keyMedical),
+      prefs.remove(_keyAllergies),
+      prefs.remove(_keyAge),
+      prefs.remove(_keyGender),
+      prefs.remove(_keyLanguage),
+      prefs.remove(_keyActivityLevel),
+    ]);
   }
 
   /// Generic method to save any data with a key
@@ -188,15 +196,19 @@ class LocalStorageService {
 
   /// Xóa tất cả dữ liệu food records của tất cả user
   /// Được gọi khi đăng xuất để tránh lộ dữ liệu
+  /// Optimized: Batches all remove operations for better performance
   Future<void> clearAllFoodRecords() async {
     final prefs = await _prefs;
     final allKeys = prefs.getKeys();
 
-    // Xóa tất cả key bắt đầu với 'food_records'
-    for (final key in allKeys) {
-      if (key.startsWith('food_records')) {
-        await prefs.remove(key);
-      }
+    // Collect all keys to remove and batch the operations
+    final keysToRemove = allKeys
+        .where((key) => key.startsWith('food_records'))
+        .map((key) => prefs.remove(key))
+        .toList();
+
+    if (keysToRemove.isNotEmpty) {
+      await Future.wait(keysToRemove);
     }
   }
 }

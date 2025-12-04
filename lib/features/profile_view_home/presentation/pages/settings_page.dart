@@ -7,6 +7,7 @@ import '../../../../common/language_selector.dart';
 import '../../../../common/unit_selector.dart';
 import '../../../../services/language_service.dart';
 import '../../../../common/custom_app_bar.dart';
+import '../../../../common/snackbar_helper.dart';
 
 /// Settings page for app configuration
 class SettingsPage extends StatefulWidget {
@@ -53,6 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.settingsTitle,
         showBackButton: true,
+        showNotificationBell: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -70,12 +72,20 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: AppLocalizations.of(context)!.settingsDarkMode,
                   subtitle: AppLocalizations.of(context)!.settingsDarkModeSubtitle,
                   value: _darkModeEnabled,
-                  onChanged: (value) async {
+                                    onChanged: (value) async {
                     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
                     setState(() {
                       _darkModeEnabled = value;
                     });
                     await themeProvider.toggleTheme();
+                    if (mounted) {
+                      SnackBarHelper.showInfo(
+                        context,
+                        value
+                            ? AppLocalizations.of(context)!.settingsDarkModeEnabled
+                            : AppLocalizations.of(context)!.settingsDarkModeDisabled,
+                      );
+                    }
                   },
                 ),
                 const Divider(height: 1),
@@ -119,7 +129,7 @@ class _SettingsPageState extends State<SettingsPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.04),
+            color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -143,7 +153,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withAlpha((255 * 0.1).toInt()),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -195,7 +205,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withAlpha((255 * 0.1).toInt()),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -217,14 +227,16 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           LanguageSelector(
             selected: _selectedLanguage,
-            onChanged: (Language newLanguage) async {
+                        onChanged: (Language newLanguage) async {
               setState(() {
                 _selectedLanguage = newLanguage;
               });
               await _saveSettings();
-              
+
               // Change app language using LanguageService
               await LanguageService.changeLanguage(newLanguage);
+
+              
             },
           ),
         ],
@@ -240,7 +252,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withAlpha((255 * 0.1).toInt()),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(

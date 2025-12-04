@@ -2,6 +2,7 @@ from fastapi import FastAPI, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import google.generativeai as genai
+from fastapi import FastAPI, UploadFile, File, Form
 from pyzbar.pyzbar import decode
 from PIL import Image
 import requests
@@ -10,33 +11,6 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-app = FastAPI()
-
-
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
-model_gemini = genai.GenerativeModel('gemini-2.5-flash-lite')
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-class ChatRequest(BaseModel):
-    disease: str
-    allergy: str
-    goal: str
-
-def analyze_product(disease, allergy, goal, product_name, calories, protein, Carbs, fat):
-    guidance_prompt = f"Hãy kiểm tra xem món ăn {product_name} có lượng dinh dưỡng bao gồm calories: {calories}, protein: {protein}, Carbs: {Carbs}, fat: {fat} có phù hợp với bệnh lí: {disease}, dị ứng: {allergy} và goal: {goal} và hãy đưa ra nhận xét của bạn của món ăn trên để nó phù hợp với thông tin của người dùng. Nhớ nói ngắn gọn nhưng súc tích và hãy nhớ nói một cách nhẹ nhàng"
-
-    response = model_gemini.generate_content(guidance_prompt)
-    raw = response.text.strip()
-    return raw
-
 app = FastAPI()
 
 @app.post("/get_product_info")
