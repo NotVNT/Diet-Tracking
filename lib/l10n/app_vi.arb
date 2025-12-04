@@ -110,6 +110,12 @@
   "activityLevelLightlyActiveSubtitle": "(Tập thể dục/thể thao 1-3 ngày/tuần)",
   "activityLevelModeratelyActiveTitle": "Vận động vừa",
   "activityLevelModeratelyActiveSubtitle": "(Tập thể dục/thể thao 3-5 ngày/tuần)",
+  "dateRangeTitle": "Khoảng ngày",
+  "today": "Hôm nay",
+  "yesterday": "Hôm qua",
+  "last7Days": "7 ngày qua",
+  "customRange": "Khoảng khác",
+
   "activityLevelVeryActiveTitle": "Vận động nặng",
   "activityLevelVeryActiveSubtitle": "(Tập thể dục/thể thao 6-7 ngày/tuần)",
   "activityLevelExtraActiveTitle": "Vận động rất nặng",
@@ -444,5 +450,11 @@
   "foodScannerBarcodeError": "Lỗi khi quét barcode",
   "foodScannerProductDefaultName": "Sản phẩm {barcode}",
   "foodScannerScanned": "Đã quét: {foodName}",
-  "foodScannerSaveProductError": "Lỗi khi lưu sản phẩm"
+  "foodScannerSaveProductError": "Lỗi khi lưu sản phẩm",
+
+  "mealDeletedSuccessfully": "Xoá món ăn thành công",
+  "deleteMealFailed": "Xoá món ăn thất bại",
+  "sourceTagBotSuggestion": "Gợi ý Chatbot",
+  "sourceTagScanned": "Từ quét ảnh/mã",
+  "sourceTagManual": "Nhập thủ công"
 }

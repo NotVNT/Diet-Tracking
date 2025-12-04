@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../../common/snackbar_helper.dart';
+import '../../../../../common/app_confirm_dialog.dart';
+
 
 import 'food_image_widget.dart';
 import 'food_scanned_info.dart';
@@ -125,8 +127,6 @@ class ScannedFoodDetailPage extends StatelessWidget {
   }
 
   void _onDelete(BuildContext context) async {
-    // Confirmation is already handled inside MoreOptionsMenu.
-    // Here we only perform the actual deletion and close the detail page.
     final recordCubit = context.read<RecordCubit>();
     final navigator = Navigator.of(context);
     final l10n = AppLocalizations.of(context);
@@ -139,15 +139,27 @@ class ScannedFoodDetailPage extends StatelessWidget {
       return;
     }
 
+    // Show only one confirmation: "Xóa món ăn"
+    final confirmed = await showAppConfirmDialog(
+      context,
+      title: l10n?.deleteMealTitle ?? 'Xoá món ăn?',
+      message: l10n?.deleteMealMessage(scannedFood.foodName) ??
+          'Bạn có chắc muốn xoá "${scannedFood.foodName}" khỏi ghi nhận?',
+      confirmText: l10n?.delete,
+      cancelText: l10n?.cancel,
+      destructive: true,
+      icon: Icons.delete_rounded,
+    );
+    if (confirmed != true) return;
+
     await recordCubit.deleteFoodRecord(id);
     if (!context.mounted) return;
-    // Show success message before leaving the page so the snackbar is visible on the previous screen
     SnackBarHelper.showSuccess(
       context,
-      l10n?.photoDeletedSuccessfully ?? 'Photo deleted successfully',
+      l10n?.photoDeletedSuccessfully ?? 'Deleted successfully',
     );
     if (navigator.canPop()) {
-      navigator.pop(true); // Return true so previous page can refresh if needed
+      navigator.pop(true);
     }
   }
 

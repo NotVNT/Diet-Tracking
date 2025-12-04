@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/save_food_record_usecase.dart';
 import '../../domain/usecases/get_food_records_usecase.dart';
@@ -15,6 +16,7 @@ class RecordCubit extends Cubit<RecordState> {
   // Filters
   String _searchQuery = '';
   String? _calorieRange; // format: "min-max"
+  DateTimeRange? _dateRange; // inclusive range
 
   RecordCubit(
     this._saveFoodRecordUseCase,
@@ -69,6 +71,11 @@ class RecordCubit extends Cubit<RecordState> {
     }
   }
 
+  // GETTERS for UI
+  String? get calorieRange => _calorieRange;
+  DateTimeRange? get dateRange => _dateRange;
+  bool get hasActiveFilters => _calorieRange != null || _dateRange != null;
+
   // PUBLIC FILTER API
   void setSearchQuery(String query) {
     _searchQuery = query.trim();
@@ -77,6 +84,24 @@ class RecordCubit extends Cubit<RecordState> {
 
   void filterRecordsByCalories(String? calorieRange) {
     _calorieRange = calorieRange;
+    _emitFiltered();
+  }
+
+  void setDateRangeFilter(DateTimeRange? range) {
+    _dateRange = range;
+    _emitFiltered();
+  }
+
+  // Apply both filters in one emission to avoid intermediate states
+  void setFilters({String? calorieRange, DateTimeRange? dateRange}) {
+    _calorieRange = calorieRange;
+    _dateRange = dateRange;
+    _emitFiltered();
+  }
+
+  void clearFilters() {
+    _calorieRange = null;
+    _dateRange = null;
     _emitFiltered();
   }
 
@@ -92,6 +117,20 @@ class RecordCubit extends Cubit<RecordState> {
 
   List<FoodRecordEntity> _applyFilters() {
     Iterable<FoodRecordEntity> result = _allRecords;
+
+    // Apply date range filter (inclusive)
+    if (_dateRange != null) {
+      final start = _dateRange!.start;
+      final end = _dateRange!.end;
+      result = result.where((r) {
+        final d = r.date.toLocal();
+        // Compare dates at the day level to avoid time/timezone issues
+        final recordDay = DateTime(d.year, d.month, d.day);
+        final startDay = DateTime(start.year, start.month, start.day);
+        final endDay = DateTime(end.year, end.month, end.day);
+        return !recordDay.isBefore(startDay) && !recordDay.isAfter(endDay);
+      });
+    }
 
     // Apply calorie filter if present
     if (_calorieRange != null) {

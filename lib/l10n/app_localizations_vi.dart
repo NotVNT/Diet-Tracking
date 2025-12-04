@@ -1123,6 +1123,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String get filterTitle => 'Bộ lọc';
 
   @override
+  String get dateRangeTitle => 'Khoảng ngày';
+
+  @override
+  String get today => 'Hôm nay';
+
+  @override
+  String get yesterday => 'Hôm qua';
+
+  @override
+  String get last7Days => '7 ngày qua';
+
+  @override
+  String get customRange => 'Khoảng khác';
+
+
+  @override
   String get category => 'Danh mục';
 
   @override
@@ -1165,6 +1181,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String deleteMealMessage(String foodName) {
     return 'Bạn có chắc muốn xoá \"$foodName\" khỏi ghi nhận?';
   }
+
+  @override
+  String get mealDeletedSuccessfully => 'Xoá món ăn thành công';
+
+  @override
+  String get deleteMealFailed => 'Xoá món ăn thất bại';
+
+  @override
+  String get sourceTagBotSuggestion => 'Gợi ý Chatbot';
+
+  @override
+  String get sourceTagScanned => 'Từ quét ảnh/mã';
+
+  @override
+  String get sourceTagManual => 'Nhập thủ công';
+
 
   @override
   String get initializing => 'Đang khởi tạo...';
