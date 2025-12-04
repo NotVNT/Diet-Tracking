@@ -11,7 +11,6 @@ class ProfileEntity {
   final double? weight;
   final double? goalWeight;
   final String? goal;
-  final List<String>? medicalConditions;
   final List<String>? allergies;
   final String? avatars;
 
@@ -25,7 +24,6 @@ class ProfileEntity {
     this.weight,
     this.goalWeight,
     this.goal,
-    this.medicalConditions,
     this.allergies,
     this.avatars,
   });
@@ -42,7 +40,6 @@ class ProfileEntity {
       weight: user.bodyInfo?.weightKg,
       goalWeight: user.bodyInfo?.goalWeightKg,
       goal: user.goal,
-      medicalConditions: user.bodyInfo?.medicalConditions,
       allergies: user.bodyInfo?.allergies,
       avatars: user.avatars,
     );
@@ -57,7 +54,6 @@ class ProfileEntity {
     double? weight,
     double? goalWeight,
     String? goal,
-    List<String>? medicalConditions,
     List<String>? allergies,
     String? avatars,
   }) {
@@ -71,7 +67,6 @@ class ProfileEntity {
       weight: weight ?? this.weight,
       goalWeight: goalWeight ?? this.goalWeight,
       goal: goal ?? this.goal,
-      medicalConditions: medicalConditions ?? this.medicalConditions,
       allergies: allergies ?? this.allergies,
       avatars: avatars ?? this.avatars,
     );

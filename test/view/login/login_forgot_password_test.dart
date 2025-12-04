@@ -24,7 +24,6 @@ void main() {
           authService: null,
           guestSyncService: null,
           googleAuthService: null,
-          onSendPasswordReset: spy.call,
         ),
       ),
     );

@@ -31,7 +31,8 @@ class RegisterController {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   // Dữ liệu từ on_boarding
   Map<String, dynamic> onboardingData = {};
@@ -72,12 +73,12 @@ class RegisterController {
     if (value == null || value.trim().isEmpty) {
       return RegisterErrorCode.emptyEmail;
     }
-    
+
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value.trim())) {
       return RegisterErrorCode.invalidEmail;
     }
-    
+
     return null;
   }
 
@@ -86,11 +87,11 @@ class RegisterController {
     if (value == null || value.isEmpty) {
       return RegisterErrorCode.emptyPassword;
     }
-    
+
     if (value.length < 6) {
       return RegisterErrorCode.passwordTooShort;
     }
-    
+
     return null;
   }
 
@@ -99,11 +100,11 @@ class RegisterController {
     if (value == null || value.isEmpty) {
       return RegisterErrorCode.emptyConfirmPassword;
     }
-    
+
     if (value != passwordController.text) {
       return RegisterErrorCode.passwordMismatch;
     }
-    
+
     return null;
   }
 
@@ -118,25 +119,25 @@ class RegisterController {
   /// Validate tất cả các trường
   String? validateAllFields(bool isTermsAccepted) {
     String? error;
-    
+
     error = validateFullName(fullNameController.text);
     if (error != null) return error;
-    
+
     error = validatePhone(phoneController.text);
     if (error != null) return error;
-    
+
     error = validateEmail(emailController.text);
     if (error != null) return error;
-    
+
     error = validatePassword(passwordController.text);
     if (error != null) return error;
-    
+
     error = validateConfirmPassword(confirmPasswordController.text);
     if (error != null) return error;
-    
+
     error = validateTerms(isTermsAccepted);
     if (error != null) return error;
-    
+
     return null;
   }
 
@@ -176,7 +177,6 @@ class RegisterController {
             : null,
         age: onboardingData['age'] as int?,
         goal: onboardingData['goal'] as String?,
-        medicalConditions: onboardingData['medicalConditions'] as List<String>?,
         allergies: onboardingData['allergies'] as List<String>?,
       );
 
@@ -231,26 +231,16 @@ class RegisterResult {
   final String? errorCode;
   final String? userId;
 
-  RegisterResult._({
-    required this.isSuccess,
-    this.errorCode,
-    this.userId,
-  });
+  RegisterResult._({required this.isSuccess, this.errorCode, this.userId});
 
   factory RegisterResult.success({required String userId}) {
-    return RegisterResult._(
-      isSuccess: true,
-      userId: userId,
-    );
+    return RegisterResult._(isSuccess: true, userId: userId);
   }
 
   factory RegisterResult.failure(String errorCode) {
-    return RegisterResult._(
-      isSuccess: false,
-      errorCode: errorCode,
-    );
+    return RegisterResult._(isSuccess: false, errorCode: errorCode);
   }
-  
+
   // Getter for backward compatibility
   String? get error => errorCode;
 }

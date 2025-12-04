@@ -33,7 +33,6 @@ class LocalStorageService {
     double? goalWeightKg,
     double? goalHeightCm,
     String? health,
-    List<String>? medicalConditions,
     List<String>? allergies,
     List<String>? weightReasons,
     int? age,
@@ -52,10 +51,8 @@ class LocalStorageService {
     }
     if (heightCm != null) futures.add(prefs.setDouble(_keyHeight, heightCm));
     if (weightKg != null) futures.add(prefs.setDouble(_keyWeight, weightKg));
-    if (goalWeightKg != null) futures.add(prefs.setDouble(_keyGoalWeight, goalWeightKg));
-    if (medicalConditions != null && medicalConditions.isNotEmpty) {
-      futures.add(prefs.setStringList(_keyMedical, medicalConditions));
-    }
+    if (goalWeightKg != null)
+      futures.add(prefs.setDouble(_keyGoalWeight, goalWeightKg));
     if (allergies != null && allergies.isNotEmpty) {
       futures.add(prefs.setStringList(_keyAllergies, allergies));
     }
@@ -87,7 +84,6 @@ class LocalStorageService {
       'weightKg': prefs.getDouble(_keyWeight),
       'goalWeightKg': prefs.getDouble(_keyGoalWeight),
       // 'goalHeightCm' and 'health' no longer stored
-      'medicalConditions': prefs.getStringList(_keyMedical),
       'allergies': prefs.getStringList(_keyAllergies),
       'age': prefs.getInt(_keyAge),
       'gender': prefs.getString(_keyGender),

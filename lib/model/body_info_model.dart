@@ -6,7 +6,6 @@ class BodyInfoModel {
   final double? goalWeightKg;
   final String? activityLevel;
   final HealthStatus? health;
-  final List<String>? medicalConditions; // bệnh lý
   final List<String>? allergies; // dị ứng
 
   const BodyInfoModel({
@@ -15,7 +14,6 @@ class BodyInfoModel {
     this.goalWeightKg,
     this.activityLevel,
     this.health,
-    this.medicalConditions,
     this.allergies,
   });
 
@@ -26,7 +24,6 @@ class BodyInfoModel {
     double? goalWeightKg,
     String? activityLevel,
     HealthStatus? health,
-    List<String>? medicalConditions,
     List<String>? allergies,
   }) {
     return BodyInfoModel(
@@ -35,7 +32,6 @@ class BodyInfoModel {
       goalWeightKg: goalWeightKg ?? this.goalWeightKg,
       activityLevel: activityLevel ?? this.activityLevel,
       health: health ?? this.health,
-      medicalConditions: medicalConditions ?? this.medicalConditions,
       allergies: allergies ?? this.allergies,
     );
   }
@@ -47,7 +43,6 @@ class BodyInfoModel {
       'weightKg': weightKg,
       'goalWeightKg': goalWeightKg,
       'activityLevel': activityLevel,
-      'medicalConditions': medicalConditions,
       'allergies': allergies,
     };
   }
@@ -60,7 +55,6 @@ class BodyInfoModel {
       goalWeightKg: (json['goalWeightKg'] as num?)?.toDouble(),
       activityLevel: json['activityLevel'] as String?,
       health: _tryParseHealth(json['health'] as String?),
-      medicalConditions: _parseStringList(json['medicalConditions']),
       allergies: _parseStringList(json['allergies']),
     );
   }

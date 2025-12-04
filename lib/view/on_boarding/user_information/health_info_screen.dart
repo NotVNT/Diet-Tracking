@@ -24,9 +24,7 @@ class HealthInfoScreen extends StatefulWidget {
 }
 
 class _HealthInfoScreenState extends State<HealthInfoScreen> {
-  final TextEditingController _diseaseCtrl = TextEditingController();
   final TextEditingController _allergyCtrl = TextEditingController();
-  final List<String> _diseases = <String>[];
   final List<String> _allergies = <String>[];
   late final LocalStorageService _local;
   AuthService? _auth;
@@ -51,14 +49,13 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
 
   @override
   void dispose() {
-    _diseaseCtrl.dispose();
     _allergyCtrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    const title = 'Thông Tin Sức Khỏe';
+    const title = 'Dị Ứng Thực Phẩm';
     return Scaffold(
       backgroundColor: const Color(0xFFF3F6FC),
       body: SafeArea(
@@ -81,43 +78,13 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Vui lòng cung cấp thông tin về bệnh lý và dị ứng thực phẩm của bạn để chúng tôi có thể hỗ trợ tốt nhất',
+                'Vui lòng cung cấp thông tin về dị ứng thực phẩm của bạn để chúng tôi có thể hỗ trợ tốt nhất',
                 style: AppStyles.bodySmall,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
 
-              // Card 1: Diseases
-              HealthCardWidget(
-                index: 1,
-                title: 'Bệnh Lý',
-                description:
-                    'Nhập các bệnh lý hiện tại nếu có. Thông tin này giúp chúng tôi tư vấn phù hợp hơn.',
-                input: HealthTextField(
-                  controller: _diseaseCtrl,
-                  hintText: 'Ví dụ: Tiểu đường, Cao huyết áp, Hen suyễn,...',
-                ),
-                trailingButton: AddButton(
-                  onPressed: () {
-                    final text = _diseaseCtrl.text.trim();
-                    if (text.isEmpty) return;
-                    setState(() {
-                      if (!_diseases.contains(text)) {
-                        _diseases.add(text);
-                      }
-                      _diseaseCtrl.clear();
-                    });
-                  },
-                ),
-                emptyIcon: Icons.favorite_border,
-                emptyText:
-                    'Chưa có bệnh lý nào được thêm. Nếu không có, bạn có thể bỏ qua phần này.',
-                items: _diseases,
-                onRemoveItem: (i) => setState(() => _diseases.removeAt(i)),
-              ),
-              const SizedBox(height: 14),
-
-              // Card 2: Food allergies
+              // Card: Food allergies
               HealthCardWidget(
                 index: 2,
                 title: 'Dị Ứng Thực Phẩm',
@@ -182,16 +149,12 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                       backgroundColor: const Color(0xFF1F2A37),
                       onPressed: () async {
                         final uid = _auth?.currentUser?.uid;
-                        final bool hasAny =
-                            _diseases.isNotEmpty || _allergies.isNotEmpty;
+                        final bool hasAny = _allergies.isNotEmpty;
 
                         if (uid != null) {
                           if (hasAny) {
-                            final sanitizedDiseases = _sanitize(_diseases);
                             final sanitizedAllergies = _sanitize(_allergies);
                             await _auth!.updateUserData(uid, {
-                              if (sanitizedDiseases != null)
-                                'bodyInfo.medicalConditions': sanitizedDiseases,
                               if (sanitizedAllergies != null)
                                 'bodyInfo.allergies': sanitizedAllergies,
                             });
@@ -199,7 +162,6 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                         } else {
                           if (hasAny) {
                             await _local.saveGuestData(
-                              medicalConditions: _sanitize(_diseases),
                               allergies: _sanitize(_allergies),
                             );
                           }
