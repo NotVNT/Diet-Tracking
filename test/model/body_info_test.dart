@@ -9,7 +9,6 @@ void main() {
         weightKg: 65.2,
         goalWeightKg: 60.0,
         health: HealthStatus.good,
-        medicalConditions: ['a', 'b'],
         allergies: ['x'],
       );
       final json = model.toJson();
@@ -17,7 +16,8 @@ void main() {
       expect(json['heightCm'], 170.5);
       expect(json['weightKg'], 65.2);
       expect(json['goalWeightKg'], 60.0);
-      expect(json['medicalConditions'], ['a', 'b']);
+      // medicalConditions is no longer persisted in toJson
+      expect(json.containsKey('medicalConditions'), isFalse);
       expect(json['allergies'], ['x']);
       expect(json.containsKey('health'), isFalse);
     });
@@ -36,7 +36,6 @@ void main() {
       expect(parsed.weightKg, 50.0);
       expect(parsed.goalWeightKg, 48.5);
       expect(parsed.health, HealthStatus.excellent);
-      expect(parsed.medicalConditions, ['a', 'b', 'c']);
       expect(parsed.allergies, ['x', 'y']);
     });
 
