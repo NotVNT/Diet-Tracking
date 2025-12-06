@@ -267,7 +267,7 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
   }
 
   String _buildDescription(BarcodeProduct product) {
-    String description = 'Barcode: ${product.barcode}\n\n';
+    String description = '';
     if (product.calories != null) {
       description +=
           '🔥 Calories: ${product.calories!.toStringAsFixed(0)} kcal\n';
