@@ -37,19 +37,10 @@ class GuestSyncService {
       update['goal'] = data['goal'];
     }
 
-    // Đồng bộ bệnh lý và dị ứng nếu có
-    final List<String>? medical = (data['medicalConditions'] as List?)
-        ?.map((e) => e.toString())
-        .toList();
+    // Đồng bộ dị ứng nếu có
     final List<String>? allergies = (data['allergies'] as List?)
         ?.map((e) => e.toString())
         .toList();
-    if (medical != null && medical.isNotEmpty) {
-      update['bodyInfo'] = {
-        ...(update['bodyInfo'] as Map<String, dynamic>? ?? bodyInfo.toJson()),
-        'medicalConditions': medical,
-      };
-    }
     if (allergies != null && allergies.isNotEmpty) {
       update['bodyInfo'] = {
         ...(update['bodyInfo'] as Map<String, dynamic>? ?? bodyInfo.toJson()),

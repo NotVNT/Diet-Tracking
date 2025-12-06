@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/user.dart' as app_user;
 import '../model/body_info_model.dart';
 import '../model/nutrition_calculation_model.dart';
-import '../features/food_scanner/services/session_permission_service.dart';
+import '../features/food_scanner/services/camera_permission_service.dart';
 import 'exceptions.dart';
 import 'local_storage_service.dart';
 
@@ -93,7 +93,7 @@ class AuthService {
   Future<void> signOut() async {
     await _auth.signOut();
     // Reset session permission state when user logs out
-    SessionPermissionService().resetSessionState();
+    CameraPermissionService().resetSessionState();
     // Xóa dữ liệu guest khi đăng xuất
     try {
       final LocalStorageService localStorage = LocalStorageService();
@@ -226,7 +226,6 @@ class AuthService {
     double? heightCm,
     double? weightKg,
     double? goalWeightKg,
-    List<String>? medicalConditions,
     List<String>? allergies,
     int? age,
     String? goal,
@@ -258,10 +257,7 @@ class AuthService {
           fullName: fullName,
           phone: phone,
           gender: _parseGender(gender),
-          bodyInfo: bodyInfo.copyWith(
-            medicalConditions: medicalConditions,
-            allergies: allergies,
-          ),
+          bodyInfo: bodyInfo.copyWith(allergies: allergies),
           age: age,
           goal: goal,
           avatars: user.photoURL,
@@ -344,100 +340,20 @@ class AuthService {
       throw const AuthException('Email không hợp lệ.', 'invalid-email');
     }
 
-    String emailForReset = sanitizedEmail;
-
-    try {
-      List<String> signInMethods = await _auth.fetchSignInMethodsForEmail(
-        emailForReset,
-      );
-
-      if (signInMethods.isEmpty) {
-        final String lowerCaseEmail = sanitizedEmail.toLowerCase();
-        if (lowerCaseEmail != sanitizedEmail) {
-          signInMethods = await _auth.fetchSignInMethodsForEmail(
-            lowerCaseEmail,
-          );
-          if (signInMethods.isNotEmpty) {
-            emailForReset = lowerCaseEmail;
-          }
-        }
-
-        if (signInMethods.isEmpty) {
-          final bool exists = await _doesUserExistByEmail(emailForReset);
-          if (!exists && lowerCaseEmail != sanitizedEmail) {
-            final bool existsLower = await _doesUserExistByEmail(
-              lowerCaseEmail,
-            );
-            if (existsLower) {
-              emailForReset = lowerCaseEmail;
-            } else {
-              throw const AuthException(
-                'Email không tồn tại trong hệ thống.',
-                'user-not-found',
-              );
-            }
-          } else if (!exists) {
-            throw const AuthException(
-              'Email không tồn tại trong hệ thống.',
-              'user-not-found',
-            );
-          }
-        }
-      }
-
-      if (signInMethods.isNotEmpty && !signInMethods.contains('password')) {
-        final String providers = signInMethods
-            .map(_providerDisplayName)
-            .join(', ');
-        throw AuthException(
-          'Tài khoản này đang đăng nhập bằng: $providers. Không thể đặt lại mật khẩu bằng email.',
-          'requires-different-provider',
-        );
-      }
-
-      await _auth.sendPasswordResetEmail(email: emailForReset);
+      try {
+      // As of recent Firebase updates, `fetchSignInMethodsForEmail` is deprecated
+      // to prevent email enumeration attacks. The recommended approach is to call
+      // `sendPasswordResetEmail` directly. Firebase will handle sending the email
+      // only if the user exists, without revealing whether the email is registered.
+      await _auth.sendPasswordResetEmail(email: sanitizedEmail);
     } on FirebaseAuthException catch (e) {
+      // Rethrow with a more user-friendly message, but avoid confirming if the
+      // user exists or not.
       throw AuthException(_handleAuthException(e), e.code);
     }
   }
 
-  Future<bool> _doesUserExistByEmail(String email) async {
-    final String lowerCaseEmail = email.trim().toLowerCase();
 
-    final QuerySnapshot<Map<String, dynamic>> normalizedSnapshot =
-        await _firestore
-            .collection(_usersCollection)
-            .where('emailLowercase', isEqualTo: lowerCaseEmail)
-            .limit(1)
-            .get();
-
-    if (normalizedSnapshot.docs.isNotEmpty) {
-      return true;
-    }
-
-    final QuerySnapshot<Map<String, dynamic>> legacySnapshot = await _firestore
-        .collection(_usersCollection)
-        .where('email', isEqualTo: email.trim())
-        .limit(1)
-        .get();
-
-    return legacySnapshot.docs.isNotEmpty;
-  }
-
-  String _providerDisplayName(String providerId) {
-    switch (providerId) {
-      case 'password':
-        return 'Email & Mật khẩu';
-      case 'google.com':
-        return 'Google';
-      case 'facebook.com':
-        return 'Facebook';
-      case 'apple.com':
-        return 'Apple';
-      default:
-        return providerId;
-    }
-  }
 
   /// Test kết nối Firebase
   Future<bool> testFirebaseConnection() async {

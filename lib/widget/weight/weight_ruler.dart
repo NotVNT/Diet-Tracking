@@ -29,7 +29,7 @@ class WeightRuler extends StatelessWidget {
             activeTrackColor: accent,
             inactiveTrackColor: const Color(0xFFE5E7EB),
             thumbColor: accent,
-            overlayColor: accent.withOpacity(0.08),
+            overlayColor: accent.withValues(alpha: 0.08),
             thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 9),
           ),
           child: Slider(

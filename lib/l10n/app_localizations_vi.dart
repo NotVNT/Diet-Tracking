@@ -1111,6 +1111,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get permissionCameraRequired => 'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
 
   @override
+  String get scanOnlyToday => 'Bạn chỉ có thể quét món ăn cho ngày hôm nay.';
+
+  @override
   String get inboxTitle => 'Hộp thư đến';
 
   @override
@@ -1118,6 +1121,22 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get filterTitle => 'Bộ lọc';
+
+  @override
+  String get dateRangeTitle => 'Khoảng ngày';
+
+  @override
+  String get today => 'Hôm nay';
+
+  @override
+  String get yesterday => 'Hôm qua';
+
+  @override
+  String get last7Days => '7 ngày qua';
+
+  @override
+  String get customRange => 'Khoảng khác';
+
 
   @override
   String get category => 'Danh mục';
@@ -1162,6 +1181,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String deleteMealMessage(String foodName) {
     return 'Bạn có chắc muốn xoá \"$foodName\" khỏi ghi nhận?';
   }
+
+  @override
+  String get mealDeletedSuccessfully => 'Xoá món ăn thành công';
+
+  @override
+  String get deleteMealFailed => 'Xoá món ăn thất bại';
+
+  @override
+  String get sourceTagBotSuggestion => 'Gợi ý Chatbot';
+
+  @override
+  String get sourceTagScanned => 'Từ quét ảnh/mã';
+
+  @override
+  String get sourceTagManual => 'Nhập thủ công';
+
 
   @override
   String get initializing => 'Đang khởi tạo...';

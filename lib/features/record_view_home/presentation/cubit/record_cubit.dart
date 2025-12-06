@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/save_food_record_usecase.dart';
 import '../../domain/usecases/get_food_records_usecase.dart';
@@ -12,6 +13,11 @@ class RecordCubit extends Cubit<RecordState> {
 
   List<FoodRecordEntity> _allRecords = [];
 
+  // Filters
+  String _searchQuery = '';
+  String? _calorieRange; // format: "min-max"
+  DateTimeRange? _dateRange; // inclusive range
+
   RecordCubit(
     this._saveFoodRecordUseCase,
     this._getFoodRecordsUseCase,
@@ -25,7 +31,6 @@ class RecordCubit extends Cubit<RecordState> {
     String? nutritionDetails,
   }) async {
     try {
-      // Only emit loading if not already loading
       if (state is! RecordLoading) {
         emit(RecordLoading());
       }
@@ -36,7 +41,6 @@ class RecordCubit extends Cubit<RecordState> {
         nutritionDetails: nutritionDetails,
       );
       emit(const RecordSuccess('Món ăn đã được ghi nhận thành công!'));
-      // Tự động load lại danh sách sau khi lưu
       await loadFoodRecords();
     } catch (e) {
       emit(RecordError('Lỗi khi ghi nhận món ăn: ${e.toString()}'));
@@ -45,13 +49,12 @@ class RecordCubit extends Cubit<RecordState> {
 
   Future<void> loadFoodRecords() async {
     try {
-      // Only emit loading if not already showing data
       if (state is! RecordListLoaded) {
         emit(RecordLoading());
       }
       final records = await _getFoodRecordsUseCase.call();
       _allRecords = records;
-      emit(RecordListLoaded(records));
+      _emitFiltered();
     } catch (e) {
       emit(RecordError('Lỗi khi tải danh sách món ăn: ${e.toString()}'));
     }
@@ -60,47 +63,95 @@ class RecordCubit extends Cubit<RecordState> {
   Future<void> deleteFoodRecord(String id) async {
     try {
       await _deleteFoodRecordUseCase.call(id);
-
-      // Optimistically update the UI by removing the item from the local list
-      final updatedRecords = _allRecords
-          .where((record) => record.id != id)
-          .toList();
-      _allRecords = updatedRecords;
-
-      // Emit the new state to update the UI immediately
-      emit(RecordListLoaded(updatedRecords));
+      _allRecords = _allRecords.where((record) => record.id != id).toList();
+      _emitFiltered();
     } catch (e) {
       emit(RecordError('Lỗi khi xóa món ăn: ${e.toString()}'));
-      // If deletion fails, reload the list to ensure data consistency
       await loadFoodRecords();
     }
   }
 
+  // GETTERS for UI
+  String? get calorieRange => _calorieRange;
+  DateTimeRange? get dateRange => _dateRange;
+  bool get hasActiveFilters => _calorieRange != null || _dateRange != null;
+
+  // PUBLIC FILTER API
+  void setSearchQuery(String query) {
+    _searchQuery = query.trim();
+    _emitFiltered();
+  }
+
   void filterRecordsByCalories(String? calorieRange) {
-    if (calorieRange == null) {
-      // Show all records when no filter is selected
-      emit(RecordListLoaded(_allRecords));
-      return;
-    }
+    _calorieRange = calorieRange;
+    _emitFiltered();
+  }
 
-    // Parse the calorie range
-    final parts = calorieRange.split('-');
-    if (parts.length != 2) return;
+  void setDateRangeFilter(DateTimeRange? range) {
+    _dateRange = range;
+    _emitFiltered();
+  }
 
-    final minCalories = double.tryParse(parts[0]);
-    final maxCalories = double.tryParse(parts[1]);
+  // Apply both filters in one emission to avoid intermediate states
+  void setFilters({String? calorieRange, DateTimeRange? dateRange}) {
+    _calorieRange = calorieRange;
+    _dateRange = dateRange;
+    _emitFiltered();
+  }
 
-    if (minCalories == null || maxCalories == null) return;
-
-    // Filter records based on calorie range
-    final filteredRecords = _allRecords.where((record) {
-      return record.calories >= minCalories && record.calories <= maxCalories;
-    }).toList();
-
-    emit(RecordListLoaded(_allRecords, filteredRecords: filteredRecords));
+  void clearFilters() {
+    _calorieRange = null;
+    _dateRange = null;
+    _emitFiltered();
   }
 
   void resetState() {
     emit(RecordInitial());
+  }
+
+  // INTERNAL
+  void _emitFiltered() {
+    final filtered = _applyFilters();
+    emit(RecordListLoaded(_allRecords, filteredRecords: filtered));
+  }
+
+  List<FoodRecordEntity> _applyFilters() {
+    Iterable<FoodRecordEntity> result = _allRecords;
+
+    // Apply date range filter (inclusive)
+    if (_dateRange != null) {
+      final start = _dateRange!.start;
+      final end = _dateRange!.end;
+      result = result.where((r) {
+        final d = r.date.toLocal();
+        // Compare dates at the day level to avoid time/timezone issues
+        final recordDay = DateTime(d.year, d.month, d.day);
+        final startDay = DateTime(start.year, start.month, start.day);
+        final endDay = DateTime(end.year, end.month, end.day);
+        return !recordDay.isBefore(startDay) && !recordDay.isAfter(endDay);
+      });
+    }
+
+    // Apply calorie filter if present
+    if (_calorieRange != null) {
+      final parts = _calorieRange!.split('-');
+      if (parts.length == 2) {
+        final minCalories = double.tryParse(parts[0]);
+        final maxCalories = double.tryParse(parts[1]);
+        if (minCalories != null && maxCalories != null) {
+          result = result.where(
+            (r) => r.calories >= minCalories && r.calories <= maxCalories,
+          );
+        }
+      }
+    }
+
+    // Apply search query (case-insensitive)
+    if (_searchQuery.isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      result = result.where((r) => r.foodName.toLowerCase().contains(q));
+    }
+
+    return result.toList();
   }
 }

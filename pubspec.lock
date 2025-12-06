@@ -173,26 +173,26 @@ packages:
     dependency: "direct main"
     description:
       name: camera
-      sha256: "87a27e0553e3432119c1c2f6e4b9a1bbf7d2c660552b910bfa59185a9facd632"
+      sha256: eefad89f262a873f38d21e5eec853461737ea074d7c9ede39f3ceb135d201cab
       url: "https://pub.dev"
     source: hosted
-    version: "0.11.2+1"
+    version: "0.11.3"
   camera_android_camerax:
     dependency: transitive
     description:
       name: camera_android_camerax
-      sha256: "58b8fe843a3c83fd1273c00cb35f5a8ae507f6cc9b2029bcf7e2abba499e28d8"
+      sha256: "360a9436980590e7268e0ff9eff482ff73ac3e0f66fffdd203cd93d1bfed0fc4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.19+1"
+    version: "0.6.25+1"
   camera_avfoundation:
     dependency: transitive
     description:
       name: camera_avfoundation
-      sha256: "951ef122d01ebba68b7a54bfe294e8b25585635a90465c311b2f875ae72c412f"
+      sha256: "035b90c1e33c2efad7548f402572078f6e514d4f82be0a315cd6c6af7e855aa8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.21+2"
+    version: "0.9.22+6"
   camera_platform_interface:
     dependency: transitive
     description:
@@ -205,10 +205,10 @@ packages:
     dependency: transitive
     description:
       name: camera_web
-      sha256: "595f28c89d1fb62d77c73c633193755b781c6d2e0ebcd8dc25b763b514e6ba8f"
+      sha256: "3bc7bb1657a0f29c34116453c5d5e528c23efcf5e75aac0a3387cf108040bf65"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.5"
+    version: "0.3.5+2"
   cel:
     dependency: transitive
     description:
@@ -301,10 +301,10 @@ packages:
     dependency: transitive
     description:
       name: cross_file
-      sha256: "942a4791cd385a68ccb3b32c71c427aba508a1bb949b86dff2adbe4049f16239"
+      sha256: "701dcfc06da0882883a2657c445103380e53e647060ad8d9dfb710c100996608"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.5"
+    version: "0.3.5+1"
   crypto:
     dependency: transitive
     description:
@@ -405,18 +405,18 @@ packages:
     dependency: transitive
     description:
       name: file_selector_linux
-      sha256: "80a877f5ec570c4fb3b40720a70b6f31e8bb1315a464b4d3e92fe82754d4b21a"
+      sha256: "2567f398e06ac72dcf2e98a0c95df2a9edd03c2c2e0cacd4780f20cdf56263a0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.3+3"
+    version: "0.9.4"
   file_selector_macos:
     dependency: transitive
     description:
       name: file_selector_macos
-      sha256: "19124ff4a3d8864fdc62072b6a2ef6c222d55a3404fe14893a3c02744907b60c"
+      sha256: "5e0bbe9c312416f1787a68259ea1505b52f258c587f12920422671807c4d618a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.4+4"
+    version: "0.9.5"
   file_selector_platform_interface:
     dependency: transitive
     description:
@@ -599,10 +599,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
-      sha256: c2fe1001710127dfa7da89977a08d591398370d099aacdaa6d44da7eb14b8476
+      sha256: ee8068e0e1cd16c4a82714119918efdeed33b3ba7772c54b5d094ab53f9b7fd1
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.31"
+    version: "2.0.33"
   flutter_svg:
     dependency: transitive
     description:
@@ -653,22 +653,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.3+1"
-  google_mlkit_barcode_scanning:
-    dependency: "direct main"
-    description:
-      name: google_mlkit_barcode_scanning
-      sha256: b38505df2d3fdf7830979d60fee55039c2f442d189b2e06fcb2fe494ba65d0db
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.14.1"
-  google_mlkit_commons:
-    dependency: transitive
-    description:
-      name: google_mlkit_commons
-      sha256: "8f40fbac10685cad4715d11e6a0d86837d9ad7168684dfcad29610282a88e67a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.11.0"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -742,7 +726,7 @@ packages:
     source: hosted
     version: "4.1.2"
   image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image
       sha256: "4e973fcf4caae1a4be2fa0a13157aa38a8f9cb049db6529aa00b4d71abc4d928"
@@ -761,26 +745,26 @@ packages:
     dependency: transitive
     description:
       name: image_picker_android
-      sha256: "28f3987ca0ec702d346eae1d90eda59603a2101b52f1e234ded62cff1d5cfa6e"
+      sha256: "5e9bf126c37c117cf8094215373c6d561117a3cfb50ebc5add1a61dc6e224677"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.13+1"
+    version: "0.8.13+10"
   image_picker_for_web:
     dependency: transitive
     description:
       name: image_picker_for_web
-      sha256: "40c2a6a0da15556dc0f8e38a3246064a971a9f512386c3339b89f76db87269b6"
+      sha256: "66257a3191ab360d23a55c8241c91a6e329d31e94efa7be9cf7a212e65850214"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   image_picker_ios:
     dependency: transitive
     description:
       name: image_picker_ios
-      sha256: eb06fe30bab4c4497bad449b66448f50edcc695f1c59408e78aa3a8059eb8f0e
+      sha256: "956c16a42c0c708f914021666ffcd8265dde36e673c9fa68c81f7d085d9774ad"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.13"
+    version: "0.8.13+3"
   image_picker_linux:
     dependency: transitive
     description:
@@ -793,10 +777,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_macos
-      sha256: d58cd9d67793d52beefd6585b12050af0a7663c0c2a6ece0fb110a35d6955e04
+      sha256: "86f0f15a309de7e1a552c12df9ce5b59fe927e71385329355aec4776c6a8ec91"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.2+1"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -917,6 +901,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      name: mobile_scanner
+      sha256: d234581c090526676fd8fab4ada92f35c6746e3fb4f05a399665d75a399fb760
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.3"
   mock_exceptions:
     dependency: transitive
     description:
@@ -1496,8 +1488,12 @@ sdks:
   dart: ">=3.8.1 <4.0.0"
 =======
   dart: ">=3.9.0 <4.0.0"
+<<<<<<< HEAD
 >>>>>>> 410f5bcb8f3a790da6495eafa964bce837eaecd2
 =======
   dart: ">=3.9.0 <4.0.0"
 >>>>>>> d401a9f2c642081a6dff30f7a10092c63e910fb2
   flutter: ">=3.32.0"
+=======
+  flutter: ">=3.35.0"
+>>>>>>> d22a7a582436106be461bc6fa76c229996e04243

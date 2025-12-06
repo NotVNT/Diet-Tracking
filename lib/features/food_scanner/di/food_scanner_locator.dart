@@ -4,7 +4,7 @@ import '../data/repositories/scanned_food_repository_impl.dart';
 import '../services/food_recognition_service.dart';
 import '../services/barcode_scanner_service.dart' as barcode_service;
 import '../services/barcode_api_service.dart';
-import '../services/session_permission_service.dart';
+import '../services/camera_permission_service.dart';
 import '../domain/usecases/save_scanned_food.dart';
 import '../domain/usecases/request_camera_permission.dart';
 import '../domain/usecases/scan_barcode_from_image.dart';
@@ -65,7 +65,7 @@ class FoodScannerLocator {
       () => SaveScannedFood(I<ScannedFoodRepository>()),
     );
     I.registerLazySingleton<RequestCameraPermission>(
-      () => requestCameraPermission ?? RequestCameraPermission(SessionPermissionService()),
+      () => requestCameraPermission ?? RequestCameraPermission(CameraPermissionService()),
     );
     I.registerLazySingleton<ScanBarcodeFromImage>(
       () => ScanBarcodeFromImage(I<barcode_service.IBarcodeScannerService>()),
@@ -90,6 +90,7 @@ class FoodScannerLocator {
         scanBarcodeFromCameraFrame: I<ScanBarcodeFromCameraFrame>(),
         getBarcodeProductInfo: I<GetBarcodeProductInfo>(),
         saveScannedFood: I<SaveScannedFood>(),
+        barcodeApiService: I<BarcodeApiService>(),
       ),
     );
     I.registerFactory<cam.CameraBloc>(

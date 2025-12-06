@@ -1,5 +1,3 @@
-/// Custom exceptions cho database operations
-
 /// Exception cho authentication errors
 class AuthException implements Exception {
   final String message;

@@ -1110,6 +1110,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get permissionCameraRequired => 'Please grant camera access to use this feature.';
 
+
+  @override
+  String get scanOnlyToday => 'You can only scan meals for today.';
+
   @override
   String get inboxTitle => 'Inbox';
 
@@ -1118,6 +1122,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterTitle => 'Filter';
+
+  @override
+  String get dateRangeTitle => 'Date range';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get last7Days => 'Last 7 days';
+
+  @override
+  String get customRange => 'Custom range';
+
 
   @override
   String get category => 'Category';
@@ -1162,6 +1182,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String deleteMealMessage(String foodName) {
     return 'Are you sure you want to delete \"$foodName\" from records?';
   }
+
+  @override
+  String get mealDeletedSuccessfully => 'Meal deleted successfully';
+
+  @override
+  String get deleteMealFailed => 'Failed to delete meal';
+
+  @override
+  String get sourceTagBotSuggestion => 'Chatbot suggestion';
+
+  @override
+  String get sourceTagScanned => 'From scan/photo';
+
+  @override
+  String get sourceTagManual => 'Manual input';
+
 
   @override
   String get initializing => 'Initializing...';

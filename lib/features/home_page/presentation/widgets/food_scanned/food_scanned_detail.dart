@@ -6,12 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../../common/snackbar_helper.dart';
+import '../../../../../common/app_confirm_dialog.dart';
 
 import 'food_image_widget.dart';
 import 'food_scanned_info.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../../record_view_home/presentation/cubit/record_cubit.dart';
-import '../components/options_menu_for_plus_button.dart';
+import '../shared/options_menu_for_plus_button.dart';
 
 /// Page to display scanned food details with image viewer and actions
 class ScannedFoodDetailPage extends StatelessWidget {
@@ -23,9 +24,7 @@ class ScannedFoodDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final isBarcode = scannedFood.recordType == RecordType.barcode;
 
-    return isBarcode
-        ? _buildBarcodeView(context)
-        : _buildImageView(context);
+    return isBarcode ? _buildBarcodeView(context) : _buildImageView(context);
   }
 
   Widget _buildImageView(BuildContext context) {
@@ -105,7 +104,6 @@ class ScannedFoodDetailPage extends StatelessWidget {
     );
   }
 
-
   void _showMoreOptions(BuildContext context, ResponsiveHelper responsive) {
     showModalBottomSheet(
       context: context,
@@ -125,36 +123,40 @@ class ScannedFoodDetailPage extends StatelessWidget {
   }
 
   void _onDelete(BuildContext context) async {
-    // Confirmation is already handled inside MoreOptionsMenu.
-    // Here we only perform the actual deletion and close the detail page.
     final recordCubit = context.read<RecordCubit>();
     final navigator = Navigator.of(context);
     final l10n = AppLocalizations.of(context);
     final id = scannedFood.id;
     if (id == null) {
-      SnackBarHelper.showError(
-        context,
-        l10n?.snackbarErrorTitle ?? 'Error',
-      );
+      SnackBarHelper.showError(context, l10n?.snackbarErrorTitle ?? 'Error');
       return;
     }
 
+    // Show only one confirmation: "Xóa món ăn"
+    final confirmed = await showAppConfirmDialog(
+      context,
+      title: l10n?.deleteMealTitle ?? 'Xoá món ăn?',
+      message:
+          l10n?.deleteMealMessage(scannedFood.foodName) ??
+          'Bạn có chắc muốn xoá "${scannedFood.foodName}" khỏi ghi nhận?',
+      confirmText: l10n?.delete,
+      cancelText: l10n?.cancel,
+      destructive: true,
+      icon: Icons.delete_rounded,
+    );
+    if (confirmed != true) return;
+
     await recordCubit.deleteFoodRecord(id);
     if (!context.mounted) return;
-    // Show success message before leaving the page so the snackbar is visible on the previous screen
     SnackBarHelper.showSuccess(
       context,
-      l10n?.photoDeletedSuccessfully ?? 'Photo deleted successfully',
+      l10n?.photoDeletedSuccessfully ?? 'Deleted successfully',
     );
     if (navigator.canPop()) {
-      navigator.pop(true); // Return true so previous page can refresh if needed
+      navigator.pop(true);
     }
   }
-
 }
-
-
-
 
 /// Bottom sheet widget displaying scanned food details and action buttons
 class DetailBottomSheetWidget extends StatelessWidget {

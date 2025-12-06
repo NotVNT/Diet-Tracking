@@ -1,7 +1,9 @@
 import os
 import torch
 import timm
+import torch
 import torch.nn as nn
+import torch.optim as optim
 import torchvision.transforms as T
 from sklearn.metrics.pairwise import cosine_similarity
 from PIL import Image
@@ -248,9 +250,9 @@ class NutrientPredictor(nn.Module):
         self.backbone = backbone
         self.regressor = regressor
 
-    def forward(self, x):
+    def forward(self, x): # Changed input argument from pixel_values to x
         with torch.no_grad():
-            features = self.backbone(x)
+            features = self.backbone(x) # Pass the tensor directly; removed .pooler_output
         return self.regressor(features)
 
 def predict_image(img_bytes, predictor, transform, device):
@@ -261,6 +263,8 @@ def predict_image(img_bytes, predictor, transform, device):
         preds = predictor(tensor)
     return preds.squeeze(0).cpu().numpy()
 
+vision_model = load_feature_extractor().to(device)
+regressor = NutrientRegressor(input_dim=1280, output_dim=5).to(device)
 
 model = timm.create_model("efficientnet_lite0", pretrained=True)
 vision_model = load_feature_extractor(model).to(device)

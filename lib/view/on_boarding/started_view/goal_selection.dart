@@ -64,7 +64,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                           child: Container(
                             height: 6,
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.08),
+                              color: Colors.black.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(6),
                             ),
                           ),
@@ -74,7 +74,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                           child: Container(
                             height: 6,
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.08),
+                              color: Colors.black.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(6),
                             ),
                           ),
@@ -84,7 +84,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                           child: Container(
                             height: 6,
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.08),
+                              color: Colors.black.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(6),
                             ),
                           ),
@@ -119,7 +119,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                   vertical: 8,
                 ),
                 itemBuilder: (context, index) => _buildGoalTile(index),
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                separatorBuilder: (_,_) => const SizedBox(height: 12),
                 itemCount: _goals.length,
               ),
             ),
@@ -138,7 +138,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                           );
 
                           // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
-                          print('🔍 Saving goal to localStorage: $selectedTitle');
+                          debugPrint('🔍 Saving goal to localStorage: $selectedTitle');
                           await _local.saveGuestData(goal: selectedTitle);
 
                           // Nếu đã đăng nhập: cũng lưu trực tiếp vào Firestore
@@ -151,17 +151,19 @@ class _GoalSelectionState extends State<GoalSelection> {
                             } catch (_) {}
                           }
 
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => GoalReasonScreen(
-                                selectedMainGoals: [selectedTitle],
+                          if (mounted && context.mounted) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => GoalReasonScreen(
+                                  selectedMainGoals: [selectedTitle],
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primary,
-                    disabledBackgroundColor: Colors.black.withOpacity(0.1),
+                    disabledBackgroundColor: Colors.black.withValues(alpha: 0.1),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
@@ -199,7 +201,7 @@ class _GoalSelectionState extends State<GoalSelection> {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 14,
               offset: const Offset(0, 6),
             ),
@@ -215,7 +217,7 @@ class _GoalSelectionState extends State<GoalSelection> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(12),
               ),
               alignment: Alignment.center,
@@ -247,7 +249,7 @@ class _GoalSelectionState extends State<GoalSelection> {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.05),
+        color: Colors.black.withValues(alpha: 0.05),
         shape: BoxShape.circle,
       ),
       child: Material(

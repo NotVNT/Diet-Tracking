@@ -107,7 +107,6 @@ class User {
         weightKg: data['weightKg'] as double?,
         goalWeightKg: data['goalWeightKg'] as double?,
         activityLevel: data['activityLevel'] as String?,
-        medicalConditions: (data['medicalConditions'] as List?)?.cast<String>(),
         allergies: (data['allergies'] as List?)?.cast<String>(),
       ),
       diet: const [],

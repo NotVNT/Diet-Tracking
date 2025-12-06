@@ -42,11 +42,15 @@ class ScannedFoodRepositoryImpl implements ScannedFoodRepository {
       calories: food.calories ?? 0,
       date: food.scanDate,
       imagePath: uploadedUrl, // Use the potentially updated URL
-      // Treat everything except explicit barcode scans as normal food photos
       recordType: food.scanType == ScanType.barcode
           ? RecordType.barcode
           : RecordType.food,
       nutritionDetails: food.description,
+      // Pass the new nutrition fields
+      protein: food.protein,
+      carbs: food.carbs,
+      fat: food.fat,
+      barcode: food.barcode,
     );
 
     // 3. Use the injected repository to save the record, centralizing logic

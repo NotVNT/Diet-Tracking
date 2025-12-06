@@ -21,7 +21,6 @@ class UserDataModel extends UserDataEntity {
   ///   "bodyInfo": {
   ///     "heightCm": int,
   ///     "weightKg": int,
-  ///     "medicalConditions": List&lt;String&gt;,
   ///     "allergies": List&lt;String&gt;
   ///   }
   /// }
@@ -73,28 +72,6 @@ class UserDataModel extends UserDataEntity {
         ? goalWRaw.toDouble()
         : double.tryParse(goalWRaw.toString());
 
-    // medicalConditions (allow null -> empty list)
-    final dynamic medDyn = bodyInfo['medicalConditions'];
-    final List<String> medicalConditions;
-    if (medDyn == null) {
-      medicalConditions = <String>[];
-    } else if (medDyn is List) {
-      if (!medDyn.every((e) => e is String)) {
-        throw FormatException(
-          'All items in bodyInfo.medicalConditions must be String',
-        );
-      }
-      medicalConditions = medDyn
-          .cast<String>()
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty)
-          .toList();
-    } else {
-      throw FormatException(
-        'Invalid type for "bodyInfo.medicalConditions". Expected List<String> or null, got ${medDyn.runtimeType}',
-      );
-    }
-
     // allergies (allow null -> empty list)
     final dynamic allergyDyn = bodyInfo['allergies'];
     final List<String> allergies;
@@ -127,7 +104,7 @@ class UserDataModel extends UserDataEntity {
     }
 
     // Join lists for model fields
-    final String disease = medicalConditions.join(', ');
+    final String disease = ''; // medicalConditions no longer used
     final String allergy = allergies.join(', ');
 
     return UserDataModel(

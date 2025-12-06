@@ -8,6 +8,10 @@ class ScannedFoodEntity {
   final String? foodName; // Tên món ăn (từ barcode hoặc AI)
   final double? calories; // Calories (từ OpenFoodFacts)
   final String? description; // Mô tả/thông tin dinh dưỡng
+  final double? protein;
+  final double? carbs;
+  final double? fat;
+  final String? barcode;
 
   const ScannedFoodEntity({
     required this.id,
@@ -18,6 +22,10 @@ class ScannedFoodEntity {
     this.foodName,
     this.calories,
     this.description,
+    this.protein,
+    this.carbs,
+    this.fat,
+    this.barcode,
   });
 }
 

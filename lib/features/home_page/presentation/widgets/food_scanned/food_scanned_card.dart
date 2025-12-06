@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../components/plus_button.dart';
+import '../shared/plus_button.dart';
 import 'food_scanned_info.dart';
-import '../components/options_menu_for_plus_button.dart';
+import '../shared/options_menu_for_plus_button.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
@@ -50,10 +50,7 @@ class FoodScannedCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (showImage) ...[
-            _buildFoodImage(),
-            const SizedBox(width: 12),
-          ],
+          if (showImage) ...[_buildFoodImage(), const SizedBox(width: 12)],
           Expanded(
             child: FoodScannedInfo(
               record: foodRecord,
@@ -64,42 +61,42 @@ class FoodScannedCard extends StatelessWidget {
           if (showAddButton || isBarcode) ...[
             const SizedBox(width: 8),
             _buildAddButton(context),
-          ]
+          ],
         ],
       ),
     );
   }
 
   Widget _buildFoodImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12.0),
-      child: CachedNetworkImage(
-        imageUrl: foodRecord.imagePath!,
-        height: 60,
-        width: 60,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => Container(
-          height: 60,
-          width: 60,
-          color: Colors.grey[200],
-          child: const Center(
+    // Sử dụng Container với decoration thay vì ClipRRect để giảm layer overhead
+    return Container(
+      height: 60,
+      width: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.0),
+        color: Colors.grey[200],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0),
+        child: CachedNetworkImage(
+          imageUrl: foodRecord.imagePath!,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => const Center(
             child: SizedBox(
               height: 24,
               width: 24,
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
           ),
-        ),
-        errorWidget: (context, url, error) => Container(
-          height: 60,
-          width: 60,
-          color: Colors.grey[200],
-          child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 24),
+          errorWidget: (context, url, error) => const Icon(
+            Icons.image_not_supported,
+            color: Colors.grey,
+            size: 24,
+          ),
         ),
       ),
     );
   }
-
 
   Widget _buildAddButton(BuildContext context) {
     return AddBadgeIconButton(

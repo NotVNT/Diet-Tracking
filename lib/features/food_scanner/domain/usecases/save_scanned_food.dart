@@ -15,6 +15,10 @@ class SaveScannedFood {
     String? foodName,
     double? calories,
     String? description,
+    double? protein,
+    double? carbs,
+    double? fat,
+    String? barcode,
   }) async {
     final entity = ScannedFoodEntity(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -25,6 +29,10 @@ class SaveScannedFood {
       foodName: foodName,
       calories: calories,
       description: description,
+      protein: protein,
+      carbs: carbs,
+      fat: fat,
+      barcode: barcode,
     );
 
     await _repository.saveScannedFood(entity);

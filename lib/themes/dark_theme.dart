@@ -41,7 +41,7 @@ class AppDarkTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        shadowColor: Colors.black.withOpacity(0.3),
+        shadowColor: Colors.black.withValues(alpha: 0.3),
       ),
       
       // Text Theme

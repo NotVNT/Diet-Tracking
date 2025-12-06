@@ -3,27 +3,60 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../common/app_styles.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../common/app_confirm_dialog.dart';
+import '../../../../common/snackbar_helper.dart';
+import '../../domain/entities/food_record_entity.dart';
+import '../../../home_page/presentation/widgets/food_scanned/food_scanned_info.dart';
 import '../cubit/record_cubit.dart';
 import '../cubit/record_state.dart';
 
-class FoodRecordList extends StatelessWidget {
-  const FoodRecordList({Key? key}) : super(key: key);
+import 'record_details_sheet.dart';
+import 'record_tag.dart';
 
-  /// Formats calories display - shows "~" for chatbot suggestions, exact for manual entries
-  String _formatCalories(record) {
-    final calories = record.calories.toStringAsFixed(0);
-    // If record has nutritionDetails, it came from chatbot suggestion (approximate)
-    if (record.nutritionDetails != null && record.nutritionDetails!.trim().isNotEmpty) {
-      return '~$calories';
+
+class FoodRecordList extends StatelessWidget {
+  const FoodRecordList({super.key});
+
+  Future<void> _confirmAndDelete(BuildContext context, FoodRecordEntity record) async {
+    final cubit = context.read<RecordCubit>();
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showAppConfirmDialog(
+      context,
+      title: l10n?.deleteMealTitle ?? 'Xoá món ăn?',
+      message: l10n?.deleteMealMessage(record.foodName) ??
+          'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
+      confirmText: l10n?.delete,
+      cancelText: l10n?.cancel,
+      destructive: true,
+      icon: Icons.delete_rounded,
+    );
+
+    if (confirmed == true && record.id != null) {
+      try {
+        await cubit.deleteFoodRecord(record.id!);
+        if (context.mounted) {
+          SnackBarHelper.showSuccess(
+            context,
+            l10n?.mealDeletedSuccessfully ?? 'Meal deleted successfully',
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          SnackBarHelper.showError(
+            context,
+            l10n?.deleteMealFailed ?? 'Failed to delete meal',
+          );
+        }
+      }
     }
-    // Otherwise it's a manual entry (exact)
-    return calories;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    
+
     return BlocBuilder<RecordCubit, RecordState>(
       builder: (context, state) {
         if (state is RecordLoading) {
@@ -31,76 +64,27 @@ class FoodRecordList extends StatelessWidget {
         }
 
         if (state is RecordError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  state.message,
-                  style: AppStyles.bodyMedium.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<RecordCubit>().loadFoodRecords();
-                  },
-                  child: Text(localizations?.retryButton ?? 'Thử lại'),
-                ),
-              ],
-            ),
+          return RecordErrorWidget(
+            message: state.message,
+            onRetry: () => context.read<RecordCubit>().loadFoodRecords(),
           );
         }
 
         if (state is RecordListLoaded) {
           final recordsToShow = state.filteredRecords;
           if (recordsToShow.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.restaurant_menu,
-                    size: 48,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    localizations?.noMealsRecorded ?? 'Chưa có món ăn nào được ghi nhận',
-                    style: AppStyles.bodyMedium.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    localizations?.addFirstMeal ?? 'Hãy thêm món ăn đầu tiên của bạn!',
-                    style: AppStyles.bodySmall.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8),
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            );
+            return const RecordEmptyStateWidget();
           }
 
+          final dateFormat = DateFormat('dd/MM/yyyy');
+
           return ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
             itemCount: recordsToShow.length,
             itemBuilder: (context, index) {
               final record = recordsToShow[index];
-              final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
               return Card(
+                key: ValueKey(record.id ?? '${record.foodName}-${record.date.millisecondsSinceEpoch}'),
                 margin: const EdgeInsets.only(bottom: 8),
                 elevation: 2,
                 shape: RoundedRectangleBorder(
@@ -117,96 +101,52 @@ class FoodRecordList extends StatelessWidget {
                         ),
                       ),
                       builder: (ctx) {
-                        return Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.restaurant,
-                                      color: Theme.of(context).colorScheme.primary,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        record.foodName,
-                                        style: AppStyles.heading2.copyWith(
-                                          fontSize: 18,
-                                          color: Theme.of(context).colorScheme.onSurface,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  '${_formatCalories(record)} ${localizations?.calories ?? 'calories'}',
-                                  style: AppStyles.bodyMedium.copyWith(
-                                    color: Theme.of(context).colorScheme.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                if ((record.nutritionDetails ?? '')
-                                    .trim()
-                                    .isNotEmpty) ...[
-                                  Text(
-                                    localizations?.nutritionInfo ?? 'Thông tin dinh dưỡng',
-                                    style: AppStyles.heading2.copyWith(
-                                      fontSize: 16,
-                                      color: Theme.of(context).colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    record.nutritionDetails!.trim(),
-                                    style: AppStyles.bodyMedium.copyWith(
-                                      color: Theme.of(context).colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                ],
-                              ],
-                            ),
-                          ),
-                        );
+                        return RecordDetailsSheet(record: record);
                       },
                     );
                   },
                   leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     child: Icon(
                       Icons.restaurant,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  title: Text(
-                    record.foodName,
-                    style: AppStyles.heading2.copyWith(
-                      fontSize: 16,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+                  title: FoodScannedInfo(
+                    record: record,
+                    showTime: false,
+                    emphasizeCalories: true,
+                    approxForBotSuggestion: true,
+                    caloriesSuffix: localizations?.calories ?? 'calories',
+                    showMacros: false,
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '${_formatCalories(record)} ${localizations?.calories ?? 'calories'}',
-                        style: AppStyles.bodyMedium.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        dateFormat.format(record.date),
-                        style: AppStyles.bodySmall.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 12,
-                        ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              dateFormat.format(record.date),
+                              style: AppStyles.bodySmall.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                fontSize: 12,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerRight,
+                              child: RecordTag(record: record),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -216,43 +156,7 @@ class FoodRecordList extends StatelessWidget {
                       Icons.close_rounded,
                       color: Theme.of(context).colorScheme.error,
                     ),
-                    onPressed: () async {
-                      // Store the cubit instance before the async gap
-                      final cubit = context.read<RecordCubit>();
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (ctx) {
-                          return AlertDialog(
-                            title: Text(localizations?.deleteMealTitle ?? 'Xoá món ăn?'),
-                            content: Text(
-                              localizations?.deleteMealMessage(record.foodName) ??
-                                  'Bạn có chắc muốn xoá "${record.foodName}" khỏi ghi nhận?',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(ctx).pop(false),
-                                child: Text(localizations?.cancel ?? 'Huỷ'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.of(ctx).pop(true),
-                                child: Text(
-                                  localizations?.delete ?? 'Xoá',
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-
-                      if (confirm == true && (record.id != null)) {
-                        cubit.deleteFoodRecord(
-                          record.id!,
-                        );
-                      }
-                    },
+                    onPressed: () => _confirmAndDelete(context, record),
                   ),
                 ),
               );

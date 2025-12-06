@@ -122,18 +122,11 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    // Tối ưu hóa: Sử dụng Material elevation thay vì BoxShadow
+    return Material(
+      elevation: 4,
+      borderRadius: BorderRadius.circular(16),
+      color: Colors.white,
       child: Material(
         color: Colors.transparent,
         child: InkWell(

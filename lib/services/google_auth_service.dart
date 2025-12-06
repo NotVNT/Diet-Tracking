@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../database/exceptions.dart';
 import '../model/user.dart' as app_user;
+import '../utils/logger.dart';
 
 /// Service đăng nhập bằng Google cho cả mobile và web
 class GoogleAuthService {
@@ -136,11 +137,11 @@ class GoogleAuthService {
     final docRef = _firestore.collection(_usersCollection).doc(uid);
     final snapshot = await docRef.get();
     if (snapshot.exists) {
-      print('🔍 GoogleAuthService: User document already exists');
+      AppLogger.debug('User document already exists', tag: 'GoogleAuthService');
       return;
     }
 
-    print('🔍 GoogleAuthService: Creating new user document for uid: $uid');
+    AppLogger.debug('Creating new user document for uid: $uid', tag: 'GoogleAuthService');
     final app_user.User userData = app_user.User(
       uid: uid,
       email: email,
@@ -148,7 +149,7 @@ class GoogleAuthService {
       avatars: avatars,
     );
     await docRef.set(userData.toJson());
-    print('🔍 GoogleAuthService: User document created successfully');
+    AppLogger.debug('User document created successfully', tag: 'GoogleAuthService');
   }
 
   String _mapAuthError(fb_auth.FirebaseAuthException e) {

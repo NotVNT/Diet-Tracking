@@ -19,17 +19,17 @@ class ChatRepositoryImpl implements ChatRepository {
 
   @override
   Future<List<ChatMessageEntity>> getChatHistory() async {
-    // TODO: Implement chat history storage if needed
+    
     return [];
   }
 
   @override
   Future<void> saveChatMessage(ChatMessageEntity message) async {
-    // TODO: Implement chat message saving if needed
+   
   }
 
   @override
   Future<void> clearChatHistory() async {
-    // TODO: Implement chat history clearing if needed
+  
   }
 }

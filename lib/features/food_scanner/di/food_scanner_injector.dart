@@ -2,14 +2,12 @@ import '../presentation/bloc/food_scan/food_scan_bloc.dart';
 import '../presentation/bloc/barcode/barcode_bloc.dart';
 import '../presentation/bloc/camera/camera_bloc.dart' as cam;
 import '../presentation/bloc/camera/camera_event.dart' as cam_event;
-
 import '../data/repositories/scanned_food_repository_impl.dart';
 import '../domain/repositories/scanned_food_repository.dart';
 import '../services/food_recognition_service.dart';
 import '../services/barcode_scanner_service.dart' as barcode_service;
 import '../services/barcode_api_service.dart';
-import '../services/session_permission_service.dart';
-
+import '../services/camera_permission_service.dart';
 import '../domain/usecases/save_scanned_food.dart';
 import '../domain/usecases/request_camera_permission.dart';
 import '../domain/usecases/scan_barcode_from_image.dart';
@@ -109,10 +107,11 @@ class FoodScannerInjector {
       scanBarcodeFromCameraFrame: scanBarcodeFromCameraFrame,
       getBarcodeProductInfo: getProductInfo,
       saveScannedFood: saveScannedFood,
+      barcodeApiService: apiService,
     );
 
     final requestPermission =
-        _requestCameraPermission ?? RequestCameraPermission(SessionPermissionService());
+        _requestCameraPermission ?? RequestCameraPermission(CameraPermissionService());
     final cameraBloc = _prebuiltCameraBloc ?? cam.CameraBloc(requestPermission: requestPermission);
     if (_prebuiltCameraBloc == null && _initializeCameraOnCreate) {
       cameraBloc.add(const cam_event.InitializeCamera());

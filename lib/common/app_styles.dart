@@ -75,14 +75,15 @@ class AppStyles {
       );
 
   // Box Decorations
+  // Tối ưu hóa: Giảm blur radius và offset để giảm rendering overhead
   static BoxDecoration get cardDecoration => BoxDecoration(
     color: AppColors.white,
     borderRadius: BorderRadius.circular(20),
     boxShadow: [
       BoxShadow(
-        color: AppColors.shadowLight,
-        blurRadius: 20,
-        offset: const Offset(0, 10),
+        color: AppColors.shadowLight.withAlpha(20), // 0.08 * 255
+        blurRadius: 8,
+        offset: const Offset(0, 4),
       ),
     ],
   );
@@ -93,9 +94,9 @@ class AppStyles {
     border: Border.all(color: AppColors.grey300, width: 1.5),
     boxShadow: [
       BoxShadow(
-        color: AppColors.shadowLight,
-        blurRadius: 10,
-        offset: const Offset(0, 5),
+        color: AppColors.shadowLight.withAlpha(13), // 0.05 * 255
+        blurRadius: 4,
+        offset: const Offset(0, 2),
       ),
     ],
   );
@@ -111,10 +112,10 @@ class AppStyles {
         boxShadow: [
           BoxShadow(
             color: isFocused
-                ? AppColors.primary.withOpacity(0.1)
-                : AppColors.shadowLight,
-            blurRadius: isFocused ? 15 : 10,
-            offset: const Offset(0, 5),
+                ? AppColors.primary.withAlpha(20) // 0.08 * 255
+                : AppColors.shadowLight.withAlpha(13), // 0.05 * 255
+            blurRadius: isFocused ? 8 : 4,
+            offset: const Offset(0, 2),
           ),
         ],
       );
@@ -128,9 +129,9 @@ class AppStyles {
     borderRadius: BorderRadius.circular(16),
     boxShadow: [
       BoxShadow(
-        color: AppColors.primary.withOpacity(0.3),
-        blurRadius: 15,
-        offset: const Offset(0, 8),
+        color: AppColors.primary.withAlpha(31), // 0.12 * 255
+        blurRadius: 8,
+        offset: const Offset(0, 4),
       ),
     ],
   );
