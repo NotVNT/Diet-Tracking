@@ -3,9 +3,12 @@ import 'package:diet_tracking_project/features/food_scanner/data/models/food_sca
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_event.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_state.dart';
-import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_bloc.dart' as cam;
-import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_event.dart' as cam_event;
-import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_state.dart' as cam_state;
+import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_bloc.dart'
+    as cam;
+import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_event.dart'
+    as cam_event;
+import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_state.dart'
+    as cam_state;
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_event.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_state.dart';
@@ -22,20 +25,19 @@ class ScannerController {
   final cam.CameraBloc cameraBloc;
 
   String? _pendingImagePath;
-  ScannerActionType _selectedAction = ScannerActionType.food;
 
-  ScannerController(this.context) :
-    foodScanBloc = context.read<FoodScanBloc>(),
-    barcodeBloc = context.read<BarcodeBloc>(),
-    cameraBloc = context.read<cam.CameraBloc>();
-
+  ScannerController(this.context)
+    : foodScanBloc = context.read<FoodScanBloc>(),
+      barcodeBloc = context.read<BarcodeBloc>(),
+      cameraBloc = context.read<cam.CameraBloc>();
 
   void onActionSelected(ScannerActionType type) {
-    _selectedAction = type;
+    // Barcode mode uses mobile_scanner which needs exclusive camera access.
+    // Release CameraController to avoid conflicts. For food mode, (re)initialize.
     if (type == ScannerActionType.barcode) {
-      cameraBloc.add(const cam_event.StartImageStream());
-    } else {
-      cameraBloc.add(const cam_event.StopImageStream());
+      cameraBloc.add(const cam_event.ReleaseCamera());
+    } else if (type == ScannerActionType.food) {
+      cameraBloc.add(const cam_event.InitializeCamera());
     }
 
     if (type == ScannerActionType.gallery) {
@@ -124,19 +126,22 @@ class ScannerController {
     }
   }
 
-  void handleCameraState(BuildContext context, cam_state.CameraState state) async {
+  void handleCameraState(
+    BuildContext context,
+    cam_state.CameraState state,
+  ) async {
     if (state is cam_state.CameraError) {
       SnackBarHelper.showError(context, state.errorMessage);
       _popAfterShortDelay(canPop: true);
     } else if (state is cam_state.CameraFrameAvailable) {
-      final isFoodUploading = foodScanBloc.state is FoodScanUploading;
-      final isBarcodeUploading = barcodeBloc.state is BarcodeUploading;
-      if (_selectedAction == ScannerActionType.barcode &&
-          !isFoodUploading &&
-          !isBarcodeUploading) {
-        barcodeBloc.add(BarcodeScanFromCameraFrameRequested(state.image));
-      }
+      // Barcode realtime is handled by mobile_scanner, not camera frames.
+      // Keep for potential future streaming use cases (e.g., food analysis).
     }
+  }
+
+  // Invoked by MobileBarcodeScannerView when a barcode is detected
+  void onMobileBarcodeDetected(String value) {
+    barcodeBloc.add(BarcodeSelected(value));
   }
 
   Future<void> _openGallery() async {
@@ -158,4 +163,3 @@ class ScannerController {
     });
   }
 }
-

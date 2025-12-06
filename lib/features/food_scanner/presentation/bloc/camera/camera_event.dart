@@ -16,6 +16,11 @@ class StopImageStream extends CameraEvent {
   const StopImageStream();
 }
 
+/// Release/Dispose the camera controller to free camera resource
+class ReleaseCamera extends CameraEvent {
+  const ReleaseCamera();
+}
+
 // Event used by CameraBloc to forward frames from the controller callback
 class CameraImageCaptured extends CameraEvent {
   final CameraImage image;
