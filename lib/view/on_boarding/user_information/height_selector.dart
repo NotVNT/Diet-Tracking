@@ -91,13 +91,13 @@ class _HeightSelectorState extends State<HeightSelector> {
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: Colors.black.withValues(alpha: 0.08),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
                       ],
                       border: Border.all(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         width: 1,
                       ),
                     ),
@@ -136,13 +136,15 @@ class _HeightSelectorState extends State<HeightSelector> {
                               heightCm: _selectedHeight,
                             );
                           }
-                          if (!mounted) return;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const WeightSelector(),
-                            ),
-                          );
+                          if (!context.mounted) return;
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const WeightSelector(),
+                              ),
+                            );
+                          }
                         },
                         child: Text(
                           AppLocalizations.of(context)?.next ?? 'Next',

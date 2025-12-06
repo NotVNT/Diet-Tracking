@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 
 /// Simple food recognition service interface and default stub implementation.
 ///
@@ -38,7 +39,7 @@ class FoodRecognitionService {
       request.files.add(file);
 
       // Gửi request
-      print('Sending image to $uri');
+      debugPrint('Sending image to $uri');
       final streamedResponse = await request.send().timeout(
         const Duration(seconds: 30), // Tăng timeout cho việc upload và xử lý AI
         onTimeout: () {
@@ -50,15 +51,15 @@ class FoodRecognitionService {
 
       // Đọc response
       final response = await http.Response.fromStream(streamedResponse);
-      print('Response status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      debugPrint('Response status code: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as Map<String, dynamic>;
         final predictions = jsonData['predictions'] as Map<String, dynamic>?;
 
         if (predictions == null) {
-          print('Predictions key not found in response');
+          debugPrint('Predictions key not found in response');
           return null;
         }
 
@@ -75,7 +76,7 @@ class FoodRecognitionService {
         return null;
       }
     } catch (e) {
-      print('Error in recognizeFood: $e');
+      debugPrint('Error in recognizeFood: $e');
       return null;
     }
   }

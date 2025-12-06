@@ -115,13 +115,14 @@ class _CustomButtonState extends State<CustomButton>
                           ),
                     color: isDisabled ? AppColors.grey300 : null,
                     borderRadius: BorderRadius.circular(responsive.radius(AppStyles.radiusL)),
+                    // Tối ưu hóa: Giảm blur radius và opacity để giảm rendering overhead
                     boxShadow: isDisabled
                         ? null
                         : [
                             BoxShadow(
-                              color: AppColors.primary.withOpacity(0.3),
-                              blurRadius: 15,
-                              offset: const Offset(0, 8),
+                              color: AppColors.primary.withValues(alpha: 0.12),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
                             ),
                           ],
                   ),
@@ -140,8 +141,8 @@ class _CustomButtonState extends State<CustomButton>
                                 center: Alignment.center,
                                 radius: _rippleAnimation.value * 2,
                                 colors: [
-                                  Colors.white.withOpacity(
-                                    0.3 * (1 - _rippleAnimation.value),
+                                  Colors.white.withAlpha(
+                                    (255 * 0.3 * (1 - _rippleAnimation.value)).round(),
                                   ),
                                   Colors.transparent,
                                 ],

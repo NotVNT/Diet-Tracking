@@ -5,6 +5,7 @@ import '../../../domain/usecases/get_barcode_product_info.dart';
 import '../../../domain/usecases/save_scanned_food.dart';
 import '../../../domain/entities/scanned_food_entity.dart';
 import '../../../data/models/food_scanner_models.dart';
+import '../../../services/barcode_api_service.dart';
 import 'barcode_event.dart';
 import 'barcode_state.dart';
 
@@ -19,12 +20,14 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
   final ScanBarcodeFromCameraFrame scanBarcodeFromCameraFrame;
   final GetBarcodeProductInfo getBarcodeProductInfo;
   final SaveScannedFood saveScannedFood;
+  final BarcodeApiService barcodeApiService;
 
   BarcodeBloc({
     required this.scanBarcodeFromImage,
     required this.scanBarcodeFromCameraFrame,
     required this.getBarcodeProductInfo,
     required this.saveScannedFood,
+    required this.barcodeApiService,
   }) : super(const BarcodeInitial()) {
     on<BarcodeScanFromImageRequested>(_onScanFromImageRequested);
     on<BarcodeScanFromCameraFrameRequested>(_onScanFromCameraFrameRequested);
@@ -41,21 +44,44 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
   ) async {
     emit(const BarcodeUploading());
     try {
-      final barcodes = await scanBarcodeFromImage(event.imagePath);
-      if (barcodes.isEmpty) {
-        emit(BarcodeNoBarcodeFound(event.imagePath));
-        return;
-      }
-      // Use the first barcode value found
-      final first = barcodes.first;
-      final value = first.displayValue ?? first.rawValue ?? '';
-      if (value.isEmpty) {
-        emit(BarcodeNoBarcodeFound(event.imagePath));
-        return;
-      }
-      add(BarcodeSelected(value, imagePath: event.imagePath));
+      // Use API service to scan barcode from image file
+      final product = await barcodeApiService.scanBarcode(event.imagePath);
+
+      final foodName = _buildFoodName(product);
+      final description = _buildDescription(product);
+
+      await saveScannedFood(
+        imagePath: event.imagePath,
+        scanType: ScanType.barcode,
+        foodName: foodName,
+        calories: product.calories,
+        description: description.trim(),
+        protein: product.protein,
+        carbs: product.carbohydrates,
+        fat: product.fat,
+        barcode: product.barcode,
+      );
+
+      emit(BarcodeSavedSuccess('Scanned: $foodName'));
+      emit(BarcodeResolved(product, imagePath: event.imagePath));
     } catch (e) {
-      emit(const BarcodeError('Error scanning barcode from image'));
+      // Fallback: save plain barcode when product info is not available
+      try {
+        // Try to extract barcode from filename or use generic message
+        await saveScannedFood(
+          imagePath: event.imagePath,
+          scanType: ScanType.barcode,
+          foodName: 'Barcode (Details not found)',
+          calories: null,
+          description:
+              'Could not find barcode or product details from image\n\nError: $e',
+        );
+        emit(
+          const BarcodeSavedSuccess('Saved image (Barcode details not found)'),
+        );
+      } catch (_) {
+        emit(const BarcodeError('Error scanning barcode from image'));
+      }
     }
   }
 

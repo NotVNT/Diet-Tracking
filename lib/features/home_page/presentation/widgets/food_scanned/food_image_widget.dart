@@ -26,7 +26,7 @@ class ImageViewerWidget extends StatelessWidget {
         child: Image.network(
           imagePath!,
           fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) => _buildImageError('Error loading image'),
+          errorBuilder: (_, _, _) => _buildImageError('Error loading image'),
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             return const Center(child: CircularProgressIndicator());

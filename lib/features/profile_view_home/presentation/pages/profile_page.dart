@@ -197,7 +197,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icons.bar_chart_rounded,
                   label: AppLocalizations.of(context)!.profileViewStatistics,
                   onTap: () {
-                    // TODO: Navigate to statistics/report page
                     debugPrint('Feature in development');
                   },
                 ),

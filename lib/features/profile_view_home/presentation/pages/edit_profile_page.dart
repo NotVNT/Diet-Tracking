@@ -444,7 +444,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ],
       ),
       child: DropdownButtonFormField<String>(
-        value: _selectedGoal,
+        initialValue: _selectedGoal,
         decoration: InputDecoration(
           prefixIcon: Icon(
             Icons.star_outline,

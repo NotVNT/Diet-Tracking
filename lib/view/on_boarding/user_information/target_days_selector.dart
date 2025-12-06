@@ -60,10 +60,6 @@ class _TargetDaysSelectorState extends State<TargetDaysSelector> {
         activityLevel: data['activityLevel'] as String,
       );
 
-      print(
-        '📊 Calculating nutrition with the following user info: $_userInfo',
-      );
-
       // Tính toán với số ngày mặc định
       _calculateNutrition();
 

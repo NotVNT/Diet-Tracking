@@ -214,13 +214,13 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: Colors.black.withValues(alpha: 0.08),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
                       ],
                       border: Border.all(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         width: 1,
                       ),
                     ),
@@ -262,11 +262,13 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
                               goalWeightKg: _goalWeightKg,
                             );
                           }
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const DailyActivitiesSelector(),
-                            ),
-                          );
+                          if (mounted && context.mounted) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const DailyActivitiesSelector(),
+                              ),
+                            );
+                          }
                         },
                         child: Text(
                           AppLocalizations.of(context)?.next ?? 'Tiếp theo',

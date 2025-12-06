@@ -61,7 +61,7 @@ class _StartScreenState extends State<StartScreen> {
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
-                  color: _accent.withOpacity(0.85),
+                  color: _accent.withValues(alpha: 0.85),
                 ),
               ),
               const Spacer(),
@@ -76,13 +76,13 @@ class _StartScreenState extends State<StartScreen> {
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: Colors.black.withValues(alpha: 0.08),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
                       ],
                       border: Border.all(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         width: 1,
                       ),
                     ),

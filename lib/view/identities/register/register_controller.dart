@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/exceptions.dart';
 import '../../../database/guest_sync_service.dart';
+import '../../../utils/logger.dart';
 
 /// Error codes cho đăng ký
 class RegisterErrorCode {
@@ -43,7 +44,7 @@ class RegisterController {
     Map<String, dynamic>? preSelectedData,
   }) {
     onboardingData = preSelectedData ?? {};
-    print('🔍 Onboarding data received: $onboardingData');
+    AppLogger.debug('Onboarding data received: $onboardingData', tag: 'RegisterController');
   }
 
   /// Khởi tạo lazy services khi cần thiết
@@ -144,7 +145,7 @@ class RegisterController {
   /// Test kết nối Firebase
   Future<bool> testFirebaseConnection() async {
     _ensureServicesInitialized();
-    print('🔍 Testing Firebase connection...');
+    AppLogger.debug('Testing Firebase connection...', tag: 'RegisterController');
     return await _authService!.testFirebaseConnection();
   }
 
@@ -159,7 +160,7 @@ class RegisterController {
     _ensureServicesInitialized();
 
     try {
-      print('🔍 Processing onboarding data: $onboardingData');
+      debugPrint('🔍 Processing onboarding data: $onboardingData');
       final user = await _authService!.signUpWithOnboardingData(
         email: emailController.text.trim(),
         password: passwordController.text,
@@ -192,7 +193,7 @@ class RegisterController {
 
       return RegisterResult.success(userId: user.uid);
     } on AuthException catch (e) {
-      print('❌ AuthException in signup: $e');
+      AppLogger.error('AuthException in signup: $e', tag: 'RegisterController');
       // Map AuthException codes to RegisterErrorCode
       if (e.code == 'email-already-in-use') {
         return RegisterResult.failure(RegisterErrorCode.emailAlreadyInUse);
@@ -201,7 +202,7 @@ class RegisterController {
       }
       return RegisterResult.failure(RegisterErrorCode.registrationFailed);
     } catch (e) {
-      print('❌ Exception in signup: $e');
+      debugPrint('❌ Exception in signup: $e');
       return RegisterResult.failure(RegisterErrorCode.registrationFailed);
     }
   }
@@ -211,7 +212,7 @@ class RegisterController {
     try {
       await _guestSync?.syncGuestToUser(userId);
     } catch (e) {
-      print('⚠️ Guest sync failed: $e');
+      debugPrint('⚠️ Guest sync failed: $e');
     }
   }
 

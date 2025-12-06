@@ -34,12 +34,12 @@ class _GenderSelectorState extends State<GenderSelector> {
             Positioned(
               top: -40,
               left: -40,
-              child: _softBlob(140, const Color(0xFFFFE4A3).withOpacity(0.5)),
+              child: _softBlob(140, const Color(0xFFFFE4A3).withValues(alpha: 0.5)),
             ),
             Positioned(
               bottom: 120,
               right: -30,
-              child: _softBlob(180, const Color(0xFFFFE9C2).withOpacity(0.6)),
+              child: _softBlob(180, const Color(0xFFFFE9C2).withValues(alpha: 0.6)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -67,7 +67,7 @@ class _GenderSelectorState extends State<GenderSelector> {
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       height: 1.6,
-                      color: const Color(0xFF2D3A4A).withOpacity(0.8),
+                      color: const Color(0xFF2D3A4A).withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(height: 28),
@@ -101,13 +101,13 @@ class _GenderSelectorState extends State<GenderSelector> {
                           borderRadius: BorderRadius.circular(18),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
+                              color: Colors.black.withValues(alpha: 0.08),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
                           ],
                           border: Border.all(
-                            color: Colors.black.withOpacity(0.08),
+                            color: Colors.black.withValues(alpha: 0.08),
                             width: 1,
                           ),
                         ),
@@ -142,13 +142,15 @@ class _GenderSelectorState extends State<GenderSelector> {
                                     ? 'male'
                                     : 'female',
                               );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      AgeSelector(selectedGender: _selected),
-                                ),
-                              );
+                              if (mounted && context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AgeSelector(selectedGender: _selected),
+                                  ),
+                                );
+                              }
                             },
                             child: Text(
                               AppLocalizations.of(context)?.continueButton ??
@@ -217,11 +219,11 @@ class _GenderOption extends StatelessWidget {
             duration: const Duration(milliseconds: 220),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
             decoration: BoxDecoration(
-              color: selected ? highlight.withOpacity(0.55) : cardColor,
+              color: selected ? highlight.withValues(alpha: 0.55) : cardColor,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(selected ? 0.12 : 0.06),
+                  color: Colors.black.withValues(alpha: selected ? 0.12 : 0.06),
                   blurRadius: selected ? 18 : 12,
                   offset: const Offset(0, 6),
                 ),
@@ -253,7 +255,7 @@ class _GenderOption extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.08),
+                            color: Colors.black.withValues(alpha: 0.08),
                             blurRadius: 14,
                             offset: const Offset(0, 6),
                           ),
@@ -283,7 +285,7 @@ class _GenderOption extends StatelessWidget {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
+                                  color: Colors.black.withValues(alpha: 0.15),
                                   blurRadius: 8,
                                   offset: const Offset(0, 3),
                                 ),
@@ -318,7 +320,7 @@ Widget _softBlob(double size, Color color) {
       shape: BoxShape.circle,
       boxShadow: [
         BoxShadow(
-          color: color.withOpacity(0.6),
+          color: color.withValues(alpha: 0.6),
           blurRadius: 60,
           spreadRadius: 10,
         ),

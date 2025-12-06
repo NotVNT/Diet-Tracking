@@ -1,6 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:diet_tracking_project/database/firebase_options.dart';
 import 'package:diet_tracking_project/view/identities/forgot_password/forgot_password_controller.dart';
 import 'package:diet_tracking_project/view/identities/forgot_password/forgot_password_service.dart';
 

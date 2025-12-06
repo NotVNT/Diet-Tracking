@@ -90,6 +90,7 @@ class FoodScannerLocator {
         scanBarcodeFromCameraFrame: I<ScanBarcodeFromCameraFrame>(),
         getBarcodeProductInfo: I<GetBarcodeProductInfo>(),
         saveScannedFood: I<SaveScannedFood>(),
+        barcodeApiService: I<BarcodeApiService>(),
       ),
     );
     I.registerFactory<cam.CameraBloc>(

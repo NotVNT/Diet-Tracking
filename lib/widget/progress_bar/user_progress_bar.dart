@@ -25,7 +25,7 @@ class ProgressBarWidget extends StatelessWidget {
   final int animationDuration;
 
   const ProgressBarWidget({
-    Key? key,
+    super.key,
     required this.progress,
     this.height = 8.0,
     this.backgroundColor = const Color(0xFFE0E0E0),
@@ -33,7 +33,7 @@ class ProgressBarWidget extends StatelessWidget {
     this.borderRadius = 4.0,
     this.animated = true,
     this.animationDuration = 300,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class ProgressBarWithSteps extends StatelessWidget {
   final double spacing;
 
   const ProgressBarWithSteps({
-    Key? key,
+    super.key,
     required this.currentStep,
     required this.totalSteps,
     this.height = 8.0,
@@ -111,7 +111,7 @@ class ProgressBarWithSteps extends StatelessWidget {
     this.showStepText = true,
     this.stepTextStyle,
     this.spacing = 8.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +170,7 @@ class SegmentedProgressBar extends StatelessWidget {
   final double borderRadius;
 
   const SegmentedProgressBar({
-    Key? key,
+    super.key,
     required this.segmentCount,
     required this.currentSegment,
     this.height = 8.0,
@@ -178,7 +178,7 @@ class SegmentedProgressBar extends StatelessWidget {
     this.inactiveColor = const Color(0xFFE0E0E0),
     this.activeColor = const Color(0xFFFFA726),
     this.borderRadius = 4.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +226,7 @@ class GradientProgressBar extends StatelessWidget {
   final bool animated;
 
   const GradientProgressBar({
-    Key? key,
+    super.key,
     required this.progress,
     this.height = 8.0,
     this.backgroundColor = const Color(0xFFE0E0E0),
@@ -237,7 +237,7 @@ class GradientProgressBar extends StatelessWidget {
     ],
     this.borderRadius = 4.0,
     this.animated = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

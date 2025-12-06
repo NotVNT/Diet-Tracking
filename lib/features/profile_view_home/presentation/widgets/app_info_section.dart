@@ -40,10 +40,10 @@ class AppInfoSection extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+              color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
@@ -81,7 +81,7 @@ class AppInfoSection extends StatelessWidget {
                 '2025 VGP - Diet Tracking Team',
                 style: GoogleFonts.inter(
                   fontSize: 11,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -94,7 +94,7 @@ class AppInfoSection extends StatelessWidget {
             'All Rights Reserved',
             style: GoogleFonts.inter(
               fontSize: 11,
-              color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
               fontStyle: FontStyle.italic,
             ),
           ),

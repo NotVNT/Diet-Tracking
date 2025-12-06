@@ -86,6 +86,6 @@ class FirestoreService {
   /// Tải toàn bộ lịch sử chat của user hiện tại (để UI gọi sau khi đăng nhập)
   Future<List<ChatMessage>> loadChatHistoryForCurrentUser() async {
     final uid = _requireUid();
-    return load_history_from_firestore(uid);
+    return loadHistoryFromFirestore(uid);
   }
 }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:diet_tracking_project/view/on_boarding/started_view/goal_selection.dart';
-import 'package:diet_tracking_project/view/on_boarding/started_view/goal_reason_screen.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';

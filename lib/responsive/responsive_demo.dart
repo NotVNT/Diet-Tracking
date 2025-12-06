@@ -99,7 +99,7 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
           label,
           style: TextStyle(
             fontSize: 14,
-            color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+            color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
           ),
         ),
         ResponsiveText(

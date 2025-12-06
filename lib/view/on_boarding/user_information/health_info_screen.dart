@@ -168,6 +168,8 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                         }
 
                         if (!mounted) return;
+
+                        // ignore: use_build_context_synchronously
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => const HeightSelector(),
