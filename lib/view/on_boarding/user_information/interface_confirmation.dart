@@ -356,8 +356,6 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         if (data['heightCm'] != null) 'heightCm': data['heightCm'],
         if (data['weightKg'] != null) 'weightKg': data['weightKg'],
         if (data['goalWeightKg'] != null) 'goalWeightKg': data['goalWeightKg'],
-        if (data['medicalConditions'] != null)
-          'medicalConditions': data['medicalConditions'],
         if (data['allergies'] != null) 'allergies': data['allergies'],
         if (data['activityLevel'] != null)
           'activityLevel': data['activityLevel'],

@@ -61,7 +61,7 @@ class _AgeSelectorState extends State<AgeSelector> {
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   height: 1.6,
-                  color: _title.withOpacity(0.8),
+                  color: _title.withValues(alpha: 0.8),
                 ),
               ),
               const SizedBox(height: 24),
@@ -95,8 +95,8 @@ class _AgeSelectorState extends State<AgeSelector> {
                                         borderRadius: BorderRadius.circular(14),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.08,
+                                            color: Colors.black.withValues(
+                                              alpha: 0.08,
                                             ),
                                             blurRadius: 18,
                                             offset: const Offset(0, 6),
@@ -129,7 +129,7 @@ class _AgeSelectorState extends State<AgeSelector> {
                           child: Icon(
                             Icons.play_arrow_rounded,
                             size: 44,
-                            color: _accent.withOpacity(0.9),
+                            color: _accent.withValues(alpha: 0.9),
                           ),
                         ),
                       ),
@@ -147,13 +147,13 @@ class _AgeSelectorState extends State<AgeSelector> {
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: Colors.black.withValues(alpha: 0.08),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
                       ],
                       border: Border.all(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         width: 1,
                       ),
                     ),
@@ -184,11 +184,13 @@ class _AgeSelectorState extends State<AgeSelector> {
                         onPressed: () async {
                           // Lưu tạm tuổi
                           await _local.saveGuestData(age: currentAge);
-                          await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const HealthInfoScreen(),
-                            ),
-                          );
+                          if (mounted) {
+                            await Navigator.of(this.context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const HealthInfoScreen(),
+                              ),
+                            );
+                          }
                         },
                         child: Text(
                           AppLocalizations.of(context)?.next ?? 'Tiếp theo',

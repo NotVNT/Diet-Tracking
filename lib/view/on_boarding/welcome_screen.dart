@@ -148,7 +148,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       borderRadius: BorderRadius.circular(responsive.radius(12)),
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).shadowColor.withOpacity(0.1),
+                          color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -236,7 +236,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                     borderRadius: BorderRadius.circular(responsive.radius(20)),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.grey.withOpacity(0.1),
+                                        color: Colors.grey.withValues(alpha: 0.1),
                                         blurRadius: 20,
                                         offset: const Offset(0, 10),
                                       ),
@@ -268,7 +268,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               decoration: BoxDecoration(
                                 color: _currentImageIndex == index
                                     ? const Color(0xFF9C27B0)
-                                    : Colors.grey.withOpacity(0.3),
+                                    : Colors.grey.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(responsive.radius(4)),
                               ),
                             ),
@@ -303,7 +303,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                 BoxShadow(
                                   color: const Color(
                                     0xFF9C27B0,
-                                  ).withOpacity(0.3),
+                                  ).withValues(alpha: 0.3),
                                   blurRadius: 15,
                                   offset: const Offset(0, 5),
                                 ),
@@ -350,24 +350,24 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                             children: [
                                               Icon(
                                                 Icons.arrow_forward_ios,
-                                                color: Colors.white.withOpacity(
-                                                  0.8,
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.8,
                                                 ),
                                                 size: responsive.iconSize(14),
                                               ),
                                               responsive.horizontalSpace(2),
                                               Icon(
                                                 Icons.arrow_forward_ios,
-                                                color: Colors.white.withOpacity(
-                                                  0.6,
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.6,
                                                 ),
                                                 size: responsive.iconSize(14),
                                               ),
                                               responsive.horizontalSpace(2),
                                               Icon(
                                                 Icons.arrow_forward_ios,
-                                                color: Colors.white.withOpacity(
-                                                  0.4,
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.4,
                                                 ),
                                                 size: responsive.iconSize(14),
                                               ),

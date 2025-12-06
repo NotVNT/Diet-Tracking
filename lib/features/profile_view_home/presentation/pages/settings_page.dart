@@ -72,18 +72,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: AppLocalizations.of(context)!.settingsDarkMode,
                   subtitle: AppLocalizations.of(context)!.settingsDarkModeSubtitle,
                   value: _darkModeEnabled,
-                                    onChanged: (value) async {
+                  onChanged: (value) async {
                     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+                    final enabledMessage = AppLocalizations.of(context)!.settingsDarkModeEnabled;
+                    final disabledMessage = AppLocalizations.of(context)!.settingsDarkModeDisabled;
                     setState(() {
                       _darkModeEnabled = value;
                     });
                     await themeProvider.toggleTheme();
-                    if (mounted) {
+                    if (mounted && context.mounted) {
                       SnackBarHelper.showInfo(
                         context,
-                        value
-                            ? AppLocalizations.of(context)!.settingsDarkModeEnabled
-                            : AppLocalizations.of(context)!.settingsDarkModeDisabled,
+                        value ? enabledMessage : disabledMessage,
                       );
                     }
                   },

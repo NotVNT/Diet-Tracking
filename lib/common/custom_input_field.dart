@@ -97,13 +97,14 @@ class _CustomInputFieldState extends State<CustomInputField>
                         : Theme.of(context).colorScheme.outline,
                     width: 1.5,
                   ),
+                  // Tối ưu hóa: Giảm blur radius và opacity
                   boxShadow: [
                     BoxShadow(
-                      color: widget.isFocused 
-                          ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                          : Theme.of(context).shadowColor.withOpacity(0.05),
-                      blurRadius: widget.isFocused ? 15 : 10,
-                      offset: const Offset(0, 5),
+                      color: widget.isFocused
+                          ? Theme.of(context).colorScheme.primary.withAlpha(20) // 0.08 * 255
+                          : Theme.of(context).shadowColor.withAlpha(8), // 0.03 * 255
+                      blurRadius: widget.isFocused ? 8 : 4,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),

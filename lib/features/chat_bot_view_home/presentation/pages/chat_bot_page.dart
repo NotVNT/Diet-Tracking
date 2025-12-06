@@ -106,7 +106,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   /// Handles chat history action
   void _onChatHistory() {
     final l10n = AppLocalizations.of(context)!;
-    // TODO: Implement chat history view
+ 
     SnackBarHelper.showInfo(context, l10n.chatBotChatHistoryComingSoon);
   }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service để quản lý dữ liệu tạm thời của người dùng guest
@@ -33,7 +34,6 @@ class LocalStorageService {
     double? goalWeightKg,
     double? goalHeightCm,
     String? health,
-    List<String>? medicalConditions,
     List<String>? allergies,
     List<String>? weightReasons,
     int? age,
@@ -47,14 +47,13 @@ class LocalStorageService {
     final futures = <Future<bool>>[];
 
     if (goal != null) {
-      print('🔍 LocalStorageService: Saving goal = $goal');
+      debugPrint('🔍 LocalStorageService: Saving goal = $goal');
       futures.add(prefs.setString(_keyGoal, goal));
     }
     if (heightCm != null) futures.add(prefs.setDouble(_keyHeight, heightCm));
     if (weightKg != null) futures.add(prefs.setDouble(_keyWeight, weightKg));
-    if (goalWeightKg != null) futures.add(prefs.setDouble(_keyGoalWeight, goalWeightKg));
-    if (medicalConditions != null && medicalConditions.isNotEmpty) {
-      futures.add(prefs.setStringList(_keyMedical, medicalConditions));
+    if (goalWeightKg != null) {
+      futures.add(prefs.setDouble(_keyGoalWeight, goalWeightKg));
     }
     if (allergies != null && allergies.isNotEmpty) {
       futures.add(prefs.setStringList(_keyAllergies, allergies));
@@ -80,14 +79,13 @@ class LocalStorageService {
   Future<Map<String, dynamic>> readGuestData() async {
     final prefs = await _prefs;
     final goal = prefs.getString(_keyGoal);
-    print('🔍 LocalStorageService: Reading goal = $goal');
+    debugPrint('🔍 LocalStorageService: Reading goal = $goal');
     return {
       'goal': goal,
       'heightCm': prefs.getDouble(_keyHeight),
       'weightKg': prefs.getDouble(_keyWeight),
       'goalWeightKg': prefs.getDouble(_keyGoalWeight),
       // 'goalHeightCm' and 'health' no longer stored
-      'medicalConditions': prefs.getStringList(_keyMedical),
       'allergies': prefs.getStringList(_keyAllergies),
       'age': prefs.getInt(_keyAge),
       'gender': prefs.getString(_keyGender),

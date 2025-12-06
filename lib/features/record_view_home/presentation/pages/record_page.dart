@@ -42,74 +42,70 @@ class RecordPage extends StatelessWidget {
               CustomAppBar(
                 title: localizations?.recordPageTitle ?? 'Ghi nhận món ăn',
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        // Danh sách món ăn đã ghi nhận (without card wrapper)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              localizations?.recordedMealsTitle ?? 'Món ăn đã ghi nhận',
-                              style: AppStyles.heading2.copyWith(
-                                fontSize: 18,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            // Search + Filter button
-                            BlocBuilder<RecordCubit, RecordState>(
-                              buildWhen: (prev, curr) => true,
-                              builder: (context, state) {
-                                final cubit = context.read<RecordCubit>();
-                                return record_widgets.SearchBar(
-                                  onSearchChanged: (query) =>
-                                      context.read<RecordCubit>().setSearchQuery(query),
-                                  trailing: FilterButton(
-                                    highlighted: cubit.hasActiveFilters,
-                                    onPressed: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: false,
-                                        useSafeArea: true,
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                                        ),
-                                        builder: (_) => DraggableScrollableSheet(
-                                          initialChildSize: 0.5,
-                                          minChildSize: 0.3,
-                                          maxChildSize: 0.9,
-                                          expand: false,
-                                          builder: (context, controller) => FilterSheet(
-                                            scrollController: controller,
-                                            calorieRange: cubit.calorieRange,
-                                            dateRange: cubit.dateRange,
-                                            onApply: (calRange, dateRange) {
-                                              final c = context.read<RecordCubit>();
-                                              c.setFilters(calorieRange: calRange, dateRange: dateRange);
-                                            },
-                                            onClear: () {
-                                              final c = context.read<RecordCubit>();
-                                              c.clearFilters();
-                                            },
-                                          ),
-                                        ),
-                                      );
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations?.recordedMealsTitle ?? 'Món ăn đã ghi nhận',
+                      style: AppStyles.heading2.copyWith(
+                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Search + Filter button
+                    BlocBuilder<RecordCubit, RecordState>(
+                      buildWhen: (prev, curr) => true,
+                      builder: (context, state) {
+                        final cubit = context.read<RecordCubit>();
+                        return record_widgets.SearchBar(
+                          onSearchChanged: (query) =>
+                              context.read<RecordCubit>().setSearchQuery(query),
+                          trailing: FilterButton(
+                            highlighted: cubit.hasActiveFilters,
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: false,
+                                useSafeArea: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                ),
+                                builder: (_) => DraggableScrollableSheet(
+                                  initialChildSize: 0.5,
+                                  minChildSize: 0.3,
+                                  maxChildSize: 0.9,
+                                  expand: false,
+                                  builder: (context, controller) => FilterSheet(
+                                    scrollController: controller,
+                                    calorieRange: cubit.calorieRange,
+                                    dateRange: cubit.dateRange,
+                                    onApply: (calRange, dateRange) {
+                                      final c = context.read<RecordCubit>();
+                                      c.setFilters(calorieRange: calRange, dateRange: dateRange);
+                                    },
+                                    onClear: () {
+                                      final c = context.read<RecordCubit>();
+                                      c.clearFilters();
                                     },
                                   ),
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            const FoodRecordList(),
-                          ],
-                        ),
-                      ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+              const Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: FoodRecordList(),
                 ),
               ),
             ],

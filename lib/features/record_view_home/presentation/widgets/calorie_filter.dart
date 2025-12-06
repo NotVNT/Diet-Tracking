@@ -7,10 +7,10 @@ class CalorieFilter extends StatefulWidget {
   final String? initialSelected;
 
   const CalorieFilter({
-    Key? key,
+    super.key,
     required this.onFilterChanged,
     this.initialSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<CalorieFilter> createState() => _CalorieFilterState();

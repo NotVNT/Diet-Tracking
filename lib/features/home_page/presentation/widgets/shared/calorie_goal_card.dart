@@ -49,113 +49,108 @@ class CalorieGoalCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
-    return Container(
-      padding: EdgeInsets.all(responsive.width(16)),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(responsive.radius(16)),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Top row: circular summary + nutrient bars
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 5,
-                child: _CalorieRing(
-                  progress: nutritionInfo.progress,
-                  size: responsive.width(160),
-                  trackWidth: responsive.width(12),
-                  color: theme.colorScheme.primary,
-                  centerNumber: nutritionInfo.calorieConsumed.round().toString(),
-                  centerSubtitle: (l10n?.calorieCardBurnedToday ?? 'Your calories burned today'),
+    // Sử dụng Material với elevation thay vì BoxShadow để tối ưu hóa rendering
+    return Material(
+      elevation: 4,
+      borderRadius: BorderRadius.circular(responsive.radius(16)),
+      color: theme.colorScheme.surface,
+      child: Padding(
+        padding: EdgeInsets.all(responsive.width(16)),
+        child: Column(
+          children: [
+            // Top row: circular summary + nutrient bars
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: _CalorieRing(
+                    progress: nutritionInfo.progress,
+                    size: responsive.width(160),
+                    trackWidth: responsive.width(12),
+                    color: theme.colorScheme.primary,
+                    centerNumber: nutritionInfo.calorieConsumed.round().toString(),
+                    centerSubtitle: (l10n?.calorieCardBurnedToday ?? 'Your calories burned today'),
+                  ),
                 ),
-              ),
-              SizedBox(width: responsive.width(16)),
-              Expanded(
-                flex: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _NutrientItem(
-                      title: (l10n?.nutrientProtein ?? 'Protein'),
-                      valueText:
-                          '${nutritionInfo.proteinConsumed.round()}/${nutritionInfo.proteinGoal.round()}g',
-                      progress: nutritionInfo.proteinGoal == 0
-                          ? 0
-                          : (nutritionInfo.proteinConsumed /
-                                  nutritionInfo.proteinGoal)
-                              .clamp(0, 1),
+                SizedBox(width: responsive.width(16)),
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _NutrientItem(
+                        title: (l10n?.nutrientProtein ?? 'Protein'),
+                        valueText:
+                            '${nutritionInfo.proteinConsumed.round()}/${nutritionInfo.proteinGoal.round()}g',
+                        progress: nutritionInfo.proteinGoal == 0
+                            ? 0
+                            : (nutritionInfo.proteinConsumed /
+                                    nutritionInfo.proteinGoal)
+                                .clamp(0, 1),
+                        color: theme.colorScheme.primary,
+                      ),
+                      SizedBox(height: responsive.height(8)),
+                      _NutrientItem(
+                        title: (l10n?.nutrientFiber ?? 'Fiber'),
+                        valueText:
+                            '${nutritionInfo.fiberConsumed.round()}/${nutritionInfo.fiberGoal.round()}g',
+                        progress: nutritionInfo.fiberGoal == 0
+                            ? 0
+                            : (nutritionInfo.fiberConsumed /
+                                    nutritionInfo.fiberGoal)
+                                .clamp(0, 1),
+                        color: theme.colorScheme.tertiary,
+                      ),
+                      SizedBox(height: responsive.height(8)),
+                      _NutrientItem(
+                        title: (l10n?.nutrientCarbs ?? 'Carbs'),
+                        valueText:
+                            '${nutritionInfo.carbsConsumed.round()}/${nutritionInfo.carbsGoal.round()}g',
+                        progress: nutritionInfo.carbsGoal == 0
+                            ? 0
+                            : (nutritionInfo.carbsConsumed /
+                                    nutritionInfo.carbsGoal)
+                                .clamp(0, 1),
+                        color: Colors.orange,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: responsive.height(16)),
+
+            // Bottom row: calories taken + optional report action (kept for feature parity)
+            Row(
+              children: [
+                Icon(Icons.restaurant, color: Colors.green.shade700,
+                    size: responsive.iconSize(18)),
+                SizedBox(width: responsive.width(8)),
+                Expanded(
+                  child: Text(
+                    '${nutritionInfo.calorieConsumed.round()} ${l10n?.calorieCardCaloriesTaken ?? 'Calories taken'}',
+                    style: TextStyle(
+                      fontSize: responsive.fontSize(14),
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                if (onViewReport != null)
+                  IconButton(
+                    tooltip: (l10n?.calorieCardViewReport ?? 'View report'),
+                    onPressed: onViewReport,
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      size: responsive.iconSize(16),
                       color: theme.colorScheme.primary,
                     ),
-                    SizedBox(height: responsive.height(8)),
-                    _NutrientItem(
-                      title: (l10n?.nutrientFiber ?? 'Fiber'),
-                      valueText:
-                          '${nutritionInfo.fiberConsumed.round()}/${nutritionInfo.fiberGoal.round()}g',
-                      progress: nutritionInfo.fiberGoal == 0
-                          ? 0
-                          : (nutritionInfo.fiberConsumed /
-                                  nutritionInfo.fiberGoal)
-                              .clamp(0, 1),
-                      color: theme.colorScheme.tertiary,
-                    ),
-                    SizedBox(height: responsive.height(8)),
-                    _NutrientItem(
-                      title: (l10n?.nutrientCarbs ?? 'Carbs'),
-                      valueText:
-                          '${nutritionInfo.carbsConsumed.round()}/${nutritionInfo.carbsGoal.round()}g',
-                      progress: nutritionInfo.carbsGoal == 0
-                          ? 0
-                          : (nutritionInfo.carbsConsumed /
-                                  nutritionInfo.carbsGoal)
-                              .clamp(0, 1),
-                      color: Colors.orange,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: responsive.height(16)),
-
-          // Bottom row: calories taken + optional report action (kept for feature parity)
-          Row(
-            children: [
-              Icon(Icons.restaurant, color: Colors.green.shade700,
-                  size: responsive.iconSize(18)),
-              SizedBox(width: responsive.width(8)),
-              Expanded(
-                child: Text(
-                  '${nutritionInfo.calorieConsumed.round()} ' + (l10n?.calorieCardCaloriesTaken ?? 'Calories taken'),
-                  style: TextStyle(
-                    fontSize: responsive.fontSize(14),
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
                   ),
-                ),
-              ),
-              if (onViewReport != null)
-                IconButton(
-                  tooltip: (l10n?.calorieCardViewReport ?? 'View report'),
-                  onPressed: onViewReport,
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
-                    size: responsive.iconSize(16),
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -381,15 +376,14 @@ class _NutrientItem extends StatelessWidget {
           ],
         ),
         SizedBox(height: 6),
-        ClipRRect(
+        // LinearProgressIndicator đã có borderRadius tích hợp, không cần ClipRRect
+        LinearProgressIndicator(
+          value: progress,
+          minHeight: 8,
           borderRadius: BorderRadius.circular(6),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 8,
-            backgroundColor:
-                theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-          ),
+          backgroundColor:
+              theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+          valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ],
     );

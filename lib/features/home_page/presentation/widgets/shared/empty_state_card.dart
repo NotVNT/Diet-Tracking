@@ -47,7 +47,7 @@ class EmptyStateCard extends StatelessWidget {
           style: TextStyle(
             fontSize: responsive.fontSize(14),
             fontWeight: FontWeight.w400,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
+            color: Theme.of(context).colorScheme.onSurface.withAlpha(166), // 0.65 * 255
           ),
         ),
         if (footer != null) ...[
@@ -72,7 +72,7 @@ class EmptyStateCard extends StatelessWidget {
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(responsive.radius(16)),
             border: Border.all(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
           ),
           child: child,

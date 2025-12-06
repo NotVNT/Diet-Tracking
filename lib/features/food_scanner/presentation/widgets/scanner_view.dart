@@ -1,8 +1,10 @@
 import 'package:diet_tracking_project/features/food_scanner/data/models/food_scanner_models.dart';
 import '../controller/scanner_controller.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_state.dart';
-import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_bloc.dart' as cam;
-import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_state.dart' as cam_state;
+import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_bloc.dart'
+    as cam;
+import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_state.dart'
+    as cam_state;
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_state.dart';
@@ -63,19 +65,23 @@ class _ScannerViewState extends State<ScannerView> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-            body: BlocBuilder<cam.CameraBloc, cam_state.CameraState>(
+      body: BlocBuilder<cam.CameraBloc, cam_state.CameraState>(
         builder: (context, cameraState) {
           return BlocBuilder<FoodScanBloc, FoodScanState>(
             builder: (context, foodScanState) {
               return BlocBuilder<BarcodeBloc, BarcodeState>(
                 builder: (context, barcodeState) {
                   final isUploading =
-                      foodScanState is FoodScanUploading || barcodeState is BarcodeUploading;
-                  final isCameraInitializing = cameraState is cam_state.CameraInitializing;
+                      foodScanState is FoodScanUploading ||
+                      barcodeState is BarcodeUploading;
+                  final isCameraInitializing =
+                      cameraState is cam_state.CameraInitializing;
 
-                  final bool disableCapture = isUploading ||
+                  final bool disableCapture =
+                      isUploading ||
                       _selectedAction == ScannerActionType.barcode ||
-                      (_selectedAction == ScannerActionType.food && isCameraInitializing);
+                      (_selectedAction == ScannerActionType.food &&
+                          isCameraInitializing);
 
                   return Stack(
                     children: [
@@ -87,16 +93,18 @@ class _ScannerViewState extends State<ScannerView> {
                             fontSize: 14,
                           ),
                           cameraPreview: CameraPreviewWrapper(
-                            // Use the CameraBloc controller regardless of specific state so
-                            // preview stays visible during Barcode mode (streaming state).
-                            controller: context.read<cam.CameraBloc>().controller,
+                            // CameraPreview is used for food/gallery; in barcode mode we render MobileScanner instead.
+                            controller: context
+                                .read<cam.CameraBloc>()
+                                .controller,
                             isInitializing: isCameraInitializing,
                             errorMessage: cameraState is cam_state.CameraError
                                 ? cameraState.errorMessage
                                 : null,
                           ),
-                          isRealTimeScanning: cameraState is cam_state.CameraStreamingState &&
-                              cameraState.isStreaming,
+                          isRealTimeScanning: true,
+                          onBarcodeDetected:
+                              widget.controller.onMobileBarcodeDetected,
                         ),
                       ),
                       SafeArea(
@@ -113,7 +121,9 @@ class _ScannerViewState extends State<ScannerView> {
                               actions: actions,
                               selectedAction: _selectedAction,
                               onActionSelected: _onActionSelected,
-                              onCapture: disableCapture ? () {} : widget.controller.onCapturePressed,
+                              onCapture: disableCapture
+                                  ? () {}
+                                  : widget.controller.onCapturePressed,
                             ),
                           ],
                         ),
@@ -121,7 +131,9 @@ class _ScannerViewState extends State<ScannerView> {
                       if (isUploading)
                         Container(
                           color: Colors.black.withAlpha((255 * 0.6).round()),
-                          child: const Center(child: CircularProgressIndicator()),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
                     ],
                   );
@@ -134,5 +146,3 @@ class _ScannerViewState extends State<ScannerView> {
     );
   }
 }
-
-

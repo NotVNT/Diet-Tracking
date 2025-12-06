@@ -124,7 +124,7 @@ class _HeightSelectorWidgetState extends State<HeightSelectorWidget> {
               // Left side - Height ruler
               Expanded(
                 flex: 2,
-                child: Container(
+                child: SizedBox(
                   height: wheelHeight,
                   child: CustomPaint(
                     painter: HeightScalePainter(

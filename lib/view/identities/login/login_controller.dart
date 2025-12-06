@@ -5,6 +5,7 @@ import '../../../database/guest_sync_service.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../model/user.dart' as app_user;
 import '../../../services/google_auth_service.dart';
+import '../../../utils/logger.dart';
 
 /// Error codes cho đăng nhập
 class LoginErrorCode {
@@ -53,7 +54,7 @@ class LoginController {
 
   /// Xử lý exception chung cho các phương thức đăng nhập
   LoginResult _handleLoginException(dynamic e, String defaultErrorCode) {
-    print('❌ Exception: $e');
+    AppLogger.error('Exception occurred during login', error: e, tag: 'LoginController');
     if (e is AuthException) {
       // Map AuthException codes to LoginErrorCode
       if (e.code == 'wrong-password' || e.code == 'user-not-found' || e.code == 'invalid-credential') {
@@ -162,7 +163,7 @@ class LoginController {
     try {
       await _guestSync?.syncGuestToUser(userId);
     } catch (e) {
-      print('⚠️ Guest sync failed: $e');
+      AppLogger.warning('Guest sync failed: $e', tag: 'LoginController');
     }
   }
 

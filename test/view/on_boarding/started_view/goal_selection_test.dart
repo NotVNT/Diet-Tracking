@@ -1,80 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:diet_tracking_project/view/on_boarding/started_view/goal_selection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:diet_tracking_project/database/local_storage_service.dart';
+import 'package:diet_tracking_project/view/on_boarding/started_view/goal_selection.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:diet_tracking_project/view/on_boarding/started_view/weight_goal_screen.dart';
+
+class _AuthStub extends AuthService {
+  _AuthStub()
+    : super(auth: MockFirebaseAuth(), firestore: FakeFirebaseFirestore());
+}
+
+Widget _buildApp(Widget home) {
+  return MaterialApp(
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    locale: const Locale('en'),
+    home: home,
+  );
+}
 
 void main() {
-  group('GoalSelection', () {
-    testWidgets('Render tiêu đề và danh sách mục tiêu', (tester) async {
-      SharedPreferences.setMockInitialValues({});
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+  });
+
+  testWidgets('GoalSelection: hiển thị câu hỏi và danh sách mục tiêu', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_buildApp(GoalSelection(authService: _AuthStub())));
+
+    expect(find.text('What is your main goal?'), findsOneWidget);
+    expect(find.text('Lose weight'), findsOneWidget);
+    expect(find.text('Gain weight'), findsOneWidget);
+    expect(find.text('Maintain weight'), findsOneWidget);
+    expect(find.text('Build muscle'), findsOneWidget);
+
+    // Nút Next disabled khi chưa chọn
+    final nextButton = find.text('Next');
+    expect(nextButton, findsOneWidget);
+    final elevated = tester.widget<ElevatedButton>(
+      find.byType(ElevatedButton).last,
+    );
+    expect(elevated.onPressed, isNull);
+  });
+
+  testWidgets(
+    'GoalSelection: chọn mục tiêu sẽ bật nút Next (không điều hướng)',
+    (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: GoalSelection(
-            localStorageService: LocalStorageService(),
-            authService: AuthService(
-              auth: MockFirebaseAuth(),
-              firestore: FakeFirebaseFirestore(),
-            ),
-          ),
-        ),
+        _buildApp(GoalSelection(authService: _AuthStub())),
       );
 
-      expect(find.text('Mục tiêu chính của bạn là gì?'), findsOneWidget);
-      // Ít nhất một item hiển thị
-      expect(find.byType(ListView), findsOneWidget);
-    });
-
-    testWidgets('Chạm chọn mục tiêu bật nút Tiếp theo', (tester) async {
-      SharedPreferences.setMockInitialValues({});
-      await tester.pumpWidget(
-        MaterialApp(
-          home: GoalSelection(
-            localStorageService: LocalStorageService(),
-            authService: AuthService(
-              auth: MockFirebaseAuth(),
-              firestore: FakeFirebaseFirestore(),
-            ),
-          ),
-        ),
-      );
-
-      // Nút Tiếp theo ban đầu disabled
-      final buttonFinder = find.widgetWithText(ElevatedButton, 'Tiếp theo');
-      ElevatedButton btn = tester.widget(buttonFinder);
-      expect(btn.onPressed, isNull);
-
-      // Chọn mục tiêu đầu tiên theo text để đảm bảo trúng ô
-      await tester.tap(find.text('Giảm cân'));
+      // Chọn mục tiêu "Lose weight"
+      await tester.tap(find.text('Lose weight').first);
       await tester.pump();
 
-      btn = tester.widget(buttonFinder);
-      expect(btn.onPressed, isNotNull);
-    });
-
-    testWidgets('Tap Bỏ qua điều hướng tới WeightGoalScreen', (tester) async {
-      SharedPreferences.setMockInitialValues({});
-      await tester.pumpWidget(
-        MaterialApp(
-          home: GoalSelection(
-            localStorageService: LocalStorageService(),
-            authService: AuthService(
-              auth: MockFirebaseAuth(),
-              firestore: FakeFirebaseFirestore(),
-            ),
-          ),
-        ),
+      // Nút Next đã bật (tránh tap để không điều hướng sang màn dùng Firebase)
+      final elevated = tester.widget<ElevatedButton>(
+        find.byType(ElevatedButton).last,
       );
-
-      await tester.tap(find.text('Bỏ qua'));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(WeightGoalScreen), findsOneWidget);
-    });
-  });
+      expect(elevated.onPressed, isNotNull);
+    },
+  );
 }

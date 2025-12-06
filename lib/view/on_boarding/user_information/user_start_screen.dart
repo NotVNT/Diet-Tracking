@@ -47,7 +47,7 @@ class StartScreen extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   height: 1.6,
-                  color: _textColor.withOpacity(0.8),
+                  color: _textColor.withValues(alpha: 0.8),
                 ),
               ),
               const Spacer(),
@@ -62,13 +62,13 @@ class StartScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: Colors.black.withValues(alpha: 0.08),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
                       ],
                       border: Border.all(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         width: 1,
                       ),
                     ),

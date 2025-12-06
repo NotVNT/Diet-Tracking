@@ -22,7 +22,7 @@ _UnitInfo _unitInfo(UnitSystem unit) {
     case UnitSystem.metric:
       return const _UnitInfo(
         name: 'Hệ mét',
-        description: 'gam, kilôgam, mililit, lít',
+        description: 'gam, kg, ml, lít',
         displayName: 'Metric (kg, cm)',
       );
     case UnitSystem.imperial:
@@ -98,7 +98,7 @@ class UnitSelector extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha(25), // 0.1 * 255
                     blurRadius: 20,
                     offset: const Offset(0, -6),
                   ),
@@ -113,7 +113,7 @@ class UnitSelector extends StatelessWidget {
                     width: 48,
                     height: 5,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.3),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(77), // 0.3 * 255
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
@@ -172,7 +172,7 @@ class UnitSelector extends StatelessWidget {
                                     border: Border.all(
                                       color: isSelected
                                           ? Theme.of(context).colorScheme.primary
-                                          : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+                                          : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(128), // 0.5 * 255
                                       width: 2,
                                     ),
                                     color: isSelected
@@ -217,7 +217,7 @@ class UnitSelector extends StatelessWidget {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                   
                   const SizedBox(height: 16),
                   

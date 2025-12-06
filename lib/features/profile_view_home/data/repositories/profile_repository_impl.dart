@@ -14,8 +14,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl({
     required ProfileRemoteDataSource remoteDataSource,
     required ProfileLocalDataSource localDataSource,
-  })  : _remoteDataSource = remoteDataSource,
-        _localDataSource = localDataSource;
+  }) : _remoteDataSource = remoteDataSource,
+       _localDataSource = localDataSource;
 
   @override
   Future<ProfileEntity?> getUserProfile() async {
@@ -61,12 +61,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
       gender: profile.gender,
       age: profile.age,
       goal: profile.goal,
-  avatars: profile.avatars,
+      avatars: profile.avatars,
       bodyInfo: BodyInfoModel(
         heightCm: profile.height,
         weightKg: profile.weight,
         goalWeightKg: profile.goalWeight,
-        medicalConditions: profile.medicalConditions,
         allergies: profile.allergies,
       ),
     );

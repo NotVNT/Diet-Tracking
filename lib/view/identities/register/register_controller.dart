@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/exceptions.dart';
 import '../../../database/guest_sync_service.dart';
+import '../../../utils/logger.dart';
 
 /// Error codes cho đăng ký
 class RegisterErrorCode {
@@ -31,7 +32,8 @@ class RegisterController {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   // Dữ liệu từ on_boarding
   Map<String, dynamic> onboardingData = {};
@@ -42,7 +44,7 @@ class RegisterController {
     Map<String, dynamic>? preSelectedData,
   }) {
     onboardingData = preSelectedData ?? {};
-    print('🔍 Onboarding data received: $onboardingData');
+    AppLogger.debug('Onboarding data received: $onboardingData', tag: 'RegisterController');
   }
 
   /// Khởi tạo lazy services khi cần thiết
@@ -72,12 +74,12 @@ class RegisterController {
     if (value == null || value.trim().isEmpty) {
       return RegisterErrorCode.emptyEmail;
     }
-    
+
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value.trim())) {
       return RegisterErrorCode.invalidEmail;
     }
-    
+
     return null;
   }
 
@@ -86,11 +88,11 @@ class RegisterController {
     if (value == null || value.isEmpty) {
       return RegisterErrorCode.emptyPassword;
     }
-    
+
     if (value.length < 6) {
       return RegisterErrorCode.passwordTooShort;
     }
-    
+
     return null;
   }
 
@@ -99,11 +101,11 @@ class RegisterController {
     if (value == null || value.isEmpty) {
       return RegisterErrorCode.emptyConfirmPassword;
     }
-    
+
     if (value != passwordController.text) {
       return RegisterErrorCode.passwordMismatch;
     }
-    
+
     return null;
   }
 
@@ -118,32 +120,32 @@ class RegisterController {
   /// Validate tất cả các trường
   String? validateAllFields(bool isTermsAccepted) {
     String? error;
-    
+
     error = validateFullName(fullNameController.text);
     if (error != null) return error;
-    
+
     error = validatePhone(phoneController.text);
     if (error != null) return error;
-    
+
     error = validateEmail(emailController.text);
     if (error != null) return error;
-    
+
     error = validatePassword(passwordController.text);
     if (error != null) return error;
-    
+
     error = validateConfirmPassword(confirmPasswordController.text);
     if (error != null) return error;
-    
+
     error = validateTerms(isTermsAccepted);
     if (error != null) return error;
-    
+
     return null;
   }
 
   /// Test kết nối Firebase
   Future<bool> testFirebaseConnection() async {
     _ensureServicesInitialized();
-    print('🔍 Testing Firebase connection...');
+    AppLogger.debug('Testing Firebase connection...', tag: 'RegisterController');
     return await _authService!.testFirebaseConnection();
   }
 
@@ -158,7 +160,7 @@ class RegisterController {
     _ensureServicesInitialized();
 
     try {
-      print('🔍 Processing onboarding data: $onboardingData');
+      debugPrint('🔍 Processing onboarding data: $onboardingData');
       final user = await _authService!.signUpWithOnboardingData(
         email: emailController.text.trim(),
         password: passwordController.text,
@@ -176,7 +178,6 @@ class RegisterController {
             : null,
         age: onboardingData['age'] as int?,
         goal: onboardingData['goal'] as String?,
-        medicalConditions: onboardingData['medicalConditions'] as List<String>?,
         allergies: onboardingData['allergies'] as List<String>?,
       );
 
@@ -192,7 +193,7 @@ class RegisterController {
 
       return RegisterResult.success(userId: user.uid);
     } on AuthException catch (e) {
-      print('❌ AuthException in signup: $e');
+      AppLogger.error('AuthException in signup: $e', tag: 'RegisterController');
       // Map AuthException codes to RegisterErrorCode
       if (e.code == 'email-already-in-use') {
         return RegisterResult.failure(RegisterErrorCode.emailAlreadyInUse);
@@ -201,7 +202,7 @@ class RegisterController {
       }
       return RegisterResult.failure(RegisterErrorCode.registrationFailed);
     } catch (e) {
-      print('❌ Exception in signup: $e');
+      debugPrint('❌ Exception in signup: $e');
       return RegisterResult.failure(RegisterErrorCode.registrationFailed);
     }
   }
@@ -211,7 +212,7 @@ class RegisterController {
     try {
       await _guestSync?.syncGuestToUser(userId);
     } catch (e) {
-      print('⚠️ Guest sync failed: $e');
+      debugPrint('⚠️ Guest sync failed: $e');
     }
   }
 
@@ -231,26 +232,16 @@ class RegisterResult {
   final String? errorCode;
   final String? userId;
 
-  RegisterResult._({
-    required this.isSuccess,
-    this.errorCode,
-    this.userId,
-  });
+  RegisterResult._({required this.isSuccess, this.errorCode, this.userId});
 
   factory RegisterResult.success({required String userId}) {
-    return RegisterResult._(
-      isSuccess: true,
-      userId: userId,
-    );
+    return RegisterResult._(isSuccess: true, userId: userId);
   }
 
   factory RegisterResult.failure(String errorCode) {
-    return RegisterResult._(
-      isSuccess: false,
-      errorCode: errorCode,
-    );
+    return RegisterResult._(isSuccess: false, errorCode: errorCode);
   }
-  
+
   // Getter for backward compatibility
   String? get error => errorCode;
 }

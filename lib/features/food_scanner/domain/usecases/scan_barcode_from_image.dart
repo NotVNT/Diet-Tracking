@@ -1,4 +1,4 @@
-import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
+import '../entities/barcode_model.dart';
 import '../../services/barcode_scanner_service.dart';
 
 /// Use case để quét barcode từ ảnh
@@ -21,7 +21,7 @@ class ScanBarcodeFromImage {
   ///
   /// Ném:
   /// - Exception nếu quét thất bại
-  Future<List<Barcode>> call(String imagePath) async {
+  Future<List<BarcodeModel>> call(String imagePath) async {
     return _barcodeScannerService.scanBarcodeFromImage(imagePath);
   }
 }

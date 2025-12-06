@@ -76,7 +76,7 @@ class LanguageSelector extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha(25), // 0.1 * 255
                     blurRadius: 20,
                     offset: const Offset(0, -6),
                   ),
@@ -147,7 +147,7 @@ class LanguageSelector extends StatelessWidget {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.05),
+                                      color: Colors.black.withAlpha(12), // 0.05 * 255
                                       blurRadius: 12,
                                       offset: const Offset(0, 6),
                                     ),

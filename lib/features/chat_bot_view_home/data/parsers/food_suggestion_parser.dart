@@ -1,9 +1,8 @@
-// Helper class for food suggestion data
 class FoodSuggestion {
   final String foodName;
   final double calories;
-  final String? reason; // Lý do chọn
-  final String? nutritionDetails; // Khối "Thông tin dinh dưỡng"
+  final String? reason;
+  final String? nutritionDetails;
 
   FoodSuggestion({
     required this.foodName,
@@ -14,7 +13,6 @@ class FoodSuggestion {
 }
 
 class FoodSuggestionParser {
-  // Extract multiple suggestions strictly by "Món ăn đề xuất|gợi ý: <tên>" blocks
   static List<FoodSuggestion> extract(String text) {
     final lower = text.toLowerCase();
     final hasSuggestKeyword =
@@ -34,9 +32,10 @@ class FoodSuggestionParser {
     for (var i = 0; i < matches.length; i++) {
       final m = matches[i];
       final name = (m.group(2) ?? '').trim();
-      if (name.isEmpty) continue;
+      if (name.isEmpty) {
+        continue;
+      }
 
-      // Lấy đoạn text từ sau tên đến trước tên tiếp theo để tìm calo
       final start = m.end;
       final end = i + 1 < matches.length ? matches[i + 1].start : text.length;
       final slice = text.substring(start, end);
@@ -67,7 +66,6 @@ class FoodSuggestionParser {
         }
       }
 
-      // Tách lý do và thông tin dinh dưỡng bằng regex linh hoạt (hỗ trợ **...** và xuống dòng)
       String? reason;
       String? nutrition;
       final reasonMatch = RegExp(
@@ -77,20 +75,19 @@ class FoodSuggestionParser {
       if (reasonMatch != null) {
         reason = reasonMatch.group(1)?.trim();
       }
-      RegExp _nutriRx1 = RegExp(
+      RegExp nutriRx1 = RegExp(
         r'(?:\*\*)?\s*Thông tin dinh dưỡng(?:\s*\([^)]*\))?\s*(?:\*\*)?\s*[:：]?\s*([\s\S]*)',
         caseSensitive: false,
       );
-      RegExp _nutriRx2 = RegExp(
+      RegExp nutriRx2 = RegExp(
         r'(?:\*\*)?\s*Th\w*ng tin dinh d\w*(?:\s*\([^)]*\))?\s*(?:\*\*)?\s*[:：]?\s*([\s\S]*)',
         caseSensitive: false,
       );
       final nutritionMatch =
-          _nutriRx1.firstMatch(slice) ?? _nutriRx2.firstMatch(slice);
+          nutriRx1.firstMatch(slice) ?? nutriRx2.firstMatch(slice);
       if (nutritionMatch != null) {
         nutrition = nutritionMatch.group(1)?.trim();
       }
-      // Làm sạch ký tự ngôi sao trong nội dung dinh dưỡng, bỏ các dòng chỉ có sao
       if (nutrition != null) {
         final cleanedLines = nutrition
             .split('\n')
@@ -99,7 +96,6 @@ class FoodSuggestionParser {
             .toList();
         nutrition = cleanedLines.join('\n');
       }
-      // Fallback: nếu chưa bắt được, tách theo dòng sau tiêu đề và gom các dòng bullet
       if (nutrition == null || nutrition.trim().isEmpty) {
         final lines = slice.split('\n');
         bool inSection = false;
@@ -111,11 +107,15 @@ class FoodSuggestionParser {
             inSection = true;
             continue;
           }
-          if (!inSection) continue;
-          // Dừng khi gặp header mới hoặc dòng toàn '**'
-          if (l.startsWith('**')) break;
-          if (l.trim().isEmpty) continue;
-          // Fallback 2: gom các dòng bullet thường gặp nếu vẫn chưa có
+          if (!inSection) {
+            continue;
+          }
+          if (l.startsWith('**')) {
+            break;
+          }
+          if (l.trim().isEmpty) {
+            continue;
+          }
           if (nutrition == null || nutrition.trim().isEmpty) {
             final lines = slice.split('\n');
             bool afterHeader = false;
@@ -127,10 +127,15 @@ class FoodSuggestionParser {
                 afterHeader = true;
                 continue;
               }
-              if (!afterHeader) continue;
-              if (l.startsWith('**') || l.startsWith('⭐'))
-                break; // kết thúc block
-              if (l.trim().isEmpty) continue;
+              if (!afterHeader) {
+                continue;
+              }
+              if (l.startsWith('**') || l.startsWith('⭐')) {
+                break;
+              }
+              if (l.trim().isEmpty) {
+                continue;
+              }
               final isBullet =
                   l.trimLeft().startsWith('-') ||
                   l.trimLeft().startsWith('•') ||
@@ -138,7 +143,9 @@ class FoodSuggestionParser {
                   lower.contains('protein') ||
                   lower.contains('carb') ||
                   lower.contains('fat');
-              if (isBullet) buff.add(l);
+              if (isBullet) {
+                buff.add(l);
+              }
             }
             if (buff.isNotEmpty) nutrition = buff.join('\n');
           }
@@ -150,7 +157,6 @@ class FoodSuggestionParser {
         }
       }
 
-      // Chỉ thêm theo tên món; không thêm các block “Lý do chọn”, “Thông tin dinh dưỡng” vào tên
       final cleanedName = name.replaceAll(RegExp(r'\*\*'), '').trim();
       final ignoreLower = cleanedName.toLowerCase();
       if (ignoreLower.contains('thông tin dinh dưỡng') ||
@@ -176,4 +182,3 @@ class FoodSuggestionParser {
     return suggestions;
   }
 }
-

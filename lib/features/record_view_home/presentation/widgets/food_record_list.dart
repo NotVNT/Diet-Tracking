@@ -79,8 +79,6 @@ class FoodRecordList extends StatelessWidget {
           final dateFormat = DateFormat('dd/MM/yyyy');
 
           return ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
             itemCount: recordsToShow.length,
             itemBuilder: (context, index) {
               final record = recordsToShow[index];

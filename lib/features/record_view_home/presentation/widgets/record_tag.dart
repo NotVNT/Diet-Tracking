@@ -9,7 +9,13 @@ class RecordTag extends StatelessWidget {
   final FoodRecordEntity record;
 
   bool _isBotSuggestion(FoodRecordEntity r) {
-    return (r.nutritionDetails ?? '').trim().isNotEmpty;
+    // Only consider it a bot suggestion if it's explicitly marked as text type
+    // AND has nutrition details. Barcode and food scans should never be bot suggestions.
+    if (r.recordType == RecordType.barcode || r.recordType == RecordType.food) {
+      return false;
+    }
+    return r.recordType == RecordType.text &&
+           (r.nutritionDetails ?? '').trim().isNotEmpty;
   }
 
   @override

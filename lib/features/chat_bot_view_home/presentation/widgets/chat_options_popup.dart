@@ -29,7 +29,7 @@ class ChatOptionsPopup extends StatelessWidget {
         borderRadius: BorderRadius.circular(_smallBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withAlpha(77), // 0.3 * 255
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),

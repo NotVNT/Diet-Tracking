@@ -107,6 +107,7 @@ class FoodScannerInjector {
       scanBarcodeFromCameraFrame: scanBarcodeFromCameraFrame,
       getBarcodeProductInfo: getProductInfo,
       saveScannedFood: saveScannedFood,
+      barcodeApiService: apiService,
     );
 
     final requestPermission =

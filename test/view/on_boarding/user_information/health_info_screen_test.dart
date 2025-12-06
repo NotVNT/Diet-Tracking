@@ -1,66 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:diet_tracking_project/view/on_boarding/user_information/health_info_screen.dart';
-import 'package:diet_tracking_project/database/local_storage_service.dart';
-import 'package:flutter_test/flutter_test.dart' as flutter_test;
-import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class _LocalFake extends LocalStorageService {
-  Map<String, dynamic>? saved;
-  @override
-  Future<void> saveGuestData({
-    String? goal,
-    double? heightCm,
-    double? weightKg,
-    double? goalWeightKg,
-    double? goalHeightCm,
-    String? health,
-    List<String>? medicalConditions,
-    List<String>? allergies,
-    int? age,
-    String? gender,
-    String? language,
-  }) async {
-    saved = {'medicalConditions': medicalConditions, 'allergies': allergies};
-  }
+import 'package:diet_tracking_project/view/on_boarding/user_information/health_info_screen.dart';
+import 'package:diet_tracking_project/view/on_boarding/user_information/height_selector.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
+import 'package:diet_tracking_project/database/auth_service.dart';
+import 'package:diet_tracking_project/widget/health/add_button.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+
+class _AuthStub extends AuthService {
+  _AuthStub()
+    : super(auth: MockFirebaseAuth(), firestore: FakeFirebaseFirestore());
 }
 
-class _NoAuth {}
+Widget _buildApp(Widget home) {
+  return MaterialApp(
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    locale: const Locale('en'), // Using 'en' for predictable text
+    home: home,
+  );
+}
 
 void main() {
-  flutter_test.setUpAll(() async {
-    flutter_test.TestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('HealthInfoScreen continue without input', (tester) async {
-    final local = _LocalFake();
+  testWidgets('HealthInfoScreen: renders correctly and navigates on tap', (
+    tester,
+  ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: HealthInfoScreen(localStorageService: local, authService: null),
-      ),
+      _buildApp(HealthInfoScreen(authService: _AuthStub())),
     );
 
-    // Bấm tiếp tục không nhập gì
-    final continueFinder = find.text('Tiếp tục');
-    await tester.ensureVisible(continueFinder);
-    await tester.tap(continueFinder);
+    // Verify title and description are present (using hardcoded vietnamese text from the widget)
+    expect(
+      find.text('Dị Ứng Thực Phẩm'),
+      findsNWidgets(2),
+    ); // Title and Card Title
+    expect(find.byType(TextField), findsOneWidget);
+    // The button is a CustomButton, so we find it by its text.
+    expect(find.text('Next'), findsOneWidget);
+
+    // Tap the 'Next' button
+    await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
 
-    // Không crash và không lưu gì
-    expect(local.saved, isNull);
+    // Verify navigation to HeightSelector
+    expect(find.byType(HeightSelector), findsOneWidget);
   });
 
-  testWidgets('HealthInfoScreen displays progress bar', (tester) async {
+  testWidgets('HealthInfoScreen: can add and remove allergies', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: HealthInfoScreen(),
-      ),
+      _buildApp(HealthInfoScreen(authService: _AuthStub())),
     );
 
-    // Tìm ProgressBarWidget
-    final progressBarFinder = find.byType(ProgressBarWidget);
+    // Enter an allergy
+    await tester.enterText(find.byType(TextField), 'Peanuts');
+    await tester.pump();
 
-    // Kiểm tra xem widget có tồn tại không
-    expect(progressBarFinder, findsOneWidget);
+    // Tap the add button
+    await tester.tap(find.byType(AddButton));
+    await tester.pump();
+
+    // Verify the allergy is added
+    expect(find.text('Peanuts'), findsOneWidget);
+    expect(find.byType(Chip), findsOneWidget);
+
+    // Tap the remove icon on the chip
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pump();
+
+    // Verify the allergy is removed
+    expect(find.text('Peanuts'), findsNothing);
+    expect(find.byType(Chip), findsNothing);
   });
 }

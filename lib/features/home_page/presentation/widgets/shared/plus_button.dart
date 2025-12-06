@@ -35,7 +35,7 @@ class AddBadgeIconButton extends StatelessWidget {
         badgeStyle: badges.BadgeStyle(
           shape: badges.BadgeShape.square,
           borderRadius: BorderRadius.circular(borderRadius),
-          badgeColor: badgeColor ?? theme.colorScheme.surfaceVariant,
+          badgeColor: badgeColor ?? theme.colorScheme.surfaceContainerHighest,
           elevation: 0,
           padding: EdgeInsets.zero,
         ),

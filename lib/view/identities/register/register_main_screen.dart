@@ -353,10 +353,8 @@ class _SignupScreenState extends State<SignupScreen>
                           });
                         },
                         onTermsTap: () {
-                          // TODO: Navigate to Terms of Service
                         },
                         onPolicyTap: () {
-                          // TODO: Navigate to Privacy Policy
                         },
                       ),
                     ),

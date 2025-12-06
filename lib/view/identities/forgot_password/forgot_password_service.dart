@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -53,59 +54,38 @@ class ForgotPasswordService {
     String emailForReset = sanitizedEmail;
 
     try {
-      // Kiểm tra email tồn tại và lấy sign-in methods
-      List<String> signInMethods =
-          await _auth.fetchSignInMethodsForEmail(emailForReset);
+      // Kiểm tra email tồn tại trong Firestore
+      bool exists = await _doesUserExistByEmail(emailForReset);
 
       // Nếu không tìm thấy, thử với lowercase
-      if (signInMethods.isEmpty) {
+      if (!exists) {
         final String lowerCaseEmail = sanitizedEmail.toLowerCase();
         if (lowerCaseEmail != sanitizedEmail) {
-          signInMethods =
-              await _auth.fetchSignInMethodsForEmail(lowerCaseEmail);
-          if (signInMethods.isNotEmpty) {
+          final bool existsLower = await _doesUserExistByEmail(lowerCaseEmail);
+          if (existsLower) {
             emailForReset = lowerCaseEmail;
-          }
-        }
-
-        // Kiểm tra trong Firestore
-        if (signInMethods.isEmpty) {
-          final bool exists = await _doesUserExistByEmail(emailForReset);
-          if (!exists && lowerCaseEmail != sanitizedEmail) {
-            final bool existsLower = await _doesUserExistByEmail(lowerCaseEmail);
-            if (existsLower) {
-              emailForReset = lowerCaseEmail;
-            } else {
-              return PasswordResetResult.failure(
-                ForgotPasswordErrorCode.emailNotExist,
-              );
-            }
-          } else if (!exists) {
-            return PasswordResetResult.failure(
-              ForgotPasswordErrorCode.emailNotExist,
-            );
+            exists = true;
           }
         }
       }
 
-      // Kiểm tra provider type
-      if (signInMethods.isNotEmpty && !signInMethods.contains('password')) {
-        final String providers =
-            signInMethods.map(_providerDisplayName).join(', ');
+      // Nếu email không tồn tại trong Firestore, trả về lỗi
+      if (!exists) {
         return PasswordResetResult.failure(
-          ForgotPasswordErrorCode.accountUsesProvider,
-          additionalInfo: providers,
+          ForgotPasswordErrorCode.emailNotExist,
         );
       }
 
       // Gửi email reset password
+      // Note: sendPasswordResetEmail không tiết lộ thông tin về provider type
+      // để tuân thủ email enumeration protection
       await _auth.sendPasswordResetEmail(email: emailForReset);
 
       return PasswordResetResult.success(emailUsed: emailForReset);
     } on FirebaseAuthException catch (e) {
       return PasswordResetResult.failure(_handleAuthException(e));
     } catch (e) {
-      print('❌ Exception in password reset: $e');
+      developer.log('Exception in password reset: $e', level: 1000);
       return PasswordResetResult.failure(
         ForgotPasswordErrorCode.unknown,
       );
@@ -136,22 +116,6 @@ class ForgotPasswordService {
         .get();
 
     return legacySnapshot.docs.isNotEmpty;
-  }
-
-  /// Chuyển đổi provider ID thành tên hiển thị
-  String _providerDisplayName(String providerId) {
-    switch (providerId) {
-      case 'password':
-        return 'Email & Mật khẩu';
-      case 'google.com':
-        return 'Google';
-      case 'facebook.com':
-        return 'Facebook';
-      case 'apple.com':
-        return 'Apple';
-      default:
-        return providerId;
-    }
   }
 
   /// Xử lý Firebase Auth exceptions

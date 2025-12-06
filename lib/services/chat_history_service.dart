@@ -30,7 +30,7 @@ class ChatMessage {
 final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 // Theo yêu cầu: tên hàm chính xác
-Future<void> save_history_to_firestore(
+Future<void> saveHistoryToFirestore(
   String userId,
   List<ChatMessage> history,
 ) async {
@@ -49,7 +49,7 @@ Future<void> save_history_to_firestore(
 }
 
 // Theo yêu cầu: tên hàm chính xác
-Future<List<ChatMessage>> load_history_from_firestore(String userId) async {
+Future<List<ChatMessage>> loadHistoryFromFirestore(String userId) async {
   final doc = await _db
       .collection('users')
       .doc(userId)

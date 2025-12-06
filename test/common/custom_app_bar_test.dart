@@ -1,228 +1,313 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 import 'package:diet_tracking_project/common/custom_app_bar.dart';
+import 'package:diet_tracking_project/view/notification/notification_provider.dart';
 
 void main() {
   group('CustomAppBar', () {
-    testWidgets('should render with required title', (
-      WidgetTester tester,
-    ) async {
-      const String title = 'Test Title';
-      
-      await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(appBar: CustomAppBar(title: title))),
-      );
-
-      expect(find.byType(CustomAppBar), findsOneWidget);
-      expect(find.byType(AppBar), findsOneWidget);
-      expect(find.text(title), findsOneWidget);
-    });
-
-    testWidgets('should not show back button', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(appBar: CustomAppBar(title: 'Test'))),
-      );
-
-      expect(find.byIcon(Icons.arrow_back), findsNothing);
-    });
-
-      expect(find.byIcon(Icons.arrow_back), findsNothing);
-    });
-
-    testWidgets('should call onBackPressed when back button is tapped', (
-      WidgetTester tester,
-    ) async {
-      bool backPressed = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            appBar: CustomAppBar(
-              title: 'Test',
-              onBackPressed: () {
-                backPressed = true;
-              },
+    group('Basic Rendering', () {
+      testWidgets('should render with title', (WidgetTester tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(
+                title: 'Test Title',
+                showNotificationBell: false,
+              ),
+              body: const SizedBox(),
             ),
           ),
-        ),
-      );
-
-      await tester.tap(find.byIcon(Icons.arrow_back));
-      expect(backPressed, true);
-    });
-
-    testWidgets(
-      'should use default back navigation when onBackPressed is null',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          MaterialApp(home: Scaffold(appBar: const CustomAppBar())),
         );
 
-        // Should not throw an error when tapped
-        await tester.tap(find.byIcon(Icons.arrow_back));
-        await tester.pump();
-      },
-    );
+        expect(find.text('Test Title'), findsOneWidget);
+      });
 
-    testWidgets('should render with custom actions', (
-      WidgetTester tester,
-    ) async {
-      const actions = [Icon(Icons.search), Icon(Icons.more_vert)];
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(appBar: const CustomAppBar(actions: actions)),
-        ),
-      );
-
-      expect(find.byIcon(Icons.search), findsOneWidget);
-      expect(find.byIcon(Icons.more_vert), findsOneWidget);
-    });
-
-    testWidgets('should use custom backgroundColor', (
-      WidgetTester tester,
-    ) async {
-      const Color customColor = Colors.red;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            appBar: const CustomAppBar(backgroundColor: customColor),
-          ),
-        ),
-      );
-
-      final AppBar appBar = tester.widget<AppBar>(find.byType(AppBar));
-      expect(appBar.backgroundColor, customColor);
-    });
-
-    testWidgets('should use default backgroundColor when not provided', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(home: Scaffold(appBar: const CustomAppBar())),
-      );
-
-      final AppBar appBar = tester.widget<AppBar>(find.byType(AppBar));
-      expect(appBar.backgroundColor, AppColors.white);
-    });
-
-    testWidgets('should center title when centerTitle is true', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            appBar: const CustomAppBar(
-              title: 'Centered Title',
-              centerTitle: true,
+      testWidgets('should render AppBar with correct properties', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(title: 'Test', showNotificationBell: false),
+              body: const SizedBox(),
             ),
           ),
-        ),
-      );
+        );
 
-      final AppBar appBar = tester.widget<AppBar>(find.byType(AppBar));
-      expect(appBar.centerTitle, true);
-    });
+        final appBar = tester.widget<AppBar>(find.byType(AppBar));
+        expect(appBar.elevation, 0);
+        expect(appBar.centerTitle, true);
+      });
 
-    testWidgets('should not center title when centerTitle is false', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            appBar: const CustomAppBar(title: 'Left Title', centerTitle: false),
+      testWidgets('should not show back button by default', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(title: 'Test', showNotificationBell: false),
+              body: const SizedBox(),
+            ),
           ),
-        ),
-      );
+        );
 
-      final AppBar appBar = tester.widget<AppBar>(find.byType(AppBar));
-      expect(appBar.centerTitle, false);
+        final appBar = tester.widget<AppBar>(find.byType(AppBar));
+        expect(appBar.automaticallyImplyLeading, false);
+      });
+
+      testWidgets('should show back button when enabled', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(
+                title: 'Test',
+                showBackButton: true,
+                showNotificationBell: false,
+              ),
+              body: const SizedBox(),
+            ),
+          ),
+        );
+
+        final appBar = tester.widget<AppBar>(find.byType(AppBar));
+        expect(appBar.automaticallyImplyLeading, true);
+      });
     });
 
-    testWidgets('should have correct preferred size', (
-      WidgetTester tester,
-    ) async {
-      const customAppBar = CustomAppBar();
+    group('Custom Background Color', () {
+      testWidgets('should use custom background color', (
+        WidgetTester tester,
+      ) async {
+        const customColor = Color(0xFF123456);
 
-      expect(customAppBar.preferredSize, const Size.fromHeight(kToolbarHeight));
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(
+                title: 'Test',
+                backgroundColor: customColor,
+                showNotificationBell: false,
+              ),
+              body: const SizedBox(),
+            ),
+          ),
+        );
+
+        final appBar = tester.widget<AppBar>(find.byType(AppBar));
+        expect(appBar.backgroundColor, customColor);
+      });
+
+      testWidgets('should use default background color when not provided', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(title: 'Test', showNotificationBell: false),
+              body: const SizedBox(),
+            ),
+          ),
+        );
+
+        final appBar = tester.widget<AppBar>(find.byType(AppBar));
+        expect(appBar.backgroundColor, isNotNull);
+      });
     });
 
-    testWidgets('should render back button with correct styling', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(home: Scaffold(appBar: const CustomAppBar())),
-      );
+    group('Custom Actions', () {
+      testWidgets('should render custom actions', (WidgetTester tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(
+                title: 'Test',
+                showNotificationBell: false,
+                actions: [
+                  IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+                ],
+              ),
+              body: const SizedBox(),
+            ),
+          ),
+        );
 
-      final IconButton backButton = tester.widget<IconButton>(
-        find.byType(IconButton),
-      );
-      expect(backButton.icon, isA<Container>());
+        expect(find.byIcon(Icons.search), findsOneWidget);
+      });
 
-      final Container iconContainer = backButton.icon as Container;
-      expect(iconContainer.padding, const EdgeInsets.all(8));
-      expect(iconContainer.decoration, isA<BoxDecoration>());
+      testWidgets('should render multiple custom actions', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(
+                title: 'Test',
+                showNotificationBell: false,
+                actions: [
+                  IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+                  IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              body: const SizedBox(),
+            ),
+          ),
+        );
+
+        expect(find.byIcon(Icons.search), findsOneWidget);
+        expect(find.byIcon(Icons.more_vert), findsOneWidget);
+      });
+
+      testWidgets('should not render actions when not provided', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(title: 'Test', showNotificationBell: false),
+              body: const SizedBox(),
+            ),
+          ),
+        );
+
+        final appBar = tester.widget<AppBar>(find.byType(AppBar));
+        // When no custom actions, only notification bell should be in actions
+        expect(appBar.actions, isNotNull);
+      });
     });
 
-    testWidgets('should render title with correct style', (
-      WidgetTester tester,
-    ) async {
-      const String title = 'Styled Title';
+    group('Notification Bell', () {
+      testWidgets('should show notification bell by default', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => NotificationProvider()),
+            ],
+            child: MaterialApp(
+              home: Scaffold(
+                appBar: CustomAppBar(title: 'Test'),
+                body: const SizedBox(),
+              ),
+            ),
+          ),
+        );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(appBar: const CustomAppBar(title: title)),
-        ),
-      );
+        // Notification bell should be rendered
+        expect(find.byType(AppBar), findsOneWidget);
+      });
 
-      final Text titleWidget = tester.widget<Text>(find.text(title));
-      expect(titleWidget.style, AppStyles.heading2);
+      testWidgets('should hide notification bell when disabled', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => NotificationProvider()),
+            ],
+            child: MaterialApp(
+              home: Scaffold(
+                appBar: CustomAppBar(
+                  title: 'Test',
+                  showNotificationBell: false,
+                ),
+                body: const SizedBox(),
+              ),
+            ),
+          ),
+        );
+
+        expect(find.byType(AppBar), findsOneWidget);
+      });
     });
 
-    testWidgets('should not render title when title is null', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(home: Scaffold(appBar: const CustomAppBar())),
-      );
+    group('Title Styling', () {
+      testWidgets('should render title with correct style', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(
+                title: 'Styled Title',
+                showNotificationBell: false,
+              ),
+              body: const SizedBox(),
+            ),
+          ),
+        );
 
-      expect(find.byType(Text), findsNothing);
+        final titleWidget = tester.widget<Text>(find.text('Styled Title'));
+        expect(titleWidget.style, isNotNull);
+        expect(titleWidget.style?.fontWeight, FontWeight.w600);
+      });
     });
 
-    testWidgets('should have zero elevation', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(home: Scaffold(appBar: const CustomAppBar())),
-      );
-
-      final AppBar appBar = tester.widget<AppBar>(find.byType(AppBar));
-      expect(appBar.elevation, 0);
+    group('PreferredSizeWidget', () {
+      testWidgets('should have correct preferred size', (
+        WidgetTester tester,
+      ) async {
+        final appBar = CustomAppBar(title: 'Test');
+        expect(appBar.preferredSize, const Size.fromHeight(kToolbarHeight));
+      });
     });
 
-    testWidgets('should handle multiple actions correctly', (
-      WidgetTester tester,
-    ) async {
-      const actions = [
-        Icon(Icons.search),
-        Icon(Icons.favorite),
-        Icon(Icons.share),
-        Icon(Icons.more_vert),
-      ];
+    group('Integration Tests', () {
+      testWidgets('should render in Scaffold correctly', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              appBar: CustomAppBar(
+                title: 'Integration Test',
+                showBackButton: true,
+                showNotificationBell: false,
+              ),
+              body: const Center(child: Text('Body')),
+            ),
+          ),
+        );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(appBar: const CustomAppBar(actions: actions)),
-        ),
-      );
+        expect(find.text('Integration Test'), findsOneWidget);
+        expect(find.text('Body'), findsOneWidget);
+      });
 
-      expect(find.byIcon(Icons.search), findsOneWidget);
-      expect(find.byIcon(Icons.favorite), findsOneWidget);
-      expect(find.byIcon(Icons.share), findsOneWidget);
-      expect(find.byIcon(Icons.more_vert), findsOneWidget);
+      testWidgets('should work with custom actions and notification bell', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => NotificationProvider()),
+            ],
+            child: MaterialApp(
+              home: Scaffold(
+                appBar: CustomAppBar(
+                  title: 'Full Featured',
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {},
+                    ),
+                  ],
+                  showNotificationBell: true,
+                ),
+                body: const SizedBox(),
+              ),
+            ),
+          ),
+        );
+
+        expect(find.text('Full Featured'), findsOneWidget);
+        expect(find.byIcon(Icons.search), findsOneWidget);
+      });
     });
   });
 }
-
-

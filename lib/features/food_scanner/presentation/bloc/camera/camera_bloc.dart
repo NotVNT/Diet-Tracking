@@ -12,6 +12,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     on<InitializeCamera>(_onInitializeCamera);
     on<StartImageStream>(_onStartImageStream);
     on<StopImageStream>(_onStopImageStream);
+    on<ReleaseCamera>(_onReleaseCamera);
     on<CameraImageCaptured>(_onCameraImageCaptured);
   }
 
@@ -24,7 +25,11 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     try {
       final permission = await requestPermission();
       if (!permission.hasPermission) {
-        emit(CameraError(errorMessage: permission.errorMessage ?? 'Camera permission denied'));
+        emit(
+          CameraError(
+            errorMessage: permission.errorMessage ?? 'Camera permission denied',
+          ),
+        );
         emit(const CameraInitializing(isInitializing: false));
         return;
       }
@@ -90,6 +95,25 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     }
     // After stopping the stream, expose a ready state so the UI can take photos again
     emit(CameraReady(controller: controller));
+  }
+
+  Future<void> _onReleaseCamera(
+    ReleaseCamera event,
+    Emitter<CameraState> emit,
+  ) async {
+    final controller = _controller;
+    _controller = null;
+    if (controller != null) {
+      try {
+        if (controller.value.isStreamingImages) {
+          await controller.stopImageStream();
+        }
+      } catch (_) {}
+      try {
+        await controller.dispose();
+      } catch (_) {}
+    }
+    emit(const CameraInitial());
   }
 
   Future<void> _onCameraImageCaptured(
