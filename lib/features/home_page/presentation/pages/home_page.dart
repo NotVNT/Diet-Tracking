@@ -51,9 +51,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _onViewReport() {
-
-  }
+  void _onViewReport() {}
 
   /// Handle picture tap - navigate to detail page
   Future<void> _onPictureTap(FoodRecordEntity food) async {
@@ -75,9 +73,12 @@ class _HomePageState extends State<HomePage> {
       builder: (context, homeProvider, child) {
         final pages = HomePageConfig.getPages();
 
-        final bool isChatTab = homeProvider.currentIndex == HomePageConfig.chatBotIndex;
-        final bool isRecordTab = homeProvider.currentIndex == HomePageConfig.recordIndex;
-        final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+        final bool isChatTab =
+            homeProvider.currentIndex == HomePageConfig.chatBotIndex;
+        final bool isRecordTab =
+            homeProvider.currentIndex == HomePageConfig.recordIndex;
+        final bool isKeyboardOpen =
+            MediaQuery.of(context).viewInsets.bottom > 0;
 
         return Scaffold(
           body: homeProvider.currentIndex == HomePageConfig.homeIndex
@@ -88,7 +89,8 @@ class _HomePageState extends State<HomePage> {
               : BlocBuilder<RecordCubit, RecordState>(
                   builder: (context, state) {
                     bool showFabArrow = false;
-                    final bool isHomeTab = homeProvider.currentIndex == HomePageConfig.homeIndex;
+                    final bool isHomeTab =
+                        homeProvider.currentIndex == HomePageConfig.homeIndex;
                     final bool isViewingToday = DateUtils.isSameDay(
                       homeProvider.selectedDate,
                       DateTime.now(),
@@ -99,7 +101,8 @@ class _HomePageState extends State<HomePage> {
                         (r) => DateUtils.isSameDay(r.date, today),
                       );
                       // Only show on Home tab, when viewing Today, and Today has no records
-                      showFabArrow = isHomeTab && isViewingToday && !hasTodayRecord;
+                      showFabArrow =
+                          isHomeTab && isViewingToday && !hasTodayRecord;
                     } else {
                       // Until data is loaded, don't show the arrow
                       showFabArrow = false;
@@ -112,8 +115,10 @@ class _HomePageState extends State<HomePage> {
                       arrowSize: ResponsiveHelper.of(context).width(64),
                       child: CustomFloatingActionButton(
                         onRecordSelected: () => _navigateToRecord(homeProvider),
-                        onChatBotSelected: () => _navigateToChatBot(homeProvider),
-                        onScanFoodSelected: () => _onScanFoodTapped(homeProvider),
+                        onChatBotSelected: () =>
+                            _navigateToChatBot(homeProvider),
+                        onScanFoodSelected: () =>
+                            _onScanFoodTapped(homeProvider),
                         onReportSelected: () => _onReportTapped(),
                       ),
                     );
@@ -191,9 +196,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Handle report action
-  void _onReportTapped() {
-  
-  }
+  void _onReportTapped() {}
 
   /// Handle bottom navigation tap
   void _onBottomNavTap(HomeProvider provider, int index) {

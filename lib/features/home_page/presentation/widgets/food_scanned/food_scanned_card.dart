@@ -50,10 +50,7 @@ class FoodScannedCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (showImage) ...[
-            _buildFoodImage(),
-            const SizedBox(width: 12),
-          ],
+          if (showImage) ...[_buildFoodImage(), const SizedBox(width: 12)],
           Expanded(
             child: FoodScannedInfo(
               record: foodRecord,
@@ -64,7 +61,7 @@ class FoodScannedCard extends StatelessWidget {
           if (showAddButton || isBarcode) ...[
             const SizedBox(width: 8),
             _buildAddButton(context),
-          ]
+          ],
         ],
       ),
     );
@@ -100,7 +97,6 @@ class FoodScannedCard extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildAddButton(BuildContext context) {
     return AddBadgeIconButton(

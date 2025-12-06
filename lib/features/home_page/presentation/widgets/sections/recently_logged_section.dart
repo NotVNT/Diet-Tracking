@@ -51,8 +51,11 @@ class RecentlyLoggedSection extends StatelessWidget {
         SizedBox(height: responsive.height(12)),
         if (!hasAny)
           EmptyStateCard(
-            title: localizations?.recentlyLoggedEmpty ?? "You haven't uploaded any food",
-            subtitle: emptySubtitle ??
+            title:
+                localizations?.recentlyLoggedEmpty ??
+                "You haven't uploaded any food",
+            subtitle:
+                emptySubtitle ??
                 (localizations?.recentlyLoggedSubtitle ??
                     'Start tracking your meals by taking a quick picture'),
             onTap: onEmptyTap,
@@ -118,28 +121,19 @@ class RecentlyLoggedSection extends StatelessWidget {
     );
   }
 
-  Widget _buildPhotoSection(
-    BuildContext context,
-    ResponsiveHelper responsive,
-  ) {
+  Widget _buildPhotoSection(BuildContext context, ResponsiveHelper responsive) {
     return Column(
-      children: List.generate(
-        photoItems.length * 2 - 1,
-        (index) {
-          if (index.isOdd) {
-            return SizedBox(height: responsive.height(16));
-          }
-          final foodIndex = index ~/ 2;
-          final food = photoItems[foodIndex];
-          return GestureDetector(
-            onTap: onItemTap != null ? () => onItemTap!(food) : null,
-            child: FoodScannedCard(
-              foodRecord: food,
-              onDelete: onDelete,
-            ),
-          );
-        },
-      ),
+      children: List.generate(photoItems.length * 2 - 1, (index) {
+        if (index.isOdd) {
+          return SizedBox(height: responsive.height(16));
+        }
+        final foodIndex = index ~/ 2;
+        final food = photoItems[foodIndex];
+        return GestureDetector(
+          onTap: onItemTap != null ? () => onItemTap!(food) : null,
+          child: FoodScannedCard(foodRecord: food, onDelete: onDelete),
+        );
+      }),
     );
   }
 
@@ -148,23 +142,17 @@ class RecentlyLoggedSection extends StatelessWidget {
     ResponsiveHelper responsive,
   ) {
     return Column(
-      children: List.generate(
-        barcodeItems.length * 2 - 1,
-        (index) {
-          if (index.isOdd) {
-            return SizedBox(height: responsive.height(8));
-          }
-          final foodIndex = index ~/ 2;
-          final food = barcodeItems[foodIndex];
-          return GestureDetector(
-            onTap: onItemTap != null ? () => onItemTap!(food) : null,
-            child: FoodScannedCard(
-              foodRecord: food,
-              onDelete: onDelete,
-            ),
-          );
-        },
-      ),
+      children: List.generate(barcodeItems.length * 2 - 1, (index) {
+        if (index.isOdd) {
+          return SizedBox(height: responsive.height(8));
+        }
+        final foodIndex = index ~/ 2;
+        final food = barcodeItems[foodIndex];
+        return GestureDetector(
+          onTap: onItemTap != null ? () => onItemTap!(food) : null,
+          child: FoodScannedCard(foodRecord: food, onDelete: onDelete),
+        );
+      }),
     );
   }
 }

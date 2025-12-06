@@ -71,12 +71,18 @@ class FoodScannedInfo extends StatelessWidget {
         const SizedBox(height: 4),
         Row(
           children: [
-            const Icon(Icons.local_fire_department, color: Colors.orange, size: 16),
+            const Icon(
+              Icons.local_fire_department,
+              color: Colors.orange,
+              size: 16,
+            ),
             const SizedBox(width: 4),
             Text(
               '${(approxForBotSuggestion && (record.nutritionDetails?.trim().isNotEmpty == true)) ? "~" : ""}${record.calories.toStringAsFixed(0)} ${caloriesSuffix ?? 'kcal'}',
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: emphasizeCalories ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: emphasizeCalories
+                    ? FontWeight.w700
+                    : FontWeight.w500,
               ),
             ),
           ],
@@ -157,9 +163,11 @@ class _MacroChip extends StatelessWidget {
       children: [
         Icon(icon, color: color, size: 14),
         const SizedBox(width: 3),
-        Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11)),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11),
+        ),
       ],
     );
   }
 }
-

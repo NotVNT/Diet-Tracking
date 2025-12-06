@@ -8,7 +8,6 @@ import '../../../../../responsive/responsive.dart';
 import '../../../../../common/snackbar_helper.dart';
 import '../../../../../common/app_confirm_dialog.dart';
 
-
 import 'food_image_widget.dart';
 import 'food_scanned_info.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
@@ -25,9 +24,7 @@ class ScannedFoodDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final isBarcode = scannedFood.recordType == RecordType.barcode;
 
-    return isBarcode
-        ? _buildBarcodeView(context)
-        : _buildImageView(context);
+    return isBarcode ? _buildBarcodeView(context) : _buildImageView(context);
   }
 
   Widget _buildImageView(BuildContext context) {
@@ -107,7 +104,6 @@ class ScannedFoodDetailPage extends StatelessWidget {
     );
   }
 
-
   void _showMoreOptions(BuildContext context, ResponsiveHelper responsive) {
     showModalBottomSheet(
       context: context,
@@ -132,10 +128,7 @@ class ScannedFoodDetailPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final id = scannedFood.id;
     if (id == null) {
-      SnackBarHelper.showError(
-        context,
-        l10n?.snackbarErrorTitle ?? 'Error',
-      );
+      SnackBarHelper.showError(context, l10n?.snackbarErrorTitle ?? 'Error');
       return;
     }
 
@@ -143,7 +136,8 @@ class ScannedFoodDetailPage extends StatelessWidget {
     final confirmed = await showAppConfirmDialog(
       context,
       title: l10n?.deleteMealTitle ?? 'Xoá món ăn?',
-      message: l10n?.deleteMealMessage(scannedFood.foodName) ??
+      message:
+          l10n?.deleteMealMessage(scannedFood.foodName) ??
           'Bạn có chắc muốn xoá "${scannedFood.foodName}" khỏi ghi nhận?',
       confirmText: l10n?.delete,
       cancelText: l10n?.cancel,
@@ -162,11 +156,7 @@ class ScannedFoodDetailPage extends StatelessWidget {
       navigator.pop(true);
     }
   }
-
 }
-
-
-
 
 /// Bottom sheet widget displaying scanned food details and action buttons
 class DetailBottomSheetWidget extends StatelessWidget {
