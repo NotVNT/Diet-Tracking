@@ -157,8 +157,8 @@ client = OpenAI(
 
 def food_or_not(img_base64):
     messages = [
-    {"role": "system", "content": """Bạn là một nhà bếp người Việt phân biệt thực phẩm và nước uống. Hãy xem qua bức ảnh người dùng gửi có phải là thực phẩm hay không.
-    Nếu là thực phẩm thì trả về **FOOD**, không phải thực phẩm thì trả về **NOT_FOOD**. Không cần giải thích thêm."""},
+    {"role": "system", "content": """Hãy xem qua bức ảnh người dùng gửi, bức ảnh có phải là đồ mà con người ăn hay uống được hay không.
+    Nếu được thì trả về **FOOD**, không được thì trả về **NOT_FOOD**. Không cần giải thích thêm."""},
     {"role": "user", "content": 
         [
             {"type": "image_url",
@@ -175,7 +175,7 @@ def food_or_not(img_base64):
 def predict_correction(img_base64):
 
     messages = [
-    {"role": "system", "content": """Bạn là một nhà bếp người Việt phân biệt thực phẩm và nước uống. Trả về tên tiếng anh của thực phẩm này. Không cần giải thích thêm"""},
+    {"role": "system", "content": """Cho mình biết tên về thực phẩm hoặc nước uống hoặc cả hai nếu có trong bức ảnh này. Và cho mình từ khóa đơn giản dựa trên hình ảnh để search vectorbase. Từ khóa nên được trả về như sau: Từ khóa: {từ khóa}"""},
     {"role": "user", "content": 
     [
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}},
@@ -285,6 +285,7 @@ async def scan_food(file: UploadFile = File(...)):
     image_bytes = await file.read()
     img_base64 = base64.b64encode(image_bytes).decode('utf-8')
     if food_or_not(img_base64) == "FOOD":
+        print("FOOD")
         new_emb = extract_embedding(image_bytes, transform, vision_model, device)
         in_domain, score = is_in_domain(new_emb, db_emb)
         if(in_domain == True):
@@ -301,6 +302,7 @@ async def scan_food(file: UploadFile = File(...)):
                 "total_protein": str(float(result["total_protein"])),
             }
         else:
+            print(in_domain)
             query = predict_correction(img_base64)
             print(query)
             query_embedding = get_embedding(query)
@@ -309,6 +311,7 @@ async def scan_food(file: UploadFile = File(...)):
             top_k=1,
             include_metadata=True
             )
+            # print(results)
 
             if results["matches"] and len(results["matches"]) > 0:
                 return {
