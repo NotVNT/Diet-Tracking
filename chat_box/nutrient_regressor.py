@@ -21,7 +21,7 @@ load_dotenv()
 app = FastAPI()
 
 ##api-key##
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY_1")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 ##pinecone##
@@ -157,8 +157,8 @@ client = OpenAI(
 
 def food_or_not(img_base64):
     messages = [
-    {"role": "system", "content": """Bạn là một nhà bếp người Việt phân biệt thực phẩm và nước uống. Hãy xem qua bức ảnh người dùng gửi có phải là thực phẩm hay không.
-    Nếu là thực phẩm thì trả về **FOOD**, không phải thực phẩm thì trả về **NOT_FOOD**. Không cần giải thích thêm."""},
+    {"role": "system", "content": """Hãy xem qua bức ảnh người dùng gửi, bức ảnh có phải là đồ mà con người ăn hay uống được hay không.
+    Nếu được thì trả về **FOOD**, không được thì trả về **NOT_FOOD**. Không cần giải thích thêm."""},
     {"role": "user", "content": 
         [
             {"type": "image_url",
@@ -175,7 +175,7 @@ def food_or_not(img_base64):
 def predict_correction(img_base64):
 
     messages = [
-    {"role": "system", "content": """Bạn là một nhà bếp người Việt phân biệt thực phẩm và nước uống. Trả về tên tiếng anh của thực phẩm này. Không cần giải thích thêm"""},
+    {"role": "system", "content": """Cho mình biết tên về thực phẩm hoặc nước uống hoặc cả hai nếu có trong bức ảnh này. Và cho mình từ khóa đơn giản dựa trên hình ảnh để search vectorbase. Từ khóa nên được trả về như sau: Từ khóa: {từ khóa}"""},
     {"role": "user", "content": 
     [
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}},
@@ -263,9 +263,6 @@ def predict_image(img_bytes, predictor, transform, device):
         preds = predictor(tensor)
     return preds.squeeze(0).cpu().numpy()
 
-vision_model = load_feature_extractor().to(device)
-regressor = NutrientRegressor(input_dim=1280, output_dim=5).to(device)
-
 model = timm.create_model("efficientnet_lite0", pretrained=True)
 vision_model = load_feature_extractor(model).to(device)
 regressor = NutrientRegressor(input_dim=1280, output_dim=5).to(device)
@@ -277,6 +274,7 @@ predictor = NutrientPredictor(vision_model, regressor).to(device)
 predictor.eval()
 
 transform = get_image_transform()
+db_emb = np.load("embedding_of_database/embeddings.npy")
 
 ##efficientnet##
 
@@ -286,8 +284,8 @@ async def scan_food(file: UploadFile = File(...)):
     ##Logic mới là nếu người dùng gửi bức ảnh là không phải là thực phẩm thì endpoint sẽ trả về là NOT_FOOD, còn lại vẫn như cũ
     image_bytes = await file.read()
     img_base64 = base64.b64encode(image_bytes).decode('utf-8')
-    db_emb = np.load("embeddings.npy")
     if food_or_not(img_base64) == "FOOD":
+        print("FOOD")
         new_emb = extract_embedding(image_bytes, transform, vision_model, device)
         in_domain, score = is_in_domain(new_emb, db_emb)
         if(in_domain == True):
@@ -295,14 +293,16 @@ async def scan_food(file: UploadFile = File(...)):
             new_emb = extract_embedding(image_bytes, transform, vision_model, device)
             nutrient_columns = ['total_mass', 'total_calories', 'total_fat', 'total_carb', 'total_protein']
             result = dict(zip(nutrient_columns, prediction))
-            return
-            {
-                "total_calories": result["total_calories"],
-                "total_fat": result["total_fat"],
-                "total_carb": result["total_carb"],
-                "total_protein": result["total_carb"],
+            print(in_domain)
+            print(result)
+            return {
+                "total_calories": str(float(result["total_calories"])),
+                "total_fat": str(float(result["total_fat"])),
+                "total_carb": str(float(result["total_carb"])),
+                "total_protein": str(float(result["total_protein"])),
             }
         else:
+            print(in_domain)
             query = predict_correction(img_base64)
             print(query)
             query_embedding = get_embedding(query)
@@ -311,64 +311,71 @@ async def scan_food(file: UploadFile = File(...)):
             top_k=1,
             include_metadata=True
             )
-            nutritional_values = []
+            # print(results)
 
-            for match in results["matches"]:
-                nutritional_values.append(
-                {'total_calories':match["metadata"]["calories"],
-                'total_fat':match["metadata"]["fat"],
-                'total_protein':match["metadata"]["protein"],
-                'total_carb':match["metadata"]["carb"]}
-                )
-            return
-            {
-                "total_calories": nutritional_values["total_calories"],
-                "total_fat": nutritional_values["total_fat"],
-                "total_carb": nutritional_values["total_carb"],
-                "total_protein": nutritional_values["total_carb"],
-            }
+            if results["matches"] and len(results["matches"]) > 0:
+                return {
+                    "total_calories": results["matches"][0]["metadata"]["calories"],
+                    "total_fat": results["matches"][0]["metadata"]["fat"],
+                    "total_carb": results["matches"][0]["metadata"]["carb"],
+                    "total_protein": results["matches"][0]["metadata"]["protein"],
+                }
+            else:
+                return {"error": "No matching food found"}
     else:
         return {"NOT_FOOD"}
 
 
 if __name__ == "__main__":
-    img_path = "diet-tracking/chat_box/testing_image/OIP.png"
+    # img_path = "diet-tracking/chat_box/testing_image/OIP.png"
 
-    image = Image.open(img_path).convert("RGB")
+    # image = Image.open(img_path).convert("RGB")
 
-    with open(img_path, "rb") as f:
-        image_bytes = f.read()
+    # with open(img_path, "rb") as f:
+    #     image_bytes = f.read()
 
-    img_base64 = base64.b64encode(image_bytes).decode('utf-8')
-    db_emb = np.load("diet-tracking/chat_box/embedding_of_database/embeddings.npy")
-    if food_or_not(img_base64) == "FOOD":
-        new_emb = extract_embedding(image_bytes, transform, vision_model, device)
-        in_domain, score = is_in_domain(new_emb, db_emb)
-        if(in_domain == True):
-            prediction = predict_image(image_bytes, predictor, transform, device)
-            new_emb = extract_embedding(image_bytes, transform, vision_model, device)
-            nutrient_columns = ['total_mass', 'total_calories', 'total_fat', 'total_carb', 'total_protein']
-            result = dict(zip(nutrient_columns, prediction))
-            print(result)
-        else:
-            query = predict_correction(img_base64)
-            print(query)
-            query_embedding = get_embedding(query)
-            results = index.query(
-            vector=query_embedding,
-            top_k=1,
-            include_metadata=True
-            )
-            nutritional_values = []
+    # img_base64 = base64.b64encode(image_bytes).decode('utf-8')
+    # db_emb = np.load("diet-tracking/chat_box/embedding_of_database/embeddings.npy")
+    # if food_or_not(img_base64) == "FOOD":
+    #     new_emb = extract_embedding(image_bytes, transform, vision_model, device)
+    #     in_domain, score = is_in_domain(new_emb, db_emb)
+    #     if(in_domain == True):
+    #         prediction = predict_image(image_bytes, predictor, transform, device)
+    #         new_emb = extract_embedding(image_bytes, transform, vision_model, device)
+    #         nutrient_columns = ['total_mass', 'total_calories', 'total_fat', 'total_carb', 'total_protein']
+    #         result = dict(zip(nutrient_columns, prediction))
+    #         print(in_domain)
+    #         print(result)
+    #     else:
+    #         query = predict_correction(img_base64)
+    #         print(query)
+    #         query_embedding = get_embedding(query)
+    #         results = index.query(
+    #         vector=query_embedding,
+    #         top_k=1,
+    #         include_metadata=True
+    #         )
+    #         nutritional_values = []
 
-            for match in results["matches"]:
-                nutritional_values.append(
-                {'total_calories':match["metadata"]["calories"],
-                'total_fat':match["metadata"]["fat"],
-                'total_protein':match["metadata"]["protein"],
-                'total_carb':match["metadata"]["carb"]}
-                )
-            print(match["metadata"]["food_name"], "-", match["score"])
-            print(nutritional_values)
-    else:
+    #         for match in results["matches"]:
+    #             nutritional_values.append(
+    #             {'total_calories':match["metadata"]["calories"],
+    #             'total_fat':match["metadata"]["fat"],
+    #             'total_protein':match["metadata"]["protein"],
+    #             'total_carb':match["metadata"]["carb"]}
+    #             )
+    #         print(match["metadata"]["food_name"], "-", match["score"])
+    #         print(nutritional_values)
+    # else:
         print("NOT_FOOD")
+
+    #     query = "apple 2"
+    #     query_embedding = get_embedding(query)
+    #     results = index.query(
+    #     vector=query_embedding,
+    #     top_k=1,
+    #     include_metadata=True
+    # )
+
+    # for match in results["matches"]:
+    #     print(match["metadata"]["food_name"], "-", match["score"])
