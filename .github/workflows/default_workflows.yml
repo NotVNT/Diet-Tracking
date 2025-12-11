@@ -1,0 +1,45 @@
+name: Flutter CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Set up Flutter SDK
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.0' # You can change this to your desired Flutter version
+          channel: 'stable'
+          cache: true
+
+      # Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Analyze the project's Dart code
+      - name: Analyze project
+        run: flutter analyze
+
+      # Run widget tests
+      - name: Run tests
+        run: flutter test
+
+      # Build the Android app
+      - name: Build APK
+        run: flutter build apk --debug
