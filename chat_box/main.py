@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 from googlesearch import search
 from datetime import datetime
 from pinecone import Pinecone, ServerlessSpec
-from sentence_transformers import SentenceTransformer
+from huggingface_hub import InferenceClient
 import json
 import re
 import os
@@ -15,20 +15,21 @@ from pydantic import BaseModel
 
 #---api_key---#
 load_dotenv()
-PINECONE_API_KEY = os.getenv("pcsk_5vFAvq_QCVDvAYQ7kxvD4xaN9t2s2Grm2NGVXMWHi12hJvtPyFmryNbcCMfM5kEzUUjZW6")
-GEMINI_API_KEY = ('AIzaSyDic7CyKachNcLmKR3VhFINtQb5hK9L03A')
-GOOGLE_API_KEY = ('AIzaSyDyWyqsCP864gGSxyunCqfKAiPtcRg85_s')
-GOOGLE_CX = ('326a236a3e77a4180')
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+GOOGLE_API_KEY = os.getenv('GOOGLE_SEARCH_API_KEY')
+GOOGLE_CX = os.getenv('GOOGLE_SEARCH_CX')
+HF_TOKEN = os.getenv("HF_TOKEN")
 #---api_key---# 
 
 #---model_database_config---#
-genai.configure(api_key="AIzaSyDic7CyKachNcLmKR3VhFINtQb5hK9L03A")
+genai.configure(api_key=GEMINI_API_KEY)
 model_gemini = genai.GenerativeModel('gemini-2.5-flash-lite')
-model = SentenceTransformer('all-MiniLM-L6-v2')
+extractor = InferenceClient(model="sentence-transformers/all-MiniLM-L6-v2")
 #---model_database_config---#
 
 #--pinecone--#
-pc = Pinecone(api_key="pcsk_5vFAvq_QCVDvAYQ7kxvD4xaN9t2s2Grm2NGVXMWHi12hJvtPyFmryNbcCMfM5kEzUUjZW6")
+pc = Pinecone(api_key=PINECONE_API_KEY)
 index_name = 'food-db'
 index = pc.Index(index_name)
 #--pinecone--#
@@ -186,7 +187,7 @@ def db_lookup(tool_query: str, gender: str = "male", top_k=10):
     print(f"Bộ lọc (filter) Pinecone sẽ dùng: {pinecone_filter}")
 
     # Bước 2: Encode Query gốc để tạo Vector
-    query_vector = model.encode(tool_query).tolist()
+    query_vector = extractor.feature_extraction(tool_query).tolist()
 
     # Bước 3: Truy vấn Pinecone
     if pinecone_filter:
@@ -233,34 +234,13 @@ def db_lookup(tool_query: str, gender: str = "male", top_k=10):
 
     return food_list
 
-def total_calories_for_today(nutrition_plan, food_records):
-    max_calories = 0
-    if nutrition_plan:
-         max_calories = nutrition_plan.get('caloriesMax')
-    
-    today = datetime.now().strftime("%Y-%m-%d")
-    total_calories = sum(
-    record.get("calories", 0)
-    for record in food_records
-    if record.get("date", "").startswith(today)
-    )
-    print(total_calories)
-    if total_calories >= max_calories:
-        return 1;
 
 
 
 
 def build_system_prompt(nutrition_plan, food_records):
 
-    if total_calories_for_today(nutrition_plan, food_records):
-        return f"""
-### ⚠️ **Thông báo dinh dưỡng**
-Database đã tính toán và thấy rằng người dùng đã tiêu thụ đủ lượng calories cho hôm nay. Hãy từ chối cung cấp thêm món ăn cho người dùng và từ chối thẳng thắn là bạn sẽ không đề xuất món ăn nữa nhưng vẫn sẽ trả lời câu hỏi liên quan về **ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống và món ăn Việt Nam**.
-"""
-
-    else:
-        return """
+    return f"""
 Cư xử như **chuyên gia dinh dưỡng Việt Nam**, nói chuyện như **một đầu bếp chuyên nghiệp** với phong cách **đi thẳng vào vấn đề, thân thiện, dễ hiểu và thực tế**.
 
 ### Nhiệm vụ:
@@ -327,21 +307,6 @@ def build_google_search_prompt():
 
 
 def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_weight, gender, nutrition_plan, food_records):
-    # plan_details = ""
-    # if nutrition_plan:
-    #     plan_details = f"""\n- Kế hoạch dinh dưỡng hiện tại:
-    #      - BMR: {nutrition_plan.get('bmr', 'N/A')} kcal
-    #      - TDEE: {nutrition_plan.get('tdee', 'N/A')} kcal
-    #      - Lượng calo mục tiêu: {nutrition_plan.get('targetCalories', 'N/A')} kcal/ngày
-    #      - Thời gian: {nutrition_plan.get('targetDays', 'N/A')} ngày
-    #      - Trạng thái: {'Lành mạnh' if nutrition_plan.get('isHealthy') else 'Cần cân nhắc'}"""
-
-    # food_history = ""
-    # if food_records:
-    #     food_history += "\n- Lịch sử ăn uống gần đây:"
-    #     for record in food_records:
-    #         food_history += f"\n  - {record.get('foodName', 'N/A')}: {record.get('calories', 'N/A')} kcal"
-
     return f"""
 ### 🔍 **Thông tin đầu vào:**
 - Tuổi: {age}
@@ -357,9 +322,9 @@ def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_
 ---
 
 ### ✅ **Nhiệm vụ của bạn:**
-Dựa trên thông tin trên, hãy **phản hồi tự nhiên, thân thiện và chuyên nghiệp như một chuyên gia dinh dưỡng**.
-- Nếu người dùng hỏi món ăn, gợi ý món phù hợp với mục tiêu và còn trong giới hạn calo.
-- Nếu người dùng hỏi ngoài chủ đề dinh dưỡng, hãy từ chối nhẹ nhàng và hướng lại đúng chủ đề.
+Dựa trên thông tin trên, hãy **phản hồi tự nhiên, thân thiện**.
+- Nếu người dùng hỏi món ăn, gợi ý món phù hợp với mục tiêu.
+- Nếu người dùng hỏi ngoài chủ đề dinh dưỡng, hãy từ chối nhẹ nhàng.
 """
 
 def reasoning_intruction():
@@ -422,11 +387,8 @@ async def chatbox(request: ChatRequest):
         return {"reply": response.text}
     
     if(action == "DATABASE"):#<---------------------------
-        #biến results sẽ là biến mà lưu danh sách database vào
         print("ĐANG SỬ DỤNG DATABASE")
         results = db_lookup(request.prompt +  request.goal, gender = "male", top_k=5)
-        # final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.nutrition_plan, request.food_records)
-        # print("FINAL_PROMPT",final_prompt)
         final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.gender, request.nutrition_plan, request.food_records) + "Dưới đây là danh sách món ăn lấy được từ database:" + str(results) + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
         print(results)
         response = chat.send_message(final_prompt)
