@@ -10,10 +10,12 @@ import '../../../../common/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../common/snackbar_helper.dart';
 import '../../../../services/user_avatar_service.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
 
 /// Main chat bot page with clean architecture
 class ChatBotPage extends StatefulWidget {
-  const ChatBotPage({super.key});
+  final FoodRecordEntity? initialFoodAnalysis;
+  const ChatBotPage({super.key, this.initialFoodAnalysis});
 
   @override
   State<ChatBotPage> createState() => _ChatBotPageState();
@@ -36,6 +38,13 @@ class _ChatBotPageState extends State<ChatBotPage> {
     UserAvatarService.instance.ensureLoaded();
     _chatProvider = ChatProviderFactory.create();
     _chatProvider.addListener(_onChatProviderChanged);
+
+    // If a scanned food was passed in, trigger analysis after first frame
+    if (widget.initialFoodAnalysis != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _chatProvider.sendFoodScanAnalysis(widget.initialFoodAnalysis!);
+      });
+    }
   }
 
   @override
@@ -68,7 +77,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
       ),
       body: Column(
         children: [
-          MessagesArea(messages: _chatProvider.messages),
+          MessagesArea(
+            messages: _chatProvider.messages,
+            isLoading: _chatProvider.isLoading,
+          ),
           if (_chatProvider.showOptions)
             ChatOptionsPopup(onOptionSelected: _onOptionSelected),
           if (_chatProvider.showFileInputs)

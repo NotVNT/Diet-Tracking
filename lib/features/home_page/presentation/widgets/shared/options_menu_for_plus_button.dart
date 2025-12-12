@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../../../../chat_bot_view_home/presentation/providers/chat_provider_factory.dart';
+import '../../providers/home_provider.dart';
+import '../../../../../config/home_page_config.dart';
 
 /// Bottom sheet menu showing more options for the scanned food detail
 class MoreOptionsMenu extends StatelessWidget {
@@ -10,6 +14,8 @@ class MoreOptionsMenu extends StatelessWidget {
   final ResponsiveHelper responsive;
   final VoidCallback onDelete;
   final bool showSaveToDevice;
+  // Optional external handler; if not provided, a sensible default is used
+  final VoidCallback? onAskChatBot;
 
   const MoreOptionsMenu({
     super.key,
@@ -17,6 +23,7 @@ class MoreOptionsMenu extends StatelessWidget {
     required this.responsive,
     required this.onDelete,
     this.showSaveToDevice = true,
+    this.onAskChatBot,
   });
 
   @override
@@ -33,7 +40,21 @@ class MoreOptionsMenu extends StatelessWidget {
             ),
             title: const Text('Ask chat bot'),
             onTap: () {
+              // Close the sheet first
               Navigator.pop(context);
+              // If external handler provided, use it; otherwise use default behavior
+              if (onAskChatBot != null) {
+                onAskChatBot!();
+                return;
+              }
+              // Switch to Chat tab within Home scaffold (keeps bottom nav & FAB)
+              final homeProvider = context.read<HomeProvider>();
+              homeProvider.setCurrentIndex(HomePageConfig.chatBotIndex);
+              // Defer sending until after navigation frame
+              Future.microtask(() {
+                final chatProvider = ChatProviderFactory.create();
+                chatProvider.sendFoodScanAnalysis(scannedFood);
+              });
             },
           ),
           if (showSaveToDevice)

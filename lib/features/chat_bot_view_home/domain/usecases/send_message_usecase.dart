@@ -9,7 +9,10 @@ class SendMessageUseCase {
   SendMessageUseCase(this._chatRepository, this._userRepository);
 
   /// Execute the use case
-  Future<SendMessageResult> execute(String message) async {
+  Future<SendMessageResult> execute(
+    String message, {
+    Map<String, dynamic>? extraContext,
+  }) async {
     try {
       // Check if user is authenticated
       final isAuthenticated = await _userRepository.isUserAuthenticated();
@@ -46,6 +49,11 @@ class SendMessageUseCase {
       final foodRecords = await _userRepository.getRecentFoodRecords();
       if (foodRecords.isNotEmpty) {
         userData['food_records'] = foodRecords;
+      }
+
+      // Merge any extra context (e.g., food_scan JSON)
+      if (extraContext != null && extraContext.isNotEmpty) {
+        userData.addAll(extraContext);
       }
 
       // Send message and get response

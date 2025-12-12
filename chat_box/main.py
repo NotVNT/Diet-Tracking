@@ -20,7 +20,7 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GOOGLE_API_KEY = os.getenv('GOOGLE_SEARCH_API_KEY')
 GOOGLE_CX = os.getenv('GOOGLE_SEARCH_CX')
 HF_TOKEN = os.getenv("HF_TOKEN")
-#---api_key---# 
+#---api_key---#
 
 #---model_database_config---#
 genai.configure(api_key=GEMINI_API_KEY)
@@ -122,6 +122,7 @@ class ChatRequest(BaseModel):
     gender: str | None = None
     nutrition_plan: dict | None = None
     food_records: list[dict] | None = None
+    food_scan: dict | None = None
 
 def google_search(query: str, num_results: int = 3):
     service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
@@ -135,7 +136,7 @@ def google_search(query: str, num_results: int = 3):
             "link": it.get("link")
         })
     return results
-    
+
 def weighted_random_choice(matches, k=5):
     scores = np.array([m['score'] for m in matches])
     probs = scores / scores.sum()
@@ -166,7 +167,7 @@ def db_lookup(tool_query: str, gender: str = "male", top_k=10):
 
     pinecone_filter = {}
     filter_parts = [] # Dùng $and để kết hợp các điều kiện
-    
+
     if extracted_tags:
         # $in: Dùng cho các cột là LIST
         if extracted_tags.get("true_ingredients"):
@@ -372,6 +373,17 @@ def decide_action(user_query:str):
     except Exception as e:
         print(f"Error in decide_action: {e}. Defaulting to DIRECT action.")
         return {"action": "DIRECT", "direct_answer": "Xin lỗi, tôi gặp chút sự cố khi phân tích câu hỏi của bạn. Bạn có thể hỏi lại được không?"}
+
+
+def attach_food_scan_to_prompt(prompt: str, food_scan: dict | None) -> str:
+    if not food_scan:
+        return prompt
+    try:
+        fs = json.dumps(food_scan, ensure_ascii=False)
+    except Exception:
+        fs = str(food_scan)
+    return prompt + "\n\nThông tin sản phẩm đã quét (food_scan): " + fs
+
 @app.post("/chat")
 async def chatbox(request: ChatRequest):
     print(f"Received request with gender: {request.gender}")
@@ -385,7 +397,7 @@ async def chatbox(request: ChatRequest):
         print("DIRECT")
         response = chat.send_message(request.prompt)
         return {"reply": response.text}
-    
+
     if(action == "DATABASE"):#<---------------------------
         print("ĐANG SỬ DỤNG DATABASE")
         results = db_lookup(request.prompt +  request.goal, gender = "male", top_k=5)
@@ -393,7 +405,7 @@ async def chatbox(request: ChatRequest):
         print(results)
         response = chat.send_message(final_prompt)
         return {"reply": response.text}
-    
+
     elif action == "GOOGLE":
         context = []
         print("ĐANG SỬ DỤNG GOOGLE")
