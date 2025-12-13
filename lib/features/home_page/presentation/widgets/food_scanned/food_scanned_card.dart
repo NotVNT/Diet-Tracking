@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../shared/plus_button.dart';
 import 'food_scanned_info.dart';
 import '../shared/options_menu_for_plus_button.dart';
 import '../../../../../responsive/responsive.dart';
+import '../../../../../utils/performance_utils.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 
 class FoodScannedCard extends StatelessWidget {
@@ -78,21 +78,11 @@ class FoodScannedCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0),
-        child: CachedNetworkImage(
+        child: PerformanceUtils.buildCachedImage(
           imageUrl: foodRecord.imagePath!,
+          width: 60,
+          height: 60,
           fit: BoxFit.cover,
-          placeholder: (context, url) => const Center(
-            child: SizedBox(
-              height: 24,
-              width: 24,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          ),
-          errorWidget: (context, url, error) => const Icon(
-            Icons.image_not_supported,
-            color: Colors.grey,
-            size: 24,
-          ),
         ),
       ),
     );

@@ -6,10 +6,12 @@ import '../widgets/chat_input_area.dart';
 import '../widgets/chat_options_popup.dart';
 import '../widgets/food_suggestion_inputs.dart';
 import '../widgets/chat_settings_menu.dart';
+import '../widgets/chat_sessions_list.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../common/snackbar_helper.dart';
 import '../../../../services/user_avatar_service.dart';
+import '../../../../services/chat_sessions_service.dart';
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
 
 /// Main chat bot page with clean architecture
@@ -28,6 +30,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
   final TextEditingController _budgetController = TextEditingController();
   final TextEditingController _mealTypeController = TextEditingController();
 
+  // UI state moved from provider
+  bool _showOptions = false;
+  bool _showFileInputs = false;
+
   // Chat provider instance
   late final ChatProvider _chatProvider;
 
@@ -42,6 +48,12 @@ class _ChatBotPageState extends State<ChatBotPage> {
     // If a scanned food was passed in, trigger analysis after first frame
     if (widget.initialFoodAnalysis != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _showOptions = false;
+            _showFileInputs = false;
+          });
+        }
         _chatProvider.sendFoodScanAnalysis(widget.initialFoodAnalysis!);
       });
     }
@@ -81,9 +93,9 @@ class _ChatBotPageState extends State<ChatBotPage> {
             messages: _chatProvider.messages,
             isLoading: _chatProvider.isLoading,
           ),
-          if (_chatProvider.showOptions)
+          if (_showOptions)
             ChatOptionsPopup(onOptionSelected: _onOptionSelected),
-          if (_chatProvider.showFileInputs)
+          if (_showFileInputs)
             _buildFoodSuggestionInputs(_chatProvider),
           ChatInputArea(
             messageController: _messageController,
@@ -115,11 +127,34 @@ class _ChatBotPageState extends State<ChatBotPage> {
     SnackBarHelper.showSuccess(context, l10n.chatBotNewChatCreated);
   }
 
-  /// Handles chat history action
+  /// Handles chat history action: show bottom sheet of last 5 sessions, allow delete
   void _onChatHistory() {
-    final l10n = AppLocalizations.of(context)!;
- 
-    SnackBarHelper.showInfo(context, l10n.chatBotChatHistoryComingSoon);
+    final service = ChatSessionsService();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(ctx).size.height * 0.7,
+            child: ChatSessionsList(
+              service: service,
+              onSelect: (s) {
+                // Chỉ xem lịch sử, không thay đổi session hiện tại
+                Navigator.of(ctx).maybePop();
+              },
+              onCreateNew: () async {
+                await _chatProvider.createNewChatSession();
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 
 
@@ -127,7 +162,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
   void _onOptionSelected(String option) {
     final l10n = AppLocalizations.of(context)!;
     if (option == l10n.chatBotFoodSuggestion) {
-      _chatProvider.showFoodSuggestionInputs();
+      setState(() {
+        _showFileInputs = true;
+        _showOptions = false;
+      });
       return;
     }
 
@@ -172,7 +210,9 @@ class _ChatBotPageState extends State<ChatBotPage> {
     _ingredientsController.clear();
     _budgetController.clear();
     _mealTypeController.clear();
-    chatProvider.hideFoodSuggestionInputs();
+    setState(() {
+      _showFileInputs = false;
+    });
   }
 
   /// Sends a regular message
@@ -181,6 +221,14 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
     // Clear textfield immediately to prevent stuck text
     _messageController.clear();
+
+    // Hide options and file inputs when sending a message
+    if (_showOptions || _showFileInputs) {
+      setState(() {
+        _showOptions = false;
+        _showFileInputs = false;
+      });
+    }
 
     final error = await chatProvider.sendMessage(text);
     if (error != null) {
