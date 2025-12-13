@@ -1,4 +1,5 @@
 import '../../domain/entities/chat_session_entity.dart';
+import '../../domain/entities/chat_message_entity.dart';
 import '../../domain/repositories/chat_session_repository.dart';
 import '../datasources/chat_session_local_data_source.dart';
 import '../../../../services/chat_sessions_service.dart';
@@ -19,7 +20,43 @@ class ChatSessionRepositoryImpl implements ChatSessionRepository {
 
   @override
   Future<ChatSessionEntity?> getSessionById(String id) async {
-    return await _localDataSource.getSessionById(id);
+    // Try local first
+    final local = await _localDataSource.getSessionById(id);
+    if (local != null) return local;
+
+    // Fallback: load from cloud (Firestore) and hydrate into local cache
+    try {
+      final remoteMeta = await _cloudService.getSessionById(id);
+      if (remoteMeta == null) return null;
+
+      // Fetch messages ordered by timestamp
+      final remoteMsgs = await _cloudService.getMessages(id);
+      remoteMsgs.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+      final messages = remoteMsgs
+          .map(
+            (m) => ChatMessageEntity(
+              text: m.content,
+              isUser: m.role == ChatRole.user,
+              timestamp: m.timestamp,
+            ),
+          )
+          .toList();
+
+      final session = ChatSessionEntity(
+        id: remoteMeta.id,
+        title: remoteMeta.title,
+        createdAt: remoteMeta.createdAt,
+        lastMessageAt: remoteMeta.lastMessageAt,
+        messages: messages,
+      );
+
+      // Cache locally for fast subsequent loads
+      await _localDataSource.saveSession(session);
+      return session;
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
@@ -41,7 +78,14 @@ class ChatSessionRepositoryImpl implements ChatSessionRepository {
 
       final msgs = session.messages;
       if (remoteCount < msgs.length) {
-        for (int i = remoteCount; i < msgs.length; i++) {
+        // If cloud has no messages yet and the first local message is a bot
+        // welcome message, skip it so that the first stored message is the
+        // user's message (so auto-title uses user content as desired).
+        int startIndex = remoteCount;
+        if (remoteCount == 0 && msgs.isNotEmpty && !msgs.first.isUser) {
+          startIndex = 1;
+        }
+        for (int i = startIndex; i < msgs.length; i++) {
           final m = msgs[i];
           await _cloudService.addMessage(
             sessionId: session.id,
@@ -73,11 +117,8 @@ class ChatSessionRepositoryImpl implements ChatSessionRepository {
 
   @override
   Future<String> createNewSession({String? title}) async {
+    // Create only in local cache; do NOT touch cloud until a user message is saved
     final id = await _localDataSource.createNewSession(title: title);
-    // Ensure cloud record exists as well (best-effort)
-    try {
-      await _cloudService.ensureSessionWithClientId(id, title: title);
-    } catch (_) {}
     return id;
   }
 }

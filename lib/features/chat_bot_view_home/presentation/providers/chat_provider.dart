@@ -37,8 +37,8 @@ class ChatProvider extends ChangeNotifier {
   List<ChatMessageEntity> get messages => _currentSession?.messages ?? [];
   bool get isLoading => _isLoading;
   ChatSessionEntity? get currentSession => _currentSession;
-  String get currentSessionTitle => _currentSession?.title ?? 'Cuộc trò chuyện mới';
-
+  String get currentSessionTitle =>
+      _currentSession?.title ?? 'Cuộc trò chuyện mới';
 
   /// Send a regular message
   Future<String?> sendMessage(String message) async {
@@ -49,40 +49,50 @@ class ChatProvider extends ChangeNotifier {
     }
 
     // Add user message
-    _addMessage(ChatMessageEntity(
-      text: validation.validMessage!,
-      isUser: true,
-      timestamp: DateTime.now(),
-    ));
+    _addMessage(
+      ChatMessageEntity(
+        text: validation.validMessage!,
+        isUser: true,
+        timestamp: DateTime.now(),
+      ),
+    );
 
     _setLoading(true);
 
     try {
       // Send message and get response
-      final result = await _sendMessageUseCase.execute(validation.validMessage!);
+      final result = await _sendMessageUseCase.execute(
+        validation.validMessage!,
+      );
 
       if (result.isSuccess) {
-        _addMessage(ChatMessageEntity(
-          text: result.response!,
-          isUser: false,
-          timestamp: DateTime.now(),
-        ));
+        _addMessage(
+          ChatMessageEntity(
+            text: result.response!,
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
         return null; // Success
       } else {
-        _addMessage(ChatMessageEntity(
-          text: result.error!,
-          isUser: false,
-          timestamp: DateTime.now(),
-        ));
+        _addMessage(
+          ChatMessageEntity(
+            text: result.error!,
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
         return result.error;
       }
     } catch (e) {
       final errorMessage = 'Lỗi không xác định: ${e.toString()}';
-      _addMessage(ChatMessageEntity(
-        text: errorMessage,
-        isUser: false,
-        timestamp: DateTime.now(),
-      ));
+      _addMessage(
+        ChatMessageEntity(
+          text: errorMessage,
+          isUser: false,
+          timestamp: DateTime.now(),
+        ),
+      );
       return errorMessage;
     } finally {
       _setLoading(false);
@@ -107,12 +117,11 @@ class ChatProvider extends ChangeNotifier {
   /// Analyze a scanned food item for personal suitability using user's profile
   Future<void> sendFoodScanAnalysis(FoodRecordEntity record) async {
     // Short user-facing message
-    final userMsg = 'Phân tích mức độ phù hợp của sản phẩm: ${record.foodName} (${record.calories.toStringAsFixed(0)} kcal)';
-    _addMessage(ChatMessageEntity(
-      text: userMsg,
-      isUser: true,
-      timestamp: DateTime.now(),
-    ));
+    final userMsg =
+        'Phân tích mức độ phù hợp của sản phẩm: ${record.foodName} (${record.calories.toStringAsFixed(0)} kcal)';
+    _addMessage(
+      ChatMessageEntity(text: userMsg, isUser: true, timestamp: DateTime.now()),
+    );
 
     _setLoading(true);
 
@@ -130,36 +139,43 @@ class ChatProvider extends ChangeNotifier {
           'record_type': record.recordType.name,
           'image_url': record.imagePath,
           'timestamp': record.date.toIso8601String(),
-        }
+        },
       };
       final result = await _sendMessageUseCase.execute(
         prompt,
         extraContext: extraContext,
       );
       if (result.isSuccess) {
-        _addMessage(ChatMessageEntity(
-          text: result.response!,
-          isUser: false,
-          timestamp: DateTime.now(),
-        ));
+        _addMessage(
+          ChatMessageEntity(
+            text: result.response!,
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
       } else {
-        _addMessage(ChatMessageEntity(
-          text: result.error ?? 'Không thể phân tích sản phẩm. Vui lòng thử lại.',
-          isUser: false,
-          timestamp: DateTime.now(),
-        ));
+        _addMessage(
+          ChatMessageEntity(
+            text:
+                result.error ??
+                'Không thể phân tích sản phẩm. Vui lòng thử lại.',
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
       }
     } catch (e) {
-      _addMessage(ChatMessageEntity(
-        text: 'Đã xảy ra lỗi khi phân tích: ${e.toString()}',
-        isUser: false,
-        timestamp: DateTime.now(),
-      ));
+      _addMessage(
+        ChatMessageEntity(
+          text: 'Đã xảy ra lỗi khi phân tích: ${e.toString()}',
+          isUser: false,
+          timestamp: DateTime.now(),
+        ),
+      );
     } finally {
       _setLoading(false);
     }
   }
-
 
   void _addMessage(ChatMessageEntity message) {
     if (_currentSession == null) return;
@@ -196,7 +212,6 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   /// Load a specific chat session
   Future<void> loadChatSession(String sessionId) async {
     _setLoading(true);
@@ -217,6 +232,13 @@ class ChatProvider extends ChangeNotifier {
 
   void _setLoading(bool loading) {
     _isLoading = loading;
+    notifyListeners();
+  }
+
+  /// Clear current session (used when all sessions are deleted remotely)
+  void clearCurrentSession() {
+    _currentSession = null;
+    _isNewSessionUnsaved = false;
     notifyListeners();
   }
 }

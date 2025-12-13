@@ -84,7 +84,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
       if (recentSession != null) {
         await _chatProvider.loadChatSession(recentSession.id);
       } else {
-        await _chatProvider.createNewChatSession();
+        // Không tạo phiên mới tự động; giữ màn hình trống cho đến khi người dùng chọn "Tạo đoạn chat mới"
       }
     } catch (e) {
       // ignore: avoid_print
@@ -117,24 +117,27 @@ class _ChatBotPageState extends State<ChatBotPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                MessagesArea(
-                  messages: _chatProvider.messages,
-                  isLoading: _chatProvider.isLoading,
-                ),
-                if (_showOptions)
-                  ChatOptionsPopup(onOptionSelected: _onOptionSelected),
-                if (_showFileInputs)
-                  _buildFoodSuggestionInputs(_chatProvider),
-                ChatInputArea(
-                  messageController: _messageController,
-                  onSendPressed: () => _onSendPressed(_chatProvider),
-                  onMessageSubmitted: (text) =>
-                      _onMessageSubmitted(text, _chatProvider),
-                ),
-              ],
-            ),
+          : (_chatProvider.currentSession == null
+                ? // Trạng thái trống khi chưa có phiên chat
+                  const SizedBox.expand()
+                : Column(
+                    children: [
+                      MessagesArea(
+                        messages: _chatProvider.messages,
+                        isLoading: _chatProvider.isLoading,
+                      ),
+                      if (_showOptions)
+                        ChatOptionsPopup(onOptionSelected: _onOptionSelected),
+                      if (_showFileInputs)
+                        _buildFoodSuggestionInputs(_chatProvider),
+                      ChatInputArea(
+                        messageController: _messageController,
+                        onSendPressed: () => _onSendPressed(_chatProvider),
+                        onMessageSubmitted: (text) =>
+                            _onMessageSubmitted(text, _chatProvider),
+                      ),
+                    ],
+                  )),
     );
   }
 
@@ -182,13 +185,17 @@ class _ChatBotPageState extends State<ChatBotPage> {
               onCreateNew: () async {
                 await _chatProvider.createNewChatSession();
               },
+              onDeletedSessionId: (deletedId) {
+                if (_chatProvider.currentSession?.id == deletedId) {
+                  _chatProvider.clearCurrentSession();
+                }
+              },
             ),
           ),
         );
       },
     );
   }
-
 
   /// Handles option selection
   void _onOptionSelected(String option) {
@@ -271,6 +278,4 @@ class _ChatBotPageState extends State<ChatBotPage> {
       SnackBarHelper.showError(context, error);
     }
   }
-
-
 }

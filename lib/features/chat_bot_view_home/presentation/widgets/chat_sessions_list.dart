@@ -9,11 +9,13 @@ class ChatSessionsList extends StatelessWidget {
     required this.service,
     this.onSelect,
     this.onCreateNew,
+    this.onDeletedSessionId,
   });
 
   final ChatSessionsService service;
   final void Function(ChatSessionFS session)? onSelect;
   final VoidCallback? onCreateNew;
+  final void Function(String sessionId)? onDeletedSessionId;
 
   String _two(int n) => n < 10 ? '0$n' : '$n';
   String _formatTime(DateTime dt) {
@@ -33,13 +35,16 @@ class ChatSessionsList extends StatelessWidget {
     final ok = await showAppConfirmDialog(
       context,
       title: 'Xóa cuộc trò chuyện',
-      message: 'Bạn có chắc muốn xóa cuộc trò chuyện "${s.title}"? Hành động này không thể hoàn tác.',
+      message:
+          'Bạn có chắc muốn xóa cuộc trò chuyện "${s.title}"? Hành động này không thể hoàn tác.',
       confirmText: 'Xóa',
       cancelText: 'Hủy',
       destructive: true,
     );
     if (ok == true) {
       await service.deleteSession(s.id);
+      // Thông báo về phiên đã xóa cho chủ sở hữu widget (để dọn UI nếu cần)
+      onDeletedSessionId?.call(s.id);
       // ignore: use_build_context_synchronously
       SnackBarHelper.showSuccess(context, 'Đã xóa cuộc trò chuyện');
     }
@@ -70,9 +75,7 @@ class ChatSessionsList extends StatelessWidget {
               }
               final items = snapshot.data ?? const <ChatSessionFS>[];
               if (items.isEmpty) {
-                return const Center(
-                  child: Text('Chưa có lịch sử trò chuyện'),
-                );
+                return const Center(child: Text('Chưa có lịch sử trò chuyện'));
               }
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(vertical: 8),
@@ -129,4 +132,3 @@ class ChatSessionsList extends StatelessWidget {
     );
   }
 }
-
