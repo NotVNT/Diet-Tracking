@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../services/chat_sessions_service.dart';
 import '../../../../common/app_confirm_dialog.dart';
+import '../../../../common/snackbar_helper.dart';
 
 class ChatSessionsList extends StatelessWidget {
   const ChatSessionsList({
@@ -40,9 +41,7 @@ class ChatSessionsList extends StatelessWidget {
     if (ok == true) {
       await service.deleteSession(s.id);
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đã xóa cuộc trò chuyện')),
-      );
+      SnackBarHelper.showSuccess(context, 'Đã xóa cuộc trò chuyện');
     }
   }
 

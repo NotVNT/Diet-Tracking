@@ -26,34 +26,18 @@ class ChatProvider extends ChangeNotifier {
     this._buildFoodScanAnalysisPromptUseCase,
     this._createNewChatSessionUseCase,
     this._chatSessionRepository,
-  ) {
-    _initializeChat();
-  }
+  );
 
   // State
   ChatSessionEntity? _currentSession;
   bool _isLoading = false;
+  bool _isNewSessionUnsaved = false; // Track if the session is temporary
 
   // Getters
   List<ChatMessageEntity> get messages => _currentSession?.messages ?? [];
   bool get isLoading => _isLoading;
   ChatSessionEntity? get currentSession => _currentSession;
   String get currentSessionTitle => _currentSession?.title ?? 'Cuộc trò chuyện mới';
-
-  void _initializeChat() async {
-    // Try to load current session or create a new one
-    final currentSessionId = await _chatSessionRepository.getCurrentSessionId();
-
-    if (currentSessionId != null) {
-      _currentSession = await _chatSessionRepository.getSessionById(currentSessionId);
-    }
-
-    // If no current session exists, create a new one
-    _currentSession ??= await _createNewChatSessionUseCase.execute();
-
-    // Repository handles any background sync to cloud after local persistence
-    notifyListeners();
-  }
 
 
   /// Send a regular message
@@ -178,15 +162,21 @@ class ChatProvider extends ChangeNotifier {
 
 
   void _addMessage(ChatMessageEntity message) {
-    if (_currentSession != null) {
-      _currentSession = _currentSession!.addMessage(message);
-      // Update UI immediately
-      notifyListeners();
+    if (_currentSession == null) return;
 
-      // Save to storage asynchronously without blocking UI
-      _saveSessionAsync(_currentSession!);
-      // Cloud sync (if any) is handled inside repository layer
+    _currentSession = _currentSession!.addMessage(message);
+    notifyListeners(); // Update UI immediately
+
+    // If this is the first user message in a new session, save it and mark as saved.
+    if (_isNewSessionUnsaved && message.isUser) {
+      _isNewSessionUnsaved = false; // Mark as no longer temporary
+      _saveSessionAsync(_currentSession!); // Persist for the first time
     }
+    // Otherwise, if the session is already saved, continue saving updates.
+    else if (!_isNewSessionUnsaved) {
+      _saveSessionAsync(_currentSession!);
+    }
+    // If it's a new unsaved session and the message is from the bot, do nothing.
   }
 
   /// Save session asynchronously without blocking UI
@@ -202,7 +192,27 @@ class ChatProvider extends ChangeNotifier {
   /// Create a new chat session
   Future<void> createNewChatSession() async {
     _currentSession = await _createNewChatSessionUseCase.execute();
+    _isNewSessionUnsaved = true; // Mark as temporary until first user message
     notifyListeners();
+  }
+
+
+  /// Load a specific chat session
+  Future<void> loadChatSession(String sessionId) async {
+    _setLoading(true);
+    try {
+      final session = await _chatSessionRepository.getSessionById(sessionId);
+      if (session != null) {
+        _currentSession = session;
+        _isNewSessionUnsaved = false; // Loaded sessions are always saved
+        await _chatSessionRepository.setCurrentSessionId(sessionId);
+        notifyListeners(); // Notify UI to update with the new session
+      }
+    } catch (e) {
+      debugPrint('Error loading session: $e');
+    } finally {
+      _setLoading(false);
+    }
   }
 
   void _setLoading(bool loading) {

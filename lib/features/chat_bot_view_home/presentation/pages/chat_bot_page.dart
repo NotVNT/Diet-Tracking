@@ -33,6 +33,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   // UI state moved from provider
   bool _showOptions = false;
   bool _showFileInputs = false;
+  bool _isLoading = true; // Added for initial session loading
 
   // Chat provider instance
   late final ChatProvider _chatProvider;
@@ -44,6 +45,8 @@ class _ChatBotPageState extends State<ChatBotPage> {
     UserAvatarService.instance.ensureLoaded();
     _chatProvider = ChatProviderFactory.create();
     _chatProvider.addListener(_onChatProviderChanged);
+
+    _loadOrInitChatSession();
 
     // If a scanned food was passed in, trigger analysis after first frame
     if (widget.initialFoodAnalysis != null) {
@@ -73,6 +76,31 @@ class _ChatBotPageState extends State<ChatBotPage> {
     setState(() {});
   }
 
+  /// Loads the most recent chat session or creates a new one if none exist.
+  Future<void> _loadOrInitChatSession() async {
+    final service = ChatSessionsService();
+    try {
+      final recentSession = await service.getMostRecentSession();
+      if (recentSession != null) {
+        await _chatProvider.loadChatSession(recentSession.id);
+      } else {
+        await _chatProvider.createNewChatSession();
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error initializing chat session: $e');
+      if (mounted) {
+        SnackBarHelper.showError(context, 'Could not initialize chat: $e');
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -87,23 +115,26 @@ class _ChatBotPageState extends State<ChatBotPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          MessagesArea(
-            messages: _chatProvider.messages,
-            isLoading: _chatProvider.isLoading,
-          ),
-          if (_showOptions)
-            ChatOptionsPopup(onOptionSelected: _onOptionSelected),
-          if (_showFileInputs)
-            _buildFoodSuggestionInputs(_chatProvider),
-          ChatInputArea(
-            messageController: _messageController,
-            onSendPressed: () => _onSendPressed(_chatProvider),
-            onMessageSubmitted: (text) => _onMessageSubmitted(text, _chatProvider),
-          ),
-        ],
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                MessagesArea(
+                  messages: _chatProvider.messages,
+                  isLoading: _chatProvider.isLoading,
+                ),
+                if (_showOptions)
+                  ChatOptionsPopup(onOptionSelected: _onOptionSelected),
+                if (_showFileInputs)
+                  _buildFoodSuggestionInputs(_chatProvider),
+                ChatInputArea(
+                  messageController: _messageController,
+                  onSendPressed: () => _onSendPressed(_chatProvider),
+                  onMessageSubmitted: (text) =>
+                      _onMessageSubmitted(text, _chatProvider),
+                ),
+              ],
+            ),
     );
   }
 
@@ -143,9 +174,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
             height: MediaQuery.of(ctx).size.height * 0.7,
             child: ChatSessionsList(
               service: service,
-              onSelect: (s) {
-                // Chỉ xem lịch sử, không thay đổi session hiện tại
-                Navigator.of(ctx).maybePop();
+              onSelect: (s) async {
+                await _chatProvider.loadChatSession(s.id);
+                if (!ctx.mounted) return;
+                Navigator.of(ctx).pop(); // Close the bottom sheet
               },
               onCreateNew: () async {
                 await _chatProvider.createNewChatSession();
@@ -204,6 +236,9 @@ class _ChatBotPageState extends State<ChatBotPage> {
     if (error != null) {
       if (!mounted) return;
       SnackBarHelper.showError(context, error);
+    } else {
+      if (!mounted) return;
+      SnackBarHelper.showSuccess(context, "Đã gửi yêu cầu gợi ý món ăn");
     }
 
     // Clear inputs and hide

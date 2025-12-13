@@ -103,6 +103,27 @@ class ChatSessionsService {
         .map((qs) => qs.docs.map(ChatSessionFS.fromDoc).toList());
   }
 
+  Future<ChatSessionFS?> getMostRecentSession() async {
+    try {
+      final uid = _uidOrThrow();
+      final querySnapshot = await _sessionsCol(uid)
+          .orderBy('lastMessageAt', descending: true)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return ChatSessionFS.fromDoc(querySnapshot.docs.first);
+      }
+      return null;
+    } catch (e) {
+      // Handle cases where user is not logged in or other Firestore errors
+      // ignore: avoid_print
+      print('Error getting most recent session: $e');
+      return null;
+    }
+  }
+
+
   Future<String> createSession({String? title, bool autoDeleteOldest = true}) async {
     final uid = _uidOrThrow();
     return _db.runTransaction((tx) async {
