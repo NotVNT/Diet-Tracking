@@ -121,4 +121,14 @@ class ChatSessionRepositoryImpl implements ChatSessionRepository {
     final id = await _localDataSource.createNewSession(title: title);
     return id;
   }
+
+  @override
+  Future<String?> getMostRecentSessionIdFromCloud() async {
+    try {
+      final meta = await _cloudService.getMostRecentSession();
+      return meta?.id;
+    } catch (_) {
+      return null;
+    }
+  }
 }

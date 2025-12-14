@@ -54,18 +54,7 @@ class ChatSessionsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (onCreateNew != null)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-            child: SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: onCreateNew,
-                icon: const Icon(Icons.add_comment_outlined),
-                label: const Text('Cuộc trò chuyện mới'),
-              ),
-            ),
-          ),
+
         Expanded(
           child: StreamBuilder<List<ChatSessionFS>>(
             stream: service.streamSessionsForCurrentUser(),

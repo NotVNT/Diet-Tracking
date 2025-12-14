@@ -557,6 +557,14 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotEnterMessage => 'Nhập tin nhắn...';
 
   @override
+  String get chatBotEmptyTitle => 'Bắt đầu cuộc trò chuyện với trợ lý dinh dưỡng';
+
+  @override
+  String get chatBotEmptySubtitle =>
+      'Tạo cuộc trò chuyện mới để đặt câu hỏi về dinh dưỡng hoặc xem lại lịch sử các phiên trước đó.';
+
+
+  @override
   String get chatBotFoodSuggestion => 'gợi ý món ăn';
 
   @override

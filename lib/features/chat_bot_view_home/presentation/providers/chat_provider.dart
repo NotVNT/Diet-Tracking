@@ -230,6 +230,31 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
+  /// Initialize provider by loading current or most recent session (from cloud if needed)
+  Future<void> initOrLoadRecentSession() async {
+    _setLoading(true);
+    try {
+      // Try local current session id first
+      String? sessionId = await _chatSessionRepository.getCurrentSessionId();
+      sessionId ??= await _chatSessionRepository.getMostRecentSessionIdFromCloud();
+
+      if (sessionId != null) {
+        final session = await _chatSessionRepository.getSessionById(sessionId);
+        if (session != null) {
+          _currentSession = session;
+          _isNewSessionUnsaved = false;
+          await _chatSessionRepository.setCurrentSessionId(sessionId);
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error initializing chat provider: $e');
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+
   void _setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
