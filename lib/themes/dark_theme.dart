@@ -8,14 +8,14 @@ class AppDarkTheme {
       brightness: Brightness.dark,
       
       // Color Scheme
-      colorScheme: ColorScheme.dark(
-        primary: const Color(0xFF818CF8), // Lighter Indigo for dark mode
-        secondary: const Color(0xFF34D399), // Lighter Green
-        tertiary: const Color(0xFFFBBF24), // Lighter Amber
-        error: const Color(0xFFF87171),
-        surface: const Color(0xFF1F2937), // Dark gray
-        onSurface: const Color(0xFFF9FAFB),
-        surfaceContainerHighest: const Color(0xFF111827), // Very dark
+      colorScheme: const ColorScheme.dark(
+        primary: Color(0xFF818CF8), // Lighter Indigo for dark mode
+        secondary: Color(0xFF34D399), // Lighter Green
+        tertiary: Color(0xFFFBBF24), // Lighter Amber
+        error: Color(0xFFF87171),
+        surface: Color(0xFF1F2937), // Dark gray
+        onSurface: Color(0xFFF9FAFB),
+        surfaceContainerHighest: Color(0xFF111827), // Very dark
       ),
       
       // Scaffold
@@ -38,8 +38,8 @@ class AppDarkTheme {
       cardTheme: CardThemeData(
         color: const Color(0xFF1F2937),
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
         shadowColor: Colors.black.withValues(alpha: 0.3),
       ),
@@ -94,26 +94,26 @@ class AppDarkTheme {
       ),
       
       // Input Decoration
-      inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: const InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF374151),
+        fillColor: Color(0xFF374151),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF818CF8), width: 2),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          borderSide: BorderSide(color: Color(0xFF818CF8), width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFF87171), width: 1),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          borderSide: BorderSide(color: Color(0xFFF87171), width: 1),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
       
       // Elevated Button

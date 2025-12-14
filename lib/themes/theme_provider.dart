@@ -17,10 +17,12 @@ class ThemeProvider extends ChangeNotifier {
   bool get isDarkMode => _themeMode == ThemeMode.dark;
 
   /// Load theme from SharedPreferences
+ /// Load theme from SharedPreferences
   Future<void> _loadTheme() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final isDark = prefs.getBool(_themeKey) ?? false;
+
+      final preferences = await SharedPreferences.getInstance(); 
+      final isDark = preferences.getBool(_themeKey) ?? false;
       _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
       _isLoading = false;
       notifyListeners();
@@ -48,13 +50,12 @@ class ThemeProvider extends ChangeNotifier {
     }
   }
 
-  /// Save theme to SharedPreferences
   Future<void> _saveTheme() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(_themeKey, _themeMode == ThemeMode.dark);
+      final preferences = await SharedPreferences.getInstance(); 
+      await preferences.setBool(_themeKey, _themeMode == ThemeMode.dark);
     } catch (e) {
-      // Handle error silently
+      debugPrint('Error saving theme: $e');
     }
   }
 }

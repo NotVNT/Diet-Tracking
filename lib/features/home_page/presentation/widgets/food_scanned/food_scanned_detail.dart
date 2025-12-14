@@ -67,23 +67,24 @@ class ScannedFoodDetailPage extends StatelessWidget {
   Widget _buildBarcodeView(BuildContext context) {
     final responsive = ResponsiveHelper.of(context);
     final localizations = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           localizations?.selectedFood ?? 'Selected food',
-          style: const TextStyle(color: Colors.black),
+          style: TextStyle(color: colorScheme.onSurface),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.black),
+            icon: Icon(Icons.more_vert, color: colorScheme.onSurface),
             onPressed: () => _showMoreOptions(context, responsive),
           ),
         ],
@@ -107,6 +108,7 @@ class ScannedFoodDetailPage extends StatelessWidget {
   void _showMoreOptions(BuildContext context, ResponsiveHelper responsive) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -176,9 +178,11 @@ class DetailBottomSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(responsive.width(24)),
         ),
@@ -194,7 +198,9 @@ class DetailBottomSheetWidget extends StatelessWidget {
               height: 4,
               margin: EdgeInsets.only(bottom: responsive.height(16)),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: isDark
+                    ? colorScheme.onSurface.withValues(alpha: 0.3)
+                    : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
