@@ -117,7 +117,6 @@
                   ? // Trạng thái trống khi chưa có phiên chat
                     ChatEmptyState(
                       onCreateNewChat: _onCreateNewChat,
-                      onShowHistory: _onChatHistory,
                     )
                   : Column(
                       children: [
@@ -178,9 +177,7 @@
               await _chatProvider.createNewChatSession();
             },
             onDeletedSessionId: (deletedId) {
-              if (_chatProvider.currentSession?.id == deletedId) {
-                _chatProvider.clearCurrentSession();
-              }
+              _chatProvider.deleteLocalSessionById(deletedId);
             },
           );
         },

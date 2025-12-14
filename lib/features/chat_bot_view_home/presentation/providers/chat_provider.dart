@@ -30,12 +30,12 @@ class ChatProvider extends ChangeNotifier {
 
   // State
   ChatSessionEntity? _currentSession;
-  bool _isLoading = false;
+  int _busyCount = 0; // Tracks concurrent async operations
   bool _isNewSessionUnsaved = false; // Track if the session is temporary
 
   // Getters
   List<ChatMessageEntity> get messages => _currentSession?.messages ?? [];
-  bool get isLoading => _isLoading;
+  bool get isLoading => _busyCount > 0;
   ChatSessionEntity? get currentSession => _currentSession;
   String get currentSessionTitle =>
       _currentSession?.title ?? 'Cuộc trò chuyện mới';
@@ -192,10 +192,8 @@ class ChatProvider extends ChangeNotifier {
     else if (!_isNewSessionUnsaved) {
       _saveSessionAsync(_currentSession!);
     }
-    // If it's a new unsaved session and the message is from the bot, do nothing.
   }
 
-  /// Save session asynchronously without blocking UI
   void _saveSessionAsync(ChatSessionEntity session) async {
     try {
       await _chatSessionRepository.saveSession(session);
@@ -205,14 +203,12 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  /// Create a new chat session
   Future<void> createNewChatSession() async {
     _currentSession = await _createNewChatSessionUseCase.execute();
-    _isNewSessionUnsaved = true; // Mark as temporary until first user message
+    _isNewSessionUnsaved = true; 
     notifyListeners();
   }
 
-  /// Load a specific chat session
   Future<void> loadChatSession(String sessionId) async {
     _setLoading(true);
     try {
@@ -230,7 +226,6 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  /// Initialize provider by loading current or most recent session (from cloud if needed)
   Future<void> initOrLoadRecentSession() async {
     _setLoading(true);
     try {
@@ -245,7 +240,15 @@ class ChatProvider extends ChangeNotifier {
           _isNewSessionUnsaved = false;
           await _chatSessionRepository.setCurrentSessionId(sessionId);
           notifyListeners();
+        } else {
+          _currentSession = null;
+          _isNewSessionUnsaved = false;
+          notifyListeners();
         }
+      } else {
+        _currentSession = null;
+        _isNewSessionUnsaved = false;
+        notifyListeners();
       }
     } catch (e) {
       debugPrint('Error initializing chat provider: $e');
@@ -254,13 +257,27 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-
-  void _setLoading(bool loading) {
-    _isLoading = loading;
-    notifyListeners();
+  Future<void> deleteLocalSessionById(String sessionId) async {
+    try {
+      await _chatSessionRepository.deleteSession(sessionId);
+      if (_currentSession?.id == sessionId) {
+        clearCurrentSession();
+      }
+    } catch (e) {
+      debugPrint('Error deleting local session: $e');
+    }
   }
 
-  /// Clear current session (used when all sessions are deleted remotely)
+  void _setLoading(bool loading) {
+    final prev = _busyCount;
+    if (loading) {
+      _busyCount++;
+    } else {
+      if (_busyCount > 0) _busyCount--;
+    }
+    if (prev != _busyCount) notifyListeners();
+  }
+
   void clearCurrentSession() {
     _currentSession = null;
     _isNewSessionUnsaved = false;

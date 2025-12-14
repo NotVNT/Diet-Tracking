@@ -564,6 +564,26 @@ class AppLocalizationsEn extends AppLocalizations {
       'Create a new chat to ask nutrition questions or view your previous conversations.';
 
 
+
+  @override
+  String get chatBotConfirmDeleteTitle => 'Delete conversation';
+
+  @override
+  String chatBotConfirmDeleteMessage(String title) =>
+      'Are you sure you want to delete "$title"? This action cannot be undone.';
+
+  @override
+  String get chatBotSessionDeleted => 'Conversation deleted';
+
+  @override
+  String get chatBotHistoryEmpty => 'No chat history yet';
+
+  @override
+  String get chatBotStartConversation => 'Start conversation';
+
+  @override
+  String get chatBotYesterday => 'Yesterday';
+
   @override
   String get chatBotFoodSuggestion => 'food suggestion';
 

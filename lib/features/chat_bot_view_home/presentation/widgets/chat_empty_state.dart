@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class ChatEmptyState extends StatelessWidget {
   const ChatEmptyState({
@@ -14,6 +15,7 @@ class ChatEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Center(
       child: Padding(
@@ -34,13 +36,13 @@ class ChatEmptyState extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Bắt đầu cuộc trò chuyện với trợ lý dinh dưỡng',
+                l10n.chatBotEmptyTitle,
                 textAlign: TextAlign.center,
                 style: textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
               Text(
-                'Tạo cuộc trò chuyện mới để đặt câu hỏi về dinh dưỡng hoặc xem lại lịch sử các phiên trước đó.',
+                l10n.chatBotEmptySubtitle,
                 textAlign: TextAlign.center,
                 style: textTheme.bodyMedium?.copyWith(color: textTheme.bodySmall?.color),
               ),
@@ -52,13 +54,13 @@ class ChatEmptyState extends StatelessWidget {
                     OutlinedButton.icon(
                       onPressed: onShowHistory,
                       icon: const Icon(Icons.history),
-                      label: const Text('Xem lịch sử'),
+                      label: Text(l10n.chatBotChatHistory),
                     ),
                   if (onShowHistory != null) const SizedBox(width: 12),
                   FilledButton.icon(
                     onPressed: onCreateNewChat,
                     icon: const Icon(Icons.add_comment_outlined),
-                    label: const Text('Tạo đoạn chat mới'),
+                    label: Text(l10n.chatBotCreateNewChat),
                   ),
                 ],
               )
