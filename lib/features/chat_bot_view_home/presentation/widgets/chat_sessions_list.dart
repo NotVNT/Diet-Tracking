@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../services/chat_sessions_service.dart';
 import '../../../../common/app_confirm_dialog.dart';
 import '../../../../common/snackbar_helper.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class ChatSessionsList extends StatelessWidget {
   const ChatSessionsList({
@@ -9,14 +10,17 @@ class ChatSessionsList extends StatelessWidget {
     required this.service,
     this.onSelect,
     this.onCreateNew,
+    this.onDeletedSessionId,
   });
 
   final ChatSessionsService service;
   final void Function(ChatSessionFS session)? onSelect;
   final VoidCallback? onCreateNew;
+  final void Function(String sessionId)? onDeletedSessionId;
 
   String _two(int n) => n < 10 ? '0$n' : '$n';
-  String _formatTime(DateTime dt) {
+  String _formatTime(BuildContext context, DateTime dt) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final d = DateTime(dt.year, dt.month, dt.day);
     final today = DateTime(now.year, now.month, now.day);
@@ -24,24 +28,27 @@ class ChatSessionsList extends StatelessWidget {
       return '${_two(dt.hour)}:${_two(dt.minute)}'; // 13:45
     }
     if (today.difference(d).inDays == 1) {
-      return 'Hôm qua ${_two(dt.hour)}:${_two(dt.minute)}';
+      return '${l10n.chatBotYesterday} ${_two(dt.hour)}:${_two(dt.minute)}';
     }
     return '${_two(dt.day)}/${_two(dt.month)} ${_two(dt.hour)}:${_two(dt.minute)}';
   }
 
   Future<void> _confirmDelete(BuildContext context, ChatSessionFS s) async {
+    final l10n = AppLocalizations.of(context)!;
     final ok = await showAppConfirmDialog(
       context,
-      title: 'Xóa cuộc trò chuyện',
-      message: 'Bạn có chắc muốn xóa cuộc trò chuyện "${s.title}"? Hành động này không thể hoàn tác.',
-      confirmText: 'Xóa',
-      cancelText: 'Hủy',
+      title: l10n.chatBotConfirmDeleteTitle,
+      message: l10n.chatBotConfirmDeleteMessage(s.title),
+      confirmText: l10n.delete,
+      cancelText: l10n.cancel,
       destructive: true,
     );
     if (ok == true) {
       await service.deleteSession(s.id);
+      // Thông báo về phiên đã xóa cho chủ sở hữu widget (để dọn UI nếu cần)
+      onDeletedSessionId?.call(s.id);
       // ignore: use_build_context_synchronously
-      SnackBarHelper.showSuccess(context, 'Đã xóa cuộc trò chuyện');
+      SnackBarHelper.showSuccess(context, l10n.chatBotSessionDeleted);
     }
   }
 
@@ -49,18 +56,7 @@ class ChatSessionsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (onCreateNew != null)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-            child: SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: onCreateNew,
-                icon: const Icon(Icons.add_comment_outlined),
-                label: const Text('Cuộc trò chuyện mới'),
-              ),
-            ),
-          ),
+
         Expanded(
           child: StreamBuilder<List<ChatSessionFS>>(
             stream: service.streamSessionsForCurrentUser(),
@@ -70,9 +66,8 @@ class ChatSessionsList extends StatelessWidget {
               }
               final items = snapshot.data ?? const <ChatSessionFS>[];
               if (items.isEmpty) {
-                return const Center(
-                  child: Text('Chưa có lịch sử trò chuyện'),
-                );
+                final l10n = AppLocalizations.of(context)!;
+                return Center(child: Text(l10n.chatBotHistoryEmpty));
               }
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(vertical: 8),
@@ -90,7 +85,7 @@ class ChatSessionsList extends StatelessWidget {
                     ),
                     subtitle: Text(
                       s.lastMessagePreview.isEmpty
-                          ? 'Bắt đầu cuộc trò chuyện'
+                          ? AppLocalizations.of(context)!.chatBotStartConversation
                           : s.lastMessagePreview,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -102,14 +97,14 @@ class ChatSessionsList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            _formatTime(s.lastMessageAt),
+                            _formatTime(context, s.lastMessageAt),
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                           SizedBox(
                             height: 32,
                             width: 32,
                             child: IconButton(
-                              tooltip: 'Xóa',
+                              tooltip: AppLocalizations.of(context)!.delete,
                               icon: const Icon(Icons.delete_outline),
                               iconSize: 18,
                               padding: EdgeInsets.zero,
@@ -129,4 +124,3 @@ class ChatSessionsList extends StatelessWidget {
     );
   }
 }
-

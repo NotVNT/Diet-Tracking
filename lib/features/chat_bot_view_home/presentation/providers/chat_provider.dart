@@ -30,15 +30,15 @@ class ChatProvider extends ChangeNotifier {
 
   // State
   ChatSessionEntity? _currentSession;
-  bool _isLoading = false;
+  int _busyCount = 0; // Tracks concurrent async operations
   bool _isNewSessionUnsaved = false; // Track if the session is temporary
 
   // Getters
   List<ChatMessageEntity> get messages => _currentSession?.messages ?? [];
-  bool get isLoading => _isLoading;
+  bool get isLoading => _busyCount > 0;
   ChatSessionEntity? get currentSession => _currentSession;
-  String get currentSessionTitle => _currentSession?.title ?? 'Cuộc trò chuyện mới';
-
+  String get currentSessionTitle =>
+      _currentSession?.title ?? 'Cuộc trò chuyện mới';
 
   /// Send a regular message
   Future<String?> sendMessage(String message) async {
@@ -49,40 +49,50 @@ class ChatProvider extends ChangeNotifier {
     }
 
     // Add user message
-    _addMessage(ChatMessageEntity(
-      text: validation.validMessage!,
-      isUser: true,
-      timestamp: DateTime.now(),
-    ));
+    _addMessage(
+      ChatMessageEntity(
+        text: validation.validMessage!,
+        isUser: true,
+        timestamp: DateTime.now(),
+      ),
+    );
 
     _setLoading(true);
 
     try {
       // Send message and get response
-      final result = await _sendMessageUseCase.execute(validation.validMessage!);
+      final result = await _sendMessageUseCase.execute(
+        validation.validMessage!,
+      );
 
       if (result.isSuccess) {
-        _addMessage(ChatMessageEntity(
-          text: result.response!,
-          isUser: false,
-          timestamp: DateTime.now(),
-        ));
+        _addMessage(
+          ChatMessageEntity(
+            text: result.response!,
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
         return null; // Success
       } else {
-        _addMessage(ChatMessageEntity(
-          text: result.error!,
-          isUser: false,
-          timestamp: DateTime.now(),
-        ));
+        _addMessage(
+          ChatMessageEntity(
+            text: result.error!,
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
         return result.error;
       }
     } catch (e) {
       final errorMessage = 'Lỗi không xác định: ${e.toString()}';
-      _addMessage(ChatMessageEntity(
-        text: errorMessage,
-        isUser: false,
-        timestamp: DateTime.now(),
-      ));
+      _addMessage(
+        ChatMessageEntity(
+          text: errorMessage,
+          isUser: false,
+          timestamp: DateTime.now(),
+        ),
+      );
       return errorMessage;
     } finally {
       _setLoading(false);
@@ -107,12 +117,11 @@ class ChatProvider extends ChangeNotifier {
   /// Analyze a scanned food item for personal suitability using user's profile
   Future<void> sendFoodScanAnalysis(FoodRecordEntity record) async {
     // Short user-facing message
-    final userMsg = 'Phân tích mức độ phù hợp của sản phẩm: ${record.foodName} (${record.calories.toStringAsFixed(0)} kcal)';
-    _addMessage(ChatMessageEntity(
-      text: userMsg,
-      isUser: true,
-      timestamp: DateTime.now(),
-    ));
+    final userMsg =
+        'Phân tích mức độ phù hợp của sản phẩm: ${record.foodName} (${record.calories.toStringAsFixed(0)} kcal)';
+    _addMessage(
+      ChatMessageEntity(text: userMsg, isUser: true, timestamp: DateTime.now()),
+    );
 
     _setLoading(true);
 
@@ -130,36 +139,43 @@ class ChatProvider extends ChangeNotifier {
           'record_type': record.recordType.name,
           'image_url': record.imagePath,
           'timestamp': record.date.toIso8601String(),
-        }
+        },
       };
       final result = await _sendMessageUseCase.execute(
         prompt,
         extraContext: extraContext,
       );
       if (result.isSuccess) {
-        _addMessage(ChatMessageEntity(
-          text: result.response!,
-          isUser: false,
-          timestamp: DateTime.now(),
-        ));
+        _addMessage(
+          ChatMessageEntity(
+            text: result.response!,
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
       } else {
-        _addMessage(ChatMessageEntity(
-          text: result.error ?? 'Không thể phân tích sản phẩm. Vui lòng thử lại.',
-          isUser: false,
-          timestamp: DateTime.now(),
-        ));
+        _addMessage(
+          ChatMessageEntity(
+            text:
+                result.error ??
+                'Không thể phân tích sản phẩm. Vui lòng thử lại.',
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
       }
     } catch (e) {
-      _addMessage(ChatMessageEntity(
-        text: 'Đã xảy ra lỗi khi phân tích: ${e.toString()}',
-        isUser: false,
-        timestamp: DateTime.now(),
-      ));
+      _addMessage(
+        ChatMessageEntity(
+          text: 'Đã xảy ra lỗi khi phân tích: ${e.toString()}',
+          isUser: false,
+          timestamp: DateTime.now(),
+        ),
+      );
     } finally {
       _setLoading(false);
     }
   }
-
 
   void _addMessage(ChatMessageEntity message) {
     if (_currentSession == null) return;
@@ -176,10 +192,8 @@ class ChatProvider extends ChangeNotifier {
     else if (!_isNewSessionUnsaved) {
       _saveSessionAsync(_currentSession!);
     }
-    // If it's a new unsaved session and the message is from the bot, do nothing.
   }
 
-  /// Save session asynchronously without blocking UI
   void _saveSessionAsync(ChatSessionEntity session) async {
     try {
       await _chatSessionRepository.saveSession(session);
@@ -189,15 +203,12 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  /// Create a new chat session
   Future<void> createNewChatSession() async {
     _currentSession = await _createNewChatSessionUseCase.execute();
-    _isNewSessionUnsaved = true; // Mark as temporary until first user message
+    _isNewSessionUnsaved = true; 
     notifyListeners();
   }
 
-
-  /// Load a specific chat session
   Future<void> loadChatSession(String sessionId) async {
     _setLoading(true);
     try {
@@ -215,8 +226,61 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> initOrLoadRecentSession() async {
+    _setLoading(true);
+    try {
+      // Try local current session id first
+      String? sessionId = await _chatSessionRepository.getCurrentSessionId();
+      sessionId ??= await _chatSessionRepository.getMostRecentSessionIdFromCloud();
+
+      if (sessionId != null) {
+        final session = await _chatSessionRepository.getSessionById(sessionId);
+        if (session != null) {
+          _currentSession = session;
+          _isNewSessionUnsaved = false;
+          await _chatSessionRepository.setCurrentSessionId(sessionId);
+          notifyListeners();
+        } else {
+          _currentSession = null;
+          _isNewSessionUnsaved = false;
+          notifyListeners();
+        }
+      } else {
+        _currentSession = null;
+        _isNewSessionUnsaved = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Error initializing chat provider: $e');
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<void> deleteLocalSessionById(String sessionId) async {
+    try {
+      await _chatSessionRepository.deleteSession(sessionId);
+      if (_currentSession?.id == sessionId) {
+        clearCurrentSession();
+      }
+    } catch (e) {
+      debugPrint('Error deleting local session: $e');
+    }
+  }
+
   void _setLoading(bool loading) {
-    _isLoading = loading;
+    final prev = _busyCount;
+    if (loading) {
+      _busyCount++;
+    } else {
+      if (_busyCount > 0) _busyCount--;
+    }
+    if (prev != _busyCount) notifyListeners();
+  }
+
+  void clearCurrentSession() {
+    _currentSession = null;
+    _isNewSessionUnsaved = false;
     notifyListeners();
   }
 }

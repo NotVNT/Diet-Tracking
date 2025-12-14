@@ -22,4 +22,7 @@ abstract class ChatSessionRepository {
 
   /// Create a new session and return its ID
   Future<String> createNewSession({String? title});
+
+  /// Get the most recent session ID from cloud if available
+  Future<String?> getMostRecentSessionIdFromCloud();
 }

@@ -118,6 +118,11 @@ class ScannedFoodDetailPage extends StatelessWidget {
           _onDelete(context);
         },
         showSaveToDevice: scannedFood.recordType != RecordType.barcode,
+        // Close this detail page after choosing Ask chat bot to reveal main scaffold
+        onCloseParent: () {
+          final nav = Navigator.of(context);
+          if (nav.canPop()) nav.pop();
+        },
       ),
     );
   }

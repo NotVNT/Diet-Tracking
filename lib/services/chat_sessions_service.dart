@@ -19,10 +19,10 @@ class ChatMessageFS {
   });
 
   Map<String, dynamic> toMap() => {
-        'role': _roleToString(role),
-        'content': content,
-        'ts': FieldValue.serverTimestamp(),
-      };
+    'role': _roleToString(role),
+    'content': content,
+    'ts': FieldValue.serverTimestamp(),
+  };
 
   factory ChatMessageFS.fromDoc(DocumentSnapshot doc) {
     final m = doc.data() as Map<String, dynamic>? ?? {};
@@ -79,8 +79,8 @@ class ChatSessionsService {
   final FirebaseFirestore _db;
   final FirebaseAuth _auth;
   ChatSessionsService({FirebaseFirestore? db, FirebaseAuth? auth})
-      : _db = db ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance;
+    : _db = db ?? FirebaseFirestore.instance,
+      _auth = auth ?? FirebaseAuth.instance;
 
   String _uidOrThrow() {
     final user = _auth.currentUser;
@@ -106,10 +106,9 @@ class ChatSessionsService {
   Future<ChatSessionFS?> getMostRecentSession() async {
     try {
       final uid = _uidOrThrow();
-      final querySnapshot = await _sessionsCol(uid)
-          .orderBy('lastMessageAt', descending: true)
-          .limit(1)
-          .get();
+      final querySnapshot = await _sessionsCol(
+        uid,
+      ).orderBy('lastMessageAt', descending: true).limit(1).get();
 
       if (querySnapshot.docs.isNotEmpty) {
         return ChatSessionFS.fromDoc(querySnapshot.docs.first);
@@ -123,14 +122,15 @@ class ChatSessionsService {
     }
   }
 
-
-  Future<String> createSession({String? title, bool autoDeleteOldest = true}) async {
+  Future<String> createSession({
+    String? title,
+    bool autoDeleteOldest = true,
+  }) async {
     final uid = _uidOrThrow();
     return _db.runTransaction((tx) async {
-      final sessionsQuery = await _sessionsCol(uid)
-          .orderBy('createdAt')
-          .limit(6)
-          .get();
+      final sessionsQuery = await _sessionsCol(
+        uid,
+      ).orderBy('createdAt').limit(6).get();
       if (sessionsQuery.docs.length >= 5) {
         if (autoDeleteOldest) {
           final oldest = sessionsQuery.docs.first;
@@ -166,10 +166,9 @@ class ChatSessionsService {
       }
 
       // Enforce limit
-      final sessionsQuery = await _sessionsCol(uid)
-          .orderBy('createdAt')
-          .limit(6)
-          .get();
+      final sessionsQuery = await _sessionsCol(
+        uid,
+      ).orderBy('createdAt').limit(6).get();
       if (sessionsQuery.docs.length >= 5) {
         if (autoDeleteOldest) {
           final oldest = sessionsQuery.docs.first;
@@ -254,5 +253,17 @@ class ChatSessionsService {
       });
     });
   }
-}
 
+  /// Fetch messages for a session (ordered by timestamp asc)
+  Future<List<ChatMessageFS>> getMessages(
+    String sessionId, {
+    int limit = 500,
+  }) async {
+    final uid = _uidOrThrow();
+    final qs = await _messagesCol(
+      uid,
+      sessionId,
+    ).orderBy('ts').limit(limit).get();
+    return qs.docs.map(ChatMessageFS.fromDoc).toList();
+  }
+}
