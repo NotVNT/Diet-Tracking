@@ -19,7 +19,7 @@ class AnimatedArrowPointer extends StatefulWidget {
     this.color,
     this.size,
     this.animationDuration = const Duration(milliseconds: 1500),
-    this.glow = true,
+    this.glow = false,
   });
 
   @override

@@ -1,4 +1,6 @@
 import '../../data/datasources/firestore_datasource.dart';
+import '../../../../services/chat_sessions_service.dart';
+
 import '../../data/datasources/chatbot_endpoint_datasource.dart';
 import '../../data/datasources/chat_session_local_data_source.dart';
 import '../../data/repositories/chat_repository_impl.dart';
@@ -8,6 +10,7 @@ import '../../data/repositories/chat_session_repository_impl.dart';
 import '../../domain/usecases/send_message_usecase.dart';
 import '../../domain/usecases/validate_message_usecase.dart';
 import '../../domain/usecases/generate_food_suggestion_usecase.dart';
+import '../../domain/usecases/food_scan_analysis_usecase.dart';
 import '../../domain/usecases/create_new_chat_session_usecase.dart';
 import 'chat_provider.dart';
 
@@ -30,8 +33,10 @@ class ChatProviderFactory {
     final authService = AuthService(); // Khởi tạo AuthService
     final userRepository = UserRepositoryImpl(firestoreDatasource, authService);
     final chatRepository = ChatRepositoryImpl(geminiApiDatasource);
+    final cloudChatService = ChatSessionsService();
     final chatSessionRepository = ChatSessionRepositoryImpl(
       chatSessionLocalDataSource,
+      cloudChatService,
     );
 
     // Use cases
@@ -41,6 +46,7 @@ class ChatProviderFactory {
     );
     final validateMessageUseCase = ValidateMessageUseCase();
     final generateFoodSuggestionUseCase = GenerateFoodSuggestionUseCase();
+    final buildFoodScanAnalysisPromptUseCase = BuildFoodScanAnalysisPromptUseCase();
     final createNewChatSessionUseCase = CreateNewChatSessionUseCase(
       chatSessionRepository,
     );
@@ -50,6 +56,7 @@ class ChatProviderFactory {
       sendMessageUseCase,
       validateMessageUseCase,
       generateFoodSuggestionUseCase,
+      buildFoodScanAnalysisPromptUseCase,
       createNewChatSessionUseCase,
       chatSessionRepository,
     );

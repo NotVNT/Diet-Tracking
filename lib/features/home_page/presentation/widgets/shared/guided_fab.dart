@@ -33,9 +33,11 @@ class GuidedFloatingActionButton extends StatelessWidget {
         Positioned(
           left: -arrowDistance,
           child: IgnorePointer(
-            child: AnimatedArrowPointer(
-              color: arrowColor,
-              size: arrowSize,
+            child: RepaintBoundary(
+              child: AnimatedArrowPointer(
+                color: arrowColor,
+                size: arrowSize,
+              ),
             ),
           ),
         ),

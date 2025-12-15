@@ -1,16 +1,31 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// Performance optimization utilities for the Diet Tracking app
 class PerformanceUtils {
-  /// Configure image caching with optimal settings
-  static void configureImageCaching() {
-    // CachedNetworkImage automatically handles caching
-    // Default cache duration is 30 days
-    // Cache size is limited to 100MB
+  /// Configure global image cache to reduce decoding spikes.
+  static void configureImageCaching({int? maxCount, int? maxBytes}) {
+    // Tune the global image cache. Large values reduce re-decoding but may use more RAM.
+    final cache = PaintingBinding.instance.imageCache;
+    if (maxCount != null) cache.maximumSize = maxCount; // number of images
+    if (maxBytes != null) cache.maximumSizeBytes = maxBytes; // in bytes
   }
 
-  /// Create a cached network image with error handling
+  /// Calculate cache dimension close to physical pixels of displayed size.
+  static (int, int) _memCacheSize(
+    BuildContext context, {
+    required double width,
+    required double height,
+  }) {
+    final dpr = MediaQuery.of(context).devicePixelRatio.clamp(1.0, 3.0);
+    final w = (width * dpr).round();
+    final h = (height * dpr).round();
+    // Cap to avoid decoding very large sources
+    return (math.min(w, 256), math.min(h, 256));
+  }
+
+  /// Create a cached network image with lightweight placeholder and proper cache sizing.
   static Widget buildCachedImage({
     required String imageUrl,
     required double width,
@@ -19,33 +34,34 @@ class PerformanceUtils {
     Widget? placeholder,
     Widget? errorWidget,
   }) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      width: width,
-      height: height,
-      fit: fit,
-      placeholder: (context, url) =>
-          placeholder ??
-          Container(
-            width: width,
-            height: height,
-            color: Colors.grey[200],
-            child: const Center(
-              child: SizedBox(
-                height: 30,
-                width: 30,
-                child: CircularProgressIndicator(strokeWidth: 2),
+    return LayoutBuilder(
+      builder: (context, _) {
+        final (memW, memH) = _memCacheSize(context, width: width, height: height);
+        return CachedNetworkImage(
+          imageUrl: imageUrl,
+          width: width,
+          height: height,
+          fit: fit,
+          memCacheWidth: memW,
+          memCacheHeight: memH,
+          filterQuality: FilterQuality.low,
+          placeholder: (context, url) =>
+              placeholder ??
+              Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
               ),
-            ),
-          ),
-      errorWidget: (context, url, error) =>
-          errorWidget ??
-          Container(
-            width: width,
-            height: height,
-            color: Colors.grey[200],
-            child: const Icon(Icons.image_not_supported, color: Colors.grey),
-          ),
+          errorWidget: (context, url, error) =>
+              errorWidget ??
+              Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
+                child: const Icon(Icons.image_not_supported, color: Colors.grey),
+              ),
+        );
+      },
     );
   }
 
@@ -61,4 +77,3 @@ class PerformanceUtils {
   static const SizedBox spacer16 = SizedBox(height: 16, width: 16);
   static const SizedBox spacer24 = SizedBox(height: 24, width: 24);
 }
-

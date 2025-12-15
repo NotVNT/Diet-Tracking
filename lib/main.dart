@@ -14,11 +14,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/home_page/di/home_di.dart';
 import 'features/record_view_home/di/record_di.dart';
 import 'view/splash/splash_screen.dart';
+import 'utils/performance_utils.dart';
 
 import 'view/notification/notification_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Giảm tải decode ảnh toàn cục để hạn chế jank khi cuộn
+  PerformanceUtils.configureImageCaching(maxCount: 200, maxBytes: 60 * 1024 * 1024);
 
   // Web-only: đảm bảo dùng popup flow và giữ phiên đăng nhập
   if (kIsWeb) {

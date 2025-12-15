@@ -6,10 +6,12 @@ import 'chat_message_bubble.dart';
 /// Automatically scrolls to the latest message when returning to the page
 class MessagesArea extends StatefulWidget {
   final List<ChatMessageEntity> messages;
+  final bool isLoading;
 
   const MessagesArea({
     super.key,
     required this.messages,
+    this.isLoading = false,
   });
 
   @override
@@ -31,8 +33,9 @@ class _MessagesAreaState extends State<MessagesArea> {
   @override
   void didUpdateWidget(MessagesArea oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Scroll to bottom when messages change
-    if (widget.messages.length != oldWidget.messages.length) {
+    // Scroll to bottom when messages or loading state change
+    if (widget.messages.length != oldWidget.messages.length ||
+        widget.isLoading != oldWidget.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollToBottom();
       });
@@ -56,15 +59,77 @@ class _MessagesAreaState extends State<MessagesArea> {
 
   @override
   Widget build(BuildContext context) {
+    final itemCount = widget.messages.length + (widget.isLoading ? 1 : 0);
     return Expanded(
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(16),
-        itemCount: widget.messages.length,
+        itemCount: itemCount,
         itemBuilder: (context, index) {
-          final message = widget.messages[index];
-          return ChatMessageBubble(message: message);
+          if (index < widget.messages.length) {
+            final message = widget.messages[index];
+            return ChatMessageBubble(message: message);
+          }
+          // Typing/loading indicator bubble (bot side)
+          return _buildTypingIndicator(context);
         },
+      ),
+    );
+  }
+
+  Widget _buildTypingIndicator(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.smart_toy,
+              color: Colors.white,
+              size: 18,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(20).copyWith(
+                  bottomLeft: const Radius.circular(4),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Đang phân tích…',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

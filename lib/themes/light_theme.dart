@@ -8,14 +8,14 @@ class AppLightTheme {
       brightness: Brightness.light,
       
       // Color Scheme
-      colorScheme: ColorScheme.light(
-        primary: const Color(0xFF6366F1), // Indigo
-        secondary: const Color(0xFF10B981), // Green
-        tertiary: const Color(0xFFF59E0B), // Amber
-        error: const Color(0xFFEF4444),
+      colorScheme: const ColorScheme.light(
+        primary:Color(0xFF6366F1), // Indigo
+        secondary:Color(0xFF10B981), // Green
+        tertiary:Color(0xFFF59E0B), // Amber
+        error:Color(0xFFEF4444),
         surface: Colors.white,
-        onSurface: const Color(0xFF111827),
-        surfaceContainerHighest: const Color(0xFFF6F7FB),
+        onSurface:Color(0xFF111827),
+        surfaceContainerHighest:Color(0xFFF6F7FB),
       ),
       
       // Scaffold

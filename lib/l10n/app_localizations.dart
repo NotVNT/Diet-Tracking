@@ -1187,6 +1187,56 @@ abstract class AppLocalizations {
   /// **'Enter message...'**
   String get chatBotEnterMessage;
 
+
+  /// No description provided for @chatBotEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a conversation with your diet assistant'**
+  String get chatBotEmptyTitle;
+
+  /// No description provided for @chatBotEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new chat to ask nutrition questions or view your previous conversations.'**
+  String get chatBotEmptySubtitle;
+
+
+  /// No description provided for @chatBotConfirmDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete conversation'**
+  String get chatBotConfirmDeleteTitle;
+
+  /// No description provided for @chatBotConfirmDeleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete "{title}"? This action cannot be undone.'**
+  String chatBotConfirmDeleteMessage(String title);
+
+  /// No description provided for @chatBotSessionDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation deleted'**
+  String get chatBotSessionDeleted;
+
+  /// No description provided for @chatBotHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No chat history yet'**
+  String get chatBotHistoryEmpty;
+
+  /// No description provided for @chatBotStartConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start conversation'**
+  String get chatBotStartConversation;
+
+  /// No description provided for @chatBotYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get chatBotYesterday;
+
   /// No description provided for @chatBotFoodSuggestion.
   ///
   /// In en, this message translates to:
