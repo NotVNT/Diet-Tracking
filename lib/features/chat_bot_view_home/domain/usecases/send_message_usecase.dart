@@ -60,7 +60,10 @@ class SendMessageUseCase {
       final response = await _chatRepository.sendMessage(message, userData);
       return SendMessageResult.success(response);
     } catch (e) {
-      return SendMessageResult.failure("Lỗi khi gửi tin nhắn: ${e.toString()}");
+      // Hide technical details from end-users
+      return SendMessageResult.failure(
+        "Không thể gửi tin nhắn. Vui lòng kiểm tra kết nối và thử lại.",
+      );
     }
   }
 }
