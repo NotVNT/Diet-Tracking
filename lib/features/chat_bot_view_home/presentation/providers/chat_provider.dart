@@ -85,7 +85,8 @@ class ChatProvider extends ChangeNotifier {
         return result.error;
       }
     } catch (e) {
-      final errorMessage = 'Lỗi không xác định: ${e.toString()}';
+      // Hide technical error details from users
+      const errorMessage = 'Không thể gửi tin nhắn. Vui lòng kiểm tra kết nối và thử lại.';
       _addMessage(
         ChatMessageEntity(
           text: errorMessage,
@@ -167,7 +168,7 @@ class ChatProvider extends ChangeNotifier {
     } catch (e) {
       _addMessage(
         ChatMessageEntity(
-          text: 'Đã xảy ra lỗi khi phân tích: ${e.toString()}',
+          text: 'Không thể phân tích sản phẩm. Vui lòng thử lại.',
           isUser: false,
           timestamp: DateTime.now(),
         ),
