@@ -33,11 +33,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late final List<Widget> _pages;
+
   @override
   void initState() {
     super.initState();
     // Initial load
     context.read<RecordCubit>().loadFoodRecords();
+
+    // Prebuild tab pages once and keep them alive to avoid heavy rebuilds
+    final pages = HomePageConfig.getPages();
+    pages[0] = HomeContent(
+      onViewReport: _onViewReport,
+      onEmptyTap: () => _onScanFoodTapped(context.read<HomeProvider>()),
+      onItemTap: (food) => _onPictureTap(food),
+    );
+    _pages = pages;
 
     // Schedule a one-time water reminder after 30s when user accesses Home
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -71,7 +82,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
       builder: (context, homeProvider, child) {
-        final pages = HomePageConfig.getPages();
 
         final bool isChatTab =
             homeProvider.currentIndex == HomePageConfig.chatBotIndex;
@@ -81,9 +91,10 @@ class _HomePageState extends State<HomePage> {
             MediaQuery.of(context).viewInsets.bottom > 0;
 
         return Scaffold(
-          body: homeProvider.currentIndex == HomePageConfig.homeIndex
-              ? _buildHomeContent(context, homeProvider)
-              : pages[homeProvider.currentIndex],
+          body: IndexedStack(
+            index: homeProvider.currentIndex,
+            children: _pages,
+          ),
           floatingActionButton: ((isChatTab || isRecordTab) && isKeyboardOpen)
               ? null
               : BlocBuilder<RecordCubit, RecordState>(
@@ -132,15 +143,6 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       },
-    );
-  }
-
-  /// Build home content
-  Widget _buildHomeContent(BuildContext context, HomeProvider homeProvider) {
-    return HomeContent(
-      onViewReport: _onViewReport,
-      onEmptyTap: () => _onScanFoodTapped(homeProvider),
-      onItemTap: (food) => _onPictureTap(food),
     );
   }
 

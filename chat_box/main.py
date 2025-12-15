@@ -19,7 +19,7 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GOOGLE_API_KEY = os.getenv('GOOGLE_SEARCH_API_KEY')
 GOOGLE_CX = os.getenv('GOOGLE_SEARCH_CX')
 HF_TOKEN = os.getenv("HF_TOKEN")
-#---api_key---# 
+#---api_key---#
 
 #---model_database_config---#
 client = OpenAI(
@@ -128,6 +128,7 @@ class ChatRequest(BaseModel):
     gender: str | None = None
     nutrition_plan: dict | None = None
     food_records: list[dict] | None = None
+    food_scan: dict | None = None
 
 def google_search(query: str, num_results: int = 3):
     print("đang sử dụng google")
@@ -142,7 +143,7 @@ def google_search(query: str, num_results: int = 3):
             "link": it.get("link")
         })
     return results
-    
+
 def weighted_random_choice(matches, k=5):
     scores = np.array([m['score'] for m in matches])
     probs = scores / scores.sum()

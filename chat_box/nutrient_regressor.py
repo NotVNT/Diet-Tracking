@@ -21,7 +21,7 @@ load_dotenv()
 app = FastAPI()
 
 ##api-key##
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY_1")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY_FOR_VISION")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 ##pinecone##

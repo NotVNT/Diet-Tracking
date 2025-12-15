@@ -557,6 +557,34 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotEnterMessage => 'Nhập tin nhắn...';
 
   @override
+  String get chatBotEmptyTitle => 'Bắt đầu cuộc trò chuyện với trợ lý dinh dưỡng';
+
+  @override
+  String get chatBotEmptySubtitle =>
+      'Tạo cuộc trò chuyện mới để đặt câu hỏi về dinh dưỡng hoặc xem lại lịch sử các phiên trước đó.';
+
+
+  @override
+  String get chatBotConfirmDeleteTitle => 'Xóa cuộc trò chuyện';
+
+  @override
+  String chatBotConfirmDeleteMessage(String title) =>
+      'Bạn có chắc chắn muốn xóa "$title"? Hành động này không thể hoàn tác.';
+
+  @override
+  String get chatBotSessionDeleted => 'Đã xóa cuộc trò chuyện';
+
+  @override
+  String get chatBotHistoryEmpty => 'Chưa có lịch sử chat';
+
+  @override
+  String get chatBotStartConversation => 'Bắt đầu trò chuyện';
+
+  @override
+  String get chatBotYesterday => 'Hôm qua';
+
+
+  @override
   String get chatBotFoodSuggestion => 'gợi ý món ăn';
 
   @override

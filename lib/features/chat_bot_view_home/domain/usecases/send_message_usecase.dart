@@ -9,7 +9,10 @@ class SendMessageUseCase {
   SendMessageUseCase(this._chatRepository, this._userRepository);
 
   /// Execute the use case
-  Future<SendMessageResult> execute(String message) async {
+  Future<SendMessageResult> execute(
+    String message, {
+    Map<String, dynamic>? extraContext,
+  }) async {
     try {
       // Check if user is authenticated
       final isAuthenticated = await _userRepository.isUserAuthenticated();
@@ -48,11 +51,19 @@ class SendMessageUseCase {
         userData['food_records'] = foodRecords;
       }
 
+      // Merge any extra context (e.g., food_scan JSON)
+      if (extraContext != null && extraContext.isNotEmpty) {
+        userData.addAll(extraContext);
+      }
+
       // Send message and get response
       final response = await _chatRepository.sendMessage(message, userData);
       return SendMessageResult.success(response);
     } catch (e) {
-      return SendMessageResult.failure("Lỗi khi gửi tin nhắn: ${e.toString()}");
+      // Hide technical details from end-users
+      return SendMessageResult.failure(
+        "Không thể gửi tin nhắn. Vui lòng kiểm tra kết nối và thử lại.",
+      );
     }
   }
 }

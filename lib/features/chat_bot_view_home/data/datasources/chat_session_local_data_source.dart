@@ -36,6 +36,9 @@ class InMemoryChatSessionLocalDataSource implements ChatSessionLocalDataSource {
   @override
   Future<void> deleteSession(String id) async {
     _sessions.remove(id);
+    if (_currentSessionId == id) {
+      _currentSessionId = null;
+    }
   }
 
   @override
