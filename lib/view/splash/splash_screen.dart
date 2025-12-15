@@ -66,55 +66,54 @@ class _SplashScreenState extends State<SplashScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      body: SafeArea(
-        child: Center(
-          child: FadeTransition(
+      backgroundColor: Colors.black,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Ảnh nền full màn hình
+          FadeTransition(
             opacity: _fadeIn,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Image.asset(
+              'assets/logo/load_image.png',
+              fit: BoxFit.cover, // phủ full, cắt tràn nếu cần
+            ),
+          ),
+
+          // Overlay thanh loading và text đè lên ảnh
+          Positioned(
+            left: 24,
+            right: 24,
+            bottom: 32,
+            child: SafeArea(
+              top: false,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Ảnh load
-                  Flexible(
-                    child: Image.asset(
-                      'assets/logo/load_image.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  // Thanh loading có tiến độ tăng dần
-                  SizedBox(
-                    height: 10,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: LinearProgressIndicator(
-                        minHeight: 10,
-                        value: _progress, // 0..1
-                        backgroundColor: theme.colorScheme.primary.withValues(
-                          alpha: 0.15,
-                        ),
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          theme.colorScheme.primary,
-                        ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: LinearProgressIndicator(
+                      minHeight: 10,
+                      value: _progress, // 0..1
+                      backgroundColor: theme.colorScheme.primary.withValues(
+                        alpha: 0.15,
+                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        theme.colorScheme.primary,
                       ),
                     ),
                   ),
                   const SizedBox(height: 8),
-                  // Dòng chữ thông báo kèm %
                   Text(
                     'Đang tải... ${(_progress * 100).toInt()}%',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

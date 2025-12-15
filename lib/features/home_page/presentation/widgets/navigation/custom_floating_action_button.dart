@@ -19,16 +19,24 @@ class CustomFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return FloatingActionButton(
       onPressed: () => _showActionButtons(context, localizations),
-      backgroundColor: Colors.black,
+      backgroundColor: isDark ? Colors.black : Colors.black,
       shape: const CircleBorder(),
-      child: const Icon(Icons.add, color: Colors.white, size: 28),
+      child: Icon(
+        Icons.add,
+        color: isDark ? Colors.white : Colors.white,
+        size: 28,
+      ),
     );
   }
 
-  void _showActionButtons(BuildContext context, AppLocalizations? localizations) {
+  void _showActionButtons(
+    BuildContext context,
+    AppLocalizations? localizations,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -77,7 +85,8 @@ class CustomFloatingActionButton extends StatelessWidget {
                     Expanded(
                       child: _ActionButton(
                         icon: Icons.qr_code_scanner,
-                        label: localizations?.bottomNavScanFood ?? 'Quét món ăn',
+                        label:
+                            localizations?.bottomNavScanFood ?? 'Quét món ăn',
                         onTap: () {
                           Navigator.pop(context);
                           onScanFoodSelected();
@@ -122,7 +131,67 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Tối ưu hóa: Sử dụng Material elevation thay vì BoxShadow
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fgColor = isDark ? Colors.white : Colors.black87;
+
+    if (isDark) {
+      // Dark mode: dùng gradient như bạn đề xuất
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF424242), // Xám đậm (Grey 800)
+              Color(0xFF212121), // Đen xám (Grey 900)
+            ],
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black54,
+              blurRadius: 5,
+              offset: Offset(2, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: onTap,
+              splashColor: Colors.white24,
+              highlightColor: Colors.white10,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 16,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(icon, size: 28, color: fgColor),
+                    const SizedBox(height: 8),
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: fgColor,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Light mode: giữ Material với nền trắng và đổ bóng nhẹ
     return Material(
       elevation: 4,
       borderRadius: BorderRadius.circular(16),
@@ -137,18 +206,14 @@ class _ActionButton extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  icon,
-                  size: 28,
-                  color: Colors.black87,
-                ),
+                Icon(icon, size: 28, color: fgColor),
                 const SizedBox(height: 8),
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                    color: fgColor,
                   ),
                   textAlign: TextAlign.center,
                 ),
