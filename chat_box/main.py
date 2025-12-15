@@ -1,8 +1,7 @@
-import google.generativeai as genai
 import numpy as np
 from googleapiclient.discovery import build
 from googlesearch import search
-from datetime import datetime
+from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
 from huggingface_hub import InferenceClient
 import json
@@ -15,7 +14,7 @@ from pydantic import BaseModel
 
 #---api_key---#
 load_dotenv()
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY_FOR_CHATBOX")
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GOOGLE_API_KEY = os.getenv('GOOGLE_SEARCH_API_KEY')
 GOOGLE_CX = os.getenv('GOOGLE_SEARCH_CX')
@@ -23,8 +22,10 @@ HF_TOKEN = os.getenv("HF_TOKEN")
 #---api_key---# 
 
 #---model_database_config---#
-genai.configure(api_key=GEMINI_API_KEY)
-model_gemini = genai.GenerativeModel('gemini-2.5-flash-lite')
+client = OpenAI(
+    api_key = HF_TOKEN,
+    base_url="https://router.huggingface.co/v1"
+)
 extractor = InferenceClient(model="sentence-transformers/all-MiniLM-L6-v2")
 #---model_database_config---#
 
@@ -47,11 +48,8 @@ def build_guideline_prompt():
     return "\n".join(prompt_lines)
 
 
-def extract_tags_with_gemini(query_text):
-    """Sử dụng Gemini để trích xuất các tag từ query, dựa trên guideline."""
+def extract_tags(query_text):
     guideline_prompt = build_guideline_prompt()
-    if not guideline_prompt:
-        return {}
 
     prompt = (
         f"Bạn là một trợ lý trích xuất thông tin món ăn.\n"
@@ -85,8 +83,16 @@ def extract_tags_with_gemini(query_text):
         f"Output:\n"
     )
 
-    response = model_gemini.generate_content(prompt)
-    json_str = re.sub(r"```json\n?|```", "", response.text.strip())
+    response = client.chat.completions.create(
+        model="Qwen/Qwen3-4B-Instruct-2507:nscale",
+        messages= [
+            {"role": "system",
+            "content": prompt},
+        ]
+    )
+
+    response = response.choices[0].message.content
+    json_str = re.sub(r"```json\n?|```", "", response.strip())
     extracted_tags = json.loads(json_str)
 
     for key, value in extracted_tags.items():
@@ -124,6 +130,7 @@ class ChatRequest(BaseModel):
     food_records: list[dict] | None = None
 
 def google_search(query: str, num_results: int = 3):
+    print("đang sử dụng google")
     service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
     resp = service.cse().list(q=query, cx=GOOGLE_CX).execute()
     items = resp['items'][:num_results]
@@ -154,21 +161,17 @@ def db_lookup(tool_query: str, gender: str = "male", top_k=10):
 
     print(f"--- Đang tìm kiếm cho: '{tool_query}' | Giới tính: {gender} ---")
 
-    # 1. Xác định Namespace dựa trên giới tính
-    # Đây là tên namespace bạn đã dùng lúc upsert ở bước 1
     target_namespace = "male_diet"
     if gender.lower() == "female":
         target_namespace = "female_diet"
 
-    # 2. Trích xuất Tag bằng Gemini
-    extracted_tags = extract_tags_with_gemini(tool_query)
-    print(f"Tags trích xuất từ Gemini: {extracted_tags}")
+    extracted_tags = extract_tags(tool_query)
+    print(f"Tags trích xuất từ database: {extracted_tags}")
 
     pinecone_filter = {}
-    filter_parts = [] # Dùng $and để kết hợp các điều kiện
-    
+    filter_parts = []
+
     if extracted_tags:
-        # $in: Dùng cho các cột là LIST
         if extracted_tags.get("true_ingredients"):
             filter_parts.append({"true_ingredients": {"$in": extracted_tags["true_ingredients"]}})
         if extracted_tags.get("main_methods"):
@@ -176,7 +179,6 @@ def db_lookup(tool_query: str, gender: str = "male", top_k=10):
         if extracted_tags.get("dish_tags"):
             filter_parts.append({"dish_tags": {"$in": extracted_tags["dish_tags"]}})
 
-        # $eq: Dùng cho các cột là STRING (chính xác)
         if extracted_tags.get("dish_type"):
             filter_parts.append({"dish_type": {"$eq": extracted_tags["dish_type"][0]}})
         if extracted_tags.get("mức độ"):
@@ -186,10 +188,8 @@ def db_lookup(tool_query: str, gender: str = "male", top_k=10):
         pinecone_filter = {"$and": filter_parts}
     print(f"Bộ lọc (filter) Pinecone sẽ dùng: {pinecone_filter}")
 
-    # Bước 2: Encode Query gốc để tạo Vector
     query_vector = extractor.feature_extraction(tool_query).tolist()
 
-    # Bước 3: Truy vấn Pinecone
     if pinecone_filter:
         results = index.query(
             vector=query_vector,
@@ -207,44 +207,35 @@ def db_lookup(tool_query: str, gender: str = "male", top_k=10):
             namespace=target_namespace
         )
 
-        # Bước 4: Trả về kết quả (thay vì chỉ in)
     if not results['matches']:
         print("Không tìm thấy kết quả nào.")
-        return [] # Trả về list rỗng
+        return []
 
 
     matches = results['matches']
 
-# === Weighted Random Sampling ===
     if matches:
-        # Lấy điểm similarity
         scores = np.array([m['score'] for m in matches], dtype=np.float64)
 
-        # Chuẩn hóa điểm để thành xác suất (cộng = 1)
         probs = scores / scores.sum()
 
-        # Chọn ngẫu nhiên 3 kết quả (tùy bạn)
         k = min(3, len(matches))
         chosen_indices = np.random.choice(len(matches), size=k, replace=False, p=probs)
 
-        # Lấy metadata tương ứng
         food_list = [matches[i]['metadata'] for i in chosen_indices]
     else:
         food_list = []
-
+    print(food_list)
     return food_list
 
 
 
 
 
-def build_system_prompt(nutrition_plan, food_records):
-
+def build_system_prompt():
     return f"""
-Cư xử như **chuyên gia dinh dưỡng Việt Nam**, nói chuyện như **một đầu bếp chuyên nghiệp** với phong cách **đi thẳng vào vấn đề, thân thiện, dễ hiểu và thực tế**.
-
 ### Nhiệm vụ:
-Trả lời mọi câu hỏi liên quan đến **ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống và món ăn Việt Nam**.
+Trả lời mọi câu hỏi liên quan đến **ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống và món ăn**.
 Câu trả lời phải **ngắn gọn, tự nhiên, mang tính tư vấn** tối đa 250 câu.
 
 ---
@@ -293,27 +284,22 @@ Nếu người dùng hỏi về:
 - **Kiến thức dinh dưỡng:** Giải thích ngắn, dễ hiểu, kèm ví dụ món Việt.
 - **Lượng ăn mỗi ngày:** Tính toán hợp lý dựa vào cân nặng và mục tiêu, nhưng không nhắc lại thông tin đó trong câu trả lời.
 
+### 🔧 Quy tắc sử dụng công cụ (tool‑calling):
+- Khi người dùng hỏi về món ăn, calo, thành phần, dinh dưỡng, cách nấu, hoặc cần tra cứu dữ liệu, bạn phải ưu tiên sử dụng function được cung cấp.
+- Nếu câu hỏi liên quan đến món ăn cụ thể → gọi function `db_lookup`.
+- Nếu câu hỏi liên quan đến thông tin chung → gọi function `google_search`.
+- Không trả lời trực tiếp nếu có function phù hợp để xử lý truy vấn.
+- Không tự tạo dữ liệu món ăn hoặc calo nếu chưa gọi tool.
 ---
 """
 
-def build_google_search_prompt():
-    return """
-    ### Nhiệm vụ:
-    Trả lời mọi câu hỏi liên quan đến **ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống và món ăn Việt Nam**.
-    Câu trả lời phải **ngắn gọn, tự nhiên, mang tính tư vấn và hành động được**.
-    Nếu người dùng hỏi **ngoài chủ đề dinh dưỡng**, hãy **từ chối nhẹ nhàng**, ví dụ:
-    > “Xin lỗi, tôi chỉ hỗ trợ về dinh dưỡng và ăn uống. Bạn có muốn tôi gợi ý món ăn hôm nay không?”
-    """
-
-
-def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_weight, gender, nutrition_plan, food_records):
+def build_user_prompt(age, height, weight, allergy, goal, prompt, goal_weight, gender):
     return f"""
 ### 🔍 **Thông tin đầu vào:**
 - Tuổi: {age}
-- Giới tính: {gender or 'Không xác định'}
+- Giới tính: {gender}
 - Chiều cao: {height} cm
 - Cân nặng: {weight} kg
-- Bệnh lý: {disease}
 - Dị ứng: {allergy}
 - Mục tiêu: {goal}
 - Cân nặng mục tiêu: {goal_weight}
@@ -321,102 +307,100 @@ def build_user_prompt(age, height, weight, disease, allergy, goal, prompt, goal_
 
 ---
 
-### ✅ **Nhiệm vụ của bạn:**
+###**Nhiệm vụ của bạn:**
 Dựa trên thông tin trên, hãy **phản hồi tự nhiên, thân thiện**.
 - Nếu người dùng hỏi món ăn, gợi ý món phù hợp với mục tiêu.
-- Nếu người dùng hỏi ngoài chủ đề dinh dưỡng, hãy từ chối nhẹ nhàng.
 """
 
-def reasoning_intruction():
-    return"""
-    Bạn là một trợ lý chuyên về dinh dưỡng. Khi nhận một câu hỏi, hãy phân tích nhanh và quyết định một trong ba hành động:
-    - "DIRECT": bạn có thể trả lời ngay dựa trên kiến thức chung.
-    - "DATABASE": cần truy vấn cơ sở dữ liệu nội bộ để trả lời chính xác (ví dụ danh sách món ăn, yêu cầu đề xuất món ăn, yêu cầu về chế độ ăn, yêu cầu về bữa ăn).
-    - "GOOGLE": cần tìm thông tin cập nhật/chi tiết từ web nếu bạn không chắc chắn (ví dụ thông tin dinh dưỡng có cấu trúc, câu hỏi chung chung về dinh dưỡng).
+tools = [
+  {
+      "type": "function",
+      "function": {
+          "name": "google_search",
+          "description": "Tìm kiếm thông tin trên mạng",
+          "parameters": {
+              "type": "object",
+              "properties": {
+                  "query":{
+                      "type": "string",
+                      "description": "Tìm kiếm query để tìm thông tin"
+                  }
+              },
+              "required": ["query"]
+          }
+      }
+  },
+  {
+      "type": "function",
+      "function": {
+          "name": "db_lookup",
+          "description": "Tìm kiếm thông tin của món ăn trong database",
+          "parameters":{
+              "type": "object",
+              "properties": {
+                  "tool_query": {
+                      "type": "string",
+                      "description": "Tìm kiếm query để tìm thông tin của món ăn"
+                  }
+              },
+              "required": ["tool_query"]
+          }
 
-    Trả về văn bản dạng như sau (không giải thích thêm) với các trường:
-    '''
-    "action": "DIRECT" | "DATABASE" | "GOOGLE",
-    "direct_answer": "nếu action là DIRECT thì điền câu trả lời ngắn ở đây, ngược lại để trống"
-    '''
-    Luôn đảm bảo JSON hợp lệ.
-    """
+      }
+  }
+]
+TOOL_MAPPING = {
+    "google_search": google_search,
+    "db_lookup": db_lookup
+}
 
-# def check_calories(food_records):
+def call_llm(msgs):
+    resp = client.chat.completions.create(
+        model="Qwen/Qwen3-4B-Instruct-2507:nscale",
+        tools=tools,
+        messages=msgs
+    )
+    msgs.append(resp.choices[0].message.dict())
+    return resp
 
+def get_tool_response(response):
+    tool_call = response.choices[0].message.tool_calls[0]
+    tool_name = tool_call.function.name
+    tool_args = json.loads(tool_call.function.arguments)
+    tool_result = TOOL_MAPPING[tool_name](**tool_args)
+    return {
+        "role": "tool",
+        "tool_call_id": tool_call.id,
+        "content": tool_result,
+    }
 
-def decide_action(user_query:str):
-    full_prompt = reasoning_intruction() + user_query
-    try:
-        response = model_gemini.generate_content(full_prompt)
-        raw = response.text.strip()
-        # Find JSON block, even with markdown wrappers
-        match = re.search(r'```json\n(\{.*?\})\n```|(\{.*?\})', raw, re.DOTALL)
-        if not match:
-            print(f"Warning: Could not find JSON in decision response. Defaulting to DIRECT. Response was: {raw}")
-            return {"action": "DIRECT", "direct_answer": ""} # Let the main prompt handle it
-
-        # Extract the actual JSON string from one of the capture groups
-        json_str = match.group(1) or match.group(2)
-        parsed = json.loads(json_str)
-        action = parsed.get("action", "").upper()
-
-        if action not in ("GOOGLE", "DATABASE", "DIRECT"):
-            print(f"Warning: Invalid action '{action}' in decision response. Defaulting to DIRECT.")
-            return {"action": "DIRECT", "direct_answer": ""}
-
-        return {
-            "action": action,
-            "direct_answer": parsed.get("direct_answer", ""),
-        }
-    except Exception as e:
-        print(f"Error in decide_action: {e}. Defaulting to DIRECT action.")
-        return {"action": "DIRECT", "direct_answer": "Xin lỗi, tôi gặp chút sự cố khi phân tích câu hỏi của bạn. Bạn có thể hỏi lại được không?"}
 @app.post("/chat")
 async def chatbox(request: ChatRequest):
     print(f"Received request with gender: {request.gender}")
-    # print("Received request:", request.model_dump())
-    history=[]
-    chat = model_gemini.start_chat(history = history)
+    chat_history = [
+        {"role": "system",
+        "content": build_system_prompt()}
+    ]
 
-    decision = decide_action(request.prompt)
-    action = decision["action"]
-    if(action == "DIRECT"):
-        print("DIRECT")
-        response = chat.send_message(request.prompt)
-        return {"reply": response.text}
-    
-    if(action == "DATABASE"):#<---------------------------
-        print("ĐANG SỬ DỤNG DATABASE")
-        results = db_lookup(request.prompt +  request.goal, gender = "male", top_k=5)
-        final_prompt = build_system_prompt(request.nutrition_plan, request.food_records) + build_user_prompt(request.age, request.height, request.weight, request.disease, request.allergy, request.goal, request.prompt, request.goal_weight, request.gender, request.nutrition_plan, request.food_records) + "Dưới đây là danh sách món ăn lấy được từ database:" + str(results) + "Chỉ được chọn và trả lời dựa trên các món có trong danh sách trên. Không được thêm món khác hoặc tự nghĩ ra món mới"
-        print(results)
-        response = chat.send_message(final_prompt)
-        return {"reply": response.text}
-    
-    elif action == "GOOGLE":
-        context = []
-        print("ĐANG SỬ DỤNG GOOGLE")
-        try:
-            web_results = google_search(request.prompt, num_results = 3)
-        except Exception as e:
-            print(f"Lỗi tìm kiếm trên google", e)
+    content = build_user_prompt(request.age, request.height, request.weight, request.allergy, request.goal, request.prompt, request.goal_weight, request.gender)
 
-        web_results = []
-        if not web_results:
-            context.append("Không có context công cụ, hãy trả lời bằng kiến thức nội bộ nếu có.")
-            context_string = str(context)
-            final_prompt = build_google_search_prompt() + request.prompt + "Ngữ cảnh thu thập được(dùng để tham khảo)" + context_string
-            # print("\n--- FINAL PROMPT FOR AI (GOOGLE) ---\n", final_prompt)
-            response = chat.send_message(final_prompt)
-            return {"reply": response.text}
+    chat_history.append(
+        {"role": "user",
+         "content": content}
+    )
+
+    max_iterations = 2
+    iteration_count = 0
+    while iteration_count < max_iterations:
+        iteration_count += 1
+        resp = call_llm(chat_history)
+        if resp.choices[0].message.tool_calls:
+            chat_history.append(get_tool_response(resp))
         else:
-            context.append("Tôi đã tìm thấy trên google và tóm tắt link/snippet chính sau:")
-            for r in web_results:
-                print(f"-{r['title']} - {r['snippet']} - {r['link']}")
-            context.append(f"-{r['title']} - {r['snippet']} - {r['link']}")
-            context_string = str(context)
-            final_prompt = build_google_search_prompt() + request.prompt +"Ngữ cảnh thu thập được(dùng để tham khảo)" + context_string
-            print("\n--- FINAL PROMPT FOR AI (GOOGLE) ---\n", final_prompt)
-            response = chat.send_message(final_prompt)
-            return {"reply": response.text}
+            break
+    if iteration_count >= max_iterations:
+        print("Warning: Maximum iterations reached")
+    return{"reply": chat_history[-1]['content']}
+        
+if __name__ == "__main__":
+    print(extract_tags("món ăn giảm cân giành con người bị dị ứng cá"))
