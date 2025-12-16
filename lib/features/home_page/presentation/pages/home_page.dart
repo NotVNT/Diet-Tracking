@@ -17,6 +17,7 @@ import '../../../../common/snackbar_helper.dart';
 import '../../../../services/notification_service.dart';
 import '../../../../services/permission_service.dart';
 import '../widgets/layout/home_content.dart';
+import 'daily_nutrition_detail_page.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -62,7 +63,16 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _onViewReport() {}
+  void _onViewReport(DateTime date, List<FoodRecordEntity> foodRecords) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => DailyNutritionDetailPage(
+          date: date,
+          foodRecords: foodRecords,
+        ),
+      ),
+    );
+  }
 
   /// Handle picture tap - navigate to detail page
   Future<void> _onPictureTap(FoodRecordEntity food) async {

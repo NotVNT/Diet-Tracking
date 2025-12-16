@@ -4,6 +4,7 @@
   "weWillBuild": "We'll build a tailored plan to keep you motivated and help you reach your goals.",
   "getStartedNow": "Get started!",
   "appTitle": "Diet Tracking",
+  "nutrientFat": "Fat",
   "startTrackingToday": "Start tracking your\ndiet plan today!",
   "trackDailyDiet": "Track your daily diet with\npersonalized meal plans and\nsmart recommendations.",
   "getStarted": "Get started",
@@ -11,6 +12,25 @@
   "apply": "Apply",
   "tellUsAboutYourself": "Tell us about yourself",
   "weWillCreatePersonalizedPlan": "We'll create a personalized plan for you based on details like your age and current weight.",
+  "chatBotYesterday": "Yesterday",
+  "chatBotConfirmDeleteTitle": "Delete session?",
+  "chatBotConfirmDeleteMessage": "Are you sure you want to delete the session \"{sessionTitle}\"?",
+  "@chatBotConfirmDeleteMessage": {
+    "description": "Confirmation message for deleting a chat session",
+    "placeholders": {
+      "sessionTitle": {
+        "type": "String",
+        "example": "My Diet Plan"
+      }
+    }
+  },
+  "chatBotSessionDeleted": "Session deleted",
+  "chatBotHistoryEmpty": "No chat history yet",
+  "chatBotStartConversation": "Start a conversation...",
+  "chatBotEmptyTitle": "Start a new conversation",
+  "chatBotEmptySubtitle": "Your chat history will be saved here. Ask me anything about your diet plan!",
+  "chatBotChatHistory": "Chat History",
+  "chatBotCreateNewChat": "Create New Chat",
   "start": "Start",
   "gender": "Gender",
   "weWillUseThisInfo": "We'll use this information to calculate your daily energy needs.",

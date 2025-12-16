@@ -119,6 +119,12 @@ abstract class AppLocalizations {
   /// **'Diet Tracking'**
   String get appTitle;
 
+  /// No description provided for @nutrientFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat'**
+  String get nutrientFat;
+
   /// No description provided for @startTrackingToday.
   ///
   /// In en, this message translates to:
@@ -160,6 +166,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We\'ll create a personalized plan for you based on details like your age and current weight.'**
   String get weWillCreatePersonalizedPlan;
+
+  /// No description provided for @chatBotYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get chatBotYesterday;
+
+  /// No description provided for @chatBotConfirmDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete session?'**
+  String get chatBotConfirmDeleteTitle;
+
+  /// Confirmation message for deleting a chat session
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the session \"{sessionTitle}\"?'**
+  String chatBotConfirmDeleteMessage(String sessionTitle);
+
+  /// No description provided for @chatBotSessionDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Session deleted'**
+  String get chatBotSessionDeleted;
+
+  /// No description provided for @chatBotHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No chat history yet'**
+  String get chatBotHistoryEmpty;
+
+  /// No description provided for @chatBotStartConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a conversation...'**
+  String get chatBotStartConversation;
+
+  /// No description provided for @chatBotEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a new conversation'**
+  String get chatBotEmptyTitle;
+
+  /// No description provided for @chatBotEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your chat history will be saved here. Ask me anything about your diet plan!'**
+  String get chatBotEmptySubtitle;
+
+  /// No description provided for @chatBotChatHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat history'**
+  String get chatBotChatHistory;
+
+  /// No description provided for @chatBotCreateNewChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new chat'**
+  String get chatBotCreateNewChat;
 
   /// No description provided for @start.
   ///
@@ -731,6 +797,36 @@ abstract class AppLocalizations {
   /// **'(Exercise/sports 3-5 days/week)'**
   String get activityLevelModeratelyActiveSubtitle;
 
+  /// No description provided for @dateRangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Date range'**
+  String get dateRangeTitle;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @last7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 days'**
+  String get last7Days;
+
+  /// No description provided for @customRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom range'**
+  String get customRange;
+
   /// No description provided for @activityLevelVeryActiveTitle.
   ///
   /// In en, this message translates to:
@@ -1145,23 +1241,11 @@ abstract class AppLocalizations {
   /// **'Please fill in all information'**
   String get chatBotPleaseEnterAllInfo;
 
-  /// No description provided for @chatBotCreateNewChat.
-  ///
-  /// In en, this message translates to:
-  /// **'Create new chat'**
-  String get chatBotCreateNewChat;
-
   /// No description provided for @chatBotStartNewConversation.
   ///
   /// In en, this message translates to:
   /// **'Start a new conversation'**
   String get chatBotStartNewConversation;
-
-  /// No description provided for @chatBotChatHistory.
-  ///
-  /// In en, this message translates to:
-  /// **'Chat history'**
-  String get chatBotChatHistory;
 
   /// No description provided for @chatBotViewPreviousConversations.
   ///
@@ -1186,56 +1270,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter message...'**
   String get chatBotEnterMessage;
-
-
-  /// No description provided for @chatBotEmptyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Start a conversation with your diet assistant'**
-  String get chatBotEmptyTitle;
-
-  /// No description provided for @chatBotEmptySubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Create a new chat to ask nutrition questions or view your previous conversations.'**
-  String get chatBotEmptySubtitle;
-
-
-  /// No description provided for @chatBotConfirmDeleteTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete conversation'**
-  String get chatBotConfirmDeleteTitle;
-
-  /// No description provided for @chatBotConfirmDeleteMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to delete "{title}"? This action cannot be undone.'**
-  String chatBotConfirmDeleteMessage(String title);
-
-  /// No description provided for @chatBotSessionDeleted.
-  ///
-  /// In en, this message translates to:
-  /// **'Conversation deleted'**
-  String get chatBotSessionDeleted;
-
-  /// No description provided for @chatBotHistoryEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'No chat history yet'**
-  String get chatBotHistoryEmpty;
-
-  /// No description provided for @chatBotStartConversation.
-  ///
-  /// In en, this message translates to:
-  /// **'Start conversation'**
-  String get chatBotStartConversation;
-
-  /// No description provided for @chatBotYesterday.
-  ///
-  /// In en, this message translates to:
-  /// **'Yesterday'**
-  String get chatBotYesterday;
 
   /// No description provided for @chatBotFoodSuggestion.
   ///
@@ -2302,7 +2336,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoDeletedSuccessfully.
   ///
   /// In en, this message translates to:
-  /// **'Photo deleted successfully'**
+  /// **'Deleted successfully'**
   String get photoDeletedSuccessfully;
 
   /// No description provided for @analyzeFood.
@@ -2328,13 +2362,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please grant camera access to use this feature.'**
   String get permissionCameraRequired;
-
-  /// No description provided for @scanOnlyToday.
-  ///
-  /// In en, this message translates to:
-  /// **'You can only scan meals for today.'**
-  String get scanOnlyToday;
-
 
   /// No description provided for @inboxTitle.
   ///
@@ -2402,36 +2429,6 @@ abstract class AppLocalizations {
   /// **'Reset'**
   String get reset;
 
-  /// No description provided for @dateRangeTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Date range'**
-  String get dateRangeTitle;
-
-  /// No description provided for @today.
-  ///
-  /// In en, this message translates to:
-  /// **'Today'**
-  String get today;
-
-  /// No description provided for @yesterday.
-  ///
-  /// In en, this message translates to:
-  /// **'Yesterday'**
-  String get yesterday;
-
-  /// No description provided for @last7Days.
-  ///
-  /// In en, this message translates to:
-  /// **'Last 7 days'**
-  String get last7Days;
-
-  /// No description provided for @customRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Custom range'**
-  String get customRange;
-
   /// No description provided for @mealsListTitle.
   ///
   /// In en, this message translates to:
@@ -2467,37 +2464,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete \"{foodName}\" from records?'**
   String deleteMealMessage(String foodName);
-
-
-  /// No description provided for @mealDeletedSuccessfully.
-  ///
-  /// In en, this message translates to:
-  /// **'Meal deleted successfully'**
-  String get mealDeletedSuccessfully;
-
-  /// No description provided for @deleteMealFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'Failed to delete meal'**
-  String get deleteMealFailed;
-
-  /// No description provided for @sourceTagBotSuggestion.
-  ///
-  /// In en, this message translates to:
-  /// **'Chatbot suggestion'**
-  String get sourceTagBotSuggestion;
-
-  /// No description provided for @sourceTagScanned.
-  ///
-  /// In en, this message translates to:
-  /// **'From scan/photo'**
-  String get sourceTagScanned;
-
-  /// No description provided for @sourceTagManual.
-  ///
-  /// In en, this message translates to:
-  /// **'Manual input'**
-  String get sourceTagManual;
 
   /// No description provided for @initializing.
   ///
@@ -2612,6 +2578,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error saving product'**
   String get foodScannerSaveProductError;
+
+  /// No description provided for @mealDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal deleted successfully'**
+  String get mealDeletedSuccessfully;
+
+  /// No description provided for @deleteMealFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete meal'**
+  String get deleteMealFailed;
+
+  /// No description provided for @sourceTagBotSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Chatbot suggestion'**
+  String get sourceTagBotSuggestion;
+
+  /// No description provided for @sourceTagScanned.
+  ///
+  /// In en, this message translates to:
+  /// **'From scan/photo'**
+  String get sourceTagScanned;
+
+  /// No description provided for @sourceTagManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual input'**
+  String get sourceTagManual;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

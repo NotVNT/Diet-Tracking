@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
-
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../components/nutrient_color_scheme.dart';
 
-/// A small, reusable presentation widget that shows
-/// - Food name (or "No Food Detection")
-/// - A time badge for when the photo/record was created
-/// - Calories with icon
-/// - Protein/Carbs/Fat rows with small icons
-///
-/// Keep this UI logic in one place so it can be reused by cards and detail pages.
 class FoodScannedInfo extends StatelessWidget {
   final FoodRecordEntity record;
   final bool showTime;
   final bool emphasizeCalories;
-  // When true, if record seems to come from bot suggestion (has nutritionDetails), prefix calories with '~'
   final bool approxForBotSuggestion;
-  // Optional suffix for calories text (e.g., localized "calories"), default to 'kcal' when null
   final String? caloriesSuffix;
-  // Control displaying macro chips to allow reuse without changing UI elsewhere
   final bool showMacros;
 
   const FoodScannedInfo({
@@ -71,10 +61,9 @@ class FoodScannedInfo extends StatelessWidget {
         const SizedBox(height: 4),
         Row(
           children: [
-            const Icon(
-              Icons.local_fire_department,
-              color: Colors.orange,
-              size: 16,
+            Text(
+              NutrientColorScheme.getEmoji(NutrientType.calorie),
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(width: 4),
             Text(
@@ -92,20 +81,17 @@ class FoodScannedInfo extends StatelessWidget {
           Row(
             children: [
               _MacroChip(
-                color: Colors.red,
-                icon: Icons.egg_alt_outlined,
+                emoji: NutrientColorScheme.getEmoji(NutrientType.protein),
                 label: _formatGram(record.protein),
               ),
               const SizedBox(width: 12),
               _MacroChip(
-                color: Colors.green,
-                icon: Icons.grass,
+                emoji: NutrientColorScheme.getEmoji(NutrientType.carbs),
                 label: _formatGram(record.carbs),
               ),
               const SizedBox(width: 12),
               _MacroChip(
-                color: Colors.blue,
-                icon: Icons.opacity,
+                emoji: NutrientColorScheme.getEmoji(NutrientType.fat),
                 label: _formatGram(record.fat),
               ),
             ],
@@ -146,13 +132,11 @@ class _TimeBadge extends StatelessWidget {
 }
 
 class _MacroChip extends StatelessWidget {
-  final Color color;
-  final IconData icon;
+  final String emoji;
   final String label;
 
   const _MacroChip({
-    required this.color,
-    required this.icon,
+    required this.emoji,
     required this.label,
   });
 
@@ -161,8 +145,8 @@ class _MacroChip extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: color, size: 14),
-        const SizedBox(width: 3),
+        Text(emoji, style: const TextStyle(fontSize: 14)),
+        const SizedBox(width: 4),
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11),

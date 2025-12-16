@@ -21,6 +21,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'Theo dõi chế độ ăn';
 
   @override
+  String get nutrientFat => 'Chất béo';
+
+  @override
   String get startTrackingToday => 'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!';
 
   @override
@@ -40,6 +43,38 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get weWillCreatePersonalizedPlan => 'Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho bạn dựa trên các chi tiết như tuổi và cân nặng hiện tại của bạn.';
+
+  @override
+  String get chatBotYesterday => 'Hôm qua';
+
+  @override
+  String get chatBotConfirmDeleteTitle => 'Xóa cuộc trò chuyện?';
+
+  @override
+  String chatBotConfirmDeleteMessage(String sessionTitle) {
+    return 'Bạn có chắc chắn muốn xóa cuộc trò chuyện \"$sessionTitle\"?';
+  }
+
+  @override
+  String get chatBotSessionDeleted => 'Đã xóa cuộc trò chuyện';
+
+  @override
+  String get chatBotHistoryEmpty => 'Chưa có lịch sử trò chuyện';
+
+  @override
+  String get chatBotStartConversation => 'Bắt đầu cuộc trò chuyện...';
+
+  @override
+  String get chatBotEmptyTitle => 'Bắt đầu cuộc trò chuyện mới';
+
+  @override
+  String get chatBotEmptySubtitle => 'Lịch sử trò chuyện của bạn sẽ được lưu tại đây. Hãy hỏi tôi bất cứ điều gì về kế hoạch ăn kiêng của bạn!';
+
+  @override
+  String get chatBotChatHistory => 'Lịch sử chat';
+
+  @override
+  String get chatBotCreateNewChat => 'Tạo đoạn chat mới';
 
   @override
   String get start => 'Bắt đầu';
@@ -327,6 +362,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get activityLevelModeratelyActiveSubtitle => '(Tập thể dục/thể thao 3-5 ngày/tuần)';
 
   @override
+  String get dateRangeTitle => 'Khoảng ngày';
+
+  @override
+  String get today => 'Hôm nay';
+
+  @override
+  String get yesterday => 'Hôm qua';
+
+  @override
+  String get last7Days => '7 ngày qua';
+
+  @override
+  String get customRange => 'Khoảng khác';
+
+  @override
   String get activityLevelVeryActiveTitle => 'Vận động nặng';
 
   @override
@@ -536,13 +586,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotPleaseEnterAllInfo => 'Vui lòng điền đầy đủ thông tin';
 
   @override
-  String get chatBotCreateNewChat => 'Tạo đoạn chat mới';
-
-  @override
   String get chatBotStartNewConversation => 'Bắt đầu cuộc trò chuyện mới';
-
-  @override
-  String get chatBotChatHistory => 'Lịch sử chat';
 
   @override
   String get chatBotViewPreviousConversations => 'Xem các cuộc trò chuyện trước';
@@ -555,34 +599,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get chatBotEnterMessage => 'Nhập tin nhắn...';
-
-  @override
-  String get chatBotEmptyTitle => 'Bắt đầu cuộc trò chuyện với trợ lý dinh dưỡng';
-
-  @override
-  String get chatBotEmptySubtitle =>
-      'Tạo cuộc trò chuyện mới để đặt câu hỏi về dinh dưỡng hoặc xem lại lịch sử các phiên trước đó.';
-
-
-  @override
-  String get chatBotConfirmDeleteTitle => 'Xóa cuộc trò chuyện';
-
-  @override
-  String chatBotConfirmDeleteMessage(String title) =>
-      'Bạn có chắc chắn muốn xóa "$title"? Hành động này không thể hoàn tác.';
-
-  @override
-  String get chatBotSessionDeleted => 'Đã xóa cuộc trò chuyện';
-
-  @override
-  String get chatBotHistoryEmpty => 'Chưa có lịch sử chat';
-
-  @override
-  String get chatBotStartConversation => 'Bắt đầu trò chuyện';
-
-  @override
-  String get chatBotYesterday => 'Hôm qua';
-
 
   @override
   String get chatBotFoodSuggestion => 'gợi ý món ăn';
@@ -1139,9 +1155,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get permissionCameraRequired => 'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
 
   @override
-  String get scanOnlyToday => 'Bạn chỉ có thể quét món ăn cho ngày hôm nay.';
-
-  @override
   String get inboxTitle => 'Hộp thư đến';
 
   @override
@@ -1149,22 +1162,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get filterTitle => 'Bộ lọc';
-
-  @override
-  String get dateRangeTitle => 'Khoảng ngày';
-
-  @override
-  String get today => 'Hôm nay';
-
-  @override
-  String get yesterday => 'Hôm qua';
-
-  @override
-  String get last7Days => '7 ngày qua';
-
-  @override
-  String get customRange => 'Khoảng khác';
-
 
   @override
   String get category => 'Danh mục';
@@ -1209,22 +1206,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String deleteMealMessage(String foodName) {
     return 'Bạn có chắc muốn xoá \"$foodName\" khỏi ghi nhận?';
   }
-
-  @override
-  String get mealDeletedSuccessfully => 'Xoá món ăn thành công';
-
-  @override
-  String get deleteMealFailed => 'Xoá món ăn thất bại';
-
-  @override
-  String get sourceTagBotSuggestion => 'Gợi ý Chatbot';
-
-  @override
-  String get sourceTagScanned => 'Từ quét ảnh/mã';
-
-  @override
-  String get sourceTagManual => 'Nhập thủ công';
-
 
   @override
   String get initializing => 'Đang khởi tạo...';
@@ -1288,4 +1269,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get foodScannerSaveProductError => 'Lỗi khi lưu sản phẩm';
+
+  @override
+  String get mealDeletedSuccessfully => 'Xoá món ăn thành công';
+
+  @override
+  String get deleteMealFailed => 'Xoá món ăn thất bại';
+
+  @override
+  String get sourceTagBotSuggestion => 'Gợi ý Chatbot';
+
+  @override
+  String get sourceTagScanned => 'Từ quét ảnh/mã';
+
+  @override
+  String get sourceTagManual => 'Nhập thủ công';
 }

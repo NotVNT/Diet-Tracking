@@ -8,15 +8,14 @@ import '../../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../../record_view_home/presentation/cubit/record_cubit.dart';
 import '../../../../record_view_home/presentation/cubit/record_state.dart';
 import '../calendar/week_calendar_widget.dart';
-
-import '../shared/calorie_goal_card.dart';
+import '../cards/calorie_goal_card.dart';
 import '../sections/recently_logged_section.dart';
 import '../../../../../common/snackbar_helper.dart';
 import '../../providers/home_provider.dart';
 import '../../../../../config/home_page_config.dart';
 
 class HomeContent extends StatefulWidget {
-  final VoidCallback onViewReport;
+  final void Function(DateTime, List<FoodRecordEntity>) onViewReport;
   final VoidCallback onEmptyTap;
   final void Function(FoodRecordEntity) onItemTap;
 
@@ -127,13 +126,12 @@ class _HomeContentState extends State<HomeContent> {
                   ),
                   SizedBox(height: responsive.height(16)),
                   CalorieGoalCard(
-                    nutritionInfo: NutritionInfo(
-                      calorieGoal: 2273,
-                      calorieConsumed: 0,
-                      proteinConsumed: 0,
-                      carbsConsumed: 0,
+                    nutritionInfo: NutritionInfo.fromRecordsForDate(
+                      records: foodRecords,
+                      date: selectedDate,
+                      calorieGoal: 2273, // TODO: replace with dynamic goal from user profile
                     ),
-                    onViewReport: widget.onViewReport,
+                    onViewReport: () => widget.onViewReport(selectedDate, filteredRecords),
                   ),
                   SizedBox(height: responsive.height(16)),
                   RecentlyLoggedSection(

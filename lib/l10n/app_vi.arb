@@ -4,6 +4,7 @@
   "weWillBuild": "Chúng tôi sẽ xây dựng cho bạn một kế hoạch tùy chỉnh nhằm giúp bạn duy trì động lực và đạt được mục tiêu của mình.",
   "getStartedNow": "Bắt đầu ngay!",
   "appTitle": "Theo dõi chế độ ăn",
+  "nutrientFat": "Chất béo",
   "startTrackingToday": "Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!",
   "trackDailyDiet": "Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.",
   "getStarted": "Bắt đầu ngay",
@@ -11,6 +12,25 @@
   "apply": "Áp dụng",
   "tellUsAboutYourself": "Hãy cho chúng tôi biết về bản thân bạn",
   "weWillCreatePersonalizedPlan": "Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho bạn dựa trên các chi tiết như tuổi và cân nặng hiện tại của bạn.",
+  "chatBotYesterday": "Hôm qua",
+  "chatBotConfirmDeleteTitle": "Xóa cuộc trò chuyện?",
+  "chatBotConfirmDeleteMessage": "Bạn có chắc chắn muốn xóa cuộc trò chuyện \"{sessionTitle}\"?",
+  "@chatBotConfirmDeleteMessage": {
+    "description": "Thông báo xác nhận xóa một cuộc trò chuyện",
+    "placeholders": {
+      "sessionTitle": {
+        "type": "String",
+        "example": "Kế hoạch ăn kiêng của tôi"
+      }
+    }
+  },
+  "chatBotSessionDeleted": "Đã xóa cuộc trò chuyện",
+  "chatBotHistoryEmpty": "Chưa có lịch sử trò chuyện",
+  "chatBotStartConversation": "Bắt đầu cuộc trò chuyện...",
+  "chatBotEmptyTitle": "Bắt đầu cuộc trò chuyện mới",
+  "chatBotEmptySubtitle": "Lịch sử trò chuyện của bạn sẽ được lưu tại đây. Hãy hỏi tôi bất cứ điều gì về kế hoạch ăn kiêng của bạn!",
+  "chatBotChatHistory": "Lịch sử trò chuyện",
+  "chatBotCreateNewChat": "Tạo cuộc trò chuyện mới",
   "start": "Bắt đầu",
   "gender": "Giới tính",
   "weWillUseThisInfo": "Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.",

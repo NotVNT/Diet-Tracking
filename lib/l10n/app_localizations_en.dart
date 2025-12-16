@@ -21,6 +21,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Diet Tracking';
 
   @override
+  String get nutrientFat => 'Fat';
+
+  @override
   String get startTrackingToday => 'Start tracking your\ndiet plan today!';
 
   @override
@@ -40,6 +43,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weWillCreatePersonalizedPlan => 'We\'ll create a personalized plan for you based on details like your age and current weight.';
+
+  @override
+  String get chatBotYesterday => 'Yesterday';
+
+  @override
+  String get chatBotConfirmDeleteTitle => 'Delete session?';
+
+  @override
+  String chatBotConfirmDeleteMessage(String sessionTitle) {
+    return 'Are you sure you want to delete the session \"$sessionTitle\"?';
+  }
+
+  @override
+  String get chatBotSessionDeleted => 'Session deleted';
+
+  @override
+  String get chatBotHistoryEmpty => 'No chat history yet';
+
+  @override
+  String get chatBotStartConversation => 'Start a conversation...';
+
+  @override
+  String get chatBotEmptyTitle => 'Start a new conversation';
+
+  @override
+  String get chatBotEmptySubtitle => 'Your chat history will be saved here. Ask me anything about your diet plan!';
+
+  @override
+  String get chatBotChatHistory => 'Chat history';
+
+  @override
+  String get chatBotCreateNewChat => 'Create new chat';
 
   @override
   String get start => 'Start';
@@ -327,6 +362,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activityLevelModeratelyActiveSubtitle => '(Exercise/sports 3-5 days/week)';
 
   @override
+  String get dateRangeTitle => 'Date range';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get last7Days => 'Last 7 days';
+
+  @override
+  String get customRange => 'Custom range';
+
+  @override
   String get activityLevelVeryActiveTitle => 'Very active';
 
   @override
@@ -536,13 +586,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatBotPleaseEnterAllInfo => 'Please fill in all information';
 
   @override
-  String get chatBotCreateNewChat => 'Create new chat';
-
-  @override
   String get chatBotStartNewConversation => 'Start a new conversation';
-
-  @override
-  String get chatBotChatHistory => 'Chat history';
 
   @override
   String get chatBotViewPreviousConversations => 'View previous conversations';
@@ -555,34 +599,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chatBotEnterMessage => 'Enter message...';
-
-  @override
-  String get chatBotEmptyTitle => 'Start a conversation with your diet assistant';
-
-  @override
-  String get chatBotEmptySubtitle =>
-      'Create a new chat to ask nutrition questions or view your previous conversations.';
-
-
-
-  @override
-  String get chatBotConfirmDeleteTitle => 'Delete conversation';
-
-  @override
-  String chatBotConfirmDeleteMessage(String title) =>
-      'Are you sure you want to delete "$title"? This action cannot be undone.';
-
-  @override
-  String get chatBotSessionDeleted => 'Conversation deleted';
-
-  @override
-  String get chatBotHistoryEmpty => 'No chat history yet';
-
-  @override
-  String get chatBotStartConversation => 'Start conversation';
-
-  @override
-  String get chatBotYesterday => 'Yesterday';
 
   @override
   String get chatBotFoodSuggestion => 'food suggestion';
@@ -1138,10 +1154,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get permissionCameraRequired => 'Please grant camera access to use this feature.';
 
-
-  @override
-  String get scanOnlyToday => 'You can only scan meals for today.';
-
   @override
   String get inboxTitle => 'Inbox';
 
@@ -1150,22 +1162,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterTitle => 'Filter';
-
-  @override
-  String get dateRangeTitle => 'Date range';
-
-  @override
-  String get today => 'Today';
-
-  @override
-  String get yesterday => 'Yesterday';
-
-  @override
-  String get last7Days => 'Last 7 days';
-
-  @override
-  String get customRange => 'Custom range';
-
 
   @override
   String get category => 'Category';
@@ -1210,22 +1206,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String deleteMealMessage(String foodName) {
     return 'Are you sure you want to delete \"$foodName\" from records?';
   }
-
-  @override
-  String get mealDeletedSuccessfully => 'Meal deleted successfully';
-
-  @override
-  String get deleteMealFailed => 'Failed to delete meal';
-
-  @override
-  String get sourceTagBotSuggestion => 'Chatbot suggestion';
-
-  @override
-  String get sourceTagScanned => 'From scan/photo';
-
-  @override
-  String get sourceTagManual => 'Manual input';
-
 
   @override
   String get initializing => 'Initializing...';
@@ -1289,4 +1269,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get foodScannerSaveProductError => 'Error saving product';
+
+  @override
+  String get mealDeletedSuccessfully => 'Meal deleted successfully';
+
+  @override
+  String get deleteMealFailed => 'Failed to delete meal';
+
+  @override
+  String get sourceTagBotSuggestion => 'Chatbot suggestion';
+
+  @override
+  String get sourceTagScanned => 'From scan/photo';
+
+  @override
+  String get sourceTagManual => 'Manual input';
 }
