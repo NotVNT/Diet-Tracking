@@ -66,7 +66,6 @@ class NutritionInfo {
 
   bool get hasAnyCalories => calorieConsumed > 0;
 
-
   double get progress =>
       calorieGoal == 0 ? 0 : (calorieConsumed / calorieGoal).clamp(0, 1);
 }
@@ -114,8 +113,11 @@ class CalorieGoalCard extends StatelessWidget {
                     gradientColors: NutrientColorScheme.getCalorieRingGradient(
                       isDarkMode: isDarkMode,
                     ),
-                    centerNumber: nutritionInfo.calorieConsumed.round().toString(),
-                    centerSubtitle: (l10n?.calorieCardBurnedToday ?? 'Your calories burned today'),
+                    centerNumber:
+                        '${nutritionInfo.calorieConsumed.round()}/${nutritionInfo.calorieGoal.round()} cal',
+                    centerSubtitle:
+                        (l10n?.calorieCardBurnedToday ??
+                        'Your calories burned today'),
                     enableGlowEffect: true,
                     showHeadDot: !nutritionInfo.hasAnyCalories,
                   ),
@@ -133,13 +135,15 @@ class CalorieGoalCard extends StatelessWidget {
                         progress: nutritionInfo.proteinGoal == 0
                             ? 0
                             : (nutritionInfo.proteinConsumed /
-                                    nutritionInfo.proteinGoal)
-                                .clamp(0, 1),
+                                      nutritionInfo.proteinGoal)
+                                  .clamp(0, 1),
                         color: NutrientColorScheme.getColor(
                           NutrientType.protein,
                           isDarkMode: isDarkMode,
                         ),
-                        icon: NutrientColorScheme.getEmoji(NutrientType.protein),
+                        icon: NutrientColorScheme.getEmoji(
+                          NutrientType.protein,
+                        ),
                       ),
                       SizedBox(height: responsive.height(8)),
                       NutrientItem(
@@ -149,8 +153,8 @@ class CalorieGoalCard extends StatelessWidget {
                         progress: nutritionInfo.carbsGoal == 0
                             ? 0
                             : (nutritionInfo.carbsConsumed /
-                                    nutritionInfo.carbsGoal)
-                                .clamp(0, 1),
+                                      nutritionInfo.carbsGoal)
+                                  .clamp(0, 1),
                         color: NutrientColorScheme.getColor(
                           NutrientType.carbs,
                           isDarkMode: isDarkMode,
@@ -165,8 +169,8 @@ class CalorieGoalCard extends StatelessWidget {
                         progress: nutritionInfo.fatGoal == 0
                             ? 0
                             : (nutritionInfo.fatConsumed /
-                                    nutritionInfo.fatGoal)
-                                .clamp(0, 1),
+                                      nutritionInfo.fatGoal)
+                                  .clamp(0, 1),
                         color: NutrientColorScheme.getColor(
                           NutrientType.fat,
                           isDarkMode: isDarkMode,
@@ -183,10 +187,7 @@ class CalorieGoalCard extends StatelessWidget {
             // Bottom row: calories taken + optional report action
             Row(
               children: [
-                Text(
-                  '🔥',
-                  style: TextStyle(fontSize: responsive.fontSize(18)),
-                ),
+                Text('🔥', style: TextStyle(fontSize: responsive.fontSize(18))),
                 SizedBox(width: responsive.width(8)),
                 Expanded(
                   child: Text(
@@ -216,6 +217,3 @@ class CalorieGoalCard extends StatelessWidget {
     );
   }
 }
-
-
-

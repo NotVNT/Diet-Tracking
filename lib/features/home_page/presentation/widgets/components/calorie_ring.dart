@@ -46,7 +46,8 @@ class CalorieRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bgColor = backgroundColor ??
+    final bgColor =
+        backgroundColor ??
         theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
 
     return SizedBox(
@@ -95,12 +96,16 @@ class CalorieRing extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  centerNumber,
-                  style: TextStyle(
-                    fontSize: size * 0.25,
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurface,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    centerNumber,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: size * 0.20, // smaller base to ensure it fits
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
+                    ),
                   ),
                 ),
                 SizedBox(height: size * 0.02),
@@ -110,7 +115,8 @@ class CalorieRing extends StatelessWidget {
                     centerSubtitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: size * 0.09, // Base font size, scales down if needed
+                      fontSize:
+                          size * 0.09, // Base font size, scales down if needed
                       fontWeight: FontWeight.w400,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
@@ -304,14 +310,10 @@ class _RingHeadDot extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.4),
-              blurRadius: 6,
-            )
+            BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 6),
           ],
         ),
       ),
     );
   }
 }
-
