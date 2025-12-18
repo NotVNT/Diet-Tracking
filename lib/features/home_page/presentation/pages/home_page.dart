@@ -18,6 +18,7 @@ import '../../../../services/notification_service.dart';
 import '../../../../services/permission_service.dart';
 import '../widgets/layout/home_content.dart';
 import 'daily_nutrition_detail_page.dart';
+import 'report_page.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -66,10 +67,8 @@ class _HomePageState extends State<HomePage> {
   void _onViewReport(DateTime date, List<FoodRecordEntity> foodRecords) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => DailyNutritionDetailPage(
-          date: date,
-          foodRecords: foodRecords,
-        ),
+        builder: (_) =>
+            DailyNutritionDetailPage(date: date, foodRecords: foodRecords),
       ),
     );
   }
@@ -92,7 +91,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
       builder: (context, homeProvider, child) {
-
         final bool isChatTab =
             homeProvider.currentIndex == HomePageConfig.chatBotIndex;
         final bool isRecordTab =
@@ -208,7 +206,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Handle report action
-  void _onReportTapped() {}
+  void _onReportTapped() {
+    final selectedDate = context.read<HomeProvider>().selectedDate;
+    final state = context.read<RecordCubit>().state;
+    List<FoodRecordEntity> allRecords = [];
+    if (state is RecordListLoaded) {
+      allRecords = state.records;
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            ReportPage(selectedDate: selectedDate, allRecords: allRecords),
+      ),
+    );
+  }
 
   /// Handle bottom navigation tap
   void _onBottomNavTap(HomeProvider provider, int index) {
