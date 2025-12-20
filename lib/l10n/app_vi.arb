@@ -1,6 +1,29 @@
 {
+  "bottomNavAddFood": "Thêm món ăn",
   "@@locale": "vi",
+  "addFoodPageTitle": "Thêm món ăn",
+  "addFoodNameLabel": "Tên món ăn",
+  "addFoodCaloriesLabel": "Calories (kcal)",
+  "addFoodProteinLabel": "Protein (g)",
+  "addFoodCarbsLabel": "Carbs (g)",
+  "addFoodFatLabel": "Fat (g)",
+  "addFoodSaveButton": "Lưu món ăn",
+  "addFoodEmptyValidator": "Vui lòng nhập thông tin",
   "defineYourGoal": "Xác định mục tiêu của bạn",
+  "recordSuccessMessage": "Món ăn đã được ghi nhận thành công!",
+  "addFoodSuccessNotificationTitle": "Thêm món ăn thành công",
+  "addFoodSuccessNotificationBody": "Bạn đã thêm '{foodName}' vào ngày {date}.",
+  "@addFoodSuccessNotificationBody": {
+    "placeholders": {
+      "foodName": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+
   "weWillBuild": "Chúng tôi sẽ xây dựng cho bạn một kế hoạch tùy chỉnh nhằm giúp bạn duy trì động lực và đạt được mục tiêu của mình.",
   "getStartedNow": "Bắt đầu ngay!",
   "appTitle": "Theo dõi chế độ ăn",

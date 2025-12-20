@@ -9,6 +9,9 @@ class SaveFoodRecordUseCase {
   Future<void> call(
     String foodName,
     double calories, {
+    double? protein,
+    double? carbs,
+    double? fat,
     String? reason,
     String? nutritionDetails,
   }) async {
@@ -17,8 +20,12 @@ class SaveFoodRecordUseCase {
       foodName: foodName,
       calories: calories,
       date: DateTime.now(),
+      protein: protein,
+      carbs: carbs,
+      fat: fat,
       reason: reason,
       nutritionDetails: nutritionDetails,
+      recordType: RecordType.food, // Explicitly set type for manually added food
     );
 
     await _repository.saveFoodRecord(foodRecord);
