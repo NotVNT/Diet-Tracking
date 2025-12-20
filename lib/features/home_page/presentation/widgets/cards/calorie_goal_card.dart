@@ -49,7 +49,12 @@ class NutritionInfo {
 
     return NutritionInfo(
       calorieGoal: calorieGoal,
-      consumed: NutritionTotals(calories: cal, protein: pro, carbs: carbs, fat: fat),
+      consumed: NutritionTotals(
+        calories: cal,
+        protein: pro,
+        carbs: carbs,
+        fat: fat,
+      ),
       proteinGoal: proteinGoal,
       carbsGoal: carbsGoal,
       fatGoal: fatGoal,
@@ -122,13 +127,8 @@ class CalorieGoalCard extends StatelessWidget {
                     children: [
                       NutrientItem(
                         title: (l10n?.nutrientProtein ?? 'Protein'),
-                        valueText:
-                            '${nutritionInfo.consumed.protein.round()}/${nutritionInfo.proteinGoal.round()}g',
-                        progress: nutritionInfo.proteinGoal == 0
-                            ? 0
-                            : (nutritionInfo.consumed.protein /
-                                      nutritionInfo.proteinGoal)
-                                  .clamp(0, 1),
+                        valueText: '${nutritionInfo.consumed.protein.round()}g',
+                        progress: 0,
                         color: NutrientColorScheme.getColor(
                           NutrientType.protein,
                           isDarkMode: isDarkMode,
@@ -136,38 +136,46 @@ class CalorieGoalCard extends StatelessWidget {
                         icon: NutrientColorScheme.getEmoji(
                           NutrientType.protein,
                         ),
+                        showProgress: false,
+                        valueStyle: TextStyle(
+                          fontSize: responsive.fontSize(16),
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                       SizedBox(height: responsive.height(8)),
                       NutrientItem(
                         title: (l10n?.nutrientCarbs ?? 'Carbs'),
-                        valueText:
-                            '${nutritionInfo.consumed.carbs.round()}/${nutritionInfo.carbsGoal.round()}g',
-                        progress: nutritionInfo.carbsGoal == 0
-                            ? 0
-                            : (nutritionInfo.consumed.carbs /
-                                      nutritionInfo.carbsGoal)
-                                  .clamp(0, 1),
+                        valueText: '${nutritionInfo.consumed.carbs.round()}g',
+                        progress: 0,
                         color: NutrientColorScheme.getColor(
                           NutrientType.carbs,
                           isDarkMode: isDarkMode,
                         ),
                         icon: NutrientColorScheme.getEmoji(NutrientType.carbs),
+                        showProgress: false,
+                        valueStyle: TextStyle(
+                          fontSize: responsive.fontSize(16),
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                       SizedBox(height: responsive.height(8)),
                       NutrientItem(
                         title: (l10n?.nutrientFat ?? 'Fat'),
-                        valueText:
-                            '${nutritionInfo.consumed.fat.round()}/${nutritionInfo.fatGoal.round()}g',
-                        progress: nutritionInfo.fatGoal == 0
-                            ? 0
-                            : (nutritionInfo.consumed.fat /
-                                      nutritionInfo.fatGoal)
-                                  .clamp(0, 1),
+                        valueText: '${nutritionInfo.consumed.fat.round()}g',
+                        progress: 0,
                         color: NutrientColorScheme.getColor(
                           NutrientType.fat,
                           isDarkMode: isDarkMode,
                         ),
                         icon: NutrientColorScheme.getEmoji(NutrientType.fat),
+                        showProgress: false,
+                        valueStyle: TextStyle(
+                          fontSize: responsive.fontSize(16),
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                     ],
                   ),

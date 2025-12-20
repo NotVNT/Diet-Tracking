@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Nutrient item with icon, title, value and progress bar
+/// Nutrient item with optional progress bar
 /// Optimized for smooth performance with minimal rebuilds
 class NutrientItem extends StatelessWidget {
   const NutrientItem({
@@ -10,13 +10,17 @@ class NutrientItem extends StatelessWidget {
     required this.progress,
     required this.color,
     this.icon,
+    this.showProgress = true,
+    this.valueStyle,
   });
 
   final String title;
   final String valueText;
   final double progress;
   final Color color;
-  final String? icon; // Emoji icon like[object Object] 🥬, 🍊
+  final String? icon; // Emoji icon like 🥩, 🍚
+  final bool showProgress;
+  final TextStyle? valueStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +44,7 @@ class NutrientItem extends StatelessWidget {
                   if (icon != null)
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: Text(
-                        icon!,
-                        style: const TextStyle(fontSize: 18),
-                      ),
+                      child: Text(icon!, style: const TextStyle(fontSize: 18)),
                     ),
                   Expanded(
                     child: Text(
@@ -65,30 +66,38 @@ class NutrientItem extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
                 valueText,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
+                style:
+                    valueStyle ??
+                    TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 6),
-        // Progress bar with smooth animation - adaptive colors for dark/light mode
-        ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: LinearProgressIndicator(
-            value: displayProgress, // Use displayProgress instead of raw progress
-            minHeight: 8,
-            backgroundColor: isDarkMode
-                ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
-                : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-            valueColor: AlwaysStoppedAnimation<Color>(color),
+        if (showProgress) ...[
+          const SizedBox(height: 6),
+          // Progress bar with smooth animation - adaptive colors for dark/light mode
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: LinearProgressIndicator(
+              value:
+                  displayProgress, // Use displayProgress instead of raw progress
+              minHeight: 8,
+              backgroundColor: isDarkMode
+                  ? theme.colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    )
+                  : theme.colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.35,
+                    ),
+              valueColor: AlwaysStoppedAnimation<Color>(color),
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
 }
-

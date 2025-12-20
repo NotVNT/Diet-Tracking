@@ -23,30 +23,51 @@ class ReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(header, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              header,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             SummaryCards(totals: total),
             const SizedBox(height: 24),
-            Text("Biểu đồ Calo", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              "Biểu đồ Calo",
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             Container(
               height: 250,
               padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 10, offset: const Offset(0, 4))],
+                border: Border.all(color: theme.colorScheme.outlineVariant),
               ),
-              child: CaloriesBarChart(days: days, byDay: byDay, isMonthly: isMonthly),
+              child: CaloriesBarChart(
+                days: days,
+                byDay: byDay,
+                isMonthly: isMonthly,
+              ),
             ),
             const SizedBox(height: 24),
-            Text("Chi tiết theo ngày", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              "Chi tiết theo ngày",
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
@@ -55,7 +76,9 @@ class ReportView extends StatelessWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final d = days[days.length - 1 - index];
-                final t = byDay[DateTime(d.year, d.month, d.day)] ?? NutritionTotals();
+                final t =
+                    byDay[DateTime(d.year, d.month, d.day)] ??
+                    NutritionTotals();
                 return DailyItem(date: d, totals: t);
               },
             ),
@@ -64,9 +87,4 @@ class ReportView extends StatelessWidget {
       ),
     );
   }
-
-
-
-
 }
-

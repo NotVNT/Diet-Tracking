@@ -28,7 +28,10 @@ class HomePageConfig {
         create: (_) => RecordDI.getRecordCubit(),
         child: const ChatBotPage(),
       ),
-      ProfilePage(profileProvider: ProfileDI.getProfileProvider()),
+      BlocProvider(
+        create: (_) => RecordDI.getRecordCubit()..loadFoodRecords(),
+        child: ProfilePage(profileProvider: ProfileDI.getProfileProvider()),
+      ),
     ];
   }
 

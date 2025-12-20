@@ -18,6 +18,10 @@ class CaloriesBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final onSurface = theme.colorScheme.onSurface;
+
     double maxY = 0;
     for (var t in byDay.values) {
       if (t.calories > maxY) maxY = t.calories;
@@ -30,19 +34,26 @@ class CaloriesBarChart extends StatelessWidget {
         maxY: maxY * 1.2, // Add some padding to the top
         barTouchData: BarTouchData(
           touchTooltipData: BarTouchTooltipData(
-            getTooltipColor: (_) => Colors.blueAccent,
+            getTooltipColor: (_) => primary,
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                 '${rod.toY.round()}\nkcal',
-                const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               );
             },
           ),
         ),
         titlesData: FlTitlesData(
           show: true,
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
@@ -58,7 +69,10 @@ class CaloriesBarChart extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       DateFormat('dd').format(d),
-                      style: const TextStyle(color: Colors.grey, fontSize: 10),
+                      style: TextStyle(
+                        color: onSurface.withValues(alpha: 0.6),
+                        fontSize: 10,
+                      ),
                     ),
                   );
                 }
@@ -66,27 +80,32 @@ class CaloriesBarChart extends StatelessWidget {
               },
             ),
           ),
-          leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          leftTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
         ),
         borderData: FlBorderData(show: false),
         gridData: const FlGridData(show: false),
         barGroups: days.asMap().entries.map((entry) {
           final index = entry.key;
           final d = entry.value;
-          final t = byDay[DateTime(d.year, d.month, d.day)] ?? NutritionTotals();
+          final t =
+              byDay[DateTime(d.year, d.month, d.day)] ?? NutritionTotals();
 
           return BarChartGroupData(
             x: index,
             barRods: [
               BarChartRodData(
                 toY: t.calories,
-                color: t.calories == 0 ? Colors.grey.withAlpha(51) : Colors.blue,
+                color: t.calories == 0
+                    ? onSurface.withValues(alpha: 0.2)
+                    : primary,
                 width: isMonthly ? 6 : 12,
                 borderRadius: BorderRadius.circular(4),
                 backDrawRodData: BackgroundBarChartRodData(
                   show: true,
                   toY: maxY * 1.2,
-                  color: Colors.grey.withAlpha(13),
+                  color: theme.colorScheme.outlineVariant,
                 ),
               ),
             ],
@@ -96,4 +115,3 @@ class CaloriesBarChart extends StatelessWidget {
     );
   }
 }
-

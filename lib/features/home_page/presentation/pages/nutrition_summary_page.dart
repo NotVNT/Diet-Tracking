@@ -7,24 +7,33 @@ class NutritionSummaryPage extends StatelessWidget {
   final DateTime selectedDate;
   final List<FoodRecordEntity> allRecords;
 
-  const NutritionSummaryPage({super.key, required this.selectedDate, required this.allRecords});
+  const NutritionSummaryPage({
+    super.key,
+    required this.selectedDate,
+    required this.allRecords,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.grey[50], // Màu nền sáng nhẹ
         appBar: AppBar(
-          title: const Text('Thống kê dinh dưỡng', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text(
+            'Thống kê dinh dưỡng',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           centerTitle: true,
           elevation: 0,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
           bottom: TabBar(
-            labelColor: Colors.blue[700],
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: Colors.blue[700],
+            labelColor: primary,
+            unselectedLabelColor: theme.colorScheme.onSurface.withValues(
+              alpha: 0.6,
+            ),
+            indicatorColor: primary,
             indicatorWeight: 3,
             labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             tabs: const [

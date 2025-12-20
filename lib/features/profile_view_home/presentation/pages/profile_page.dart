@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../record_view_home/presentation/cubit/record_cubit.dart';
+import '../../../record_view_home/presentation/cubit/record_state.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../../../home_page/presentation/pages/nutrition_summary_page.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../../../l10n/app_localizations.dart';
@@ -18,10 +24,7 @@ import '../../../../common/snackbar_helper.dart';
 class ProfilePage extends StatefulWidget {
   final ProfileProvider profileProvider;
 
-  const ProfilePage({
-    super.key,
-    required this.profileProvider,
-  });
+  const ProfilePage({super.key, required this.profileProvider});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -49,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-    Future<void> _pickAndUploadImage() async {
+  Future<void> _pickAndUploadImage() async {
     try {
       final XFile? picked = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -60,13 +63,13 @@ class _ProfilePageState extends State<ProfilePage> {
       await widget.profileProvider.uploadAvatar(File(picked.path));
 
       if (!mounted) return;
-            SnackBarHelper.showSuccess(
+      SnackBarHelper.showSuccess(
         context,
         AppLocalizations.of(context)!.profileAvatarUpdated,
       );
     } catch (e) {
       if (!mounted) return;
-            SnackBarHelper.showError(
+      SnackBarHelper.showError(
         context,
         AppLocalizations.of(context)!.profileCannotUpdateAvatar,
       );
@@ -85,9 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
       // Navigate to Welcome Screen
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (context) => const WelcomeScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
         (route) => false,
       );
 
@@ -103,21 +104,18 @@ class _ProfilePageState extends State<ProfilePage> {
     final colorScheme = Theme.of(context).colorScheme;
 
     if (widget.profileProvider.isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final profile = widget.profileProvider.profile;
-    final String displayName = profile?.displayName ?? AppLocalizations.of(context)!.profileUser;
+    final String displayName =
+        profile?.displayName ?? AppLocalizations.of(context)!.profileUser;
     final String email = profile?.email ?? '';
     final bool isLoggedIn = widget.profileProvider.isLoggedIn;
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerHighest,
-      appBar: CustomAppBar(
-        title: AppLocalizations.of(context)!.profileTitle,
-      ),
+      appBar: CustomAppBar(title: AppLocalizations.of(context)!.profileTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -197,7 +195,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icons.bar_chart_rounded,
                   label: AppLocalizations.of(context)!.profileViewStatistics,
                   onTap: () {
-                    debugPrint('Feature in development');
+                    final selectedDate = DateTime.now();
+                    List<FoodRecordEntity> allRecords = [];
+                    final state = context.read<RecordCubit>().state;
+                    if (state is RecordListLoaded) {
+                      allRecords = state.records;
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => NutritionSummaryPage(
+                          selectedDate: selectedDate,
+                          allRecords: allRecords,
+                        ),
+                      ),
+                    );
                   },
                 ),
                 const Divider(height: 1, thickness: 3),
@@ -241,7 +253,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
-            const SizedBox(height: 16), 
+            const SizedBox(height: 16),
             _MenuCard(
               children: [
                 if (isLoggedIn)
@@ -266,14 +278,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
               ],
             ),
-            const SizedBox(height: 24), 
+            const SizedBox(height: 24),
             AppInfoSection(
               appName: AppLocalizations.of(context)!.profileAppName,
               version: '1.0.0',
               description: AppLocalizations.of(context)!.profileAppDescription,
               // logoAsset: 'assets/logo/app_logo.png', // Uncomment nếu có logo
             ),
-            
+
             const SizedBox(height: 8),
           ],
         ),
@@ -294,7 +306,9 @@ class _MenuCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withAlpha((255 * 0.04).toInt()),
+            color: Theme.of(
+              context,
+            ).shadowColor.withAlpha((255 * 0.04).toInt()),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
