@@ -1,6 +1,29 @@
 {
+  "bottomNavAddFood": "Add Food",
   "@@locale": "en",
+  "addFoodPageTitle": "Add Food",
+  "addFoodNameLabel": "Food name",
+  "addFoodCaloriesLabel": "Calories (kcal)",
+  "addFoodProteinLabel": "Protein (g)",
+  "addFoodCarbsLabel": "Carbs (g)",
+  "addFoodFatLabel": "Fat (g)",
+  "addFoodSaveButton": "Save Food",
+  "addFoodEmptyValidator": "Please enter this information",
   "defineYourGoal": "Define your goal",
+  "recordSuccessMessage": "Food record saved successfully!",
+  "addFoodSuccessNotificationTitle": "Food Added Successfully",
+  "addFoodSuccessNotificationBody": "You have added '{foodName}' on {date}.",
+  "@addFoodSuccessNotificationBody": {
+    "placeholders": {
+      "foodName": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+
   "weWillBuild": "We'll build a tailored plan to keep you motivated and help you reach your goals.",
   "getStartedNow": "Get started!",
   "appTitle": "Diet Tracking",

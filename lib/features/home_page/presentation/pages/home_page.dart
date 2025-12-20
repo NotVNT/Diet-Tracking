@@ -18,6 +18,7 @@ import '../../../../services/notification_service.dart';
 import '../../../../services/permission_service.dart';
 import '../widgets/layout/home_content.dart';
 import 'daily_nutrition_detail_page.dart';
+import 'add_food_page.dart';
 import 'nutrition_summary_page.dart';
 
 /// Main home page with bottom navigation
@@ -139,6 +140,7 @@ class _HomePageState extends State<HomePage> {
                         onScanFoodSelected: () =>
                             _onScanFoodTapped(homeProvider),
                         onReportSelected: () => _onReportTapped(),
+                        onAddFoodSelected: () => _navigateToAddFood(),
                       ),
                     );
                   },
@@ -203,6 +205,13 @@ class _HomePageState extends State<HomePage> {
         context.read<RecordCubit>().loadFoodRecords();
       }
     }
+  }
+
+  /// Handle report action
+  void _navigateToAddFood() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const AddFoodPage()),
+    );
   }
 
   /// Handle report action

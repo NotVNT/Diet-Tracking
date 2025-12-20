@@ -27,6 +27,9 @@ class RecordCubit extends Cubit<RecordState> {
   Future<void> saveFoodRecord(
     String foodName,
     double calories, {
+    double? protein,
+    double? carbs,
+    double? fat,
     String? reason,
     String? nutritionDetails,
   }) async {
@@ -37,6 +40,9 @@ class RecordCubit extends Cubit<RecordState> {
       await _saveFoodRecordUseCase.call(
         foodName,
         calories,
+        protein: protein,
+        carbs: carbs,
+        fat: fat,
         reason: reason,
         nutritionDetails: nutritionDetails,
       );

@@ -9,7 +9,48 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get bottomNavAddFood => 'Add Food';
+
+  @override
+  String get addFoodPageTitle => 'Add Food';
+
+  @override
+  String get addFoodNameLabel => 'Food name';
+
+  @override
+  String get addFoodCaloriesLabel => 'Calories (kcal)';
+
+  @override
+  String get addFoodProteinLabel => 'Protein (g)';
+
+  @override
+  String get addFoodCarbsLabel => 'Carbs (g)';
+
+  @override
+  String get addFoodFatLabel => 'Fat (g)';
+
+  @override
+  String get addFoodSaveButton => 'Save Food';
+
+  @override
+  String get addFoodEmptyValidator => 'Please enter this information';
+
+  @override
   String get defineYourGoal => 'Define your goal';
+
+  @override
+  String get recordSuccessMessage => 'Food record saved successfully!';
+
+  @override
+  String get addFoodSuccessNotificationTitle => 'Food Added Successfully';
+
+  @override
+  String addFoodSuccessNotificationBody(String foodName, String date) {
+    return 'You have added \'$foodName\' on $date.';
+  }
+
+  @override
+  String get caloriesToday => 'Calories Today';
 
   @override
   String get weWillBuild => 'We\'ll build a tailored plan to keep you motivated and help you reach your goals.';

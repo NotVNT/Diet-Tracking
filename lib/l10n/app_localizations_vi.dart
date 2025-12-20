@@ -9,7 +9,48 @@ class AppLocalizationsVi extends AppLocalizations {
   AppLocalizationsVi([String locale = 'vi']) : super(locale);
 
   @override
+  String get bottomNavAddFood => 'Thêm món ăn';
+
+  @override
+  String get addFoodPageTitle => 'Thêm món ăn';
+
+  @override
+  String get addFoodNameLabel => 'Tên món ăn';
+
+  @override
+  String get addFoodCaloriesLabel => 'Calories (kcal)';
+
+  @override
+  String get addFoodProteinLabel => 'Protein (g)';
+
+  @override
+  String get addFoodCarbsLabel => 'Carbs (g)';
+
+  @override
+  String get addFoodFatLabel => 'Fat (g)';
+
+  @override
+  String get addFoodSaveButton => 'Lưu món ăn';
+
+  @override
+  String get addFoodEmptyValidator => 'Vui lòng nhập thông tin';
+
+  @override
   String get defineYourGoal => 'Xác định mục tiêu của bạn';
+
+  @override
+  String get recordSuccessMessage => 'Món ăn đã được ghi nhận thành công!';
+
+  @override
+  String get addFoodSuccessNotificationTitle => 'Thêm món ăn thành công';
+
+  @override
+  String addFoodSuccessNotificationBody(String foodName, String date) {
+    return 'Bạn đã thêm \'$foodName\' vào ngày $date.';
+  }
+
+  @override
+  String get caloriesToday => 'Calories hôm nay';
 
   @override
   String get weWillBuild => 'Chúng tôi sẽ xây dựng cho bạn một kế hoạch tùy chỉnh nhằm giúp bạn duy trì động lực và đạt được mục tiêu của mình.';
