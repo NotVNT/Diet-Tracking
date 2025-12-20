@@ -18,7 +18,7 @@ import '../../../../services/notification_service.dart';
 import '../../../../services/permission_service.dart';
 import '../widgets/layout/home_content.dart';
 import 'daily_nutrition_detail_page.dart';
-import 'report_page.dart';
+import 'nutrition_summary_page.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) =>
-            ReportPage(selectedDate: selectedDate, allRecords: allRecords),
+            NutritionSummaryPage(selectedDate: selectedDate, allRecords: allRecords),
       ),
     );
   }
