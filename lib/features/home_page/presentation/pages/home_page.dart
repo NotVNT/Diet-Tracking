@@ -209,9 +209,9 @@ class _HomePageState extends State<HomePage> {
 
   /// Handle report action
   void _navigateToAddFood() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const AddFoodPage()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const AddFoodPage()));
   }
 
   /// Handle report action
@@ -224,16 +224,23 @@ class _HomePageState extends State<HomePage> {
     }
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) =>
-            NutritionSummaryPage(selectedDate: selectedDate, allRecords: allRecords),
+        builder: (_) => NutritionSummaryPage(
+          selectedDate: selectedDate,
+          allRecords: allRecords,
+        ),
       ),
     );
   }
 
   /// Handle bottom navigation tap
   void _onBottomNavTap(HomeProvider provider, int index) {
-    if (HomePageConfig.isValidIndex(index)) {
-      provider.setCurrentIndex(index);
+    if (!HomePageConfig.isValidIndex(index)) return;
+
+    // Bảo đảm tab Ghi nhận luôn hiển thị dữ liệu mới nhất
+    if (index == HomePageConfig.recordIndex) {
+      context.read<RecordCubit>().loadFoodRecords();
     }
+
+    provider.setCurrentIndex(index);
   }
 }
