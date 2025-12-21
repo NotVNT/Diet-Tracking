@@ -45,7 +45,7 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
         child: Column(
           children: [
             StartedProgressBar(
-              currentStep: 4,
+              currentStep: 3,
               totalSteps: 4,
               activeColor: _primary,
             ),

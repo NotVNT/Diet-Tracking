@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'keto_and_lowCarbs_screen.dart';
 import 'diet_reason_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
@@ -56,13 +55,13 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         AppLocalizations.of(context)?.maintainWeight ?? 'Duy trì cân nặng';
     final buildMuscle = AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
 
-    if (goal == loseWeight) {
+    if (goal.startsWith(loseWeight)) {
       return _loseWeightReasons;
-    } else if (goal == gainWeight) {
+    } else if (goal.startsWith(gainWeight)) {
       return _gainWeightReasons;
-    } else if (goal == maintainWeight) {
+    } else if (goal.startsWith(maintainWeight)) {
       return _maintainWeightReasons;
-    } else if (goal == buildMuscle) {
+    } else if (goal.startsWith(buildMuscle)) {
       return _buildMuscleReasons;
     }
 
@@ -82,16 +81,16 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         AppLocalizations.of(context)?.maintainWeight ?? 'Duy trì cân nặng';
     final buildMuscle = AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
 
-    if (goal == loseWeight) {
+    if (goal.startsWith(loseWeight)) {
       return AppLocalizations.of(context)?.whyDoYouWantToLoseWeight ??
           'Tại sao bạn muốn giảm cân?';
-    } else if (goal == gainWeight) {
+    } else if (goal.startsWith(gainWeight)) {
       return AppLocalizations.of(context)?.whyDoYouWantToGainWeight ??
           'Tại sao bạn muốn tăng cân?';
-    } else if (goal == maintainWeight) {
+    } else if (goal.startsWith(maintainWeight)) {
       return AppLocalizations.of(context)?.whyDoYouWantToMaintainWeight ??
           'Tại sao bạn muốn duy trì cân nặng?';
-    } else if (goal == buildMuscle) {
+    } else if (goal.startsWith(buildMuscle)) {
       return AppLocalizations.of(context)?.whyDoYouWantToBuildMuscle ??
           'Tại sao bạn muốn tăng cơ?';
     }
@@ -250,12 +249,6 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         .map((i) => _getLocalizedReasonTitle(context, reasons[i].titleKey))
         .toList(growable: false);
 
-    final goal = widget.selectedMainGoals.isNotEmpty
-        ? widget.selectedMainGoals.first
-        : '';
-    final loseWeight = AppLocalizations.of(context)?.loseWeight ?? 'Giảm cân';
-    final shouldShowDietStyle = goal == loseWeight;
-
     // Lưu reasons vào localStorage
     await _local.saveGuestData(weightReasons: selectedReasons);
 
@@ -272,17 +265,11 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
     // Chuyển sang màn hình tiếp theo
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => shouldShowDietStyle
-            ? KetoAndLowCarbsScreen(
-                selectedMainGoals: widget.selectedMainGoals,
-                selectedWeightReasons: selectedReasons,
-                localStorageService: _local,
-                authService: _auth,
-              )
-            : DietReasonScreen(
-                selectedMainGoals: widget.selectedMainGoals,
-                selectedWeightReasons: selectedReasons,
-              ),
+        builder:
+            (_) => DietReasonScreen(
+              selectedMainGoals: widget.selectedMainGoals,
+              selectedWeightReasons: selectedReasons,
+            ),
       ),
     );
   }

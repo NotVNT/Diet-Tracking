@@ -22,11 +22,19 @@ class _GoalSelectionState extends State<GoalSelection> {
   Color get _primary => const Color(0xFFFF7A00);
 
   int? _selectedIndex;
+  int? _selectedSubIndex;
   late LocalStorageService _local;
   late AuthService _auth;
 
   final List<_GoalItem> _goals = const [
-    _GoalItem(icon: '📉', title: 'loseWeight'),
+    _GoalItem(
+      icon: '📉',
+      title: 'loseWeight',
+      subOptions: [
+        _GoalItem(icon: '🥑', title: 'keto'),
+        _GoalItem(icon: '🥦', title: 'lowCarb'),
+      ],
+    ),
     _GoalItem(icon: '📈', title: 'gainWeight'),
     _GoalItem(icon: '⚖️', title: 'maintainWeight'),
     _GoalItem(icon: '🏋️', title: 'buildMuscle'),
@@ -79,15 +87,27 @@ class _GoalSelectionState extends State<GoalSelection> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _selectedIndex == null
-                      ? null
-                      : () async {
-                          final selectedTitle = _getLocalizedTitle(
-                            context,
-                            _goals[_selectedIndex!].title,
-                          );
+                  onPressed:
+                      _selectedIndex == null
+                          ? null
+                          : () async {
+                            var selectedTitle = _getLocalizedTitle(
+                              context,
+                              _goals[_selectedIndex!].title,
+                            );
 
-                          // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
+                            if (_selectedSubIndex != null &&
+                                _goals[_selectedIndex!].subOptions != null) {
+                              final subOptionTitle = _getLocalizedTitle(
+                                context,
+                                _goals[_selectedIndex!]
+                                    .subOptions![_selectedSubIndex!].title,
+                              );
+                              selectedTitle =
+                                  '$selectedTitle ($subOptionTitle)';
+                            }
+
+                            // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
                           debugPrint(
                             'Saving goal to localStorage: $selectedTitle',
                           );
@@ -143,57 +163,148 @@ class _GoalSelectionState extends State<GoalSelection> {
   Widget _buildGoalTile(int index) {
     final item = _goals[index];
     final bool selected = _selectedIndex == index;
-    return InkWell(
-      borderRadius: BorderRadius.circular(18),
-      onTap: () => setState(() {
-        _selectedIndex = selected ? null : index;
-      }),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
-            ),
-          ],
-          border: Border.all(
-            color: selected ? _primary : Colors.transparent,
-            width: 2,
+    final bool hasSubOptions =
+        item.subOptions != null && item.subOptions!.isNotEmpty;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: selected ? _primary.withValues(alpha: 0.05) : Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           ),
+        ],
+        border: Border.all(
+          color: selected ? _primary : Colors.transparent,
+          width: 2,
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.04),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.center,
-              child: Text(item.icon, style: const TextStyle(fontSize: 22)),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.vertical(
+              top: const Radius.circular(18),
+              bottom:
+                  (selected && hasSubOptions)
+                      ? Radius.zero
+                      : const Radius.circular(18),
             ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                _getLocalizedTitle(context, item.title),
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: _accent,
+            onTap:
+                () => setState(() {
+                  if (_selectedIndex != index) {
+                    _selectedIndex = index;
+                    _selectedSubIndex = null;
+                  } else {
+                    _selectedIndex = null;
+                    _selectedSubIndex = null;
+                  }
+                }),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      item.icon,
+                      style: const TextStyle(fontSize: 22),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      _getLocalizedTitle(context, item.title),
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: _accent,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    selected ? Icons.check_circle : Icons.circle_outlined,
+                    color: selected ? _primary : _muted,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (selected && hasSubOptions)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: _bg,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: List.generate(item.subOptions!.length, (subIndex) {
+                    final subOption = item.subOptions![subIndex];
+                    final isSubSelected = _selectedSubIndex == subIndex;
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      decoration: BoxDecoration(
+                        color:
+                            isSubSelected ? Colors.white : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                        border:
+                            isSubSelected
+                                ? Border.all(
+                                  color: _primary.withValues(alpha: 0.2),
+                                )
+                                : null,
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _selectedSubIndex = subIndex;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                subOption.icon,
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  _getLocalizedTitle(context, subOption.title),
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: isSubSelected ? _primary : _muted,
+                                  ),
+                                ),
+                              ),
+                              if (isSubSelected)
+                                Icon(Icons.check, color: _primary, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ),
             ),
-            Icon(
-              selected ? Icons.check_circle : Icons.circle_outlined,
-              color: selected ? _primary : _muted,
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -209,6 +320,10 @@ class _GoalSelectionState extends State<GoalSelection> {
         return AppLocalizations.of(context)?.gainWeight ?? 'Tăng cân';
       case 'buildMuscle':
         return AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
+      case 'keto':
+        return 'Keto'; // Add localization key if available
+      case 'lowCarb':
+        return 'Low Carbs'; // Add localization key if available
       default:
         return key;
     }
@@ -218,5 +333,6 @@ class _GoalSelectionState extends State<GoalSelection> {
 class _GoalItem {
   final String icon;
   final String title;
-  const _GoalItem({required this.icon, required this.title});
+  final List<_GoalItem>? subOptions;
+  const _GoalItem({required this.icon, required this.title, this.subOptions});
 }

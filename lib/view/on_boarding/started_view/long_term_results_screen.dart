@@ -37,10 +37,11 @@ class LongTermResultsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                const StartedProgressBar(
-                  currentStep: 1,
-                  totalSteps: 1,
+                StartedProgressBar(
+                  currentStep: 4,
+                  totalSteps: 4,
                   activeColor: Colors.white,
+                  inactiveColor: Colors.white.withValues(alpha: 0.2),
                   padding: EdgeInsets.zero,
                 ),
                 const SizedBox(height: 28),
