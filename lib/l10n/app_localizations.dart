@@ -132,6 +132,10 @@ abstract class AppLocalizations {
 
   String get ketoDescription;
 
+  String get normalWeightLoss;
+
+  String get normalWeightLossDescription;
+
   String get lowCarbs;
 
   String get lowCarbsDescription;

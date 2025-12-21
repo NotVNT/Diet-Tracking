@@ -23,10 +23,10 @@ class RegisterErrorCode {
 /// Controller quản lý business logic cho màn hình đăng ký
 class RegisterController {
   final AuthService? authService;
-  final GuestSyncService? guestSyncService;
+  final DataMigrationService? dataMigrationService;
 
   AuthService? _authService;
-  GuestSyncService? _guestSync;
+  DataMigrationService? _dataMigration;
 
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -40,7 +40,7 @@ class RegisterController {
 
   RegisterController({
     this.authService,
-    this.guestSyncService,
+    this.dataMigrationService,
     Map<String, dynamic>? preSelectedData,
   }) {
     onboardingData = preSelectedData ?? {};
@@ -50,7 +50,7 @@ class RegisterController {
   /// Khởi tạo lazy services khi cần thiết
   void _ensureServicesInitialized() {
     _authService ??= authService ?? AuthService();
-    _guestSync ??= guestSyncService ?? GuestSyncService();
+    _dataMigration ??= dataMigrationService ?? DataMigrationService();
   }
 
   /// Validate họ và tên
@@ -210,7 +210,7 @@ class RegisterController {
   /// Đồng bộ dữ liệu guest sang user account
   Future<void> _syncGuestData(String userId) async {
     try {
-      await _guestSync?.syncGuestToUser(userId);
+      await _dataMigration?.syncGuestToUser(userId);
     } catch (e) {
       debugPrint('⚠️ Guest sync failed: $e');
     }

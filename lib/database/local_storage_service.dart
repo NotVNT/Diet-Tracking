@@ -25,9 +25,6 @@ class LocalStorageService {
   Future<SharedPreferences> get _prefs async =>
       await SharedPreferences.getInstance();
 
-  /// Lưu dữ liệu guest vào local storage
-  /// Chỉ lưu các trường được cung cấp (không null)
-  /// Optimized: Batches all operations for better performance
   Future<void> saveGuestData({
     String? goal,
     double? heightCm,
@@ -49,7 +46,7 @@ class LocalStorageService {
     final futures = <Future<bool>>[];
 
     if (goal != null) {
-      debugPrint('🔍 LocalStorageService: Saving goal = $goal');
+      debugPrint('LocalStorageService: Saving goal = $goal');
       futures.add(prefs.setString(_keyGoal, goal));
     }
     if (heightCm != null) futures.add(prefs.setDouble(_keyHeight, heightCm));

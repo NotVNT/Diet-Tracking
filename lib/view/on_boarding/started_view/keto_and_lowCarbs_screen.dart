@@ -88,6 +88,7 @@ class _KetoAndLowCarbsScreenState extends State<KetoAndLowCarbsScreen> {
                   vertical: 8,
                 ),
                 children: [
+          
                   _buildOptionCard(
                     value: 'keto',
                     icon: '🥑',
@@ -106,6 +107,20 @@ class _KetoAndLowCarbsScreenState extends State<KetoAndLowCarbsScreen> {
                         AppLocalizations.of(context)?.lowCarbsDescription ??
                         'Giảm carb vừa phải, dễ duy trì.',
                   ),
+                  const SizedBox(height: 12),
+                          _buildOptionCard(
+                    value: 'normal',
+                    icon: '🥗',
+                    title:
+                        AppLocalizations.of(context)?.normalWeightLoss ??
+                        'Giảm cân bình thường',
+                    subtitle:
+                        AppLocalizations.of(
+                          context,
+                        )?.normalWeightLossDescription ??
+                        'Cân bằng carb, đạm, béo. Dễ duy trì lâu dài.',
+                  ),
+                  
                 ],
               ),
             ),

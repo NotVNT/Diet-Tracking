@@ -19,11 +19,11 @@ class LoginErrorCode {
 /// Controller quản lý business logic cho màn hình đăng nhập
 class LoginController {
   final AuthService? authService;
-  final GuestSyncService? guestSyncService;
+  final DataMigrationService? dataMigrationService;
   final GoogleAuthService? googleAuthService;
 
   AuthService? _authService;
-  GuestSyncService? _guestSync;
+  DataMigrationService? _dataMigration;
   GoogleAuthService? _googleAuthService;
   LocalStorageService? _localStorage;
 
@@ -32,14 +32,14 @@ class LoginController {
 
   LoginController({
     this.authService,
-    this.guestSyncService,
+    this.dataMigrationService,
     this.googleAuthService,
   });
 
   /// Khởi tạo lazy services khi cần thiết
   void _ensureServicesInitialized() {
     _authService ??= authService ?? AuthService();
-    _guestSync ??= guestSyncService ?? GuestSyncService();
+    _dataMigration ??= dataMigrationService ?? DataMigrationService();
   }
 
   /// Khởi tạo Google Auth Service khi cần
@@ -161,7 +161,7 @@ class LoginController {
   /// Đồng bộ dữ liệu guest sang user account
   Future<void> _syncGuestData(String userId) async {
     try {
-      await _guestSync?.syncGuestToUser(userId);
+      await _dataMigration?.syncGuestToUser(userId);
     } catch (e) {
       AppLogger.warning('Guest sync failed: $e', tag: 'LoginController');
     }

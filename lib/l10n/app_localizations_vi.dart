@@ -163,6 +163,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get ketoDescription => 'Giảm carb mạnh, tăng chất béo.';
 
   @override
+  String get normalWeightLoss => 'Giảm cân bình thường';
+
+  @override
+  String get normalWeightLossDescription =>
+      'Cân bằng carb, đạm, béo. Dễ duy trì lâu dài.';
+
+  @override
   String get lowCarbs => 'Low Carbs';
 
   @override

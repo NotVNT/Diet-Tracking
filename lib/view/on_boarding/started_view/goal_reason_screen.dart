@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'keto_and_lowCarbs_screen.dart';
+import 'diet_reason_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
 import '../../../l10n/app_localizations.dart';
@@ -249,6 +250,12 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         .map((i) => _getLocalizedReasonTitle(context, reasons[i].titleKey))
         .toList(growable: false);
 
+    final goal = widget.selectedMainGoals.isNotEmpty
+        ? widget.selectedMainGoals.first
+        : '';
+    final loseWeight = AppLocalizations.of(context)?.loseWeight ?? 'Giảm cân';
+    final shouldShowDietStyle = goal == loseWeight;
+
     // Lưu reasons vào localStorage
     await _local.saveGuestData(weightReasons: selectedReasons);
 
@@ -265,12 +272,17 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
     // Chuyển sang màn hình tiếp theo
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => KetoAndLowCarbsScreen(
-          selectedMainGoals: widget.selectedMainGoals,
-          selectedWeightReasons: selectedReasons,
-          localStorageService: _local,
-          authService: _auth,
-        ),
+        builder: (_) => shouldShowDietStyle
+            ? KetoAndLowCarbsScreen(
+                selectedMainGoals: widget.selectedMainGoals,
+                selectedWeightReasons: selectedReasons,
+                localStorageService: _local,
+                authService: _auth,
+              )
+            : DietReasonScreen(
+                selectedMainGoals: widget.selectedMainGoals,
+                selectedWeightReasons: selectedReasons,
+              ),
       ),
     );
   }

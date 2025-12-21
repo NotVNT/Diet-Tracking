@@ -162,6 +162,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ketoDescription => 'Very low carb, higher fat.';
 
   @override
+  String get normalWeightLoss => 'Normal weight loss';
+
+  @override
+  String get normalWeightLossDescription =>
+      'Balanced carbs, protein, and fat. Easy to maintain.';
+
+  @override
   String get lowCarbs => 'Low Carbs';
 
   @override

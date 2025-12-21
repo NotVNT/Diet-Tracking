@@ -19,13 +19,13 @@ import 'login_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   final AuthService? authService;
-  final GuestSyncService? guestSyncService;
+  final DataMigrationService? dataMigrationService;
   final GoogleAuthService? googleAuthService;
   
   const LoginScreen({
     super.key,
     this.authService,
-    this.guestSyncService,
+    this.dataMigrationService,
     this.googleAuthService,
   });
 
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen>
     // Khởi tạo login controller
     _loginController = LoginController(
       authService: widget.authService,
-      guestSyncService: widget.guestSyncService,
+      dataMigrationService: widget.dataMigrationService,
       googleAuthService: widget.googleAuthService,
     );
     

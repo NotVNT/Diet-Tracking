@@ -2,7 +2,7 @@ import 'local_storage_service.dart';
 import 'auth_service.dart';
 import '../model/body_info_model.dart';
 
-class GuestSyncService {
+class DataMigrationService {
   final LocalStorageService _local = LocalStorageService();
   final AuthService _auth = AuthService();
 
