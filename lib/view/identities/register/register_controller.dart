@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/exceptions.dart';
-import '../../../database/guest_sync_service.dart';
+import '../../../database/data_migration_service.dart';
 import '../../../utils/logger.dart';
 
 /// Error codes cho đăng ký

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'long_term_results_screen.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../widget/progress_bar/started_progress_bar.dart';
 
 class DietReasonScreen extends StatefulWidget {
   final List<String> selectedMainGoals;
@@ -43,60 +44,10 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  _buildBack(context),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: _primary,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Container(
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: _primary,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Container(
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: _primary,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Container(
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                ],
-              ),
+            StartedProgressBar(
+              currentStep: 4,
+              totalSteps: 4,
+              activeColor: _primary,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -121,7 +72,7 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
                   vertical: 8,
                 ),
                 itemCount: _reasons.length,
-                separatorBuilder: (_,_) => const SizedBox(height: 12),
+                separatorBuilder: (_, _) => const SizedBox(height: 12),
                 itemBuilder: (context, index) => _buildReasonTile(index),
               ),
             ),
@@ -155,7 +106,9 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primary,
-                    disabledBackgroundColor: Colors.black.withValues(alpha: 0.1),
+                    disabledBackgroundColor: Colors.black.withValues(
+                      alpha: 0.1,
+                    ),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
@@ -235,25 +188,6 @@ class _DietReasonScreenState extends State<DietReasonScreen> {
               color: selected ? _primary : _muted,
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBack(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.05),
-        shape: BoxShape.circle,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: () => Navigator.of(context).maybePop(),
-          child: const Icon(Icons.arrow_back, size: 20),
         ),
       ),
     );

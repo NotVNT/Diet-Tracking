@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import '../../../services/language_service.dart';
-import 'goal_selection.dart';
+import 'goal_selection_screen.dart';
 
 class StartScreen extends StatefulWidget {
   final WidgetBuilder? goalSelectionBuilder;

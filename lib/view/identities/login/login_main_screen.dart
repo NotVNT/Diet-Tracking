@@ -4,7 +4,7 @@ import '../../../common/app_styles.dart';
 import '../../../common/custom_button.dart';
 import '../../../common/gradient_background.dart';
 import '../../../database/auth_service.dart';
-import '../../../database/guest_sync_service.dart';
+import '../../../database/data_migration_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../responsive/responsive.dart';
 import '../../../services/google_auth_service.dart';

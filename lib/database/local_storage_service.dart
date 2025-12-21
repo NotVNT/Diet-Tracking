@@ -19,6 +19,7 @@ class LocalStorageService {
   static const String _keyAllergies = 'guest_allergies';
   static const String _keyActivityLevel = 'guest_activity_level';
   static const String _keyWeightReasons = 'guest_weight_reasons';
+  static const String _keyDietPreference = 'guest_diet_preference';
 
   /// Lazy initialization của SharedPreferences
   Future<SharedPreferences> get _prefs async =>
@@ -36,6 +37,7 @@ class LocalStorageService {
     String? health,
     List<String>? allergies,
     List<String>? weightReasons,
+    String? dietPreference,
     int? age,
     String? gender,
     String? language,
@@ -68,6 +70,10 @@ class LocalStorageService {
       futures.add(prefs.setStringList(_keyWeightReasons, weightReasons));
     }
 
+    if (dietPreference != null && dietPreference.isNotEmpty) {
+      futures.add(prefs.setString(_keyDietPreference, dietPreference));
+    }
+
     // Execute all operations in parallel
     if (futures.isNotEmpty) {
       await Future.wait(futures);
@@ -92,6 +98,7 @@ class LocalStorageService {
       'language': prefs.getString(_keyLanguage),
       'activityLevel': prefs.getString(_keyActivityLevel),
       'weightReasons': prefs.getStringList(_keyWeightReasons),
+      'dietPreference': prefs.getString(_keyDietPreference),
     };
   }
 
@@ -109,7 +116,8 @@ class LocalStorageService {
         prefs.containsKey(_keyAge) ||
         prefs.containsKey(_keyGender) ||
         prefs.containsKey(_keyLanguage) ||
-        prefs.containsKey(_keyActivityLevel);
+        prefs.containsKey(_keyActivityLevel) ||
+        prefs.containsKey(_keyDietPreference);
   }
 
   /// Xóa tất cả dữ liệu guest khỏi local storage
@@ -130,6 +138,7 @@ class LocalStorageService {
       prefs.remove(_keyGender),
       prefs.remove(_keyLanguage),
       prefs.remove(_keyActivityLevel),
+      prefs.remove(_keyDietPreference),
     ]);
   }
 

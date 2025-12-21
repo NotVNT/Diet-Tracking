@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/exceptions.dart';
-import '../../../database/guest_sync_service.dart';
+import '../../../database/data_migration_service.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../model/user.dart' as app_user;
 import '../../../services/google_auth_service.dart';

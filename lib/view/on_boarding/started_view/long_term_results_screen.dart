@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../user_information/user_start_screen.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../widget/progress_bar/started_progress_bar.dart';
 
 class LongTermResultsScreen extends StatelessWidget {
   final List<String> selectedMainGoals;
@@ -31,35 +32,11 @@ class LongTermResultsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        customBorder: const CircleBorder(),
-                        onTap: () => Navigator.of(context).maybePop(),
-                        child: const Icon(Icons.arrow_back, size: 20),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: _primary,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                    ),
-                  ),
-                ],
+              StartedProgressBar(
+                currentStep: 1,
+                totalSteps: 1,
+                activeColor: _primary,
+                padding: EdgeInsets.zero,
               ),
               const SizedBox(height: 28),
               Text(
