@@ -50,7 +50,7 @@ class _HeightSelectorState extends State<HeightSelector> {
               const SizedBox(height: 16),
               // Progress indicator
               const ProgressBarWidget(
-                progress: 4 / 7, // Bước 4/7
+                progress: 4 / 8, // Bước 4/8
               ),
               const SizedBox(height: 24),
 

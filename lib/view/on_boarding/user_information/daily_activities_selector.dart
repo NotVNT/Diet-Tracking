@@ -62,7 +62,7 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.0),
                 child: ProgressBarWidget(
-                  progress: 7 / 7, // Bước 7/7
+                  progress: 7 / 8, // Bước 7/8
                 ),
               ),
               const SizedBox(height: 24),

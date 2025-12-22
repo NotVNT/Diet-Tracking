@@ -82,7 +82,7 @@ class LocalStorageService {
   Future<Map<String, dynamic>> readGuestData() async {
     final prefs = await _prefs;
     final goal = prefs.getString(_keyGoal);
-    debugPrint('🔍 LocalStorageService: Reading goal = $goal');
+    debugPrint('LocalStorageService: Reading goal = $goal');
     return {
       'goal': goal,
       'heightCm': prefs.getDouble(_keyHeight),

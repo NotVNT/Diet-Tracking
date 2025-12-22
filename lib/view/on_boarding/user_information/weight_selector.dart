@@ -81,7 +81,7 @@ class _WeightSelectorState extends State<WeightSelector> {
               SizedBox(height: r.space(12)),
               // Progress bar
               const ProgressBarWidget(
-                progress: 5 / 7, // Bước 5/7
+                progress: 5 / 8, // Bước 5/8
               ),
               SizedBox(height: r.space(18)),
               // Titles

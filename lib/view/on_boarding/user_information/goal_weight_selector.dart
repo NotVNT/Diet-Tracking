@@ -88,7 +88,7 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: r.space(4)),
                 child: const ProgressBarWidget(
-                  progress: 6 / 7, // Bước 6/7
+                  progress: 6 / 8, // Bước 6/8
                 ),
               ),
               SizedBox(height: r.space(20)),

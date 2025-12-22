@@ -49,7 +49,7 @@ class _GenderSelectorState extends State<GenderSelector> {
                   const SizedBox(height: 16),
                   // Progress bar mới
                   const ProgressBarWidget(
-                    progress: 1 / 7, // Bước 1/7
+                    progress: 1 / 8, // Bước 1/8
                   ),
                   const SizedBox(height: 24),
                   Text(
