@@ -205,7 +205,17 @@ class _LoginScreenState extends State<LoginScreen>
 
     if (!mounted) return;
 
-    if (hasGuestData) {
+    if (!hasGuestData) {
+      await _navigateToOnboarding();
+      return;
+    }
+
+    final hasCompleteOnboarding =
+        await _loginController.hasCompleteGuestOnboarding();
+
+    if (!mounted) return;
+
+    if (hasCompleteOnboarding) {
       await _navigateToSignupWithGuestData();
     } else {
       await _navigateToOnboarding();

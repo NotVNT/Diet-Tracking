@@ -117,6 +117,20 @@ class LocalStorageService {
         prefs.containsKey(_keyDietPreference);
   }
 
+  /// Trả về true nếu guest đã hoàn tất các bước onboarding bắt buộc
+  Future<bool> hasCompleteGuestOnboarding() async {
+    final prefs = await _prefs;
+    const requiredKeys = [
+      _keyGoal,
+      _keyHeight,
+      _keyWeight,
+      _keyGoalWeight,
+      _keyAge,
+      _keyGender,
+    ];
+    return requiredKeys.every(prefs.containsKey);
+  }
+
   /// Xóa tất cả dữ liệu guest khỏi local storage
   /// Được gọi sau khi đồng bộ thành công với tài khoản chính thức
   /// Optimized: Batches all remove operations for better performance

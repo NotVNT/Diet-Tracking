@@ -152,6 +152,12 @@ class LoginController {
     return await _localStorage!.hasGuestData();
   }
 
+  /// Kiểm tra xem guest đã hoàn tất onboarding cần thiết chưa
+  Future<bool> hasCompleteGuestOnboarding() async {
+    _ensureLocalStorageInitialized();
+    return await _localStorage!.hasCompleteGuestOnboarding();
+  }
+
   /// Lấy dữ liệu guest
   Future<Map<String, dynamic>?> getGuestData() async {
     _ensureLocalStorageInitialized();
