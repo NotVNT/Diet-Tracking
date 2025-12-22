@@ -228,13 +228,12 @@ class NutritionCalculatorService {
     return minDays;
   }
 
-  /// Tính số ngày khuyến nghị (an toàn và hiệu quả)
+  /// Tính số ngày khuyến nghị dựa trên mức điều chỉnh an toàn và mức độ vận động
   static int calculateRecommendedDays({required UserNutritionInfo userInfo}) {
-    final weightDifference = userInfo.weightDifference;
-
-    // Khuyến nghị giảm/tăng 0.5kg mỗi tuần (an toàn)
-    const recommendedWeeklyChange = 0.5; // kg
-    final weeks = (weightDifference / recommendedWeeklyChange).ceil();
-    return weeks * 7; // Chuyển sang ngày
+    final minSafeDays = calculateMinimumSafeDays(userInfo: userInfo);
+    if (minSafeDays >= 999) {
+      return minSafeDays;
+    }
+    return minSafeDays.clamp(7, 365);
   }
 }
