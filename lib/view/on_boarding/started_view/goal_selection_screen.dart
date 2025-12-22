@@ -91,20 +91,17 @@ class _GoalSelectionState extends State<GoalSelection> {
                       _selectedIndex == null
                           ? null
                           : () async {
-                            var selectedTitle = _getLocalizedTitle(
+                            final mainTitle = _getLocalizedTitle(
                               context,
                               _goals[_selectedIndex!].title,
                             );
+                            var selectedTitle = mainTitle;
 
                             if (_selectedSubIndex != null &&
                                 _goals[_selectedIndex!].subOptions != null) {
-                              final subOptionTitle = _getLocalizedTitle(
-                                context,
-                                _goals[_selectedIndex!]
-                                    .subOptions![_selectedSubIndex!].title,
-                              );
-                              selectedTitle =
-                                  '$selectedTitle ($subOptionTitle)';
+                              final subOptionKey = _goals[_selectedIndex!]
+                                  .subOptions![_selectedSubIndex!].title;
+                              selectedTitle = '$mainTitle($subOptionKey)';
                             }
 
                             // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
