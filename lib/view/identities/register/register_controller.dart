@@ -44,7 +44,7 @@ class RegisterController {
     Map<String, dynamic>? preSelectedData,
   }) {
     onboardingData = preSelectedData ?? {};
-    AppLogger.debug('Onboarding data received: $onboardingData', tag: 'RegisterController');
+    debugPrint('Onboarding data received: $onboardingData');
   }
 
   /// Khởi tạo lazy services khi cần thiết
@@ -160,7 +160,7 @@ class RegisterController {
     _ensureServicesInitialized();
 
     try {
-      debugPrint('🔍 Processing onboarding data: $onboardingData');
+      debugPrint('Processing onboarding data: $onboardingData');
       final user = await _authService!.signUpWithOnboardingData(
         email: emailController.text.trim(),
         password: passwordController.text,
@@ -202,7 +202,7 @@ class RegisterController {
       }
       return RegisterResult.failure(RegisterErrorCode.registrationFailed);
     } catch (e) {
-      debugPrint('❌ Exception in signup: $e');
+      debugPrint('Exception in signup: $e');
       return RegisterResult.failure(RegisterErrorCode.registrationFailed);
     }
   }
@@ -212,7 +212,7 @@ class RegisterController {
     try {
       await _dataMigration?.syncGuestToUser(userId);
     } catch (e) {
-      debugPrint('⚠️ Guest sync failed: $e');
+      debugPrint('Guest sync failed: $e');
     }
   }
 
