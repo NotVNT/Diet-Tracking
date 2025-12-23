@@ -1,9 +1,33 @@
 {
+  "bottomNavAddFood": "Add Food",
   "@@locale": "en",
+  "addFoodPageTitle": "Add Food",
+  "addFoodNameLabel": "Food name",
+  "addFoodCaloriesLabel": "Calories (kcal)",
+  "addFoodProteinLabel": "Protein (g)",
+  "addFoodCarbsLabel": "Carbs (g)",
+  "addFoodFatLabel": "Fat (g)",
+  "addFoodSaveButton": "Save Food",
+  "addFoodEmptyValidator": "Please enter this information",
   "defineYourGoal": "Define your goal",
+  "recordSuccessMessage": "Food record saved successfully!",
+  "addFoodSuccessNotificationTitle": "Food Added Successfully",
+  "addFoodSuccessNotificationBody": "You have added '{foodName}' on {date}.",
+  "@addFoodSuccessNotificationBody": {
+    "placeholders": {
+      "foodName": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+
   "weWillBuild": "We'll build a tailored plan to keep you motivated and help you reach your goals.",
   "getStartedNow": "Get started!",
   "appTitle": "Diet Tracking",
+  "nutrientFat": "Fat",
   "startTrackingToday": "Start tracking your\ndiet plan today!",
   "trackDailyDiet": "Track your daily diet with\npersonalized meal plans and\nsmart recommendations.",
   "getStarted": "Get started",
@@ -11,6 +35,25 @@
   "apply": "Apply",
   "tellUsAboutYourself": "Tell us about yourself",
   "weWillCreatePersonalizedPlan": "We'll create a personalized plan for you based on details like your age and current weight.",
+  "chatBotYesterday": "Yesterday",
+  "chatBotConfirmDeleteTitle": "Delete session?",
+  "chatBotConfirmDeleteMessage": "Are you sure you want to delete the session \"{sessionTitle}\"?",
+  "@chatBotConfirmDeleteMessage": {
+    "description": "Confirmation message for deleting a chat session",
+    "placeholders": {
+      "sessionTitle": {
+        "type": "String",
+        "example": "My Diet Plan"
+      }
+    }
+  },
+  "chatBotSessionDeleted": "Session deleted",
+  "chatBotHistoryEmpty": "No chat history yet",
+  "chatBotStartConversation": "Start a conversation...",
+  "chatBotEmptyTitle": "Start a new conversation",
+  "chatBotEmptySubtitle": "Your chat history will be saved here. Ask me anything about your diet plan!",
+  "chatBotChatHistory": "Chat History",
+  "chatBotCreateNewChat": "Create New Chat",
   "start": "Start",
   "gender": "Gender",
   "weWillUseThisInfo": "We'll use this information to calculate your daily energy needs.",
@@ -20,6 +63,14 @@
   "age": "Age",
   "howOldAreYou": "How old are you?",
   "next": "Next",
+  "chooseYourDietStyle": "Which plan do you prefer?",
+  "youCanChangeLater": "You can change this later in Settings.",
+  "keto": "Keto",
+  "ketoDescription": "Very low carb, higher fat.",
+  "normalWeightLoss": "Normal weight loss",
+  "normalWeightLossDescription": "Balanced carbs, protein, and fat. Easy to maintain.",
+  "lowCarbs": "Low Carbs",
+  "lowCarbsDescription": "Moderately reduced carbs, easier to sustain.",
   "whatIsYourMainGoal": "What is your main goal?",
   "skip": "Skip",
   "loseWeight": "Lose weight",

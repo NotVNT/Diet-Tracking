@@ -3,7 +3,7 @@ import '../../../common/app_styles.dart';
 import '../../../common/custom_button.dart';
 import '../../../common/gradient_background.dart';
 import '../../../database/auth_service.dart';
-import '../../../database/guest_sync_service.dart';
+import '../../../database/data_migration_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../responsive/responsive.dart';
 import '../login/login_main_screen.dart';
@@ -13,12 +13,12 @@ import 'register_widgets.dart';
 
 class SignupScreen extends StatefulWidget {
   final AuthService? authService;
-  final GuestSyncService? guestSyncService;
+  final DataMigrationService? dataMigrationService;
   final Map<String, dynamic>? preSelectedData;
   const SignupScreen({
     super.key,
     this.authService,
-    this.guestSyncService,
+    this.dataMigrationService,
     this.preSelectedData,
   });
 
@@ -50,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen>
     // Khởi tạo register controller
     _registerController = RegisterController(
       authService: widget.authService,
-      guestSyncService: widget.guestSyncService,
+      dataMigrationService: widget.dataMigrationService,
       preSelectedData: widget.preSelectedData,
     );
     

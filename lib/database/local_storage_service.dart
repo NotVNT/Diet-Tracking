@@ -19,14 +19,12 @@ class LocalStorageService {
   static const String _keyAllergies = 'guest_allergies';
   static const String _keyActivityLevel = 'guest_activity_level';
   static const String _keyWeightReasons = 'guest_weight_reasons';
+  static const String _keyDietPreference = 'guest_diet_preference';
 
   /// Lazy initialization của SharedPreferences
   Future<SharedPreferences> get _prefs async =>
       await SharedPreferences.getInstance();
 
-  /// Lưu dữ liệu guest vào local storage
-  /// Chỉ lưu các trường được cung cấp (không null)
-  /// Optimized: Batches all operations for better performance
   Future<void> saveGuestData({
     String? goal,
     double? heightCm,
@@ -36,6 +34,7 @@ class LocalStorageService {
     String? health,
     List<String>? allergies,
     List<String>? weightReasons,
+    String? dietPreference,
     int? age,
     String? gender,
     String? language,
@@ -47,7 +46,7 @@ class LocalStorageService {
     final futures = <Future<bool>>[];
 
     if (goal != null) {
-      debugPrint('🔍 LocalStorageService: Saving goal = $goal');
+      debugPrint('LocalStorageService: Saving goal = $goal');
       futures.add(prefs.setString(_keyGoal, goal));
     }
     if (heightCm != null) futures.add(prefs.setDouble(_keyHeight, heightCm));
@@ -68,6 +67,10 @@ class LocalStorageService {
       futures.add(prefs.setStringList(_keyWeightReasons, weightReasons));
     }
 
+    if (dietPreference != null && dietPreference.isNotEmpty) {
+      futures.add(prefs.setString(_keyDietPreference, dietPreference));
+    }
+
     // Execute all operations in parallel
     if (futures.isNotEmpty) {
       await Future.wait(futures);
@@ -79,7 +82,7 @@ class LocalStorageService {
   Future<Map<String, dynamic>> readGuestData() async {
     final prefs = await _prefs;
     final goal = prefs.getString(_keyGoal);
-    debugPrint('🔍 LocalStorageService: Reading goal = $goal');
+    debugPrint('LocalStorageService: Reading goal = $goal');
     return {
       'goal': goal,
       'heightCm': prefs.getDouble(_keyHeight),
@@ -92,6 +95,7 @@ class LocalStorageService {
       'language': prefs.getString(_keyLanguage),
       'activityLevel': prefs.getString(_keyActivityLevel),
       'weightReasons': prefs.getStringList(_keyWeightReasons),
+      'dietPreference': prefs.getString(_keyDietPreference),
     };
   }
 
@@ -109,7 +113,22 @@ class LocalStorageService {
         prefs.containsKey(_keyAge) ||
         prefs.containsKey(_keyGender) ||
         prefs.containsKey(_keyLanguage) ||
-        prefs.containsKey(_keyActivityLevel);
+        prefs.containsKey(_keyActivityLevel) ||
+        prefs.containsKey(_keyDietPreference);
+  }
+
+  /// Trả về true nếu guest đã hoàn tất các bước onboarding bắt buộc
+  Future<bool> hasCompleteGuestOnboarding() async {
+    final prefs = await _prefs;
+    const requiredKeys = [
+      _keyGoal,
+      _keyHeight,
+      _keyWeight,
+      _keyGoalWeight,
+      _keyAge,
+      _keyGender,
+    ];
+    return requiredKeys.every(prefs.containsKey);
   }
 
   /// Xóa tất cả dữ liệu guest khỏi local storage
@@ -130,6 +149,7 @@ class LocalStorageService {
       prefs.remove(_keyGender),
       prefs.remove(_keyLanguage),
       prefs.remove(_keyActivityLevel),
+      prefs.remove(_keyDietPreference),
     ]);
   }
 

@@ -17,6 +17,11 @@ import os
 from huggingface_hub import InferenceClient
 from openai import OpenAI
 
+import logging
+from logging.handlers import RotatingFileHandler
+import json
+from datetime import datetime
+
 load_dotenv()
 app = FastAPI()
 
@@ -106,7 +111,7 @@ food_content = [
         "calories": "73kcal",
         "fat": "0.58g",
         "protein": "0.41g",
-        "carb": "18g"
+"carb": "18g"
     },
     {
         "id": "9",
@@ -159,7 +164,7 @@ def food_or_not(img_base64):
     messages = [
     {"role": "system", "content": """Hãy xem qua bức ảnh người dùng gửi, bức ảnh có phải là đồ mà con người ăn hay uống được hay không.
     Nếu được thì trả về **FOOD**, không được thì trả về **NOT_FOOD**. Không cần giải thích thêm."""},
-    {"role": "user", "content": 
+    {"role": "user", "content":
         [
             {"type": "image_url",
             "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}},
@@ -176,7 +181,7 @@ def predict_correction(img_base64):
 
     messages = [
     {"role": "system", "content": """Cho mình biết tên về thực phẩm hoặc nước uống hoặc cả hai nếu có trong bức ảnh này. Và cho mình từ khóa đơn giản dựa trên hình ảnh để search vectorbase. Từ khóa nên được trả về như sau: Từ khóa: {từ khóa}"""},
-    {"role": "user", "content": 
+    {"role": "user", "content":
     [
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}},
     ]}]
@@ -209,7 +214,6 @@ def load_feature_extractor(model):
 
     model.eval()
     return model
-
 def extract_embedding(rgb_bytes, transform, vision_model, device):
     image = Image.open(BytesIO(rgb_bytes)).convert("RGB")
 
@@ -243,7 +247,7 @@ class NutrientRegressor(nn.Module):
 
     def forward(self, x):
         return self.regressor(x)
-    
+
 class NutrientPredictor(nn.Module):
     def __init__(self, backbone, regressor):
         super(NutrientPredictor, self).__init__()
@@ -364,7 +368,7 @@ if __name__ == "__main__":
     #             'total_protein':match["metadata"]["protein"],
     #             'total_carb':match["metadata"]["carb"]}
     #             )
-    #         print(match["metadata"]["food_name"], "-", match["score"])
+#         print(match["metadata"]["food_name"], "-", match["score"])
     #         print(nutritional_values)
     # else:
         print("NOT_FOOD")

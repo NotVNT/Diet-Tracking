@@ -1,9 +1,33 @@
 {
+  "bottomNavAddFood": "Thêm món ăn",
   "@@locale": "vi",
+  "addFoodPageTitle": "Thêm món ăn",
+  "addFoodNameLabel": "Tên món ăn",
+  "addFoodCaloriesLabel": "Calories (kcal)",
+  "addFoodProteinLabel": "Protein (g)",
+  "addFoodCarbsLabel": "Carbs (g)",
+  "addFoodFatLabel": "Fat (g)",
+  "addFoodSaveButton": "Lưu món ăn",
+  "addFoodEmptyValidator": "Vui lòng nhập thông tin",
   "defineYourGoal": "Xác định mục tiêu của bạn",
+  "recordSuccessMessage": "Món ăn đã được ghi nhận thành công!",
+  "addFoodSuccessNotificationTitle": "Thêm món ăn thành công",
+  "addFoodSuccessNotificationBody": "Bạn đã thêm '{foodName}' vào ngày {date}.",
+  "@addFoodSuccessNotificationBody": {
+    "placeholders": {
+      "foodName": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+
   "weWillBuild": "Chúng tôi sẽ xây dựng cho bạn một kế hoạch tùy chỉnh nhằm giúp bạn duy trì động lực và đạt được mục tiêu của mình.",
   "getStartedNow": "Bắt đầu ngay!",
   "appTitle": "Theo dõi chế độ ăn",
+  "nutrientFat": "Chất béo",
   "startTrackingToday": "Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!",
   "trackDailyDiet": "Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.",
   "getStarted": "Bắt đầu ngay",
@@ -11,6 +35,25 @@
   "apply": "Áp dụng",
   "tellUsAboutYourself": "Hãy cho chúng tôi biết về bản thân bạn",
   "weWillCreatePersonalizedPlan": "Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho bạn dựa trên các chi tiết như tuổi và cân nặng hiện tại của bạn.",
+  "chatBotYesterday": "Hôm qua",
+  "chatBotConfirmDeleteTitle": "Xóa cuộc trò chuyện?",
+  "chatBotConfirmDeleteMessage": "Bạn có chắc chắn muốn xóa cuộc trò chuyện \"{sessionTitle}\"?",
+  "@chatBotConfirmDeleteMessage": {
+    "description": "Thông báo xác nhận xóa một cuộc trò chuyện",
+    "placeholders": {
+      "sessionTitle": {
+        "type": "String",
+        "example": "Kế hoạch ăn kiêng của tôi"
+      }
+    }
+  },
+  "chatBotSessionDeleted": "Đã xóa cuộc trò chuyện",
+  "chatBotHistoryEmpty": "Chưa có lịch sử trò chuyện",
+  "chatBotStartConversation": "Bắt đầu cuộc trò chuyện...",
+  "chatBotEmptyTitle": "Bắt đầu cuộc trò chuyện mới",
+  "chatBotEmptySubtitle": "Lịch sử trò chuyện của bạn sẽ được lưu tại đây. Hãy hỏi tôi bất cứ điều gì về kế hoạch ăn kiêng của bạn!",
+  "chatBotChatHistory": "Lịch sử trò chuyện",
+  "chatBotCreateNewChat": "Tạo cuộc trò chuyện mới",
   "start": "Bắt đầu",
   "gender": "Giới tính",
   "weWillUseThisInfo": "Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.",
@@ -20,6 +63,14 @@
   "age": "Tuổi",
   "howOldAreYou": "Bạn bao nhiêu tuổi?",
   "next": "Tiếp theo",
+  "chooseYourDietStyle": "Bạn muốn theo chế độ nào?",
+  "youCanChangeLater": "Bạn có thể thay đổi sau trong cài đặt.",
+  "keto": "Keto",
+  "ketoDescription": "Giảm carb mạnh, tăng chất béo.",
+  "normalWeightLoss": "Giảm cân bình thường",
+  "normalWeightLossDescription": "Cân bằng carb, đạm, béo. Dễ duy trì lâu dài.",
+  "lowCarbs": "Low Carbs",
+  "lowCarbsDescription": "Giảm carb vừa phải, dễ duy trì.",
   "whatIsYourMainGoal": "Mục tiêu chính của bạn là gì?",
   "skip": "Bỏ qua",
   "loseWeight": "Giảm cân",

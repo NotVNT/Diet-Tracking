@@ -9,10 +9,52 @@ class AppLocalizationsVi extends AppLocalizations {
   AppLocalizationsVi([String locale = 'vi']) : super(locale);
 
   @override
+  String get bottomNavAddFood => 'Thêm món ăn';
+
+  @override
+  String get addFoodPageTitle => 'Thêm món ăn';
+
+  @override
+  String get addFoodNameLabel => 'Tên món ăn';
+
+  @override
+  String get addFoodCaloriesLabel => 'Calories (kcal)';
+
+  @override
+  String get addFoodProteinLabel => 'Protein (g)';
+
+  @override
+  String get addFoodCarbsLabel => 'Carbs (g)';
+
+  @override
+  String get addFoodFatLabel => 'Fat (g)';
+
+  @override
+  String get addFoodSaveButton => 'Lưu món ăn';
+
+  @override
+  String get addFoodEmptyValidator => 'Vui lòng nhập thông tin';
+
+  @override
   String get defineYourGoal => 'Xác định mục tiêu của bạn';
 
   @override
-  String get weWillBuild => 'Chúng tôi sẽ xây dựng cho bạn một kế hoạch tùy chỉnh nhằm giúp bạn duy trì động lực và đạt được mục tiêu của mình.';
+  String get recordSuccessMessage => 'Món ăn đã được ghi nhận thành công!';
+
+  @override
+  String get addFoodSuccessNotificationTitle => 'Thêm món ăn thành công';
+
+  @override
+  String addFoodSuccessNotificationBody(String foodName, String date) {
+    return 'Bạn đã thêm \'$foodName\' vào ngày $date.';
+  }
+
+  @override
+  String get caloriesToday => 'Calories hôm nay';
+
+  @override
+  String get weWillBuild =>
+      'Chúng tôi sẽ xây dựng cho bạn một kế hoạch tùy chỉnh nhằm giúp bạn duy trì động lực và đạt được mục tiêu của mình.';
 
   @override
   String get getStartedNow => 'Bắt đầu ngay!';
@@ -21,10 +63,15 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'Theo dõi chế độ ăn';
 
   @override
-  String get startTrackingToday => 'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!';
+  String get nutrientFat => 'Chất béo';
 
   @override
-  String get trackDailyDiet => 'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.';
+  String get startTrackingToday =>
+      'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!';
+
+  @override
+  String get trackDailyDiet =>
+      'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.';
 
   @override
   String get getStarted => 'Bắt đầu ngay';
@@ -39,7 +86,41 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tellUsAboutYourself => 'Hãy cho chúng tôi biết về bản thân bạn';
 
   @override
-  String get weWillCreatePersonalizedPlan => 'Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho bạn dựa trên các chi tiết như tuổi và cân nặng hiện tại của bạn.';
+  String get weWillCreatePersonalizedPlan =>
+      'Chúng tôi sẽ tạo kế hoạch cá nhân hóa cho bạn dựa trên các chi tiết như tuổi và cân nặng hiện tại của bạn.';
+
+  @override
+  String get chatBotYesterday => 'Hôm qua';
+
+  @override
+  String get chatBotConfirmDeleteTitle => 'Xóa cuộc trò chuyện?';
+
+  @override
+  String chatBotConfirmDeleteMessage(String sessionTitle) {
+    return 'Bạn có chắc chắn muốn xóa cuộc trò chuyện \"$sessionTitle\"?';
+  }
+
+  @override
+  String get chatBotSessionDeleted => 'Đã xóa cuộc trò chuyện';
+
+  @override
+  String get chatBotHistoryEmpty => 'Chưa có lịch sử trò chuyện';
+
+  @override
+  String get chatBotStartConversation => 'Bắt đầu cuộc trò chuyện...';
+
+  @override
+  String get chatBotEmptyTitle => 'Bắt đầu cuộc trò chuyện mới';
+
+  @override
+  String get chatBotEmptySubtitle =>
+      'Lịch sử trò chuyện của bạn sẽ được lưu tại đây. Hãy hỏi tôi bất cứ điều gì về kế hoạch ăn kiêng của bạn!';
+
+  @override
+  String get chatBotChatHistory => 'Lịch sử chat';
+
+  @override
+  String get chatBotCreateNewChat => 'Tạo đoạn chat mới';
 
   @override
   String get start => 'Bắt đầu';
@@ -48,7 +129,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get gender => 'Giới tính';
 
   @override
-  String get weWillUseThisInfo => 'Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.';
+  String get weWillUseThisInfo =>
+      'Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.';
 
   @override
   String get male => 'Nam';
@@ -67,6 +149,31 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get next => 'Tiếp theo';
+
+  @override
+  String get chooseYourDietStyle => 'Bạn muốn theo chế độ nào?';
+
+  @override
+  String get youCanChangeLater => 'Bạn có thể thay đổi sau trong cài đặt.';
+
+  @override
+  String get keto => 'Keto';
+
+  @override
+  String get ketoDescription => 'Giảm carb mạnh, tăng chất béo.';
+
+  @override
+  String get normalWeightLoss => 'Giảm cân bình thường';
+
+  @override
+  String get normalWeightLossDescription =>
+      'Cân bằng carb, đạm, béo. Dễ duy trì lâu dài.';
+
+  @override
+  String get lowCarbs => 'Low Carbs';
+
+  @override
+  String get lowCarbsDescription => 'Giảm carb vừa phải, dễ duy trì.';
 
   @override
   String get whatIsYourMainGoal => 'Mục tiêu chính của bạn là gì?';
@@ -105,7 +212,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get whyDoYouWantToGainWeight => 'Tại sao bạn muốn tăng cân?';
 
   @override
-  String get whyDoYouWantToMaintainWeight => 'Tại sao bạn muốn duy trì cân nặng?';
+  String get whyDoYouWantToMaintainWeight =>
+      'Tại sao bạn muốn duy trì cân nặng?';
 
   @override
   String get whyDoYouWantToBuildMuscle => 'Tại sao bạn muốn tăng cơ?';
@@ -219,10 +327,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get optimizeMealCosts => 'Muốn tối ưu chi phí bữa ăn';
 
   @override
-  String get weBringYouBestResults => 'Chúng tôi mang đến cho bạn hiệu quả tốt nhất';
+  String get weBringYouBestResults =>
+      'Chúng tôi mang đến cho bạn hiệu quả tốt nhất';
 
   @override
-  String get personalizedPathwayBasedOnGoals => 'Lộ trình cá nhân hóa dựa trên mục tiêu và thói quen của bạn. Bắt đầu ngay để thấy sự thay đổi bền vững.';
+  String get personalizedPathwayBasedOnGoals =>
+      'Lộ trình cá nhân hóa dựa trên mục tiêu và thói quen của bạn. Bắt đầu ngay để thấy sự thay đổi bền vững.';
 
   @override
   String get height => 'Chiều cao';
@@ -249,28 +359,33 @@ class AppLocalizationsVi extends AppLocalizations {
   String get youCanDoIt => 'Bạn sẽ làm được!';
 
   @override
-  String get maintainCurrentWeightIsHealthy => 'Duy trì cân nặng hiện tại là một lựa chọn lành mạnh';
+  String get maintainCurrentWeightIsHealthy =>
+      'Duy trì cân nặng hiện tại là một lựa chọn lành mạnh';
 
   @override
   String get loseWeightGoalPrefix => 'Giảm';
 
   @override
-  String get loseWeightGoalSuffix => 'kg là mục tiêu thách thức nhưng hoàn toàn khả thi';
+  String get loseWeightGoalSuffix =>
+      'kg là mục tiêu thách thức nhưng hoàn toàn khả thi';
 
   @override
   String get gainWeightGoalPrefix => 'Tăng';
 
   @override
-  String get gainWeightGoalSuffix => 'kg sẽ giúp bạn đạt trạng thái cân bằng tốt hơn';
+  String get gainWeightGoalSuffix =>
+      'kg sẽ giúp bạn đạt trạng thái cân bằng tốt hơn';
 
   @override
-  String get setClearGoalsMessage => 'Đặt mục tiêu rõ ràng giúp bạn tiến gần hơn mỗi ngày';
+  String get setClearGoalsMessage =>
+      'Đặt mục tiêu rõ ràng giúp bạn tiến gần hơn mỗi ngày';
 
   @override
   String get goalWeightPrefix => 'Cân nặng mục tiêu';
 
   @override
-  String get userProgressMessage => 'người dùng ghi nhận tiến bộ rõ rệt sau 4 tuần theo kế hoạch';
+  String get userProgressMessage =>
+      'người dùng ghi nhận tiến bộ rõ rệt sau 4 tuần theo kế hoạch';
 
   @override
   String get continueAsGuest => 'Tiếp tục với Guest';
@@ -312,31 +427,51 @@ class AppLocalizationsVi extends AppLocalizations {
   String get activityLevelSedentaryTitle => 'Ít vận động';
 
   @override
-  String get activityLevelSedentarySubtitle => '(Chủ yếu ngồi, ít hoặc không tập thể dục)';
+  String get activityLevelSedentarySubtitle =>
+      '(Chủ yếu ngồi, ít hoặc không tập thể dục)';
 
   @override
   String get activityLevelLightlyActiveTitle => 'Vận động nhẹ';
 
   @override
-  String get activityLevelLightlyActiveSubtitle => '(Tập thể dục/thể thao 1-3 ngày/tuần)';
+  String get activityLevelLightlyActiveSubtitle =>
+      '(Tập thể dục/thể thao 1-3 ngày/tuần)';
 
   @override
   String get activityLevelModeratelyActiveTitle => 'Vận động vừa';
 
   @override
-  String get activityLevelModeratelyActiveSubtitle => '(Tập thể dục/thể thao 3-5 ngày/tuần)';
+  String get activityLevelModeratelyActiveSubtitle =>
+      '(Tập thể dục/thể thao 3-5 ngày/tuần)';
+
+  @override
+  String get dateRangeTitle => 'Khoảng ngày';
+
+  @override
+  String get today => 'Hôm nay';
+
+  @override
+  String get yesterday => 'Hôm qua';
+
+  @override
+  String get last7Days => '7 ngày qua';
+
+  @override
+  String get customRange => 'Khoảng khác';
 
   @override
   String get activityLevelVeryActiveTitle => 'Vận động nặng';
 
   @override
-  String get activityLevelVeryActiveSubtitle => '(Tập thể dục/thể thao 6-7 ngày/tuần)';
+  String get activityLevelVeryActiveSubtitle =>
+      '(Tập thể dục/thể thao 6-7 ngày/tuần)';
 
   @override
   String get activityLevelExtraActiveTitle => 'Vận động rất nặng';
 
   @override
-  String get activityLevelExtraActiveSubtitle => '(Tập thể dục 2 lần/ngày, công việc lao động phổ thông)';
+  String get activityLevelExtraActiveSubtitle =>
+      '(Tập thể dục 2 lần/ngày, công việc lao động phổ thông)';
 
   @override
   String get loginTitle => 'Đăng Nhập';
@@ -378,10 +513,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get loginSuccess => 'Đăng nhập thành công!';
 
   @override
-  String get loginFailed => 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.';
+  String get loginFailed =>
+      'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.';
 
   @override
-  String get invalidCredentials => 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.';
+  String get invalidCredentials =>
+      'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.';
 
   @override
   String get googleLoginSuccess => 'Đăng nhập Google thành công!';
@@ -390,16 +527,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String get googleLoginCancelled => 'Đăng nhập Google đã bị hủy.';
 
   @override
-  String get googleLoginFailed => 'Đăng nhập Google thất bại. Vui lòng thử lại.';
+  String get googleLoginFailed =>
+      'Đăng nhập Google thất bại. Vui lòng thử lại.';
 
   @override
-  String get passwordResetEmailSent => 'Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.';
+  String get passwordResetEmailSent =>
+      'Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.';
 
   @override
   String get pleaseEnterEmailFirst => 'Vui lòng nhập email trước.';
 
   @override
-  String get passwordResetFailed => 'Không thể gửi email đặt lại mật khẩu. Vui lòng kiểm tra email và thử lại.';
+  String get passwordResetFailed =>
+      'Không thể gửi email đặt lại mật khẩu. Vui lòng kiểm tra email và thử lại.';
 
   @override
   String get signupTitle => 'Tạo tài khoản';
@@ -453,7 +593,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get forgotPasswordTitle => 'Quên mật khẩu?';
 
   @override
-  String get forgotPasswordInstruction => 'Nhập email của bạn và chúng tôi sẽ gửi cho bạn hướng dẫn để đặt lại mật khẩu.';
+  String get forgotPasswordInstruction =>
+      'Nhập email của bạn và chúng tôi sẽ gửi cho bạn hướng dẫn để đặt lại mật khẩu.';
 
   @override
   String get sendResetEmail => 'Gửi email đặt lại mật khẩu';
@@ -479,7 +620,8 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get unableToSendResetEmail => 'Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.';
+  String get unableToSendResetEmail =>
+      'Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.';
 
   @override
   String get userNotFound => 'Không tìm thấy tài khoản với email này.';
@@ -488,7 +630,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tooManyRequests => 'Quá nhiều yêu cầu. Vui lòng thử lại sau.';
 
   @override
-  String get networkError => 'Lỗi kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.';
+  String get networkError =>
+      'Lỗi kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.';
 
   @override
   String get pleaseEnterFullName => 'Vui lòng nhập họ và tên.';
@@ -509,10 +652,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pleaseAgreeToTerms => 'Vui lòng đồng ý với điều khoản sử dụng.';
 
   @override
-  String get emailAlreadyInUse => 'Email đã được sử dụng. Vui lòng sử dụng email khác.';
+  String get emailAlreadyInUse =>
+      'Email đã được sử dụng. Vui lòng sử dụng email khác.';
 
   @override
-  String get weakPassword => 'Mật khẩu quá yếu. Vui lòng sử dụng mật khẩu mạnh hơn.';
+  String get weakPassword =>
+      'Mật khẩu quá yếu. Vui lòng sử dụng mật khẩu mạnh hơn.';
 
   @override
   String get registrationFailed => 'Đăng ký thất bại. Vui lòng thử lại.';
@@ -527,7 +672,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotNewChatCreated => 'Đã tạo cuộc trò chuyện mới';
 
   @override
-  String get chatBotChatHistoryComingSoon => 'Tính năng lịch sử chat sẽ được thêm sau';
+  String get chatBotChatHistoryComingSoon =>
+      'Tính năng lịch sử chat sẽ được thêm sau';
 
   @override
   String get chatBotSettingsComingSoon => 'Tính năng cài đặt sẽ được thêm sau';
@@ -536,16 +682,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotPleaseEnterAllInfo => 'Vui lòng điền đầy đủ thông tin';
 
   @override
-  String get chatBotCreateNewChat => 'Tạo đoạn chat mới';
-
-  @override
   String get chatBotStartNewConversation => 'Bắt đầu cuộc trò chuyện mới';
 
   @override
-  String get chatBotChatHistory => 'Lịch sử chat';
-
-  @override
-  String get chatBotViewPreviousConversations => 'Xem các cuộc trò chuyện trước';
+  String get chatBotViewPreviousConversations =>
+      'Xem các cuộc trò chuyện trước';
 
   @override
   String get chatBotSettings => 'Cài đặt';
@@ -557,34 +698,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotEnterMessage => 'Nhập tin nhắn...';
 
   @override
-  String get chatBotEmptyTitle => 'Bắt đầu cuộc trò chuyện với trợ lý dinh dưỡng';
-
-  @override
-  String get chatBotEmptySubtitle =>
-      'Tạo cuộc trò chuyện mới để đặt câu hỏi về dinh dưỡng hoặc xem lại lịch sử các phiên trước đó.';
-
-
-  @override
-  String get chatBotConfirmDeleteTitle => 'Xóa cuộc trò chuyện';
-
-  @override
-  String chatBotConfirmDeleteMessage(String title) =>
-      'Bạn có chắc chắn muốn xóa "$title"? Hành động này không thể hoàn tác.';
-
-  @override
-  String get chatBotSessionDeleted => 'Đã xóa cuộc trò chuyện';
-
-  @override
-  String get chatBotHistoryEmpty => 'Chưa có lịch sử chat';
-
-  @override
-  String get chatBotStartConversation => 'Bắt đầu trò chuyện';
-
-  @override
-  String get chatBotYesterday => 'Hôm qua';
-
-
-  @override
   String get chatBotFoodSuggestion => 'gợi ý món ăn';
 
   @override
@@ -594,7 +707,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotEnterBudget => 'Nhập chi phí mong muốn cho bữa ăn';
 
   @override
-  String get chatBotEnterMealType => 'Bữa sáng, Bữa trưa, Bữa tối, Bữa ăn nhẹ, Thực đơn cả ngày';
+  String get chatBotEnterMealType =>
+      'Bữa sáng, Bữa trưa, Bữa tối, Bữa ăn nhẹ, Thực đơn cả ngày';
 
   @override
   String get chatBotSubmit => 'Gửi';
@@ -674,7 +788,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get profileAppName => 'VGP';
 
   @override
-  String get profileAppDescription => 'Ứng dụng quản lý chế độ ăn uống thông minh';
+  String get profileAppDescription =>
+      'Ứng dụng quản lý chế độ ăn uống thông minh';
 
   @override
   String get editProfileTitle => 'Chỉnh sửa hồ sơ';
@@ -764,7 +879,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get settingsNotificationTitle => 'Thông báo';
 
   @override
-  String get settingsNotificationSubtitle => 'Nhận thông báo về bữa ăn và mục tiêu';
+  String get settingsNotificationSubtitle =>
+      'Nhận thông báo về bữa ăn và mục tiêu';
 
   @override
   String get settingsAppearance => 'Giao diện';
@@ -809,7 +925,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get dataSyncBackupDialogTitle => 'Sao lưu dữ liệu';
 
   @override
-  String get dataSyncBackupDialogMessage => 'Bạn có muốn sao lưu dữ liệu của mình lên cloud không?';
+  String get dataSyncBackupDialogMessage =>
+      'Bạn có muốn sao lưu dữ liệu của mình lên cloud không?';
 
   @override
   String get dataSyncBackupDialogCancel => 'Hủy';
@@ -830,7 +947,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get dataSyncClearCacheDialogTitle => 'Xóa cache';
 
   @override
-  String get dataSyncClearCacheDialogMessage => 'Việc xóa cache sẽ giải phóng dung lượng nhưng có thể làm ứng dụng chậm hơn trong lần mở tiếp theo. Bạn có chắc chắn muốn xóa?';
+  String get dataSyncClearCacheDialogMessage =>
+      'Việc xóa cache sẽ giải phóng dung lượng nhưng có thể làm ứng dụng chậm hơn trong lần mở tiếp theo. Bạn có chắc chắn muốn xóa?';
 
   @override
   String get dataSyncClearCacheDialogCancel => 'Hủy';
@@ -860,7 +978,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get supportRecommendationSources => 'Nguồn khuyến nghị';
 
   @override
-  String get supportOpeningRecommendationSources => 'Đang mở nguồn khuyến nghị...';
+  String get supportOpeningRecommendationSources =>
+      'Đang mở nguồn khuyến nghị...';
 
   @override
   String get supportFindVGPOnSocialMedia => 'Tìm VGP trên trang mạng xã hội';
@@ -896,7 +1015,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get helpCenterWeAreReadyToHelp => 'Chúng tôi sẵn sàng hỗ trợ';
 
   @override
-  String get helpCenterFindAnswersOrContact => 'Tìm câu trả lời hoặc liên hệ với team';
+  String get helpCenterFindAnswersOrContact =>
+      'Tìm câu trả lời hoặc liên hệ với team';
 
   @override
   String get helpCenterFAQ => 'Câu hỏi thường gặp';
@@ -908,31 +1028,36 @@ class AppLocalizationsVi extends AppLocalizations {
   String get helpCenterFAQ1Question => 'Làm thế nào để theo dõi dinh dưỡng?';
 
   @override
-  String get helpCenterFAQ1Answer => 'Bạn có thể thêm thực phẩm vào nhật ký bữa ăn hàng ngày. Ứng dụng sẽ tự động tính toán dinh dưỡng cho bạn.';
+  String get helpCenterFAQ1Answer =>
+      'Bạn có thể thêm thực phẩm vào nhật ký bữa ăn hàng ngày. Ứng dụng sẽ tự động tính toán dinh dưỡng cho bạn.';
 
   @override
   String get helpCenterFAQ2Question => 'Tôi có thể đặt mục tiêu calo không?';
 
   @override
-  String get helpCenterFAQ2Answer => 'Có, bạn có thể đặt mục tiêu calo và các chỉ số dinh dưỡng khác trong phần Cài đặt Mục tiêu.';
+  String get helpCenterFAQ2Answer =>
+      'Có, bạn có thể đặt mục tiêu calo và các chỉ số dinh dưỡng khác trong phần Cài đặt Mục tiêu.';
 
   @override
   String get helpCenterFAQ3Question => 'Làm sao để tạo thực đơn?';
 
   @override
-  String get helpCenterFAQ3Answer => 'Vào phần Thực đơn, chọn \"Tạo mới\" và thêm các món ăn bạn muốn. Ứng dụng sẽ tính toán dinh dưỡng tự động.';
+  String get helpCenterFAQ3Answer =>
+      'Vào phần Thực đơn, chọn \"Tạo mới\" và thêm các món ăn bạn muốn. Ứng dụng sẽ tính toán dinh dưỡng tự động.';
 
   @override
   String get helpCenterFAQ4Question => 'Dữ liệu của tôi có được đồng bộ không?';
 
   @override
-  String get helpCenterFAQ4Answer => 'Có, dữ liệu được tự động đồng bộ với cloud nếu bạn đã đăng nhập tài khoản.';
+  String get helpCenterFAQ4Answer =>
+      'Có, dữ liệu được tự động đồng bộ với cloud nếu bạn đã đăng nhập tài khoản.';
 
   @override
   String get helpCenterFAQ5Question => 'Làm sao để xuất báo cáo?';
 
   @override
-  String get helpCenterFAQ5Answer => 'Vào phần Báo cáo, chọn khoảng thời gian và nhấn nút \"Xuất PDF\" để tải báo cáo về máy.';
+  String get helpCenterFAQ5Answer =>
+      'Vào phần Báo cáo, chọn khoảng thời gian và nhấn nút \"Xuất PDF\" để tải báo cáo về máy.';
 
   @override
   String get helpCenterContactEmail => 'Email';
@@ -950,7 +1075,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get helpCenterContactAddress => 'Địa chỉ';
 
   @override
-  String get helpCenterContactAddressValue => '123 Đường Chính, Quận 1, TP. Hồ Chí Minh';
+  String get helpCenterContactAddressValue =>
+      '123 Đường Chính, Quận 1, TP. Hồ Chí Minh';
 
   @override
   String get monday => 'Thứ Hai';
@@ -1019,7 +1145,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get waterReminderTitle => 'Nhắc nhở uống nước';
 
   @override
-  String get waterReminderMessage => 'Uống đủ nước mỗi ngày giúp cơ thể khỏe mạnh và duy trì năng lượng!';
+  String get waterReminderMessage =>
+      'Uống đủ nước mỗi ngày giúp cơ thể khỏe mạnh và duy trì năng lượng!';
 
   @override
   String get markAllAsRead => 'Đọc tất cả';
@@ -1076,7 +1203,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerHelpTip1 => 'Đặt món ăn nằm gọn trong khung.';
 
   @override
-  String get foodScannerHelpTip2 => 'Dùng chế độ Mã vạch cho sản phẩm đóng gói.';
+  String get foodScannerHelpTip2 =>
+      'Dùng chế độ Mã vạch cho sản phẩm đóng gói.';
 
   @override
   String get foodScannerHelpTip3 => 'Chọn từ Thư viện để dùng lại ảnh đã chụp.';
@@ -1094,16 +1222,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerPlaceholderCaptureFood => 'Đang lưu ảnh món ăn';
 
   @override
-  String get foodScannerPlaceholderScanBarcode => 'Đang quét mã vạch (sắp ra mắt)';
+  String get foodScannerPlaceholderScanBarcode =>
+      'Đang quét mã vạch (sắp ra mắt)';
 
   @override
-  String get foodScannerPlaceholderOpenGallery => 'Đang mở thư viện (sắp ra mắt)';
+  String get foodScannerPlaceholderOpenGallery =>
+      'Đang mở thư viện (sắp ra mắt)';
 
   @override
   String get recentlyLoggedTitle => 'Đã ghi nhận gần đây';
 
   @override
-  String get recentlyLoggedSubtitle => 'Bắt đầu theo dõi bữa ăn bằng cách chụp ảnh nhanh';
+  String get recentlyLoggedSubtitle =>
+      'Bắt đầu theo dõi bữa ăn bằng cách chụp ảnh nhanh';
 
   @override
   String get recentlyLoggedEmpty => 'Bạn chưa tải lên bất kỳ món ăn nào';
@@ -1121,7 +1252,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get deletePhoto => 'Xóa ảnh';
 
   @override
-  String get deletePhotoConfirmation => 'Bạn có chắc chắn muốn xóa ảnh này không?';
+  String get deletePhotoConfirmation =>
+      'Bạn có chắc chắn muốn xóa ảnh này không?';
 
   @override
   String get photoDeletedSuccessfully => 'Xóa thành công';
@@ -1136,10 +1268,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get aiFoodAnalysis => 'Phân tích món ăn bằng AI sắp ra mắt';
 
   @override
-  String get permissionCameraRequired => 'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
-
-  @override
-  String get scanOnlyToday => 'Bạn chỉ có thể quét món ăn cho ngày hôm nay.';
+  String get permissionCameraRequired =>
+      'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.';
 
   @override
   String get inboxTitle => 'Hộp thư đến';
@@ -1149,22 +1279,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get filterTitle => 'Bộ lọc';
-
-  @override
-  String get dateRangeTitle => 'Khoảng ngày';
-
-  @override
-  String get today => 'Hôm nay';
-
-  @override
-  String get yesterday => 'Hôm qua';
-
-  @override
-  String get last7Days => '7 ngày qua';
-
-  @override
-  String get customRange => 'Khoảng khác';
-
 
   @override
   String get category => 'Danh mục';
@@ -1197,7 +1311,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get noMealsYet => 'Chưa có bữa ăn nào';
 
   @override
-  String get startByScanningOrPhoto => 'Quét barcode hoặc chụp ảnh món ăn để bắt đầu';
+  String get startByScanningOrPhoto =>
+      'Quét barcode hoặc chụp ảnh món ăn để bắt đầu';
 
   @override
   String get deleteMealTooltip => 'Xoá món ăn';
@@ -1209,22 +1324,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String deleteMealMessage(String foodName) {
     return 'Bạn có chắc muốn xoá \"$foodName\" khỏi ghi nhận?';
   }
-
-  @override
-  String get mealDeletedSuccessfully => 'Xoá món ăn thành công';
-
-  @override
-  String get deleteMealFailed => 'Xoá món ăn thất bại';
-
-  @override
-  String get sourceTagBotSuggestion => 'Gợi ý Chatbot';
-
-  @override
-  String get sourceTagScanned => 'Từ quét ảnh/mã';
-
-  @override
-  String get sourceTagManual => 'Nhập thủ công';
-
 
   @override
   String get initializing => 'Đang khởi tạo...';
@@ -1245,13 +1344,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get snackbarInfoTitle => 'Thông tin';
 
   @override
-  String get foodScannerCantCapturePhoto => 'Không thể chụp ảnh, vui lòng thử lại.';
+  String get foodScannerCantCapturePhoto =>
+      'Không thể chụp ảnh, vui lòng thử lại.';
 
   @override
-  String get foodScannerCantOpenGallery => 'Không thể mở thư viện, vui lòng thử lại.';
+  String get foodScannerCantOpenGallery =>
+      'Không thể mở thư viện, vui lòng thử lại.';
 
   @override
-  String get foodScannerNoBarcodeFoundSaving => 'Không tìm thấy mã trong ảnh. Đang lưu ảnh...';
+  String get foodScannerNoBarcodeFoundSaving =>
+      'Không tìm thấy mã trong ảnh. Đang lưu ảnh...';
 
   @override
   String get foodScannerNoCamera => 'Không tìm thấy camera trên thiết bị.';
@@ -1260,10 +1362,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get foodScannerSavePhotoSuccess => 'Đã lưu ảnh thành công';
 
   @override
-  String get foodScannerUploadError => 'Không thể tải ảnh lên Cloudinary. Vui lòng thử lại.';
+  String get foodScannerUploadError =>
+      'Không thể tải ảnh lên Cloudinary. Vui lòng thử lại.';
 
   @override
-  String get foodScannerSavePhotoError => 'Đã lưu ảnh (lỗi khi tra cứu thông tin)';
+  String get foodScannerSavePhotoError =>
+      'Đã lưu ảnh (lỗi khi tra cứu thông tin)';
 
   @override
   String foodScannerSavedBarcodeNoDetail(Object barcodeValue) {
@@ -1288,4 +1392,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get foodScannerSaveProductError => 'Lỗi khi lưu sản phẩm';
+
+  @override
+  String get mealDeletedSuccessfully => 'Xoá món ăn thành công';
+
+  @override
+  String get deleteMealFailed => 'Xoá món ăn thất bại';
+
+  @override
+  String get sourceTagBotSuggestion => 'Gợi ý Chatbot';
+
+  @override
+  String get sourceTagScanned => 'Từ quét ảnh/mã';
+
+  @override
+  String get sourceTagManual => 'Nhập thủ công';
 }

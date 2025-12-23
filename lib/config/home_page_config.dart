@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../features/chat_bot_view_home/presentation/pages/chat_bot_page.dart';
 import '../features/profile_view_home/di/profile_di.dart';
 import '../features/profile_view_home/presentation/pages/profile_page.dart';
-import '../features/record_view_home/di/record_di.dart';
 import '../features/record_view_home/presentation/pages/record_page.dart';
 
 /// Configuration class for home page
@@ -19,15 +17,8 @@ class HomePageConfig {
   static List<Widget> getPages() {
     return [
       const SizedBox.shrink(), // Home is built inline in HomePage
-      BlocProvider(
-        create: (_) => RecordDI.getRecordCubit()..loadFoodRecords(),
-        child: const RecordPage(),
-      ),
-      // Provide RecordCubit for ChatBotPage so the "Thêm vào danh sách" button can access it
-      BlocProvider(
-        create: (_) => RecordDI.getRecordCubit(),
-        child: const ChatBotPage(),
-      ),
+      const RecordPage(),
+      const ChatBotPage(),
       ProfilePage(profileProvider: ProfileDI.getProfileProvider()),
     ];
   }

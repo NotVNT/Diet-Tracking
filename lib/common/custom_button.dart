@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'app_colors.dart';
 import 'app_styles.dart';
 import '../responsive/responsive.dart';
 
@@ -85,6 +84,38 @@ class _CustomButtonState extends State<CustomButton>
   Widget build(BuildContext context) {
     final bool isDisabled = !widget.isEnabled || widget.onPressed == null;
     final responsive = ResponsiveHelper.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final Color disabledBackground = colorScheme.surfaceContainerHighest;
+    final Color disabledForeground = colorScheme.onSurface.withValues(
+      alpha: 0.5,
+    );
+
+    final bool hasCustomBackground = widget.backgroundColor != null;
+    final List<Color> gradientColors = hasCustomBackground
+        ? <Color>[widget.backgroundColor!, widget.backgroundColor!]
+        : <Color>[colorScheme.primary, colorScheme.secondary];
+
+    final Color? customBackground = widget.backgroundColor;
+    final Brightness? customBackgroundBrightness = customBackground == null
+        ? null
+        : ThemeData.estimateBrightnessForColor(customBackground);
+    final Color defaultForegroundForCustomBackground =
+        customBackgroundBrightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
+
+    final Color effectiveForeground =
+        widget.textColor ??
+        (isDisabled
+            ? disabledForeground
+            : (hasCustomBackground
+                  ? defaultForegroundForCustomBackground
+                  : colorScheme.onPrimary));
+
+    final Color shadowBaseColor = hasCustomBackground
+        ? colorScheme.shadow
+        : colorScheme.primary;
 
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -97,30 +128,29 @@ class _CustomButtonState extends State<CustomButton>
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.circular(responsive.radius(AppStyles.radiusL)),
+                borderRadius: BorderRadius.circular(
+                  responsive.radius(AppStyles.radiusL),
+                ),
                 onTap: isDisabled ? null : _handlePress,
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: isDisabled
                         ? null
                         : LinearGradient(
-                            colors: widget.backgroundColor != null
-                                ? [
-                                    widget.backgroundColor!,
-                                    widget.backgroundColor!,
-                                  ]
-                                : AppColors.primaryGradient,
+                            colors: gradientColors,
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                           ),
-                    color: isDisabled ? AppColors.grey300 : null,
-                    borderRadius: BorderRadius.circular(responsive.radius(AppStyles.radiusL)),
+                    color: isDisabled ? disabledBackground : null,
+                    borderRadius: BorderRadius.circular(
+                      responsive.radius(AppStyles.radiusL),
+                    ),
                     // Tối ưu hóa: Giảm blur radius và opacity để giảm rendering overhead
                     boxShadow: isDisabled
                         ? null
                         : [
                             BoxShadow(
-                              color: AppColors.primary.withValues(alpha: 0.12),
+                              color: shadowBaseColor.withValues(alpha: 0.12),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -141,8 +171,9 @@ class _CustomButtonState extends State<CustomButton>
                                 center: Alignment.center,
                                 radius: _rippleAnimation.value * 2,
                                 colors: [
-                                  Colors.white.withAlpha(
-                                    (255 * 0.3 * (1 - _rippleAnimation.value)).round(),
+                                  effectiveForeground.withAlpha(
+                                    (255 * 0.25 * (1 - _rippleAnimation.value))
+                                        .round(),
                                   ),
                                   Colors.transparent,
                                 ],
@@ -163,7 +194,7 @@ class _CustomButtonState extends State<CustomButton>
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    widget.textColor ?? AppColors.white,
+                                    effectiveForeground,
                                   ),
                                 ),
                               ),
@@ -177,11 +208,7 @@ class _CustomButtonState extends State<CustomButton>
                               style: GoogleFonts.inter(
                                 fontSize: responsive.fontSize(16),
                                 fontWeight: FontWeight.w600,
-                                color:
-                                    widget.textColor ??
-                                    (isDisabled
-                                        ? AppColors.grey500
-                                        : AppColors.white),
+                                color: effectiveForeground,
                               ),
                             ),
                           ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../database/auth_service.dart';
 import '../../../database/exceptions.dart';
-import '../../../database/guest_sync_service.dart';
+import '../../../database/data_migration_service.dart';
 import '../../../utils/logger.dart';
 
 /// Error codes cho đăng ký
@@ -23,10 +23,10 @@ class RegisterErrorCode {
 /// Controller quản lý business logic cho màn hình đăng ký
 class RegisterController {
   final AuthService? authService;
-  final GuestSyncService? guestSyncService;
+  final DataMigrationService? dataMigrationService;
 
   AuthService? _authService;
-  GuestSyncService? _guestSync;
+  DataMigrationService? _dataMigration;
 
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -40,17 +40,17 @@ class RegisterController {
 
   RegisterController({
     this.authService,
-    this.guestSyncService,
+    this.dataMigrationService,
     Map<String, dynamic>? preSelectedData,
   }) {
     onboardingData = preSelectedData ?? {};
-    AppLogger.debug('Onboarding data received: $onboardingData', tag: 'RegisterController');
+    debugPrint('Onboarding data received: $onboardingData');
   }
 
   /// Khởi tạo lazy services khi cần thiết
   void _ensureServicesInitialized() {
     _authService ??= authService ?? AuthService();
-    _guestSync ??= guestSyncService ?? GuestSyncService();
+    _dataMigration ??= dataMigrationService ?? DataMigrationService();
   }
 
   /// Validate họ và tên
@@ -160,7 +160,7 @@ class RegisterController {
     _ensureServicesInitialized();
 
     try {
-      debugPrint('🔍 Processing onboarding data: $onboardingData');
+      debugPrint('Processing onboarding data: $onboardingData');
       final user = await _authService!.signUpWithOnboardingData(
         email: emailController.text.trim(),
         password: passwordController.text,
@@ -202,7 +202,7 @@ class RegisterController {
       }
       return RegisterResult.failure(RegisterErrorCode.registrationFailed);
     } catch (e) {
-      debugPrint('❌ Exception in signup: $e');
+      debugPrint('Exception in signup: $e');
       return RegisterResult.failure(RegisterErrorCode.registrationFailed);
     }
   }
@@ -210,9 +210,9 @@ class RegisterController {
   /// Đồng bộ dữ liệu guest sang user account
   Future<void> _syncGuestData(String userId) async {
     try {
-      await _guestSync?.syncGuestToUser(userId);
+      await _dataMigration?.syncGuestToUser(userId);
     } catch (e) {
-      debugPrint('⚠️ Guest sync failed: $e');
+      debugPrint('Guest sync failed: $e');
     }
   }
 

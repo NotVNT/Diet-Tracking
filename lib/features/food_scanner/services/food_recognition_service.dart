@@ -41,7 +41,7 @@ class FoodRecognitionService {
       // Gửi request
       debugPrint('Sending image to $uri');
       final streamedResponse = await request.send().timeout(
-        const Duration(seconds: 30), // Tăng timeout cho việc upload và xử lý AI
+        const Duration(seconds: 20), // Tăng timeout cho việc upload và xử lý AI
         onTimeout: () {
           throw Exception(
             'Timeout when connecting to the food recognition server',

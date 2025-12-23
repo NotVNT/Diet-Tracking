@@ -9,10 +9,52 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get bottomNavAddFood => 'Add Food';
+
+  @override
+  String get addFoodPageTitle => 'Add Food';
+
+  @override
+  String get addFoodNameLabel => 'Food name';
+
+  @override
+  String get addFoodCaloriesLabel => 'Calories (kcal)';
+
+  @override
+  String get addFoodProteinLabel => 'Protein (g)';
+
+  @override
+  String get addFoodCarbsLabel => 'Carbs (g)';
+
+  @override
+  String get addFoodFatLabel => 'Fat (g)';
+
+  @override
+  String get addFoodSaveButton => 'Save Food';
+
+  @override
+  String get addFoodEmptyValidator => 'Please enter this information';
+
+  @override
   String get defineYourGoal => 'Define your goal';
 
   @override
-  String get weWillBuild => 'We\'ll build a tailored plan to keep you motivated and help you reach your goals.';
+  String get recordSuccessMessage => 'Food record saved successfully!';
+
+  @override
+  String get addFoodSuccessNotificationTitle => 'Food Added Successfully';
+
+  @override
+  String addFoodSuccessNotificationBody(String foodName, String date) {
+    return 'You have added \'$foodName\' on $date.';
+  }
+
+  @override
+  String get caloriesToday => 'Calories Today';
+
+  @override
+  String get weWillBuild =>
+      'We\'ll build a tailored plan to keep you motivated and help you reach your goals.';
 
   @override
   String get getStartedNow => 'Get started!';
@@ -21,10 +63,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Diet Tracking';
 
   @override
+  String get nutrientFat => 'Fat';
+
+  @override
   String get startTrackingToday => 'Start tracking your\ndiet plan today!';
 
   @override
-  String get trackDailyDiet => 'Track your daily diet with\npersonalized meal plans and\nsmart recommendations.';
+  String get trackDailyDiet =>
+      'Track your daily diet with\npersonalized meal plans and\nsmart recommendations.';
 
   @override
   String get getStarted => 'Get started';
@@ -39,7 +85,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tellUsAboutYourself => 'Tell us about yourself';
 
   @override
-  String get weWillCreatePersonalizedPlan => 'We\'ll create a personalized plan for you based on details like your age and current weight.';
+  String get weWillCreatePersonalizedPlan =>
+      'We\'ll create a personalized plan for you based on details like your age and current weight.';
+
+  @override
+  String get chatBotYesterday => 'Yesterday';
+
+  @override
+  String get chatBotConfirmDeleteTitle => 'Delete session?';
+
+  @override
+  String chatBotConfirmDeleteMessage(String sessionTitle) {
+    return 'Are you sure you want to delete the session \"$sessionTitle\"?';
+  }
+
+  @override
+  String get chatBotSessionDeleted => 'Session deleted';
+
+  @override
+  String get chatBotHistoryEmpty => 'No chat history yet';
+
+  @override
+  String get chatBotStartConversation => 'Start a conversation...';
+
+  @override
+  String get chatBotEmptyTitle => 'Start a new conversation';
+
+  @override
+  String get chatBotEmptySubtitle =>
+      'Your chat history will be saved here. Ask me anything about your diet plan!';
+
+  @override
+  String get chatBotChatHistory => 'Chat history';
+
+  @override
+  String get chatBotCreateNewChat => 'Create new chat';
 
   @override
   String get start => 'Start';
@@ -48,7 +128,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gender => 'Gender';
 
   @override
-  String get weWillUseThisInfo => 'We\'ll use this information to calculate your daily energy needs.';
+  String get weWillUseThisInfo =>
+      'We\'ll use this information to calculate your daily energy needs.';
 
   @override
   String get male => 'Male';
@@ -67,6 +148,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get next => 'Next';
+
+  @override
+  String get chooseYourDietStyle => 'Which plan do you prefer?';
+
+  @override
+  String get youCanChangeLater => 'You can change this later in Settings.';
+
+  @override
+  String get keto => 'Keto';
+
+  @override
+  String get ketoDescription => 'Very low carb, higher fat.';
+
+  @override
+  String get normalWeightLoss => 'Normal weight loss';
+
+  @override
+  String get normalWeightLossDescription =>
+      'Balanced carbs, protein, and fat. Easy to maintain.';
+
+  @override
+  String get lowCarbs => 'Low Carbs';
+
+  @override
+  String get lowCarbsDescription =>
+      'Moderately reduced carbs, easier to sustain.';
 
   @override
   String get whatIsYourMainGoal => 'What is your main goal?';
@@ -105,7 +212,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whyDoYouWantToGainWeight => 'Why do you want to gain weight?';
 
   @override
-  String get whyDoYouWantToMaintainWeight => 'Why do you want to maintain weight?';
+  String get whyDoYouWantToMaintainWeight =>
+      'Why do you want to maintain weight?';
 
   @override
   String get whyDoYouWantToBuildMuscle => 'Why do you want to build muscle?';
@@ -222,7 +330,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weBringYouBestResults => 'We bring you the best results';
 
   @override
-  String get personalizedPathwayBasedOnGoals => 'Personalized pathway based on your goals and habits. Start now to see sustainable change.';
+  String get personalizedPathwayBasedOnGoals =>
+      'Personalized pathway based on your goals and habits. Start now to see sustainable change.';
 
   @override
   String get height => 'Height';
@@ -249,13 +358,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youCanDoIt => 'You can do it!';
 
   @override
-  String get maintainCurrentWeightIsHealthy => 'Maintaining your current weight is a healthy choice';
+  String get maintainCurrentWeightIsHealthy =>
+      'Maintaining your current weight is a healthy choice';
 
   @override
   String get loseWeightGoalPrefix => 'Losing';
 
   @override
-  String get loseWeightGoalSuffix => 'kg is a challenging but completely achievable goal';
+  String get loseWeightGoalSuffix =>
+      'kg is a challenging but completely achievable goal';
 
   @override
   String get gainWeightGoalPrefix => 'Gaining';
@@ -264,13 +375,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gainWeightGoalSuffix => 'kg will help you achieve better balance';
 
   @override
-  String get setClearGoalsMessage => 'Setting clear goals helps you get closer every day';
+  String get setClearGoalsMessage =>
+      'Setting clear goals helps you get closer every day';
 
   @override
   String get goalWeightPrefix => 'Goal weight';
 
   @override
-  String get userProgressMessage => 'users report clear progress after 4 weeks on the plan';
+  String get userProgressMessage =>
+      'users report clear progress after 4 weeks on the plan';
 
   @override
   String get continueAsGuest => 'Continue as Guest';
@@ -294,7 +407,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bmiCurrentTitle => 'Current BMI';
 
   @override
-  String get bmiEnterHeightToCalculate => 'Please enter height to calculate BMI.';
+  String get bmiEnterHeightToCalculate =>
+      'Please enter height to calculate BMI.';
 
   @override
   String get bmiUnderweight => 'You are underweight.';
@@ -306,37 +420,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bmiOverweight => 'You are overweight.';
 
   @override
-  String get bmiObese => 'You need to lose weight seriously to protect your health.';
+  String get bmiObese =>
+      'You need to lose weight seriously to protect your health.';
 
   @override
   String get activityLevelSedentaryTitle => 'Sedentary';
 
   @override
-  String get activityLevelSedentarySubtitle => '(Mostly sitting, little or no exercise)';
+  String get activityLevelSedentarySubtitle =>
+      '(Mostly sitting, little or no exercise)';
 
   @override
   String get activityLevelLightlyActiveTitle => 'Lightly active';
 
   @override
-  String get activityLevelLightlyActiveSubtitle => '(Exercise/sports 1-3 days/week)';
+  String get activityLevelLightlyActiveSubtitle =>
+      '(Exercise/sports 1-3 days/week)';
 
   @override
   String get activityLevelModeratelyActiveTitle => 'Moderately active';
 
   @override
-  String get activityLevelModeratelyActiveSubtitle => '(Exercise/sports 3-5 days/week)';
+  String get activityLevelModeratelyActiveSubtitle =>
+      '(Exercise/sports 3-5 days/week)';
+
+  @override
+  String get dateRangeTitle => 'Date range';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get last7Days => 'Last 7 days';
+
+  @override
+  String get customRange => 'Custom range';
 
   @override
   String get activityLevelVeryActiveTitle => 'Very active';
 
   @override
-  String get activityLevelVeryActiveSubtitle => '(Exercise/sports 6-7 days/week)';
+  String get activityLevelVeryActiveSubtitle =>
+      '(Exercise/sports 6-7 days/week)';
 
   @override
   String get activityLevelExtraActiveTitle => 'Extra active';
 
   @override
-  String get activityLevelExtraActiveSubtitle => '(Exercise twice a day, manual labor)';
+  String get activityLevelExtraActiveSubtitle =>
+      '(Exercise twice a day, manual labor)';
 
   @override
   String get loginTitle => 'Login';
@@ -381,7 +516,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginFailed => 'Login failed. Please check your information.';
 
   @override
-  String get invalidCredentials => 'Email or password is incorrect. Please try again.';
+  String get invalidCredentials =>
+      'Email or password is incorrect. Please try again.';
 
   @override
   String get googleLoginSuccess => 'Google login successful!';
@@ -393,13 +529,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get googleLoginFailed => 'Google login failed. Please try again.';
 
   @override
-  String get passwordResetEmailSent => 'Password reset email sent. Please check your inbox.';
+  String get passwordResetEmailSent =>
+      'Password reset email sent. Please check your inbox.';
 
   @override
   String get pleaseEnterEmailFirst => 'Please enter email first.';
 
   @override
-  String get passwordResetFailed => 'Unable to send password reset email. Please check your email and try again.';
+  String get passwordResetFailed =>
+      'Unable to send password reset email. Please check your email and try again.';
 
   @override
   String get signupTitle => 'Create Account';
@@ -453,7 +591,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPasswordTitle => 'Forgot Password?';
 
   @override
-  String get forgotPasswordInstruction => 'Enter your email and we\'ll send you instructions to reset your password.';
+  String get forgotPasswordInstruction =>
+      'Enter your email and we\'ll send you instructions to reset your password.';
 
   @override
   String get sendResetEmail => 'Send Reset Email';
@@ -479,7 +618,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get unableToSendResetEmail => 'Unable to send password reset email. Please try again later.';
+  String get unableToSendResetEmail =>
+      'Unable to send password reset email. Please try again later.';
 
   @override
   String get userNotFound => 'No account found with this email.';
@@ -488,7 +628,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tooManyRequests => 'Too many requests. Please try again later.';
 
   @override
-  String get networkError => 'Network error. Please check your connection and try again.';
+  String get networkError =>
+      'Network error. Please check your connection and try again.';
 
   @override
   String get pleaseEnterFullName => 'Please enter your full name.';
@@ -509,10 +650,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseAgreeToTerms => 'Please agree to the terms of service.';
 
   @override
-  String get emailAlreadyInUse => 'Email is already in use. Please use a different email.';
+  String get emailAlreadyInUse =>
+      'Email is already in use. Please use a different email.';
 
   @override
-  String get weakPassword => 'Password is too weak. Please use a stronger password.';
+  String get weakPassword =>
+      'Password is too weak. Please use a stronger password.';
 
   @override
   String get registrationFailed => 'Registration failed. Please try again.';
@@ -527,22 +670,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatBotNewChatCreated => 'New conversation created';
 
   @override
-  String get chatBotChatHistoryComingSoon => 'Chat history feature will be added later';
+  String get chatBotChatHistoryComingSoon =>
+      'Chat history feature will be added later';
 
   @override
-  String get chatBotSettingsComingSoon => 'Settings feature will be added later';
+  String get chatBotSettingsComingSoon =>
+      'Settings feature will be added later';
 
   @override
   String get chatBotPleaseEnterAllInfo => 'Please fill in all information';
 
   @override
-  String get chatBotCreateNewChat => 'Create new chat';
-
-  @override
   String get chatBotStartNewConversation => 'Start a new conversation';
-
-  @override
-  String get chatBotChatHistory => 'Chat history';
 
   @override
   String get chatBotViewPreviousConversations => 'View previous conversations';
@@ -557,34 +696,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatBotEnterMessage => 'Enter message...';
 
   @override
-  String get chatBotEmptyTitle => 'Start a conversation with your diet assistant';
-
-  @override
-  String get chatBotEmptySubtitle =>
-      'Create a new chat to ask nutrition questions or view your previous conversations.';
-
-
-
-  @override
-  String get chatBotConfirmDeleteTitle => 'Delete conversation';
-
-  @override
-  String chatBotConfirmDeleteMessage(String title) =>
-      'Are you sure you want to delete "$title"? This action cannot be undone.';
-
-  @override
-  String get chatBotSessionDeleted => 'Conversation deleted';
-
-  @override
-  String get chatBotHistoryEmpty => 'No chat history yet';
-
-  @override
-  String get chatBotStartConversation => 'Start conversation';
-
-  @override
-  String get chatBotYesterday => 'Yesterday';
-
-  @override
   String get chatBotFoodSuggestion => 'food suggestion';
 
   @override
@@ -594,7 +705,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatBotEnterBudget => 'Enter desired meal budget';
 
   @override
-  String get chatBotEnterMealType => 'Breakfast, Lunch, Dinner, Snack, Full day menu';
+  String get chatBotEnterMealType =>
+      'Breakfast, Lunch, Dinner, Snack, Full day menu';
 
   @override
   String get chatBotSubmit => 'Submit';
@@ -764,7 +876,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsNotificationTitle => 'Notifications';
 
   @override
-  String get settingsNotificationSubtitle => 'Receive notifications about meals and goals';
+  String get settingsNotificationSubtitle =>
+      'Receive notifications about meals and goals';
 
   @override
   String get settingsAppearance => 'Appearance';
@@ -809,7 +922,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataSyncBackupDialogTitle => 'Backup data';
 
   @override
-  String get dataSyncBackupDialogMessage => 'Do you want to backup your data to the cloud?';
+  String get dataSyncBackupDialogMessage =>
+      'Do you want to backup your data to the cloud?';
 
   @override
   String get dataSyncBackupDialogCancel => 'Cancel';
@@ -830,7 +944,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataSyncClearCacheDialogTitle => 'Clear cache';
 
   @override
-  String get dataSyncClearCacheDialogMessage => 'Clearing cache will free up storage but may slow down the app on next launch. Are you sure you want to clear?';
+  String get dataSyncClearCacheDialogMessage =>
+      'Clearing cache will free up storage but may slow down the app on next launch. Are you sure you want to clear?';
 
   @override
   String get dataSyncClearCacheDialogCancel => 'Cancel';
@@ -860,7 +975,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supportRecommendationSources => 'Recommendation sources';
 
   @override
-  String get supportOpeningRecommendationSources => 'Opening recommendation sources...';
+  String get supportOpeningRecommendationSources =>
+      'Opening recommendation sources...';
 
   @override
   String get supportFindVGPOnSocialMedia => 'Find VGP on social media';
@@ -896,7 +1012,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpCenterWeAreReadyToHelp => 'We are ready to help';
 
   @override
-  String get helpCenterFindAnswersOrContact => 'Find answers or contact the team';
+  String get helpCenterFindAnswersOrContact =>
+      'Find answers or contact the team';
 
   @override
   String get helpCenterFAQ => 'Frequently asked questions';
@@ -908,31 +1025,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpCenterFAQ1Question => 'How to track nutrition?';
 
   @override
-  String get helpCenterFAQ1Answer => 'You can add food to your daily meal diary. The app will automatically calculate nutrition for you.';
+  String get helpCenterFAQ1Answer =>
+      'You can add food to your daily meal diary. The app will automatically calculate nutrition for you.';
 
   @override
   String get helpCenterFAQ2Question => 'Can I set calorie goals?';
 
   @override
-  String get helpCenterFAQ2Answer => 'Yes, you can set calorie goals and other nutrition metrics in the Goal Settings section.';
+  String get helpCenterFAQ2Answer =>
+      'Yes, you can set calorie goals and other nutrition metrics in the Goal Settings section.';
 
   @override
   String get helpCenterFAQ3Question => 'How to create a menu?';
 
   @override
-  String get helpCenterFAQ3Answer => 'Go to the Menu section, select \"Create new\" and add the dishes you want. The app will automatically calculate nutrition.';
+  String get helpCenterFAQ3Answer =>
+      'Go to the Menu section, select \"Create new\" and add the dishes you want. The app will automatically calculate nutrition.';
 
   @override
   String get helpCenterFAQ4Question => 'Is my data synchronized?';
 
   @override
-  String get helpCenterFAQ4Answer => 'Yes, data is automatically synchronized with cloud if you are logged in to an account.';
+  String get helpCenterFAQ4Answer =>
+      'Yes, data is automatically synchronized with cloud if you are logged in to an account.';
 
   @override
   String get helpCenterFAQ5Question => 'How to export reports?';
 
   @override
-  String get helpCenterFAQ5Answer => 'Go to the Report section, select a time period and press the \"Export PDF\" button to download the report to your device.';
+  String get helpCenterFAQ5Answer =>
+      'Go to the Report section, select a time period and press the \"Export PDF\" button to download the report to your device.';
 
   @override
   String get helpCenterContactEmail => 'Email';
@@ -950,7 +1072,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpCenterContactAddress => 'Address';
 
   @override
-  String get helpCenterContactAddressValue => '123 Main Street, District 1, Ho Chi Minh City';
+  String get helpCenterContactAddressValue =>
+      '123 Main Street, District 1, Ho Chi Minh City';
 
   @override
   String get monday => 'Monday';
@@ -1019,7 +1142,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get waterReminderTitle => 'Water Reminder';
 
   @override
-  String get waterReminderMessage => 'Drink enough water every day to keep your body healthy and energized!';
+  String get waterReminderMessage =>
+      'Drink enough water every day to keep your body healthy and energized!';
 
   @override
   String get markAllAsRead => 'Mark all as read';
@@ -1076,7 +1200,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodScannerHelpTip1 => 'Place the meal fully inside the frame.';
 
   @override
-  String get foodScannerHelpTip2 => 'Use the Barcode mode for packaged products.';
+  String get foodScannerHelpTip2 =>
+      'Use the Barcode mode for packaged products.';
 
   @override
   String get foodScannerHelpTip3 => 'Pick from Gallery to reuse saved photos.';
@@ -1085,25 +1210,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodScannerGalleryTitle => 'Pick from gallery';
 
   @override
-  String get foodScannerGallerySubtitle => 'Select a previously captured meal photo.';
+  String get foodScannerGallerySubtitle =>
+      'Select a previously captured meal photo.';
 
   @override
   String get foodScannerGalleryButton => 'Open gallery';
 
   @override
-  String get foodScannerPlaceholderCaptureFood => 'Capturing food photo (coming soon)';
+  String get foodScannerPlaceholderCaptureFood =>
+      'Capturing food photo (coming soon)';
 
   @override
-  String get foodScannerPlaceholderScanBarcode => 'Scanning barcode (coming soon)';
+  String get foodScannerPlaceholderScanBarcode =>
+      'Scanning barcode (coming soon)';
 
   @override
-  String get foodScannerPlaceholderOpenGallery => 'Opening gallery (coming soon)';
+  String get foodScannerPlaceholderOpenGallery =>
+      'Opening gallery (coming soon)';
 
   @override
   String get recentlyLoggedTitle => 'Recently logged';
 
   @override
-  String get recentlyLoggedSubtitle => 'Start tracking your meals by taking a quick picture';
+  String get recentlyLoggedSubtitle =>
+      'Start tracking your meals by taking a quick picture';
 
   @override
   String get recentlyLoggedEmpty => 'You haven\'t uploaded any food';
@@ -1121,7 +1251,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deletePhoto => 'Delete Photo';
 
   @override
-  String get deletePhotoConfirmation => 'Are you sure you want to delete this photo?';
+  String get deletePhotoConfirmation =>
+      'Are you sure you want to delete this photo?';
 
   @override
   String get photoDeletedSuccessfully => 'Deleted successfully';
@@ -1136,11 +1267,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiFoodAnalysis => 'AI food analysis coming soon';
 
   @override
-  String get permissionCameraRequired => 'Please grant camera access to use this feature.';
-
-
-  @override
-  String get scanOnlyToday => 'You can only scan meals for today.';
+  String get permissionCameraRequired =>
+      'Please grant camera access to use this feature.';
 
   @override
   String get inboxTitle => 'Inbox';
@@ -1150,22 +1278,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterTitle => 'Filter';
-
-  @override
-  String get dateRangeTitle => 'Date range';
-
-  @override
-  String get today => 'Today';
-
-  @override
-  String get yesterday => 'Yesterday';
-
-  @override
-  String get last7Days => 'Last 7 days';
-
-  @override
-  String get customRange => 'Custom range';
-
 
   @override
   String get category => 'Category';
@@ -1198,7 +1310,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noMealsYet => 'No meals yet';
 
   @override
-  String get startByScanningOrPhoto => 'Scan a barcode or take a photo to get started';
+  String get startByScanningOrPhoto =>
+      'Scan a barcode or take a photo to get started';
 
   @override
   String get deleteMealTooltip => 'Delete meal';
@@ -1210,22 +1323,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String deleteMealMessage(String foodName) {
     return 'Are you sure you want to delete \"$foodName\" from records?';
   }
-
-  @override
-  String get mealDeletedSuccessfully => 'Meal deleted successfully';
-
-  @override
-  String get deleteMealFailed => 'Failed to delete meal';
-
-  @override
-  String get sourceTagBotSuggestion => 'Chatbot suggestion';
-
-  @override
-  String get sourceTagScanned => 'From scan/photo';
-
-  @override
-  String get sourceTagManual => 'Manual input';
-
 
   @override
   String get initializing => 'Initializing...';
@@ -1246,13 +1343,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get snackbarInfoTitle => 'Info';
 
   @override
-  String get foodScannerCantCapturePhoto => 'Couldn\'t capture photo, please try again.';
+  String get foodScannerCantCapturePhoto =>
+      'Couldn\'t capture photo, please try again.';
 
   @override
-  String get foodScannerCantOpenGallery => 'Couldn\'t open gallery, please try again.';
+  String get foodScannerCantOpenGallery =>
+      'Couldn\'t open gallery, please try again.';
 
   @override
-  String get foodScannerNoBarcodeFoundSaving => 'No barcode found in image. Saving photo...';
+  String get foodScannerNoBarcodeFoundSaving =>
+      'No barcode found in image. Saving photo...';
 
   @override
   String get foodScannerNoCamera => 'No camera found on device.';
@@ -1261,7 +1361,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodScannerSavePhotoSuccess => 'Photo saved successfully';
 
   @override
-  String get foodScannerUploadError => 'Couldn\'t upload photo to Cloudinary. Please try again.';
+  String get foodScannerUploadError =>
+      'Couldn\'t upload photo to Cloudinary. Please try again.';
 
   @override
   String get foodScannerSavePhotoError => 'Saved photo (error looking up info)';
@@ -1289,4 +1390,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get foodScannerSaveProductError => 'Error saving product';
+
+  @override
+  String get mealDeletedSuccessfully => 'Meal deleted successfully';
+
+  @override
+  String get deleteMealFailed => 'Failed to delete meal';
+
+  @override
+  String get sourceTagBotSuggestion => 'Chatbot suggestion';
+
+  @override
+  String get sourceTagScanned => 'From scan/photo';
+
+  @override
+  String get sourceTagManual => 'Manual input';
 }

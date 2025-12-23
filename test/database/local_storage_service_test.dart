@@ -46,5 +46,16 @@ void main() {
       expect(data['age'], isNull);
       expect(data['gender'], isNull);
     });
+
+    test('hasCompleteGuestOnboarding yêu cầu các trường bắt buộc', () async {
+      final svc = LocalStorageService();
+      expect(await svc.hasCompleteGuestOnboarding(), false);
+
+      await svc.saveGuestData(goal: 'lose', heightCm: 170, weightKg: 65, goalWeightKg: 60, age: 30, gender: 'female');
+      expect(await svc.hasCompleteGuestOnboarding(), true);
+
+      await svc.clearGuestData();
+      expect(await svc.hasCompleteGuestOnboarding(), false);
+    });
   });
 }

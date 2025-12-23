@@ -4,6 +4,7 @@ import 'diet_reason_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../widget/progress_bar/started_progress_bar.dart';
 
 /// Màn hình hỏi lý do tại sao người dùng chọn mục tiêu cụ thể
 /// (giảm cân, tăng cân, duy trì cân nặng, tăng cơ)
@@ -43,23 +44,24 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
 
   /// Lấy danh sách lý do dựa trên mục tiêu đã chọn
   List<_ReasonItem> _getReasonsForGoal(BuildContext context) {
-    final goal = widget.selectedMainGoals.isNotEmpty 
-        ? widget.selectedMainGoals.first 
+    final goal = widget.selectedMainGoals.isNotEmpty
+        ? widget.selectedMainGoals.first
         : '';
 
     // Kiểm tra mục tiêu bằng cách so sánh với localized strings
     final loseWeight = AppLocalizations.of(context)?.loseWeight ?? 'Giảm cân';
     final gainWeight = AppLocalizations.of(context)?.gainWeight ?? 'Tăng cân';
-    final maintainWeight = AppLocalizations.of(context)?.maintainWeight ?? 'Duy trì cân nặng';
+    final maintainWeight =
+        AppLocalizations.of(context)?.maintainWeight ?? 'Duy trì cân nặng';
     final buildMuscle = AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
 
-    if (goal == loseWeight) {
+    if (goal.startsWith(loseWeight)) {
       return _loseWeightReasons;
-    } else if (goal == gainWeight) {
+    } else if (goal.startsWith(gainWeight)) {
       return _gainWeightReasons;
-    } else if (goal == maintainWeight) {
+    } else if (goal.startsWith(maintainWeight)) {
       return _maintainWeightReasons;
-    } else if (goal == buildMuscle) {
+    } else if (goal.startsWith(buildMuscle)) {
       return _buildMuscleReasons;
     }
 
@@ -69,30 +71,31 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
 
   /// Lấy câu hỏi phù hợp với mục tiêu
   String _getQuestionForGoal(BuildContext context) {
-    final goal = widget.selectedMainGoals.isNotEmpty 
-        ? widget.selectedMainGoals.first 
+    final goal = widget.selectedMainGoals.isNotEmpty
+        ? widget.selectedMainGoals.first
         : '';
 
     final loseWeight = AppLocalizations.of(context)?.loseWeight ?? 'Giảm cân';
     final gainWeight = AppLocalizations.of(context)?.gainWeight ?? 'Tăng cân';
-    final maintainWeight = AppLocalizations.of(context)?.maintainWeight ?? 'Duy trì cân nặng';
+    final maintainWeight =
+        AppLocalizations.of(context)?.maintainWeight ?? 'Duy trì cân nặng';
     final buildMuscle = AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
 
-    if (goal == loseWeight) {
-      return AppLocalizations.of(context)?.whyDoYouWantToLoseWeight ?? 
+    if (goal.startsWith(loseWeight)) {
+      return AppLocalizations.of(context)?.whyDoYouWantToLoseWeight ??
           'Tại sao bạn muốn giảm cân?';
-    } else if (goal == gainWeight) {
-      return AppLocalizations.of(context)?.whyDoYouWantToGainWeight ?? 
+    } else if (goal.startsWith(gainWeight)) {
+      return AppLocalizations.of(context)?.whyDoYouWantToGainWeight ??
           'Tại sao bạn muốn tăng cân?';
-    } else if (goal == maintainWeight) {
-      return AppLocalizations.of(context)?.whyDoYouWantToMaintainWeight ?? 
+    } else if (goal.startsWith(maintainWeight)) {
+      return AppLocalizations.of(context)?.whyDoYouWantToMaintainWeight ??
           'Tại sao bạn muốn duy trì cân nặng?';
-    } else if (goal == buildMuscle) {
-      return AppLocalizations.of(context)?.whyDoYouWantToBuildMuscle ?? 
+    } else if (goal.startsWith(buildMuscle)) {
+      return AppLocalizations.of(context)?.whyDoYouWantToBuildMuscle ??
           'Tại sao bạn muốn tăng cơ?';
     }
 
-    return AppLocalizations.of(context)?.whyDidYouChooseThisGoal ?? 
+    return AppLocalizations.of(context)?.whyDidYouChooseThisGoal ??
         'Tại sao bạn chọn mục tiêu này?';
   }
 
@@ -107,29 +110,10 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         child: Column(
           children: [
             // Header with back button and progress bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  _buildBack(context),
-                  const SizedBox(width: 12),
-                  // Progress bar (step 2/4)
-                  Expanded(
-                    child: Row(
-                      children: [
-                        _buildProgressBar(true),
-                        const SizedBox(width: 8),
-                        _buildProgressBar(true),
-                        const SizedBox(width: 8),
-                        _buildProgressBar(false),
-                        const SizedBox(width: 8),
-                        _buildProgressBar(false),
-                      ],
-                    ),
-                  ),
-
-                ],
-              ),
+            StartedProgressBar(
+              currentStep: 2,
+              totalSteps: 4,
+              activeColor: _primary,
             ),
 
             // Question title
@@ -157,11 +141,9 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
                   vertical: 8,
                 ),
                 itemCount: reasons.length,
-                separatorBuilder: (_,_) => const SizedBox(height: 12),
-                itemBuilder: (context, index) => _buildReasonTile(
-                  index,
-                  reasons[index],
-                ),
+                separatorBuilder: (_, _) => const SizedBox(height: 12),
+                itemBuilder: (context, index) =>
+                    _buildReasonTile(index, reasons[index]),
               ),
             ),
 
@@ -175,7 +157,9 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
                   onPressed: _selectedIndices.isEmpty ? null : _handleNext,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primary,
-                    disabledBackgroundColor: Colors.black.withValues(alpha: 0.1),
+                    disabledBackgroundColor: Colors.black.withValues(
+                      alpha: 0.1,
+                    ),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
@@ -193,18 +177,6 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProgressBar(bool isActive) {
-    return Expanded(
-      child: Container(
-        height: 6,
-        decoration: BoxDecoration(
-          color: isActive ? _primary : Colors.black.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(6),
         ),
       ),
     );
@@ -271,25 +243,6 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
     );
   }
 
-  Widget _buildBack(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.05),
-        shape: BoxShape.circle,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: () => Navigator.of(context).maybePop(),
-          child: const Icon(Icons.arrow_back, size: 20),
-        ),
-      ),
-    );
-  }
-
   Future<void> _handleNext() async {
     final reasons = _getReasonsForGoal(context);
     final selectedReasons = _selectedIndices
@@ -303,9 +256,7 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
     final uid = _auth.currentUser?.uid;
     if (uid != null) {
       try {
-        await _auth.updateUserData(uid, {
-          'weightReasons': selectedReasons,
-        });
+        await _auth.updateUserData(uid, {'weightReasons': selectedReasons});
       } catch (_) {}
     }
 
@@ -314,15 +265,14 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
     // Chuyển sang màn hình tiếp theo
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => DietReasonScreen(
-          selectedMainGoals: widget.selectedMainGoals,
-          selectedWeightReasons: selectedReasons,
-        ),
+        builder:
+            (_) => DietReasonScreen(
+              selectedMainGoals: widget.selectedMainGoals,
+              selectedWeightReasons: selectedReasons,
+            ),
       ),
     );
   }
-
-
 
   String _getLocalizedReasonTitle(BuildContext context, String key) {
     final loc = AppLocalizations.of(context);
@@ -342,7 +292,7 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         return loc?.moreEnergy ?? 'Có nhiều năng lượng hơn';
       case 'healthyLifestyle':
         return loc?.healthyLifestyle ?? 'Lối sống lành mạnh';
-      
+
       // Gain weight reasons
       case 'buildStrength':
         return loc?.buildStrength ?? 'Tăng sức mạnh';
@@ -354,7 +304,7 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         return loc?.recoverFromIllness ?? 'Hồi phục sau bệnh';
       case 'increaseAppetite':
         return loc?.increaseAppetite ?? 'Tăng cảm giác thèm ăn';
-      
+
       // Maintain weight reasons
       case 'stayHealthy':
         return loc?.stayHealthy ?? 'Giữ sức khỏe';
@@ -364,7 +314,7 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         return loc?.balancedLifestyle ?? 'Lối sống cân bằng';
       case 'maintainFitness':
         return loc?.maintainFitness ?? 'Duy trì thể lực';
-      
+
       // Build muscle reasons
       case 'getStronger':
         return loc?.getStronger ?? 'Trở nên mạnh mẽ hơn';
@@ -376,7 +326,7 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
         return loc?.lookToned ?? 'Trông săn chắc';
       case 'boostMetabolism':
         return loc?.boostMetabolism ?? 'Tăng cường trao đổi chất';
-      
+
       case 'other':
         return loc?.other ?? 'Khác';
       default:
@@ -437,9 +387,5 @@ class _ReasonItem {
   final String icon;
   final String titleKey;
 
-  const _ReasonItem({
-    required this.icon,
-    required this.titleKey,
-  });
+  const _ReasonItem({required this.icon, required this.titleKey});
 }
-

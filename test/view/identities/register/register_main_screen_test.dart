@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:diet_tracking_project/view/identities/register/register_main_screen.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
-import 'package:diet_tracking_project/database/guest_sync_service.dart';
+import 'package:diet_tracking_project/database/data_migration_service.dart';
 import 'package:diet_tracking_project/view/identities/register/register_widgets.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';

@@ -4,7 +4,8 @@ import '../../../common/app_styles.dart';
 import '../../../common/custom_button.dart';
 import '../../../common/gradient_background.dart';
 import '../../../database/auth_service.dart';
-import '../../../database/guest_sync_service.dart';
+import '../../../database/data_migration_service.dart';
+import '../../../database/local_storage_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../responsive/responsive.dart';
 import '../../../services/google_auth_service.dart';
@@ -19,13 +20,13 @@ import 'login_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   final AuthService? authService;
-  final GuestSyncService? guestSyncService;
+  final DataMigrationService? dataMigrationService;
   final GoogleAuthService? googleAuthService;
   
   const LoginScreen({
     super.key,
     this.authService,
-    this.guestSyncService,
+    this.dataMigrationService,
     this.googleAuthService,
   });
 
@@ -40,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<Offset> _slideAnimation;
 
   late LoginController _loginController;
+  final LocalStorageService _localStorage = LocalStorageService();
   bool _isPasswordVisible = false;
   bool _isEmailFocused = false;
   bool _isPasswordFocused = false;
@@ -51,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen>
     // Khởi tạo login controller
     _loginController = LoginController(
       authService: widget.authService,
-      guestSyncService: widget.guestSyncService,
+      dataMigrationService: widget.dataMigrationService,
       googleAuthService: widget.googleAuthService,
     );
     
@@ -201,11 +203,22 @@ class _LoginScreenState extends State<LoginScreen>
 
   /// Xử lý khi người dùng bấm "Tôi chưa có tài khoản"
   Future<void> _handleNoAccountTap() async {
+    await _localStorage.clearGuestData();
     final hasGuestData = await _loginController.hasGuestData();
 
     if (!mounted) return;
 
-    if (hasGuestData) {
+    if (!hasGuestData) {
+      await _navigateToOnboarding();
+      return;
+    }
+
+    final hasCompleteOnboarding =
+        await _loginController.hasCompleteGuestOnboarding();
+
+    if (!mounted) return;
+
+    if (hasCompleteOnboarding) {
       await _navigateToSignupWithGuestData();
     } else {
       await _navigateToOnboarding();

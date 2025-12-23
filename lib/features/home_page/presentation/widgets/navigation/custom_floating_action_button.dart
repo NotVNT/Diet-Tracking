@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../../../l10n/app_localizations.dart';
 
+
 /// Custom floating action button with action buttons
 class CustomFloatingActionButton extends StatelessWidget {
   final VoidCallback onRecordSelected;
   final VoidCallback onChatBotSelected;
   final VoidCallback onScanFoodSelected;
   final VoidCallback onReportSelected;
+  final VoidCallback onAddFoodSelected;
 
   const CustomFloatingActionButton({
     super.key,
@@ -14,6 +16,7 @@ class CustomFloatingActionButton extends StatelessWidget {
     required this.onChatBotSelected,
     required this.onScanFoodSelected,
     required this.onReportSelected,
+    required this.onAddFoodSelected,
   });
 
   @override
@@ -49,10 +52,20 @@ class CustomFloatingActionButton extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // 2 Action buttons trên 1 hàng ngang
+                // Row 1: Add Food & Record
                 Row(
                   children: [
-                    // Action button cho Ghi nhận
+                    Expanded(
+                      child: _ActionButton(
+                        icon: Icons.add_box_outlined,
+                        label: localizations?.bottomNavAddFood ?? 'Thêm món ăn',
+                        onTap: () {
+                          Navigator.pop(context);
+                          onAddFoodSelected();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: _ActionButton(
                         icon: Icons.edit_note,
@@ -63,25 +76,12 @@ class CustomFloatingActionButton extends StatelessWidget {
                         },
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    // Action button cho Chat bot
-                    Expanded(
-                      child: _ActionButton(
-                        icon: Icons.chat_bubble_outline,
-                        label: localizations?.bottomNavChatBot ?? 'Chat bot',
-                        onTap: () {
-                          Navigator.pop(context);
-                          onChatBotSelected();
-                        },
-                      ),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                // Action button cho Scan food và Report
+                // Row 2: Scan Food & Report
                 Row(
                   children: [
-                    // Action button cho Scan food
                     Expanded(
                       child: _ActionButton(
                         icon: Icons.qr_code_scanner,
@@ -94,7 +94,6 @@ class CustomFloatingActionButton extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    // Action button cho Report
                     Expanded(
                       child: _ActionButton(
                         icon: Icons.assessment_outlined,
@@ -102,6 +101,24 @@ class CustomFloatingActionButton extends StatelessWidget {
                         onTap: () {
                           Navigator.pop(context);
                           onReportSelected();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Row 3: Chat Bot (centered)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: (MediaQuery.of(context).size.width - 32 - 12) / 2, // (Total width - padding - spacing) / 2
+                      child: _ActionButton(
+                        icon: Icons.chat_bubble_outline,
+                        label: localizations?.bottomNavChatBot ?? 'Chat bot',
+                        onTap: () {
+                          Navigator.pop(context);
+                          onChatBotSelected();
                         },
                       ),
                     ),
