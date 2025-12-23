@@ -45,7 +45,7 @@ class FirestoreService {
     return _firestore.collection(_usersCollection).doc(userId).delete();
   }
 
-  /// 🔍 Kiểm tra user có tồn tại
+  ///  Kiểm tra user có tồn tại
   Future<bool> userExists(String userId) async {
     final doc = await _firestore.collection(_usersCollection).doc(userId).get();
     return doc.exists;

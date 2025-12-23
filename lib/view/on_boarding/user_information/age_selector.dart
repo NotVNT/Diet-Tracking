@@ -43,7 +43,7 @@ class _AgeSelectorState extends State<AgeSelector> {
             children: [
               const SizedBox(height: 16),
               const ProgressBarWidget(
-                progress: 2 / 7, // Bước 2/7
+                progress: 2 / 8, // Bước 2/8
               ),
               const SizedBox(height: 24),
               Text(

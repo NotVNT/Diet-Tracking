@@ -82,7 +82,7 @@ class LocalStorageService {
   Future<Map<String, dynamic>> readGuestData() async {
     final prefs = await _prefs;
     final goal = prefs.getString(_keyGoal);
-    debugPrint('🔍 LocalStorageService: Reading goal = $goal');
+    debugPrint('LocalStorageService: Reading goal = $goal');
     return {
       'goal': goal,
       'heightCm': prefs.getDouble(_keyHeight),
@@ -115,6 +115,20 @@ class LocalStorageService {
         prefs.containsKey(_keyLanguage) ||
         prefs.containsKey(_keyActivityLevel) ||
         prefs.containsKey(_keyDietPreference);
+  }
+
+  /// Trả về true nếu guest đã hoàn tất các bước onboarding bắt buộc
+  Future<bool> hasCompleteGuestOnboarding() async {
+    final prefs = await _prefs;
+    const requiredKeys = [
+      _keyGoal,
+      _keyHeight,
+      _keyWeight,
+      _keyGoalWeight,
+      _keyAge,
+      _keyGender,
+    ];
+    return requiredKeys.every(prefs.containsKey);
   }
 
   /// Xóa tất cả dữ liệu guest khỏi local storage

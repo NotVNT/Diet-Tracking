@@ -66,7 +66,7 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
             children: [
               const SizedBox(height: 4),
               const ProgressBarWidget(
-                progress: 3 / 7, // Bước 3/7
+                progress: 3 / 8, // Bước 3/8
               ),
               const SizedBox(height: 12),
               Text(

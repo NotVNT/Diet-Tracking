@@ -26,16 +26,22 @@ class StartScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Chừa khoảng trống lớn phía trên như ảnh
-              SizedBox(height: size.height * 0.15),
+              const SizedBox(height: 20),
               Text(
                 AppLocalizations.of(context)?.tellUsAboutYourself ??
                     'Hãy cho chúng tôi biết về bản thân bạn',
                 style: GoogleFonts.inter(
                   fontSize: titleFontSize,
-                  height: 1.05,
+                  height: 1.1,
                   fontWeight: FontWeight.w800,
                   color: _textColor,
+                  shadows: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.25),
+                      offset: const Offset(0, 4),
+                      blurRadius: 4,
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 24),
@@ -45,12 +51,19 @@ class StartScreen extends StatelessWidget {
                         'bạn dựa trên các chi tiết như tuổi và cân nặng'
                         'hiện tại của bạn.',
                 style: GoogleFonts.inter(
-                  fontSize: 16,
+                  fontSize: 18,
                   height: 1.6,
-                  color: _textColor.withValues(alpha: 0.8),
+                  color: _textColor.withValues(alpha: 0.85),
                 ),
               ),
-              const Spacer(),
+              Expanded(
+                child: Center(
+                  child: Image.asset(
+                    'assets/welcome_screen/user_information.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
               Row(
                 children: [
                   // Nút back bo góc vuông tròn như ảnh
