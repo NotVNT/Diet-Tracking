@@ -19,6 +19,7 @@ import 'data_sync_page.dart';
 import 'support_page.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../common/snackbar_helper.dart';
+import '../../../../database/local_storage_service.dart';
 
 /// Profile page with Clean Architecture
 class ProfilePage extends StatefulWidget {
@@ -32,6 +33,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final ImagePicker _picker = ImagePicker();
+  final LocalStorageService _localStorage = LocalStorageService();
 
   @override
   void initState() {
@@ -78,7 +80,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _handleSignOut() async {
     try {
-      await widget.profileProvider.signOut();
+  await widget.profileProvider.signOut();
+  await _localStorage.clearGuestData();
 
       // Clear chat history when logging out
       ChatProviderFactory.dispose();
