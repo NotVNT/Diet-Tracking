@@ -11,6 +11,13 @@ from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
+import pandas as pd
+from PIL import Image
+from io import BytesIO
+import numpy as np
+import io
+import requests
+
 
 #---api_key---#
 load_dotenv()
@@ -26,86 +33,316 @@ client = OpenAI(
     api_key = HF_TOKEN,
     base_url="https://router.huggingface.co/v1"
 )
-extractor = InferenceClient(model="sentence-transformers/all-MiniLM-L6-v2")
-#---model_database_config---#
 
-#--pinecone--#
-pc = Pinecone(api_key=PINECONE_API_KEY)
-index_name = 'food-db'
-index = pc.Index(index_name)
-#--pinecone--#
+def intent_classification(text):
 
-with open('tag_guidelines.json', 'r', encoding='utf-8') as f:
-    TAG_GUIDELINES = json.load(f)
+    messages = [ {"role": "system", "content": """ Bạn là bộ phân loại intent. - Nếu câu hỏi yêu cầu dữ liệu cụ thể từ dataset (ví dụ: calories, protein, allergen, health_tags, thành phần dinh dưỡng, số liệu, "đề xuất món ăn", "cho món ăn phù hơp", "Gợi ý món ăn", "Xin ý tưởng món ăn", "cơm sườn có bao nhiêu calo") → GraphRAG. - Nếu câu hỏi chỉ mang tính hội thoại chung về thực phẩm, món ăn, sức khỏe (ví dụ: "táo có tốt cho sức khỏe không", "ăn nhiều cơm có béo không", "tại sao dị ứng cá không được ăn hải sản", "Ăn chuối mỗi ngày có lợi gì?", "Bỏ bữa sáng có hại sức khỏe không?") → Chatbot. Không cần giải thích thêm"""}, {"role": "user", "content": text} ]
 
-#----#
-def build_guideline_prompt():
-    prompt_lines = []
-    for key, tags_list in TAG_GUIDELINES.items():
-        tag_string = ", ".join(tags_list)
-        prompt_lines.append(f"Danh mục '{key}' (Các tag hợp lệ: [{tag_string}])")
-
-    return "\n".join(prompt_lines)
-
-
-def extract_tags(query_text):
-    guideline_prompt = build_guideline_prompt()
-
-    prompt = (
-        f"Bạn là một trợ lý trích xuất thông tin món ăn.\n"
-        f"Nhiệm vụ của bạn là đọc câu truy vấn của người dùng và trích xuất các từ khóa (tags)\n"
-        f"dựa trên các DANH MỤC VÀ TỪ VỰNG HỢP LỆ (guideline) sau đây:\n\n"
-        f"--- BỘ TỪ VỰNG HỢP LỆ ---\n"
-        f"{guideline_prompt}\n"
-        f"--- KẾT THÚC BỘ TỪ VỰNG ---\n\n"
-        f"QUY TẮC QUAN TRỌNG:\n"
-        f"1. CHỈ TRẢ VỀ các tag có trong \"Bộ từ vựng hợp lệ\".\n"
-        f"2. Chuẩn hóa từ đồng nghĩa về tag đúng (ví dụ: \"gà\" -> \"Thịt gà\", \"ăn chay\" -> \"Món chay\", \"ăn tối\" -> \"bữa tối\").\n"
-        f"3. BỎ QUA các từ không có trong bộ từ vựng (ví dụ: \"ngon\", \"healthy\" (nếu healthy ko có trong dish_tags)).\n"
-        f"4. TRẢ VỀ ĐỊNH DẠNG JSON. Nếu không tìm thấy tag nào, trả về JSON rỗng {{}}.\n\n"
-        f"VÍ DỤ:\n"
-        f"Query: \"món gà cho bữa tối nhanh\"\n"
-        f"Output:\n"
-        f"{{\n"
-        f"  \"true_ingredients\": [\"Thịt gà\"],\n"
-        f"  \"dish_tags\": [\"bữa tối\"],\n"
-        f"  \"mức độ\": [\"nhanh\"]\n"
-        f"}}\n\n"
-        f"Query: \"cách làm món chay xào có đậu hũ\"\n"
-        f"Output:\n"
-        f"{{\n"
-        f"  \"dish_type\": [\"Món chay\"],\n"
-        f"  \"true_ingredients\": [\"Đậu hũ\"],\n"
-        f"  \"main_methods\": [\"Xào\"]\n"
-        f"}}\n\n"
-        f"BÂY GIỜ, HÃY XỬ LÝ QUERY SAU:\n"
-        f"Query: \"{query_text}\"\n"
-        f"Output:\n"
+    completion = client.chat.completions.create(
+        model="Qwen/Qwen3-4B-Instruct-2507",
+        messages=messages,
     )
 
-    response = client.chat.completions.create(
-        model="Qwen/Qwen3-4B-Instruct-2507:nscale",
-        messages= [
-            {"role": "system",
-            "content": prompt},
-        ]
+    return(completion.choices[0].message.content)
+
+import os
+from dotenv import load_dotenv
+import pandas as pd
+
+from graphrag.config.models.vector_store_schema_config import VectorStoreSchemaConfig
+from graphrag.query.context_builder.entity_extraction import EntityVectorStoreKey
+from graphrag.query.indexer_adapters import (
+    read_indexer_covariates,
+    read_indexer_entities,
+    read_indexer_relationships,
+    read_indexer_reports,
+    read_indexer_text_units,
+)
+from graphrag.query.question_gen.local_gen import LocalQuestionGen
+from graphrag.query.structured_search.local_search.mixed_context import (
+    LocalSearchMixedContext,
+)
+from graphrag.query.structured_search.local_search.search import LocalSearch
+from graphrag.vector_stores.lancedb import LanceDBVectorStore
+
+load_dotenv()
+
+INPUT_DIR = "C:/Users/LENOVO/myfilebro/diet-tracking/chat_box/graphrag/output"
+LANCEDB_URI = f"{INPUT_DIR}/lancedb"
+
+COMMUNITY_REPORT_TABLE = "community_reports"
+ENTITY_TABLE = "entities"
+COMMUNITY_TABLE = "communities"
+RELATIONSHIP_TABLE = "relationships"
+# COVARIATE_TABLE = "covariates"
+TEXT_UNIT_TABLE = "text_units"
+COMMUNITY_LEVEL = 2
+
+# read nodes table to get community and degree data
+entity_df = pd.read_parquet(f"{INPUT_DIR}/{ENTITY_TABLE}.parquet")
+community_df = pd.read_parquet(f"{INPUT_DIR}/{COMMUNITY_TABLE}.parquet")
+
+entities = read_indexer_entities(entity_df, community_df, COMMUNITY_LEVEL)
+
+# load description embeddings to an in-memory lancedb vectorstore
+# to connect to a remote db, specify url and port values.
+description_embedding_store = LanceDBVectorStore(
+    vector_store_schema_config=VectorStoreSchemaConfig(
+        index_name="default-entity-description"
+    )
+)
+description_embedding_store.connect(db_uri=LANCEDB_URI)
+
+print(f"Entity count: {len(entity_df)}")
+entity_df.head()
+
+relationship_df = pd.read_parquet(f"{INPUT_DIR}/{RELATIONSHIP_TABLE}.parquet")
+relationships = read_indexer_relationships(relationship_df)
+
+print(f"Relationship count: {len(relationship_df)}")
+relationship_df.head()
+
+# NOTE: covariates are turned off by default, because they generally need prompt tuning to be valuable
+# Please see the GRAPHRAG_CLAIM_* settings
+# covariate_df = pd.read_parquet(f"{INPUT_DIR}/{COVARIATE_TABLE}.parquet")
+
+# claims = read_indexer_covariates(covariate_df)
+
+# print(f"Claim records: {len(claims)}")
+# covariates = {"claims": claims}
+
+report_df = pd.read_parquet(f"{INPUT_DIR}/{COMMUNITY_REPORT_TABLE}.parquet")
+reports = read_indexer_reports(report_df, community_df, COMMUNITY_LEVEL)
+
+print(f"Report records: {len(report_df)}")
+report_df.head()
+
+text_unit_df = pd.read_parquet(f"{INPUT_DIR}/{TEXT_UNIT_TABLE}.parquet")
+text_units = read_indexer_text_units(text_unit_df)
+
+print(f"Text unit records: {len(text_unit_df)}")
+text_unit_df.head()
+
+from graphrag.config.enums import ModelType
+from graphrag.config.models.language_model_config import LanguageModelConfig
+from graphrag.language_model.manager import ModelManager
+from graphrag.tokenizer.get_tokenizer import get_tokenizer
+
+api_key = os.environ["HF_TOKEN"]
+
+chat_config = LanguageModelConfig(
+    api_key=api_key,
+    type=ModelType.Chat,
+    model_provider="openai",
+    model="Qwen/Qwen3-4B-Instruct-2507",
+    api_base = "https://router.huggingface.co/v1",
+    model_supports_json = "true",
+    concurrent_requests = 1, # Rất quan trọng: HF API miễn phí sẽ khóa bạn nếu gọi nhanh
+    async_mode = "threaded",
+    retry_strategy = "exponential_backoff",
+    max_retries = 10
+    )
+chat_model = ModelManager().get_or_create_chat_model(
+    name="local_search",
+    model_type=ModelType.Chat,
+    config=chat_config,
+)
+
+embedding_config = LanguageModelConfig(
+    api_key=api_key,
+    type=ModelType.Embedding,
+    model_provider="openai",
+    model="Qwen/Qwen3-Embedding-8B",
+    api_base = "https://router.huggingface.co/nebius/v1",
+    concurrent_requests = 1, # Giữ ở mức thấp để tránh lỗi 429 (Too many requests)
+    async_mode = "threaded",
+    retry_strategy = "exponential_backoff",
+    max_retries = 10)
+
+text_embedder = ModelManager().get_or_create_embedding_model(
+    name="local_search_embedding",
+    model_type=ModelType.Embedding,
+    config=embedding_config,
+)
+
+tokenizer = get_tokenizer(chat_config)
+
+context_builder = LocalSearchMixedContext(
+    community_reports=reports,
+    text_units=text_units,
+    entities=entities,
+    relationships=relationships,
+    # if you did not run covariates during indexing, set this to None
+    covariates=None,
+    entity_text_embeddings=description_embedding_store,
+    embedding_vectorstore_key=EntityVectorStoreKey.ID,  # if the vectorstore uses entity title as ids, set this to EntityVectorStoreKey.TITLE
+    text_embedder=text_embedder,
+    tokenizer=tokenizer,
+)
+
+# text_unit_prop: proportion of context window dedicated to related text units
+# community_prop: proportion of context window dedicated to community reports.
+# The remaining proportion is dedicated to entities and relationships. Sum of text_unit_prop and community_prop should be <= 1
+# conversation_history_max_turns: maximum number of turns to include in the conversation history.
+# conversation_history_user_turns_only: if True, only include user queries in the conversation history.
+# top_k_mapped_entities: number of related entities to retrieve from the entity description embedding store.
+# top_k_relationships: control the number of out-of-network relationships to pull into the context window.
+# include_entity_rank: if True, include the entity rank in the entity table in the context window. Default entity rank = node degree.
+# include_relationship_weight: if True, include the relationship weight in the context window.
+# include_community_rank: if True, include the community rank in the context window.
+# return_candidate_context: if True, return a set of dataframes containing all candidate entity/relationship/covariate records that
+# could be relevant. Note that not all of these records will be included in the context window. The "in_context" column in these
+# dataframes indicates whether the record is included in the context window.
+# max_tokens: maximum number of tokens to use for the context window.
+
+
+local_context_params = {
+    "text_unit_prop": 0.5,
+    "community_prop": 0.1,
+    "conversation_history_max_turns": 5,
+    "conversation_history_user_turns_only": True,
+    "top_k_mapped_entities": 20,
+    "top_k_relationships": 20,
+    "include_entity_rank": True,
+    "include_relationship_weight": True,
+    "include_community_rank": False,
+    "return_candidate_context": False,
+    "embedding_vectorstore_key": EntityVectorStoreKey.ID,  # set this to EntityVectorStoreKey.TITLE if the vectorstore uses entity title as ids
+    "max_tokens": 2_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 5000)
+}
+
+model_params = {
+    "max_tokens": 2_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 1000=1500)
+    "temperature": 0.3,
+}
+
+search_engine = LocalSearch(
+    model=chat_model,
+    context_builder=context_builder,
+    tokenizer=tokenizer,
+    model_params=model_params,
+    context_builder_params=local_context_params,
+    response_type="multiple paragraphs",  # free form text describing the response type and format, can be anything, e.g. prioritized list, single paragraph, multiple paragraphs, multiple-page report
+)
+
+# print("Entities:", len(entities))
+# print("Reports:", len(reports))
+# print("Relationships:", len(relationships))
+# print("Text units:", len(text_units))
+# print(report_df["level"].unique())
+# print(community_df["level"].unique())
+
+def build_user_profile(age, height, weight, allergy, goal, goal_weight, gender):
+    user_profile = f"""Dưới đây là thông tin của người dùng để bạn hiểu rõ về người dùng hơn, và không được nhắc lại thông tin của người dùng trừ khi họ yêu cầu:[
+        - Tuổi: {age}
+        - Giới tính: {gender}
+        - Chiều cao: {height} cm
+        - Cân nặng: {weight} kg
+        - Dị ứng: {allergy}
+        - Mục tiêu: {goal}
+        - Cân nặng mục tiêu: {goal_weight}
+        ].
+"""
+    return user_profile
+
+import asyncio
+
+async def local_search(prompt, age, height, weight, allergy, goal, goal_weight, gender):
+    user_profile = f"""Dưới đây là thông tin của người dùng để bạn hiểu rõ về người dùng hơn, và không được nhắc lại thông tin của người dùng trừ khi họ yêu cầu:[
+            - Tuổi: {age}
+            - Giới tính: {gender}
+            - Chiều cao: {height} cm
+            - Cân nặng: {weight} kg
+            - Dị ứng: {allergy}
+            - Mục tiêu: {goal}
+            - Cân nặng mục tiêu: {goal_weight}
+            ].
+    """
+
+    result = await search_engine.search(user_profile + prompt + "cho 10 món ăn phù hợp với query của người dùng và cho thông tin dinh dưỡng đầy đủ, cho dạng bullet point")
+    # result = await search_engine.search("cho biết thông tin về các chế độ ăn phổ biến trong bảng dữ liệu")
+    return(result.response)
+
+# asyncio.run(local_search())
+
+
+def chat_bot(prompt, conversation_history, age, height, weight, allergy, goal, goal_weight, gender):
+    # Define the system message
+    system_message = {"role": "system", "content":f"""
+        -Bạn là trợ lí dinh dưỡng ảo tiếng việt và trả lời nhẹ nhàng, có thể thêm emoji, trả lời mọi câu hỏi liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống. Hãy từ chối trả lời những câu hỏi không liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống, dị ứng. Câu trả lời không được hơn 1000 kí tự
+        Dưới đây là thông tin của người dùng để bạn hiểu rõ về người dùng hơn, và không được nhắc lại thông tin của người dùng trừ khi họ yêu cầu:[
+        - Tuổi: {age}
+        - Giới tính: {gender}
+        - Chiều cao: {height} cm
+        - Cân nặng: {weight} kg
+        - Dị ứng: {allergy}
+        - Mục tiêu: {goal}
+        - Cân nặng mục tiêu: {goal_weight}
+        ].
+        -Nếu người dùng hỏi **ngoài chủ đề dinh dưỡng**, hãy **từ chối nhẹ nhàng**, ví dụ:> “Xin lỗi, tôi chỉ hỗ trợ về dinh dưỡng và ăn uống. Bạn có muốn tôi gợi ý món ăn hôm nay không?”.
+        """}
+
+    messages = list(conversation_history)
+
+    messages.append(system_message)
+    messages.append({"role": "user", "content": prompt})
+
+    completion = client.chat.completions.create(
+        model="Qwen/Qwen3-4B-Instruct-2507",
+        messages=messages,
     )
 
-    response = response.choices[0].message.content
-    json_str = re.sub(r"```json\n?|```", "", response.strip())
-    extracted_tags = json.loads(json_str)
+    bot_response = completion.choices[0].message.content
 
-    for key, value in extracted_tags.items():
-        if not isinstance(value, list):
-            extracted_tags[key] = [value]
+    messages.append({"role": "assistant", "content": bot_response})
 
-    return extracted_tags
+    return bot_response, messages
+
+def more_bot(prompt, conversation_history, age, height, weight, allergy, goal, goal_weight, gender, context):
+    system_message = {"role": "system", "content":f"""
+        -Bạn là trợ lí dinh dưỡng ảo tiếng việt và trả lời nhẹ nhàng, có thể thêm emoji, trả lời mọi câu hỏi liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống với giọng thân thiện. Hãy từ chối trả lời những câu hỏi không liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống. Câu trả lời không được hơn 5000 kí tự
+        Dưới đây là thông tin của người dùng để bạn hiểu rõ về người dùng hơn, và không được nhắc lại thông tin của người dùng trừ khi họ yêu cầu:[
+        - Tuổi: {age}
+        - Giới tính: {gender}
+        - Chiều cao: {height} cm
+        - Cân nặng: {weight} kg
+        - Dị ứng: {allergy}
+        - Mục tiêu: {goal}
+        - Cân nặng mục tiêu: {goal_weight}
+        ].
+        -Nếu người dùng hỏi **ngoài chủ đề dinh dưỡng**, hãy **từ chối nhẹ nhàng**, ví dụ:> “Xin lỗi, tôi chỉ hỗ trợ về dinh dưỡng và ăn uống. Bạn có muốn tôi gợi ý món ăn hôm nay không?”.
+        -Dưới đây là thông tin đồ ăn lấy từ database, Hãy chọn ngẫu nhiên 3 món khác nhau mỗi lần trả lời và giải thích ngắn gọn, tránh lặp lại cùng một bộ món ăn trong nhiều lần gợi ý.+ {context}
+        -Sau đây là yêu cầu đề xuất món ăn của người dùng, hãy trả lời dưới dạng sau.
+        ### 🧾 **Định dạng trả lời chuẩn bắt buộc phải đưa ra cho từng món ăn:**
+
+        ⭐
+        **Món ăn đề xuất:** (tên món ăn rõ ràng)
+        **Lý do chọn:** (1–2 câu nêu lý do chọn món, phù hợp sức khỏe hoặc mục tiêu)
+        **Thông tin dinh dưỡng (ước tính cho 1 khẩu phần):**
+        - Calo: Khoảng (…) - (…) kcal
+        - Protein: … g
+        - Carb: … g
+        - Fat: … g
+        ⭐,
+        """}
+    messages = list(conversation_history) # Create a mutable copy
+
+    messages.append(system_message)
+    messages.append({"role": "user", "content": prompt})
+    completion = client.chat.completions.create(
+        model="Qwen/Qwen3-4B-Instruct-2507",
+        messages=messages,
+    )
+
+    bot_response = completion.choices[0].message.content
+
+    # Add the bot's response to the history
+    messages.append({"role": "assistant", "content": bot_response})
+
+    # Return the bot's response and the updated conversation history
+    return bot_response, messages
 
 
-
-#----#
-
-#--FastAPI--#
 app = FastAPI()
 
 app.add_middleware(
@@ -130,254 +367,42 @@ class ChatRequest(BaseModel):
     food_records: list[dict] | None = None
     food_scan: dict | None = None
 
-def google_search(query: str, num_results: int = 3):
-    print("đang sử dụng google")
-    service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
-    resp = service.cse().list(q=query, cx=GOOGLE_CX).execute()
-    items = resp['items'][:num_results]
-    results = []
-    for it in items:
-        results.append({
-            "title": it.get("title"),
-            "snippet": it.get("snippet"),
-            "link": it.get("link")
-        })
-    return results
+# def google_search(query: str, num_results: int = 3):
+#     print("đang sử dụng google")
+#     service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
+#     resp = service.cse().list(q=query, cx=GOOGLE_CX).execute()
+#     items = resp['items'][:num_results]
+#     results = []
+#     for it in items:
+#         results.append({
+#             "title": it.get("title"),
+#             "snippet": it.get("snippet"),
+#             "link": it.get("link")
+#         })
+#     return results
 
-def weighted_random_choice(matches, k=5):
-    scores = np.array([m['score'] for m in matches])
-    probs = scores / scores.sum()
-    chosen = np.random.choice(matches, size=min(k, len(matches)), replace=False, p=probs)
-    food_list = [matches[i]['metadata'] for i in chosen]
-    return food_list.tolist()
-
-def db_lookup(tool_query: str, gender: str = "male", top_k=10):
-    """
-    Thực hiện Hybrid Search (v3)
-    Hàm này là hàm chính để ứng dụng của bạn gọi.
-    Args:
-        tool_query: Câu truy vấn (ví dụ: "món gà")
-        gender: "male" hoặc "female" (mặc định là "male")
-    """
-
-    print(f"--- Đang tìm kiếm cho: '{tool_query}' | Giới tính: {gender} ---")
-
-    target_namespace = "male_diet"
-    if gender.lower() == "female":
-        target_namespace = "female_diet"
-
-    extracted_tags = extract_tags(tool_query)
-    print(f"Tags trích xuất từ database: {extracted_tags}")
-
-    pinecone_filter = {}
-    filter_parts = []
-
-    if extracted_tags:
-        if extracted_tags.get("true_ingredients"):
-            filter_parts.append({"true_ingredients": {"$in": extracted_tags["true_ingredients"]}})
-        if extracted_tags.get("main_methods"):
-            filter_parts.append({"main_methods": {"$in": extracted_tags["main_methods"]}})
-        if extracted_tags.get("dish_tags"):
-            filter_parts.append({"dish_tags": {"$in": extracted_tags["dish_tags"]}})
-
-        if extracted_tags.get("dish_type"):
-            filter_parts.append({"dish_type": {"$eq": extracted_tags["dish_type"][0]}})
-        if extracted_tags.get("mức độ"):
-            filter_parts.append({"mức độ": {"$eq": extracted_tags["mức độ"][0]}})
-
-    if filter_parts:
-        pinecone_filter = {"$and": filter_parts}
-    print(f"Bộ lọc (filter) Pinecone sẽ dùng: {pinecone_filter}")
-
-    query_vector = extractor.feature_extraction(tool_query).tolist()
-
-    if pinecone_filter:
-        results = index.query(
-            vector=query_vector,
-            filter=pinecone_filter,
-            top_k=top_k,
-            include_metadata=True,
-            namespace=target_namespace
-        )
-    else:
-        print("Không có filter, thực hiện tìm kiếm ngữ nghĩa đơn thuần.")
-        results = index.query(
-            vector=query_vector,
-            top_k=top_k,
-            include_metadata=True,
-            namespace=target_namespace
-        )
-
-    if not results['matches']:
-        print("Không tìm thấy kết quả nào.")
-        return []
-
-
-    matches = results['matches']
-
-    if matches:
-        scores = np.array([m['score'] for m in matches], dtype=np.float64)
-
-        probs = scores / scores.sum()
-
-        k = min(3, len(matches))
-        chosen_indices = np.random.choice(len(matches), size=k, replace=False, p=probs)
-
-        food_list = [matches[i]['metadata'] for i in chosen_indices]
-    else:
-        food_list = []
-    print(food_list)
-    return food_list
-
-
-
-
-
-def build_system_prompt():
-    return f"""
-### Nhiệm vụ:
-Trả lời mọi câu hỏi liên quan đến **ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống và món ăn**.
-Câu trả lời phải **ngắn gọn, tự nhiên, mang tính tư vấn** tối đa 250 câu.
-
----
-
-### **Luật bắt buộc:**
-
-1. **Giới hạn phạm vi**
-   - Chỉ trả lời các câu hỏi **liên quan đến dinh dưỡng, món ăn, calo, sức khỏe qua ăn uống, và mục tiêu (giảm cân, tăng cơ, giữ dáng)**.
-   - Nếu người dùng hỏi những câu hỏi liên quan về kiến thức chung hay vấn đề chung của dinh dưỡng thì hãy trả lời và đừng đề xuất món ăn.
-   - Nếu người dùng hỏi **ngoài chủ đề dinh dưỡng**, hãy **từ chối nhẹ nhàng**, ví dụ:
-     > “Xin lỗi, tôi chỉ hỗ trợ về dinh dưỡng và ăn uống. Bạn có muốn tôi gợi ý món ăn hôm nay không?”
-
-2. **Bảo mật thông tin cá nhân**
-   - Không được **nhắc lại** hoặc **lặp lại** thông tin như **tuổi, chiều cao, cân nặng, bệnh lý, dị ứng** của người dùng trừ khi người dùng yêu cầu.
-   - Chỉ **sử dụng thông tin đó để cá nhân hóa gợi ý**, không được in lại.
-
-3. **An toàn và phù hợp sức khỏe**
-   - Nếu món ăn **liên quan đến bệnh lý hoặc dị ứng**, **ngăn lại** và **giải thích lý do** rõ ràng.
-   - Luôn chọn món **phù hợp với mục tiêu** và **trạng thái sức khỏe**.
-
-4. **Tính thực tế và địa phương**
-   - Món ăn phải **thực tế, phổ biến ở Việt Nam (đặc biệt là Sài Gòn)**, có thể mua ở tiệm hoặc tự nấu tại nhà.
-   - Có thể gợi ý **biến tấu món Việt** theo hướng lành mạnh.
-
-5. **Nếu người dùng yêu cầu công thức**, hãy đưa:
-   - **Nguyên liệu**
-   - **Cách làm chi tiết**
-   - **Mẹo nấu nhanh hoặc thay thế nguyên liệu nếu cần**
-
----
-
-### 🧾 **Định dạng trả lời chuẩn bắt buộc phải đưa ra cho từng món ăn:**
-
-⭐
-**Món ăn đề xuất:** (tên món ăn rõ ràng)
-**Lý do chọn:** (1–2 câu nêu lý do chọn món, phù hợp sức khỏe hoặc mục tiêu)
-**Thông tin dinh dưỡng (ước tính cho 1 khẩu phần):**
-- Calo: Khoảng (…) - (…) kcal
-- Protein: … g
-- Carb: … g
-- Fat: … g
-⭐
-
-Nếu người dùng hỏi về:
-- **So sánh món ăn:** So sánh rõ ràng theo calo, đường, chất béo, lợi ích.
-- **Kiến thức dinh dưỡng:** Giải thích ngắn, dễ hiểu, kèm ví dụ món Việt.
-- **Lượng ăn mỗi ngày:** Tính toán hợp lý dựa vào cân nặng và mục tiêu, nhưng không nhắc lại thông tin đó trong câu trả lời.
-
-### 🔧 Quy tắc sử dụng công cụ (tool‑calling):
-- Khi người dùng hỏi về món ăn, calo, thành phần, dinh dưỡng, cách nấu, hoặc cần tra cứu dữ liệu, bạn phải ưu tiên sử dụng function được cung cấp.
-- Nếu câu hỏi liên quan đến món ăn cụ thể → gọi function `db_lookup`.
-- Nếu câu hỏi liên quan đến thông tin chung → gọi function `google_search`.
-- Không trả lời trực tiếp nếu có function phù hợp để xử lý truy vấn.
-- Không tự tạo dữ liệu món ăn hoặc calo nếu chưa gọi tool.
----
-"""
-
-def build_user_prompt(age, height, weight, allergy, goal, prompt, goal_weight, gender):
-    return f"""
-### 🔍 **Thông tin đầu vào:**
-- Tuổi: {age}
-- Giới tính: {gender}
-- Chiều cao: {height} cm
-- Cân nặng: {weight} kg
-- Dị ứng: {allergy}
-- Mục tiêu: {goal}
-- Cân nặng mục tiêu: {goal_weight}
-- Truy vấn của người dùng: {prompt}
-
----
-
-###**Nhiệm vụ của bạn:**
-Dựa trên thông tin trên, hãy **phản hồi tự nhiên, thân thiện**.
-- Nếu người dùng hỏi món ăn, gợi ý món phù hợp với mục tiêu.
-"""
-
-tools = [
-  {
-      "type": "function",
-      "function": {
-          "name": "google_search",
-          "description": "Tìm kiếm thông tin trên mạng",
-          "parameters": {
-              "type": "object",
-              "properties": {
-                  "query":{
-                      "type": "string",
-                      "description": "Tìm kiếm query để tìm thông tin"
-                  }
-              },
-              "required": ["query"]
-          }
-      }
-  },
-  {
-      "type": "function",
-      "function": {
-          "name": "db_lookup",
-          "description": "Tìm kiếm thông tin của món ăn trong database",
-          "parameters":{
-              "type": "object",
-              "properties": {
-                  "tool_query": {
-                      "type": "string",
-                      "description": "Tìm kiếm query để tìm thông tin của món ăn"
-                  }
-              },
-              "required": ["tool_query"]
-          }
-
-      }
-  }
-]
-TOOL_MAPPING = {
-    "google_search": google_search,
-    "db_lookup": db_lookup
-}
-
-def call_llm(msgs):
-    resp = client.chat.completions.create(
-        model="Qwen/Qwen3-4B-Instruct-2507:nscale",
-        tools=tools,
-        messages=msgs
-    )
-    msgs.append(resp.choices[0].message.dict())
-    return resp
-
-def get_tool_response(response):
-    tool_call = response.choices[0].message.tool_calls[0]
-    tool_name = tool_call.function.name
-    tool_args = json.loads(tool_call.function.arguments)
-    tool_result = TOOL_MAPPING[tool_name](**tool_args)
-    return {
-        "role": "tool",
-        "tool_call_id": tool_call.id,
-        "content": tool_result,
-    }
-
+chat_history = []
 @app.post("/chat")
 async def chatbox(request: ChatRequest):
     print(f"Received request with gender: {request.gender}")
+    global chat_history
+    
+    intent = intent_classification(request.prompt)
+    if(intent.lower() == "chatbot"):
+        response, chat_history = chat_bot(request.prompt, chat_history, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender)
+        return{"reply": response}
+    else:
+        print(intent)
+        context = await local_search(request.prompt, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender)
+        response, chat_history = more_bot(request.prompt, chat_history, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender, context)
+
+        return{"reply":"reasoning with chain of thought " + context + response}
+        # return{"reply": response}
+
+
+
+
+
     chat_history = [
         {"role": "system",
         "content": build_system_prompt()}

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "vitamin_guide",
+    "type": "nutrition_guide",
+    "category": "vitamins",
+    "text": "Vitamin A hỗ trợ thị lực, miễn dịch và sức khỏe da. Vitamin B1, B2, B3, B5, B6, B7, B9 và B12 tham gia chuyển hóa năng lượng, chức năng thần kinh và tạo máu. Vitamin C tăng cường miễn dịch, chống oxy hóa và hỗ trợ hấp thu sắt. Vitamin D giúp hấp thu canxi và tăng cường xương. Vitamin E là chất chống oxy hóa mạnh. Vitamin K hỗ trợ đông máu và sức khỏe xương."
+  },
+  {
+    "id": "mineral_guide",
+    "type": "nutrition_guide",
+    "category": "minerals",
+    "text": "Canxi giúp xương và răng chắc khỏe. Sắt cần cho tạo máu và vận chuyển oxy. Magie hỗ trợ cơ và thần kinh. Kali điều hòa huyết áp và cân bằng điện giải. Kẽm hỗ trợ miễn dịch và lành vết thương. Đồng, mangan và selenium là các vi khoáng chống oxy hóa. Iodine cần cho tuyến giáp. Phosphorus hỗ trợ năng lượng tế bào."
+  },
+  {
+    "id": "health_tags_guide",
+    "type": "nutrition_guide",
+    "category": "health_tags",
+    "text": "Các health_tags mô tả đặc tính dinh dưỡng của thực phẩm hoặc món ăn. 'Giảm cân' nghĩa là ít calo, nhiều chất xơ, no lâu. 'Tăng cân' nghĩa là nhiều calo, giàu năng lượng. 'Tăng cơ' nghĩa là giàu protein. 'Ít carb' phù hợp cho người ăn low-carb hoặc keto. 'Nhiều protein' hỗ trợ xây dựng cơ bắp. 'Tốt cho tim mạch' nghĩa là ít chất béo bão hòa và giàu chất chống oxy hóa. 'Ăn sạch' nghĩa là ít chế biến, nguyên chất. 'Không chứa gluten' phù hợp cho người dị ứng gluten."
+  },
+  {
+    "id": "allergen_guide",
+    "type": "nutrition_guide",
+    "category": "allergens",
+    "text": "Các dị ứng phổ biến gồm: đậu phộng, hải sản có vỏ (tôm, cua), cá, trứng, sữa, gluten, đậu nành và nhóm hành tỏi. Khi chatbot phân tích món ăn, nếu món chứa các nguyên liệu này, cần cảnh báo người dùng. Dị ứng có thể gây nổi mẩn, khó thở hoặc phản ứng nghiêm trọng."
+  },
+  {
+    "id": "diet_guide",
+    "type": "nutrition_guide",
+    "category": "diet",
+    "text": "Các chế độ ăn phổ biến: Low-carb giảm tinh bột và tăng chất béo tốt. Keto rất ít carb và nhiều chất béo. Eat clean ưu tiên thực phẩm nguyên chất, ít chế biến. Ăn chay loại bỏ thịt, có thể bao gồm hoặc không bao gồm trứng và sữa. Giảm cân ưu tiên ít calo và nhiều chất xơ. Tăng cơ ưu tiên nhiều protein và calo vừa phải."
+  },
+  {
+    "id": "nutrition_analysis",
+    "type": "nutrition_guide",
+    "category": "analysis",
+    "text": "Khi phân tích dinh dưỡng, cần xem xét: tổng calo, tỷ lệ protein–carb–fat, vitamin và khoáng chất nổi bật, mức độ chế biến, dị ứng, và mục tiêu sức khỏe của người dùng. Món nhiều carb phù hợp cho năng lượng nhanh. Món nhiều protein phù hợp tăng cơ. Món ít calo phù hợp giảm cân."
+  },
+  {
+    "id": "goal_recommendation",
+    "type": "nutrition_guide",
+    "category": "recommendation",
+    "text": "Nếu người dùng muốn giảm cân, ưu tiên món ít calo, nhiều rau, giàu chất xơ. Nếu muốn tăng cân, chọn món nhiều calo, giàu tinh bột và chất béo tốt. Nếu muốn tăng cơ, chọn món giàu protein như thịt nạc, cá, trứng, đậu. Nếu muốn ăn sạch, chọn món ít chế biến. Nếu có bệnh nền như tiểu đường, tránh món nhiều đường và tinh bột nhanh."
+  },
+  {
+    "id": "ingredient_substitution",
+    "type": "nutrition_guide",
+    "category": "substitution",
+    "text": "Nếu người dùng dị ứng đậu phộng, có thể thay bằng hạt điều hoặc hạnh nhân. Nếu không ăn gluten, thay mì hoặc bánh mì bằng miến dong hoặc khoai lang. Nếu muốn giảm béo, thay thịt mỡ bằng thịt nạc hoặc ức gà. Nếu muốn tăng protein, thêm trứng, đậu phụ hoặc cá hồi. Nếu muốn giảm carb, thay cơm trắng bằng rau củ hoặc gạo lứt."
+  },
+  {
+    "id": "calorie_calculation",
+    "type": "nutrition_guide",
+    "category": "calorie",
+    "text": "Tổng calo của món ăn được tính bằng tổng calo của từng nguyên liệu sau khi chế biến. Thực phẩm giàu carb như cơm, bún, mì thường chiếm phần lớn calo. Chất béo cung cấp nhiều năng lượng nhất (9 kcal/g), protein và carb cung cấp 4 kcal/g. Món chiên xào thường có calo cao hơn món luộc hoặc hấp."
+  },
+  {
+    "id": "health_warning",
+    "type": "nutrition_guide",
+    "category": "warning",
+    "text": "Người bị tiểu đường nên tránh món nhiều đường và tinh bột nhanh. Người bị cao huyết áp nên hạn chế natri và món mặn. Người bị mỡ máu nên tránh món chiên rán và nhiều cholesterol. Người giảm cân nên tránh món nhiều dầu mỡ. Người tập gym cần ưu tiên protein và carb phức."
+  }
+]
