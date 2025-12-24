@@ -1,0 +1,546 @@
+[
+  {
+    "id": "dish_001",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cơm sườn",
+      "category": "món chính ",
+      "ingredients": [
+        "sườn lợn",
+        "gạo tẻ",
+        "dưa chuột",
+        "cà chua"
+      ],
+      "ingredient_ids": [
+        "food_023",
+        "food_024",
+        "food_025",
+        "food_026"
+      ],
+      "calories": 616.0,
+      "protein": 14.5,
+      "carbs": 93.0,
+      "fat": 16.2,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "chứa_khoáng_chất:_canxi",
+        "contains_cholesterol",
+        "giàu_vitamin_c_và_beta-caroten",
+        "high_energy",
+        "hàm_lượng_carbohydrate_cao",
+        "hàm_lượng_chất_xơ_thấp",
+        "hàm_lượng_protein_vừa_phải",
+        "kali",
+        "kẽm",
+        "món_chính",
+        "sắt"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_002",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cơm rang thập cẩm",
+      "category": "món chính ",
+      "ingredients": [
+        "gạo tẻ",
+        "giò lụa",
+        "trứng vịt",
+        "cà rốt",
+        "dưa cải bẹ",
+        "bột canh",
+        "mỡ"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_030",
+        "food_031"
+      ],
+      "calories": 623.0,
+      "protein": 19.9,
+      "carbs": 86.6,
+      "fat": 21.9,
+      "allergen": [
+        "trứng"
+      ],
+      "health_tags": [
+        "high_cholesterol",
+        "high_energy",
+        "high_fat",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "không_tốt_cho_tim_mạch",
+        "low_fiber",
+        "món_chính",
+        "nhiều_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_003",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "bún bò nam bộ",
+      "category": "món chính ",
+      "ingredients": [
+        "bún tươi",
+        "rau xà lách",
+        "rau thơm",
+        "thịt bò xào",
+        "lạc rang",
+        "hành phi",
+        "nước chấm pha ớt",
+        "tỏi ta",
+        "giá đậu xanh",
+        "nước dùng"
+      ],
+      "ingredient_ids": [
+        "food_032",
+        "food_033",
+        "food_034",
+        "food_035",
+        "food_036",
+        "food_003",
+        "food_037",
+        "food_038",
+        "food_039",
+        "food_040",
+        "food_041"
+      ],
+      "calories": 457.7,
+      "protein": 26.3,
+      "carbs": 71.5,
+      "fat": 7.4,
+      "allergen": [
+        "đậu phộng",
+        "tỏi"
+      ],
+      "health_tags": [
+        "có_nguy_cơ_ảnh_hưởng_tim_mạch",
+        "giữ_cân",
+        "high_carbs",
+        "high_fiber",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "low_cholesterol",
+        "low_fat",
+        "moderate_energy",
+        "moderate_protein",
+        "món_chính",
+        "nhiều_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_004",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "mỳ vằn thắn",
+      "category": "món chính ",
+      "ingredients": [
+        "mỳ vằn thắn",
+        "há cảo hấp",
+        "cải ngọt luộc",
+        "trứng vịt luộc",
+        "thịt lợn xá xíu",
+        "nấm hương chần",
+        "tôm biển luộc",
+        "chanh",
+        "ớt đỏ",
+        "rau mùi",
+        "nước dùng"
+      ],
+      "ingredient_ids": [
+        "food_201",
+        "food_214",
+        "food_107",
+        "food_215",
+        "food_028",
+        "food_216",
+        "food_055",
+        "food_070",
+        "food_065",
+        "food_216",
+        "food_217",
+        "food_218",
+        "food_111",
+        "food_219: food_140"
+      ],
+      "calories": 384.1,
+      "protein": 20.0,
+      "carbs": 30.5,
+      "fat": 20.2,
+      "allergen": [
+        "trứng",
+        "động vật có vỏ (tôm",
+        "cua...)",
+        "gluten (chất gây dị ứng từ bột mì)",
+        "thịt heo",
+        "nấm"
+      ],
+      "health_tags": [
+        "high_carbs",
+        "high_cholesterol",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "không_tốt_cho_tim_mạch",
+        "low_fat",
+        "low_fiber",
+        "moderate_energy",
+        "moderate_protein",
+        "món_chính",
+        "nhiều_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_005",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "miến lươn trộn",
+      "category": "món chính ",
+      "ingredients": [
+        "miến dong",
+        "lươn chiên giò",
+        "cà rốt",
+        "dưa chuột",
+        "giá đậu xanh",
+        "hành phi",
+        "rau kinh giới",
+        "lạc rang"
+      ],
+      "ingredient_ids": [
+        "food_144",
+        "food_220",
+        "food_029",
+        "food_041",
+        "food_039",
+        "food_221",
+        "food_038"
+      ],
+      "calories": 308.8,
+      "protein": 8.5,
+      "carbs": 54.9,
+      "fat": 6.1,
+      "allergen": [
+        "đậu phộng",
+        "cá",
+        "nhóm hành tỏi"
+      ],
+      "health_tags": [
+        "high_carbs",
+        "high_vitamin_a",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "không_tốt_cho_tim_mạch",
+        "low_cholesterol",
+        "low_fat",
+        "low_fiber",
+        "low_protein",
+        "moderate_energy",
+        "món_chính",
+        "nhiều_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "food_006",
+    "type": "food",
+    "metadata": {
+      "name_vi": "táo",
+      "name_en": "apple",
+      "category": "trái cây",
+      "weight_grams": 182.0,
+      "calories": 52.0,
+      "protein": 0.26,
+      "carbs": 13.8,
+      "fat": 0.17,
+      "vitamins": [
+        "Vitamin A",
+        "Vitamin C",
+        "Vintamin D",
+        "Vitamin E",
+        "Vitamin K"
+      ],
+      "minerals": [
+        "Calcium",
+        "Iron",
+        "Magnesium",
+        "Phosphorus",
+        "Potassium",
+        "Sodium",
+        "Zinc",
+        "Copper",
+        "Manganese",
+        "Iodine",
+        "Chromium"
+      ],
+      "allergen": [
+        "leucine",
+        "lysine",
+        "phenylalanine"
+      ],
+      "health_tags": [
+        "clean_food",
+        "digestive_health",
+        "giảm_cân",
+        "gluten_free",
+        "heart_health",
+        "high_antioxidants",
+        "high_fiber",
+        "low_calorie",
+        "giảm_cân",
+        "natural_sugar",
+        "nguồn_vitamin_c",
+        "thực_vật",
+        "vegetarian_friendly",
+        "weight_management"
+      ]
+    },
+    "text": "Táo là một loại quả thuộc họ hoa hồng, được trồng rộng rãi và có hàng nghìn giống khác nhau, từ ngọt đến chua. Phần thịt giòn của táo cung cấp chất xơ (đặc biệt là pectin) và vitamin C, với hầu hết các chất dinh dưỡng tập trung ở vỏ. Đây là loại trái cây ít calo, thường được ăn sống với vỏ, nhưng cũng là nguyên liệu linh hoạt trong cả món ăn ngọt và mặn khi chế biến."
+  },
+  {
+    "id": "food_007",
+    "type": "food",
+    "metadata": {
+      "name_vi": "chuối",
+      "name_en": "banana",
+      "category": "trái cây",
+      "weight_grams": 118.0,
+      "calories": 89.0,
+      "protein": 1.09,
+      "carbs": 22.8,
+      "fat": 0.33,
+      "vitamins": [
+        "Vitamin A",
+        "Vitamin C",
+        "Vintamin D",
+        "Vitamin E",
+        "Vitamin K",
+        "Vitamin B1",
+        "Vitamin B2",
+        "Vitamin B3",
+        "Vitamin B5",
+        "Vitamin B6",
+        "Folate(DFE): 25",
+        "Vitamin B12",
+        "Biotin",
+        "Choline"
+      ],
+      "minerals": [
+        "Potassium",
+        "Magnesium",
+        "Phosphorus",
+        "Calcium",
+        "Sodium",
+        "Iron",
+        "Zinc",
+        "Copper",
+        "Manganese",
+        "Iodine",
+        "Chromium",
+        "Selenium",
+        "Molybdenum",
+        "Chlorine"
+      ],
+      "allergen": [
+        "phenylalanine"
+      ],
+      "health_tags": [
+        "clean_food",
+        "giàu_vitamin_b6",
+        "gluten_free",
+        "heart_health",
+        "high_fiber",
+        "high_potassium",
+        "high_vitamin_c",
+        "hỗ_trợ_kiểm_soát_huyết_áp",
+        "low_calorie",
+        "giảm_cân",
+        "nguồn_năng_lượng_nhanh",
+        "thực_vật",
+        "tốt_cho_cơ_và_thần_kinh",
+        "tốt_cho_tiêu_hóa",
+        "vegetarian_friendly"
+      ]
+    },
+    "text": "Chuối là một loại trái cây nhiệt đới, được nhận biết bởi hình dáng dài cong và lớp vỏ màu vàng tươi, xuất hiện các đốm nâu khi chín. Loại quả ngọt tự nhiên này cung cấp nguồn năng lượng nhanh nhờ lượng carbohydrate dễ tiêu hóa, đồng thời đặc biệt giàu kali – một chất điện giải quan trọng cho chức năng cơ và thần kinh. Khi chín, chuối có kết cấu mềm, mịn, thuận tiện làm món ăn nhẹ và là nguyên liệu phổ biến cho sinh tố, các món nướng và món tráng miệng đông lạnh; trong khi chuối xanh chứa nhiều tinh bột kháng hơn, giúp giải phóng năng lượng chậm hơn."
+  },
+  {
+    "id": "food_008",
+    "type": "food",
+    "metadata": {
+      "name_vi": "dứa",
+      "name_en": "pineapple",
+      "category": "trái cây",
+      "weight_grams": 165.0,
+      "calories": 50.0,
+      "protein": 0.54,
+      "carbs": 13.1,
+      "fat": 0.12,
+      "vitamins": [
+        "Vitamin A",
+        "Vitamin C",
+        "Vitamin D",
+        "Vitamin E",
+        "Vitamin K",
+        "Vitamin B6",
+        "Vitamin B12",
+        "Thiamin (B1)",
+        "Riboflavin (B2)",
+        "Niacin (B3)",
+        "Pantothenic Acid (B5)",
+        "Folate DFE (B9)",
+        "Choline",
+        "Biotin"
+      ],
+      "minerals": [
+        "Iron",
+        "Zinc",
+        "Copper",
+        "Iodine",
+        "Calcium",
+        "Magnesium",
+        "Manganese",
+        "Potassium",
+        "Phosphorus",
+        "Sodium",
+        "Selenium",
+        "Molybdenum"
+      ],
+      "allergen": [],
+      "health_tags": [
+        "chứa_enzyme_bromelain_(hỗ_trợ_tiêu_hóa)",
+        "clean_food",
+        "digestive_health",
+        "giàu_mangan",
+        "gluten_free",
+        "high_antioxidants",
+        "high_vitamin_c",
+        "low_calorie",
+        "giảm_cân",
+        "natural_sugar",
+        "nguồn_chất_xơ",
+        "tốt_cho_hệ_miễn_dịch",
+        "vegetarian_friendly"
+      ]
+    },
+    "text": "Dứa là một loại trái cây nhiệt đới nổi bật với hương vị ngọt pha chua và phần thịt màu vàng đặc trưng, được bao quanh bởi lớp vỏ nâu có gai. Loại quả này đặc biệt giàu vitamin C và chứa bromelain – một loại enzyme độc đáo giúp tiêu hóa protein và có thể hỗ trợ giảm viêm. Dứa tươi có thể được nhận biết qua phần thịt chắc và mùi thơm nhiệt đới ngọt ngào khi chín, mang lại kết cấu mọng nước và lợi ích enzym mạnh mẽ hơn so với dứa đóng hộp."
+  },
+  {
+    "id": "food_009",
+    "type": "food",
+    "metadata": {
+      "name_vi": "đu đủ",
+      "name_en": "papaya",
+      "category": "trái cây",
+      "weight_grams": 140.0,
+      "calories": 42.0,
+      "protein": 0.5,
+      "carbs": 10.8,
+      "fat": 0.23,
+      "vitamins": [
+        "Vitamin A",
+        "Vitamin C",
+        "Vitamin D",
+        "Vitamin E",
+        "Vitamin K",
+        "Vitamin B6",
+        "Vitamin B12",
+        "Thiamin (B1)",
+        "Riboflavin (B2)",
+        "Niacin (B3)",
+        "Pantothenic Acid (B5)",
+        "Folate (B9)",
+        "Choline"
+      ],
+      "minerals": [
+        "Iron",
+        "Zinc",
+        "Copper",
+        "Iodine",
+        "Calcium",
+        "Magnesium",
+        "Manganese",
+        "Potassium",
+        "Phosphorus",
+        "Sodium",
+        "Selenium"
+      ],
+      "allergen": [],
+      "health_tags": [
+        "chứa_enzyme_papain_(hỗ_trợ_tiêu_hóa)",
+        "clean_food",
+        "digestive_health",
+        "gluten_free",
+        "high_antioxidants",
+        "high_fiber",
+        "high_vitamin_c",
+        "low_calorie",
+        "giảm_cân",
+        "natural_sugar",
+        "nguồn_vitamin_a_(beta-carotene)",
+        "tốt_cho_hệ_miễn_dịch",
+        "vegetarian_friendly"
+      ]
+    },
+    "text": "Đu đủ là một loại trái cây nhiệt đới có nguồn gốc từ Trung Mỹ, nổi bật với phần thịt màu cam rực rỡ và khoang giữa chứa nhiều hạt đen ăn được. Hương vị ngọt pha chút mùi đặc trưng cùng kết cấu mềm mịn khiến nó khác biệt so với các loại trái cây nhiệt đới khác, trong khi enzyme papain có trong quả chưa chín giúp tiêu hóa protein. Giàu vitamin C và folate, đu đủ tươi thường được ăn sống, có thể xúc trực tiếp từ vỏ hoặc thêm vào salad và sinh tố, với hàm lượng enzyme khiến nó đặc biệt có giá trị cho sức khỏe tiêu hóa."
+  },
+  {
+    "id": "food_010",
+    "type": "food",
+    "metadata": {
+      "name_vi": "chôm chôm",
+      "name_en": "rambutan",
+      "category": "trái cây",
+      "weight_grams": 165.0,
+      "calories": 74.57,
+      "protein": 1.0,
+      "carbs": 15.7,
+      "fat": 0.4,
+      "vitamins": [
+        "Vitamin C",
+        "Vitamin E",
+        "Vitamin A",
+        "Vitamin D",
+        "Vitamin K",
+        "Vitamin B12",
+        "Vitamin B6",
+        "Thiamin (B1)",
+        "Riboflavin (B2)",
+        "Niacin (B3)",
+        "Folate (B9)"
+      ],
+      "minerals": [
+        "Potassium",
+        "Calcium",
+        "Magnesium",
+        "Phosphorus",
+        "Iron",
+        "Zinc",
+        "Sodium"
+      ],
+      "allergen": [],
+      "health_tags": [
+        "cholesterol_free",
+        "chứa_chất_chống_oxy_hóa",
+        "giúp_bổ_sung_nước",
+        "gluten_free",
+        "high_fiber",
+        "high_vitamin_c",
+        "low_fat",
+        "tốt_cho_sức_khỏe_làn_da",
+        "vegetarian_friendly",
+        "ít_natri"
+      ]
+    },
+    "text": "Chôm chôm là một loại trái cây nhiệt đới có nguồn gốc từ Đông Nam Á, nổi bật với lớp vỏ màu đỏ tươi được bao phủ bởi những gai mềm giống sợi tóc (từ “rambut” trong tiếng Mã Lai có nghĩa là “tóc”). Loại quả này có họ hàng với vải, bên trong chứa phần thịt trong suốt, ngọt, bao quanh một hạt duy nhất, với phần ăn được mang hương vị nhẹ nhàng, thoang thoảng mùi hoa và kết cấu giống như nho. Chôm chôm tươi giàu vitamin C và chất chống oxy hóa, thường được ăn sống bằng cách bóc lớp vỏ ngoài dễ dàng."
+  }
+]

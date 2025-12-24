@@ -1,0 +1,3989 @@
+[
+  {
+    "id": "dish_001",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cơm sườn",
+      "category": "món chính ",
+      "ingredients": [
+        "sườn lợn",
+        "gạo tẻ",
+        "dưa chuột",
+        "cà chua"
+      ],
+      "ingredient_ids": [
+        "food_023",
+        "food_024",
+        "food_025",
+        "food_026"
+      ],
+      "calories": 616.0,
+      "protein": 14.5,
+      "carbs": 93.0,
+      "fat": 16.2,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "chứa_khoáng_chất:_canxi",
+        "contains_cholesterol",
+        "giàu_vitamin_c_và_beta-caroten",
+        "high_energy",
+        "hàm_lượng_carbohydrate_cao",
+        "hàm_lượng_chất_xơ_thấp",
+        "hàm_lượng_protein_vừa_phải",
+        "kali",
+        "kẽm",
+        "món_chính",
+        "sắt"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_002",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cơm rang thập cẩm",
+      "category": "món chính ",
+      "ingredients": [
+        "gạo tẻ",
+        "giò lụa",
+        "trứng vịt",
+        "cà rốt",
+        "dưa cải bẹ",
+        "bột canh",
+        "mỡ"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_030",
+        "food_031"
+      ],
+      "calories": 623.0,
+      "protein": 19.9,
+      "carbs": 86.6,
+      "fat": 21.9,
+      "allergen": [
+        "trứng"
+      ],
+      "health_tags": [
+        "high_cholesterol",
+        "high_energy",
+        "high_fat",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "không_tốt_cho_tim_mạch",
+        "low_fiber",
+        "món_chính",
+        "nhiều_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_003",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "bún bò nam bộ",
+      "category": "món chính ",
+      "ingredients": [
+        "bún tươi",
+        "rau xà lách",
+        "rau thơm",
+        "thịt bò xào",
+        "lạc rang",
+        "hành phi",
+        "nước chấm pha ớt",
+        "tỏi ta",
+        "giá đậu xanh",
+        "nước dùng"
+      ],
+      "ingredient_ids": [
+        "food_032",
+        "food_033",
+        "food_034",
+        "food_035",
+        "food_036",
+        "food_003",
+        "food_037",
+        "food_038",
+        "food_039",
+        "food_040",
+        "food_041"
+      ],
+      "calories": 457.7,
+      "protein": 26.3,
+      "carbs": 71.5,
+      "fat": 7.4,
+      "allergen": [
+        "đậu phộng",
+        "tỏi"
+      ],
+      "health_tags": [
+        "có_nguy_cơ_ảnh_hưởng_tim_mạch",
+        "giữ_cân",
+        "high_carbs",
+        "high_fiber",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "low_cholesterol",
+        "low_fat",
+        "moderate_energy",
+        "moderate_protein",
+        "món_chính",
+        "nhiều_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_004",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "mỳ vằn thắn",
+      "category": "món chính ",
+      "ingredients": [
+        "mỳ vằn thắn",
+        "há cảo hấp",
+        "cải ngọt luộc",
+        "trứng vịt luộc",
+        "thịt lợn xá xíu",
+        "nấm hương chần",
+        "tôm biển luộc",
+        "chanh",
+        "ớt đỏ",
+        "rau mùi",
+        "nước dùng"
+      ],
+      "ingredient_ids": [
+        "food_201",
+        "food_214",
+        "food_107",
+        "food_215",
+        "food_028",
+        "food_216",
+        "food_055",
+        "food_070",
+        "food_065",
+        "food_216",
+        "food_217",
+        "food_218",
+        "food_111",
+        "food_219: food_140"
+      ],
+      "calories": 384.1,
+      "protein": 20.0,
+      "carbs": 30.5,
+      "fat": 20.2,
+      "allergen": [
+        "trứng",
+        "động vật có vỏ (tôm",
+        "cua...)",
+        "gluten (chất gây dị ứng từ bột mì)",
+        "thịt heo",
+        "nấm"
+      ],
+      "health_tags": [
+        "high_carbs",
+        "high_cholesterol",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "không_tốt_cho_tim_mạch",
+        "low_fat",
+        "low_fiber",
+        "moderate_energy",
+        "moderate_protein",
+        "món_chính",
+        "nhiều_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_005",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "miến lươn trộn",
+      "category": "món chính ",
+      "ingredients": [
+        "miến dong",
+        "lươn chiên giò",
+        "cà rốt",
+        "dưa chuột",
+        "giá đậu xanh",
+        "hành phi",
+        "rau kinh giới",
+        "lạc rang"
+      ],
+      "ingredient_ids": [
+        "food_144",
+        "food_220",
+        "food_029",
+        "food_041",
+        "food_039",
+        "food_221",
+        "food_038"
+      ],
+      "calories": 308.8,
+      "protein": 8.5,
+      "carbs": 54.9,
+      "fat": 6.1,
+      "allergen": [
+        "đậu phộng",
+        "cá",
+        "nhóm hành tỏi"
+      ],
+      "health_tags": [
+        "high_carbs",
+        "high_vitamin_a",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "không_tốt_cho_tim_mạch",
+        "low_cholesterol",
+        "low_fat",
+        "low_fiber",
+        "low_protein",
+        "moderate_energy",
+        "món_chính",
+        "nhiều_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_006",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nộm bò kho",
+      "category": "salad",
+      "ingredients": [
+        "bì bò khô",
+        "thịt bò khô",
+        "gan lợn rán",
+        "lạc rang",
+        "phồng tôm chiên",
+        "su hào",
+        "cà rốt",
+        "rau kinh giới",
+        "nước chấm pha"
+      ],
+      "ingredient_ids": [
+        "food_222",
+        "food_200",
+        "food_066",
+        "food_070",
+        "food_156",
+        "food_038",
+        "food_265",
+        "food_111",
+        "food_131",
+        "food_200",
+        "food_054",
+        "food_066",
+        "food_205",
+        "food_159",
+        "food_029",
+        "food_221"
+      ],
+      "calories": 184.8,
+      "protein": 18.5,
+      "carbs": 11.7,
+      "fat": 6.9,
+      "allergen": [
+        "đậu phộng",
+        "động vật có vỏ (tôm",
+        "cua...)",
+        "thịt heo",
+        "thịt đỏ",
+        "hành tỏi (nhóm allium)"
+      ],
+      "health_tags": [
+        "giàu_dinh_dưỡng",
+        "high_iron",
+        "high_magnesium",
+        "high_protein",
+        "high_vitamin_a",
+        "low_carbs",
+        "low_cholesterol",
+        "low_energy",
+        "low_fat",
+        "natri_vừa_phải",
+        "phù_hợp_giảm_cân",
+        "salad"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_007",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "bánh tráng trộn",
+      "category": "salad",
+      "ingredients": [
+        "bánh đa nem",
+        "thịt bò khô",
+        "lạc rang",
+        "hành khô",
+        "tép khô",
+        "xoài xanh",
+        "sốt bơ",
+        "sốt me"
+      ],
+      "ingredient_ids": [
+        "food_223",
+        "food_222",
+        "food_200",
+        "food_066",
+        "food_070",
+        "food_156",
+        "food_038",
+        "food_224",
+        "food_010",
+        "food_225",
+        "food_202"
+      ],
+      "calories": 436.7,
+      "protein": 12.6,
+      "carbs": 63.6,
+      "fat": 14.4,
+      "allergen": [
+        "đậu phộng",
+        "động vật có vỏ (tôm",
+        "cua...)",
+        "thịt đỏ",
+        "hành tỏi (nhóm allium)",
+        "sữa",
+        "trứng",
+        "gluten (chất gây dị ứng từ bột mì)"
+      ],
+      "health_tags": [
+        "canxi_vừa_phải",
+        "giàu_beta-caroten",
+        "high_carbs",
+        "high_protein",
+        "không_phù_hợp_cho_người_tiểu_đường",
+        "không_tốt_cho_tim_mạch",
+        "low_cholesterol",
+        "moderate_energy",
+        "moderate_fat",
+        "nhiều_natri",
+        "phù_hợp_giữ_cân",
+        "salad",
+        "ít_vitamin_c"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_008",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cháo thịt",
+      "category": "súp/cháo",
+      "ingredients": [
+        "cháo trắng",
+        "thịt lợn nạc xay hầm",
+        "hành lá",
+        "ruốc thịt lợn",
+        "tía tô"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_107",
+        "food_040",
+        "food_039",
+        "food_216",
+        "food_066",
+        "food_029",
+        "food_006",
+        "food_091",
+        "food_203",
+        "dish_091"
+      ],
+      "calories": 234.0,
+      "protein": 12.7,
+      "carbs": 37.0,
+      "fat": 3.9,
+      "allergen": [
+        "thịt heo",
+        "hành tỏi (nhóm allium)"
+      ],
+      "health_tags": [
+        "canxi_vừa_phải",
+        "low_cholesterol",
+        "moderate_carbs",
+        "moderate_energy",
+        "moderate_fat",
+        "moderate_fiber",
+        "moderate_protein",
+        "món_ăn_dễ_tiêu",
+        "phù_hợp_giữ_cân",
+        "súp/cháo",
+        "ít_natri",
+        "ít_vitamin_c"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_009",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "thịt bò xào ",
+      "category": "món chính ",
+      "ingredients": [
+        "thịt bò",
+        "hành tây",
+        "dứa",
+        "ớt chuông"
+      ],
+      "ingredient_ids": [
+        "food_035",
+        "food_036",
+        "food_003",
+        "food_037"
+      ],
+      "calories": 250.0,
+      "protein": 25.9,
+      "carbs": 0.0,
+      "fat": 15.4,
+      "allergen": [
+        "thịt heo",
+        "hành tỏi (nhóm allium)"
+      ],
+      "health_tags": [
+        "giàu_dinh_dưỡng",
+        "giàu_niacin",
+        "giàu_vitamin_b12",
+        "high_fat",
+        "high_protein",
+        "món_chính",
+        "nguồn_gốc_động_vật",
+        "no_carbs",
+        "phù_hợp_chế_độ_keto",
+        "ít_đường"
+      ]
+    },
+    "text": "Miếng thịt bò xay (beef patty) là phần thịt bò xay được nêm nếm và ép thành hình tròn dẹt; thường được nướng hoặc áp chảo; đóng vai trò là nguồn đạm chính trong bánh hamburger. Khi nấu; độ ẩm trong thịt giảm xuống; làm hương vị trở nên đậm đà hơn và tạo lớp vỏ cháy cạnh hấp dẫn. Hàm lượng chất béo của patty thay đổi đáng kể tùy theo độ nạc của thịt; thường dao động từ 15–30% chất béo. Cách chế biến này cung cấp lượng lớn protein; sắt và kẽm; nhưng mức chất béo bão hòa vẫn khá cao trừ khi sử dụng loại thịt bò nạc hơn; chẳng hạn như thịt bò xay 90/10."
+  },
+  {
+    "id": "dish_010",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "chè thái",
+      "category": "tráng miệng",
+      "ingredients": [
+        "thạch xanh",
+        "thạch trắng",
+        "nước đường",
+        "sữa bò tươi",
+        "đá"
+      ],
+      "ingredient_ids": [
+        "food_226",
+        "food_042"
+      ],
+      "calories": 123.0,
+      "protein": 4.5,
+      "carbs": 20.6,
+      "fat": 2.5,
+      "allergen": [
+        "sữa"
+      ],
+      "health_tags": [
+        "calories_trung_bình",
+        "chứa_khoáng_chất_(sắt",
+        "contains_cholesterol",
+        "có_beta-carotene",
+        "có_vitamin_a",
+        "high_calcium",
+        "high_carbs",
+        "kẽm",
+        "low_fat",
+        "magie)",
+        "nhiều_natri",
+        "tráng_miệng",
+        "ít_protein",
+        "ít_vitamin_c"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_011",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nước mía",
+      "category": "đồ uống",
+      "ingredients": [
+        "mía",
+        "quất"
+      ],
+      "ingredient_ids": [
+        "food_227"
+      ],
+      "calories": 269.4,
+      "protein": 0.1,
+      "carbs": 67.3,
+      "fat": 0.0,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "có_beta-carotene",
+        "high_carbs",
+        "high_energy",
+        "low_protein",
+        "ít_canxi",
+        "ít_vitamin_a",
+        "ít_vitamin_c",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_012",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nước ép dứa",
+      "category": "đồ uống",
+      "ingredients": [
+        "nước dứa ép",
+        "dứa ta nguyên miếng"
+      ],
+      "ingredient_ids": [
+        "food_003"
+      ],
+      "calories": 177.6,
+      "protein": 4.4,
+      "carbs": 40.0,
+      "fat": 0.0,
+      "allergen": [
+        "Enzyme bromelain"
+      ],
+      "health_tags": [
+        "canxi_vừa_phải",
+        "có_beta-carotene",
+        "có_kẽm",
+        "có_magie",
+        "có_natri",
+        "có_sắt",
+        "high_carbs",
+        "high_energy",
+        "high_vitamin_c",
+        "rất_giàu_vitamin_a",
+        "ít_protein",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_013",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nước chanh leo",
+      "category": "đồ uống",
+      "ingredients": [
+        "chanh leo tươi",
+        "đường kính"
+      ],
+      "ingredient_ids": [
+        "food_012",
+        "food_054"
+      ],
+      "calories": 66.0,
+      "protein": 0.5,
+      "carbs": 15.6,
+      "fat": 0.2,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "có_chất_béo_không_bão_hòa",
+        "có_kali",
+        "có_vitamin_a",
+        "high_carbs",
+        "low_energy",
+        "low_fat",
+        "low_protein",
+        "ít_canxi",
+        "ít_magie",
+        "ít_natri",
+        "ít_sắt",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_014",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nước ép dưa hấu",
+      "category": "đồ uống",
+      "ingredients": [
+        "dưa hấu (ruột đỏ)"
+      ],
+      "ingredient_ids": [
+        "food_126"
+      ],
+      "calories": 85.1,
+      "protein": 5.7,
+      "carbs": 13.4,
+      "fat": 1.0,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "canxi_vừa_phải",
+        "có_kẽm",
+        "high_iron",
+        "high_magnesium",
+        "high_vitamin_a",
+        "high_vitamin_c",
+        "low_energy",
+        "low_fat",
+        "moderate_carbs",
+        "protein_vừa_phải",
+        "rất_giàu_beta-carotene",
+        "ít_natri",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_015",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nước ép cam",
+      "category": "đồ uống",
+      "ingredients": [
+        "cam(không vỏ)"
+      ],
+      "ingredient_ids": [
+        "food_007"
+      ],
+      "calories": 176.8,
+      "protein": 3.4,
+      "carbs": 40.8,
+      "fat": 0.0,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "có_beta-carotene",
+        "có_kẽm",
+        "có_magie",
+        "có_sắt",
+        "có_vitamin_a",
+        "high_calcium",
+        "high_carbs",
+        "high_energy",
+        "protein_vừa_phải",
+        "rất_giàu_vitamin_c",
+        "ít_natri",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_016",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "sữa tươi chân trâu",
+      "category": "đồ uống",
+      "ingredients": [
+        "sữa tươi",
+        "đường",
+        "trân châu đen"
+      ],
+      "ingredient_ids": [
+        "food_042",
+        "food_183",
+        "food_228"
+      ],
+      "calories": 424.5,
+      "protein": 9.2,
+      "carbs": 74.7,
+      "fat": 9.9,
+      "allergen": [
+        "sữa"
+      ],
+      "health_tags": [
+        "canxi_rất_cao",
+        "carbohydrate_rất_cao",
+        "contains_cholesterol",
+        "có_chất_béo_không_bão_hòa",
+        "có_kẽm",
+        "có_magie",
+        "có_sắt",
+        "có_vitamin_a",
+        "giàu_protein",
+        "high_fat",
+        "high_potassium",
+        "natri_rất_cao",
+        "năng_lượng_rất_cao",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_017",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "sữa ngô",
+      "category": "đồ uống",
+      "ingredients": [
+        "ngô"
+      ],
+      "ingredient_ids": [
+        "food_063"
+      ],
+      "calories": 123.8,
+      "protein": 4.3,
+      "carbs": 21.0,
+      "fat": 2.5,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "có_magie",
+        "có_sắt",
+        "high_calcium",
+        "low_fat",
+        "moderate_carbs",
+        "moderate_energy",
+        "protein_vừa_phải",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_018",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nước trà hoa cúc",
+      "category": "đồ uống",
+      "ingredients": [
+        "trà hoa cúc",
+        "nước đường",
+        "quất",
+        "cam thảo"
+      ],
+      "ingredient_ids": [
+        "food_227",
+        "food_229"
+      ],
+      "calories": 18.3,
+      "protein": 0.1,
+      "carbs": 4.5,
+      "fat": 0.0,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "canxi_thấp",
+        "có_vitamin_a",
+        "kali_rất_thấp",
+        "không_có_chất_béo",
+        "low_carbs",
+        "protein_rất_thấp",
+        "very_low_energy",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_019",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cà phê trứng",
+      "category": "đồ uống",
+      "ingredients": [
+        "lòng đỏ trứng",
+        "cà phê đen",
+        "sữa đặc"
+      ],
+      "ingredient_ids": [
+        "food_230",
+        "food_087"
+      ],
+      "calories": 228.8,
+      "protein": 8.7,
+      "carbs": 8.7,
+      "fat": 17.7,
+      "allergen": [
+        "trứng",
+        "sữa"
+      ],
+      "health_tags": [
+        "giàu_protein",
+        "high_energy",
+        "high_fat",
+        "high_potassium",
+        "moderate_carbs",
+        "rất_giàu_vitamin_a",
+        "đồ_uống"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_020",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "chè vừng đen ",
+      "category": "tráng miệng",
+      "ingredients": [
+        "vừng đen",
+        "lạc rang",
+        "cùi dừa già",
+        "bánh quấy"
+      ],
+      "ingredient_ids": [
+        "food_231",
+        "food_038",
+        "food_209",
+        "food_210"
+      ],
+      "calories": 457.1,
+      "protein": 12.8,
+      "carbs": 54.9,
+      "fat": 20.7,
+      "allergen": [
+        "vừng",
+        "lạc"
+      ],
+      "health_tags": [
+        "canxi_rất_cao",
+        "có_beta-carotene",
+        "giàu_protein",
+        "high_carbs",
+        "high_cholesterol",
+        "high_fat",
+        "high_iron",
+        "high_zinc",
+        "magie_cao",
+        "năng_lượng_rất_cao",
+        "tráng_miệng",
+        "vitamin_a_rất_thấp",
+        "vitamin_c_rất_thấp",
+        "ít_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_021",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "chè kem dừa",
+      "category": "tráng miệng",
+      "ingredients": [
+        "nước cốt dừa",
+        "kem dừa",
+        "trân châu",
+        "thạch dừa",
+        "lạc rang",
+        "trân châu đường đen",
+        "thạch xanh",
+        "cùi dừa"
+      ],
+      "ingredient_ids": [
+        "food_009",
+        "food_038",
+        "food_183",
+        "food_228",
+        "food_226",
+        "food_209"
+      ],
+      "calories": 385.5,
+      "protein": 5.5,
+      "carbs": 66.5,
+      "fat": 10.8,
+      "allergen": [
+        "lạc"
+      ],
+      "health_tags": [
+        "có_chất_béo_không_bão_hòa",
+        "có_kẽm",
+        "có_vitamin_a",
+        "high_calcium",
+        "high_carbs",
+        "high_energy",
+        "high_fat",
+        "high_iron",
+        "high_potassium",
+        "magie_cao",
+        "natri_vừa_phải",
+        "protein_vừa_phải",
+        "tráng_miệng"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_022",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nha đam trộn mít",
+      "category": "tráng miệng",
+      "ingredients": [
+        "trân châu đường đen",
+        "trân châu trắng",
+        "mít",
+        "caramel",
+        "nha đam",
+        "nước cốt dừa",
+        "sữa đặc",
+        "hạt chia"
+      ],
+      "ingredient_ids": [
+        "food_183",
+        "food_228",
+        "food_014",
+        "food_239",
+        "food_211",
+        "food_212",
+        "food_087",
+        "food_213"
+      ],
+      "calories": 401.1,
+      "protein": 8.3,
+      "carbs": 79.0,
+      "fat": 5.8,
+      "allergen": [
+        "sữa"
+      ],
+      "health_tags": [
+        "canxi_cao",
+        "carbohydrate_rất_cao",
+        "contains_cholesterol",
+        "có_chất_béo_không_bão_hòa",
+        "có_kẽm",
+        "có_sắt",
+        "có_vitamin_a",
+        "giàu_protein",
+        "high_energy",
+        "kali_rất_cao",
+        "magie_cao",
+        "moderate_fat",
+        "tráng_miệng",
+        "ít_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_023",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "chè thập cẩm",
+      "category": "tráng miệng",
+      "ingredients": [
+        "nếp cẩm",
+        "thạch dừa",
+        "mít",
+        "thạch matcha",
+        "trân châu",
+        "thạch nha đam",
+        "trân châu trắng",
+        "nước cốt dừa"
+      ],
+      "ingredient_ids": [
+        "food_242",
+        "food_226",
+        "food_236",
+        "food_014",
+        "food_183",
+        "food_228",
+        "food_212"
+      ],
+      "calories": 458.7,
+      "protein": 4.6,
+      "carbs": 103.9,
+      "fat": 2.7,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "canxi_cao",
+        "carbohydrate_rất_cao",
+        "có_kẽm",
+        "có_magie",
+        "có_sắt",
+        "kali_cao",
+        "low_fat",
+        "năng_lượng_rất_cao",
+        "tráng_miệng",
+        "vitamin_a_rất_thấp",
+        "ít_natri",
+        "ít_protein"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_024",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "caramen hoa quả tươi",
+      "category": "tráng miệng",
+      "ingredients": [
+        "thanh long",
+        "mít",
+        "chuối",
+        "xoài chín",
+        "táo",
+        "dâu tây",
+        "bơ",
+        "nho",
+        "caramen",
+        "nước sốt",
+        "nước cốt dừa"
+      ],
+      "ingredient_ids": [
+        "food_019",
+        "food_014",
+        "food_002",
+        "food_010",
+        "food_001",
+        "food_257",
+        "food_013",
+        "food_008"
+      ],
+      "calories": 251.5,
+      "protein": 5.8,
+      "carbs": 41.5,
+      "fat": 6.9,
+      "allergen": [
+        "sữa"
+      ],
+      "health_tags": [
+        "canxi_cao",
+        "có_chất_béo_không_bão_hòa",
+        "có_kẽm",
+        "có_magie",
+        "có_sắt",
+        "có_vitamin_a",
+        "high_carbs",
+        "kali_rất_cao",
+        "moderate_energy",
+        "moderate_fat",
+        "protein_vừa_phải",
+        "tráng_miệng",
+        "ít_natri"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_025",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "kem sữa chua trân châu",
+      "category": "tráng miệng",
+      "ingredients": [
+        "sữa chua đặc có đường",
+        "trân châu trắng",
+        "nước cốt dừa"
+      ],
+      "ingredient_ids": [
+        "food_064",
+        "food_183",
+        "food_228",
+        "food_212"
+      ],
+      "calories": 284.2,
+      "protein": 6.4,
+      "carbs": 47.8,
+      "fat": 7.5,
+      "allergen": [
+        "sữa"
+      ],
+      "health_tags": [
+        "canxi_rất_cao",
+        "contains_cholesterol",
+        "có_chất_béo_không_bão_hòa",
+        "có_kẽm",
+        "có_sắt",
+        "có_vitamin_a",
+        "high_carbs",
+        "kali_cao",
+        "magie_thấp",
+        "moderate_energy",
+        "moderate_fat",
+        "natri_vừa_phải",
+        "protein_vừa_phải",
+        "tráng_miệng"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_026",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "háo cảo hấp",
+      "category": "món phụ",
+      "ingredients": [
+        "bột mì",
+        "thịt heo"
+      ],
+      "ingredient_ids": [
+        "food_214",
+        "food_107"
+      ],
+      "calories": 224.0,
+      "protein": 8.24,
+      "carbs": 21.2,
+      "fat": 11.8,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "canxi_thấp",
+        "carbohydrate_vừa",
+        "chất_béo_vừa",
+        "chất_xơ_thấp",
+        "contains_cholesterol",
+        "không_có_vitamin_a",
+        "không_có_vitamin_c",
+        "món_phụ",
+        "natri_cao",
+        "năng_lượng_vừa",
+        "protein_vừa",
+        "đường_thấp"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_027",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "thịt lợn xá xíu",
+      "category": "món chính ",
+      "ingredients": [
+        "thịt lợn",
+        "mật ong",
+        "tỏi",
+        "hành củ",
+        "dầu thực vật",
+        "nước mắm",
+        "ngũ vị hương"
+      ],
+      "ingredient_ids": [
+        "food_216",
+        "food_055",
+        "food_070",
+        "food_065",
+        "food_216",
+        "food_217"
+      ],
+      "calories": 846.0,
+      "protein": 50.3,
+      "carbs": 7.3,
+      "fat": 68.2,
+      "allergen": [
+        "nước mắm"
+      ],
+      "health_tags": [
+        "chất_xơ_thấp",
+        "contains_cholesterol",
+        "có_canxi",
+        "có_sắt",
+        "có_vitamin_a",
+        "có_vitamin_c",
+        "high_energy",
+        "high_fat",
+        "high_protein",
+        "low_carbs",
+        "món_chính",
+        "natri_cao"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_028",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "thịt bò khô",
+      "category": "món phụ",
+      "ingredients": [
+        "thịt bò",
+        "muối",
+        "tiêu",
+        "tỏi",
+        "ớt"
+      ],
+      "ingredient_ids": [
+        "food_222",
+        "food_200",
+        "food_066",
+        "food_070",
+        "food_156"
+      ],
+      "calories": 250.0,
+      "protein": 30.0,
+      "carbs": 10.0,
+      "fat": 10.0,
+      "allergen": [
+        "thịt bò"
+      ],
+      "health_tags": [
+        "có_thêm_đường",
+        "có_thể_gây_dị_ứng",
+        "giàu_protein",
+        "giàu_vi_chất_dinh_dưỡng",
+        "low_carbs",
+        "món_phụ",
+        "nhiều_natri",
+        "thực_phẩm_chế_biến_sẵn"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_029",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nước hầm xương bò",
+      "category": "món chính ",
+      "ingredients": [
+        "thịt bò",
+        "hành tây",
+        "cà rốt",
+        "cần tây",
+        "củ cải trắng",
+        "muối",
+        "tiêu",
+        "gừng",
+        "tỏi"
+      ],
+      "ingredient_ids": [
+        "food_222",
+        "food_036",
+        "food_029",
+        "food_075",
+        "food_157",
+        "food_200",
+        "food_066",
+        "food_113",
+        "food_040"
+      ],
+      "calories": 19.0,
+      "protein": 4.0,
+      "carbs": 0.3,
+      "fat": 0.2,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "digestive_health",
+        "giàu_amino_acid",
+        "giàu_collagen",
+        "giàu_gelatin",
+        "món_chính",
+        "ít_calo"
+      ]
+    },
+    "text": "nước hầm xương bò là chất lỏng giàu dinh dưỡng được ninh chậm từ xương và mô liên kết trong 12-24 giờ. quá trình này chiết xuất collagen và khoáng chất; tạo ra loại nước dùng đậm đà tốt cho khớp và đường ruột."
+  },
+  {
+    "id": "dish_030",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cá thu chín",
+      "category": "món chính ",
+      "ingredients": [
+        "phi lê cá thu",
+        "muối",
+        "tiêu",
+        "nước mắm",
+        "hành tây",
+        "tỏi"
+      ],
+      "ingredient_ids": [
+        "food_161",
+        "food_200",
+        "food_066",
+        "food_216",
+        "food_036",
+        "food_040"
+      ],
+      "calories": 189.0,
+      "protein": 24.8,
+      "carbs": 0.0,
+      "fat": 9.2,
+      "allergen": [
+        "cá"
+      ],
+      "health_tags": [
+        "giàu_omega-3",
+        "giàu_vitamin_b12",
+        "high_vitamin_d",
+        "món_chính",
+        "protein_chất_lượng_cao"
+      ]
+    },
+    "text": "cá thu chín là loại cá béo nổi tiếng với hương vị đậm đà và nồng độ axit béo omega-3 rất cao. đây là nguồn cung cấp vitamin d và b12 dồi dào; hỗ trợ tốt cho sức khỏe tim mạch và hệ thần kinh."
+  },
+  {
+    "id": "dish_031",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cá trê chín",
+      "category": "món chính",
+      "ingredients": [
+        "phi lê cá trê",
+        "rau thìa là",
+        "muối",
+        "tiêu",
+        "nước mắm",
+        "hành tây",
+        "tỏi"
+      ],
+      "ingredient_ids": [
+        "food_238",
+        "food_268",
+        "food_200",
+        "food_066",
+        "food_216",
+        "food_036",
+        "food_040"
+      ],
+      "calories": 144.0,
+      "protein": 18.4,
+      "carbs": 0.0,
+      "fat": 7.2,
+      "allergen": [
+        "cá"
+      ],
+      "health_tags": [
+        "chứa_omega-3",
+        "giàu_vitamin_b12",
+        "món_chính",
+        "protein_nạc",
+        "ít_calo"
+      ]
+    },
+    "text": "cá trê chín là loại cá nước ngọt có vị ngọt nhẹ và kết cấu thịt chắc; tơi. là nguồn protein nạc tốt; chứa các axit béo omega-3 hỗ trợ tim mạch và cung cấp lượng vitamin b12 đáng kể."
+  },
+  {
+    "id": "dish_032",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "da heo chiên giòn",
+      "category": "món chính",
+      "ingredients": [
+        "da heo",
+        "muối",
+        "dầu ăn",
+        "tiêu",
+        "tỏi",
+        "ớt",
+        "bột ngọt"
+      ],
+      "ingredient_ids": [
+        "food_226",
+        "food_042",
+        "food_200",
+        "food_267",
+        "food_066",
+        "food_070",
+        "food_244",
+        "food_205"
+      ],
+      "calories": 576.7,
+      "protein": 54.1,
+      "carbs": 0.0,
+      "fat": 40.3,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "chứa_collagen",
+        "giàu_protein",
+        "hàm_lượng_natri_rất_cao",
+        "keto_friendly",
+        "món_chính",
+        "no_carbs"
+      ]
+    },
+    "text": "da heo chiên giòn (chicharrones) là món ăn nhẹ làm từ da heo sấy khô và chiên phồng. đây là loại thực phẩm độc đáo không chứa carbohydrate nhưng lại rất giàu protein và collagen; phổ biến trong chế độ ăn keto."
+  },
+  {
+    "id": "dish_033",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cá tuyết chín",
+      "category": "món chính",
+      "ingredients": [
+        "cá tuyết",
+        "rau thìa là",
+        "dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_162",
+        "food_268",
+        "food_065"
+      ],
+      "calories": 105.0,
+      "protein": 22.8,
+      "carbs": 0.0,
+      "fat": 0.9,
+      "allergen": [
+        "cá"
+      ],
+      "health_tags": [
+        "giàu_selenium",
+        "hỗ_trợ_tim_mạch",
+        "món_chính",
+        "protein_chất_lượng_cao",
+        "ít_béo"
+      ]
+    },
+    "text": "cá tuyết chín là loại cá thịt trắng nạc; nổi tiếng với hương vị nhẹ và kết cấu từng miếng bong ra dễ dàng. cung cấp nguồn protein dồi dào với hàm lượng chất béo cực thấp."
+  },
+  {
+    "id": "dish_034",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "hạt hướng dương rang",
+      "category": "món phụ",
+      "ingredients": [
+        "hạt hướng dương",
+        "muối",
+        "dầu ăn"
+      ],
+      "ingredient_ids": [
+        "food_269",
+        "food_200",
+        "food_267"
+      ],
+      "calories": 582.0,
+      "protein": 19.3,
+      "carbs": 24.1,
+      "fat": 49.8,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "giàu_chất_béo_lành_mạnh",
+        "giàu_vitamin_e",
+        "high_fiber",
+        "hàm_lượng_natri_cao",
+        "món_phụ"
+      ]
+    },
+    "text": "hạt hướng dương rang là nhân của cây hướng dương được nướng để tăng hương vị béo ngậy và độ giòn. đây là nguồn cung cấp vitamin e và chất béo tốt dồi dào; thường dùng làm món ăn nhẹ hoặc thêm vào salad."
+  },
+  {
+    "id": "dish_035",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cá rô phi chín",
+      "category": "món chính",
+      "ingredients": [
+        "cá rô phi",
+        "rau thìa là",
+        "dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_163",
+        "food_268",
+        "food_065"
+      ],
+      "calories": 128.0,
+      "protein": 26.2,
+      "carbs": 0.0,
+      "fat": 2.7,
+      "allergen": [
+        "cá"
+      ],
+      "health_tags": [
+        "giàu_selenium",
+        "giàu_vitamin_b12",
+        "món_chính",
+        "protein_nạc",
+        "ít_béo"
+      ]
+    },
+    "text": "cá rô phi chín có vị nhẹ; thịt trắng; là nguồn protein nạc phổ biến và linh hoạt. nó cung cấp các axit amin thiết yếu cần thiết cho việc xây dựng cơ bắp và sức khỏe tổng thể."
+  },
+  {
+    "id": "dish_036",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cá hồi atlantis; nướng",
+      "category": "món chính",
+      "ingredients": [
+        "cá hồi",
+        "rau thìa là",
+        "dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_165",
+        "food_268",
+        "food_065"
+      ],
+      "calories": 208.0,
+      "protein": 22.1,
+      "carbs": 0.0,
+      "fat": 12.4,
+      "allergen": [
+        "cá"
+      ],
+      "health_tags": [
+        "giàu_omega_3",
+        "gluten_free",
+        "high_vitamin_d",
+        "hỗ_trợ_tim_mạch",
+        "món_chính",
+        "tốt_cho_não_bộ"
+      ]
+    },
+    "text": "Cá hồi Atlantis nổi tiếng với hàm lượng axit béo omega-3 cao; giúp giảm viêm và cải thiện sức khỏe tim mạch cũng như chức năng não bộ."
+  },
+  {
+    "id": "dish_037",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "ức gà; không da không xương; đã nấu chín",
+      "category": "món chính",
+      "ingredients": [
+        "ước gà không da",
+        "muối",
+        "tiêu",
+        "nước mắm",
+        "hành tây",
+        "tỏi"
+      ],
+      "ingredient_ids": [
+        "food_168",
+        "food_200",
+        "food_066",
+        "food_216",
+        "food_036",
+        "food_040"
+      ],
+      "calories": 151.0,
+      "protein": 30.54,
+      "carbs": 0.0,
+      "fat": 3.17,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "giàu_protein",
+        "gluten_free",
+        "hỗ_trợ_giảm_cân",
+        "hỗ_trợ_tăng_cơ",
+        "keto_friendly",
+        "low_fat",
+        "món_chính"
+      ]
+    },
+    "text": "Ức gà (không xương; không da) là thực phẩm cung cấp protein nạc thiết yếu với giá trị sinh học cao và hàm lượng chất béo tối thiểu. Khi được chế biến bằng các phương pháp như nướng; bỏ lò hoặc luộc; nó cung cấp khoảng 31g protein trên 100g khẩu phần với ít hơn 4g chất béo; trở thành nền tảng cho chế độ ăn duy trì cơ bắp và quản lý cân nặng. Hương vị trung tính và kết cấu chắc nhưng mềm giúp ức gà dễ dàng kết hợp với nhiều nền ẩm thực thế giới."
+  },
+  {
+    "id": "dish_038",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "dưa cải hẹ",
+      "category": "món chính",
+      "ingredients": [
+        "rau cải",
+        "hẹ",
+        "muối",
+        "ớt",
+        "tỏi"
+      ],
+      "ingredient_ids": [
+        "food_272",
+        "food_273",
+        "food_200",
+        "food_244",
+        "food_040"
+      ],
+      "calories": 25.0,
+      "protein": 2.0,
+      "carbs": 4.0,
+      "fat": 0.5,
+      "allergen": [
+        "Mù tạt",
+        "Họ hành tỏi"
+      ],
+      "health_tags": [
+        "có_nguồn_gốc_thực_vật",
+        "dairy_free",
+        "giàu_vitamin_k",
+        "gluten_free",
+        "heart_health",
+        "high_fiber",
+        "high_vitamin_c",
+        "món_chính",
+        "nguồn_chất_chống_oxy_hóa",
+        "probiotic_source",
+        "vegetarian_friendly",
+        "ít_calo"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_039",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "hạt diêm mạch; nấu chín",
+      "category": "món phụ",
+      "ingredients": [
+        "hạt diêm mạch",
+        "muối"
+      ],
+      "ingredient_ids": [
+        "food_271",
+        "food_200"
+      ],
+      "calories": 120.0,
+      "protein": 4.4,
+      "carbs": 21.3,
+      "fat": 1.9,
+      "allergen": [
+        "cá"
+      ],
+      "health_tags": [
+        "chỉ_số_đường_huyết_thấp",
+        "gluten_free",
+        "high_fiber",
+        "món_phụ",
+        "protein_hoàn_chỉnh",
+        "vegan_friendly"
+      ]
+    },
+    "text": "Hạt diêm mạch là một loại hạt giả ngũ cốc chứa tất cả chín axit amin thiết yếu; làm cho nó trở thành nguồn protein thực vật hoàn chỉnh hiếm có."
+  },
+  {
+    "id": "dish_040",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cháo trắng",
+      "category": "món chính; ăn chay; ăn sáng",
+      "ingredients": [
+        "gạo tẻ",
+        "giò lụa",
+        "trứng vịt",
+        "cà rốt",
+        "dưa cải bẹ",
+        "bột canh",
+        "mỡ"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029"
+      ],
+      "calories": 71.18,
+      "protein": 1.76,
+      "carbs": 14.71,
+      "fat": 0.59,
+      "allergen": [
+        "Chất béo bão hòa",
+        "Chất béo chuyển hóa",
+        "Cholesterol",
+        "Đường bổ sung",
+        "Tổng lượng đường"
+      ],
+      "health_tags": [
+        "cholesterol_free",
+        "có_chất_xơ",
+        "có_khoáng_chất",
+        "có_vitamin_nhóm_b",
+        "low_fat",
+        "món_chính",
+        "ít_calo",
+        "ít_đường",
+        "ăn_chay",
+        "ăn_sáng"
+      ]
+    },
+    "text": "Cháo trắng là món cháo gạo truyền thống của châu Á; được nấu chậm từ gạo trắng với nước hoặc nước dùng cho đến khi đạt độ mịn và sánh mượt. Đây là món ăn đơn giản; dễ ăn; thường xuất hiện trong các nhà hàng dim sum; cung cấp nguồn tinh bột dễ tiêu hóa với lượng chất béo và protein rất ít. Cách chế biến nhẹ nhàng; thanh đạm này vừa là món ăn sáng phổ biến; vừa là nền tảng linh hoạt để kết hợp với nhiều loại topping và gia vị mặn khác nhau."
+  },
+  {
+    "id": "dish_041",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "thịt lợn nạc xay hầm",
+      "category": "món chính",
+      "ingredients": [
+        "thịt lợn",
+        "tỏi",
+        "hành phi",
+        "nước mắm",
+        "muối",
+        "tiêu",
+        "cà rốt",
+        "khoai tây"
+      ],
+      "ingredient_ids": [
+        "food_107",
+        "food_040",
+        "food_039",
+        "food_216",
+        "food_066",
+        "food_029",
+        "food_006"
+      ],
+      "calories": 250.0,
+      "protein": 20.0,
+      "carbs": 2.0,
+      "fat": 15.0,
+      "allergen": [
+        "Cholesterol",
+        "Chất béo bão hòa",
+        "Chất béo chuyển hóa (nếu chiên/xào thêm dầu)",
+        "Natri (muối)"
+      ],
+      "health_tags": [
+        "contains_cholesterol",
+        "có_khoáng_chất_thiết_yếu",
+        "có_vitamin_nhóm_b",
+        "giàu_protein",
+        "low_carbs",
+        "món_chính",
+        "nhiều_chất_béo_bão_hòa"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_042",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Rau khoai lang xào tỏi",
+      "category": "Món phụ; Món chay; Low-carb",
+      "ingredients": [
+        "rau khoai lang",
+        "tỏi",
+        "hạt nêm",
+        "mì chính",
+        "dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_207",
+        "food_205",
+        "food_204",
+        "food_040",
+        "food_065"
+      ],
+      "calories": 114.0,
+      "protein": 4.0,
+      "carbs": 6.5,
+      "fat": 8.0,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "low-carb",
+        "món_chay",
+        "món_phụ"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_043",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Rau cải xoong xào tỏi",
+      "category": "Món phụ; Món chay; Low-carb",
+      "ingredients": [
+        "Cải xoong",
+        "Tỏi",
+        "Dầu thực vật",
+        "Hạt nêm"
+      ],
+      "ingredient_ids": [
+        "food_208",
+        "food_207",
+        "food_065",
+        "food_040",
+        "food_207"
+      ],
+      "calories": 83.0,
+      "protein": 5.4,
+      "carbs": 3.6,
+      "fat": 5.2,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high_calcium",
+        "high_fiber",
+        "low-carb",
+        "món_chay",
+        "món_phụ",
+        "tốt_cho_xương",
+        "vitamin_c"
+      ]
+    },
+    "text": "Rau cải xoong xào tỏi là món ăn thanh đạm và giàu dinh dưỡng; nổi bật với vị hơi hăng cay đặc trưng của cải xoong hòa quyện cùng mùi thơm nồng từ tỏi phi vàng. Đây là món phụ lý tưởng trong thực đơn Low-carb hoặc ăn chay; cung cấp lượng Canxi và Vitamin C dồi dào giúp hỗ trợ sức khỏe xương khớp và tăng cường đề kháng. Với cách chế biến nhanh gọn; món ăn giữ được độ giòn mọng nước và màu xanh tươi bắt mắt; mang lại sự cân bằng hoàn hảo cho các bữa cơm gia đình."
+  },
+  {
+    "id": "dish_044",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Rau cải ngồng xào tỏi",
+      "category": "Món phụ; Món chay; Low-carb",
+      "ingredients": [
+        "Rau cải ngồng",
+        "Tỏi",
+        "Dầu thực vật",
+        "Mì chính",
+        "Hạt nêm"
+      ],
+      "ingredient_ids": [
+        "food_205",
+        "food_040",
+        "food_065",
+        "food_207",
+        "food_215"
+      ],
+      "calories": 122.0,
+      "protein": 5.8,
+      "carbs": 13.3,
+      "fat": 5.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "giàu_vitamin_a_(beta-caroten)",
+        "high_potassium",
+        "high_vitamin_c",
+        "low-carb",
+        "món_chay",
+        "món_phụ"
+      ]
+    },
+    "text": "Rau cải ngồng xào tỏi là món rau xào phổ biến trong ẩm thực Việt; hấp dẫn bởi độ giòn sần sật của ngồng cải và vị ngọt thanh tự nhiên sau khi được chế biến. Món ăn này là \"kho tàng\" dinh dưỡng với hàm lượng Beta-caroten (Vitamin A) và Vitamin C cực cao; hỗ trợ tốt cho thị lực và làm đẹp da. Sự kết hợp giữa cải ngồng tươi và tỏi băm không chỉ tạo nên hương vị đậm đà; kích thích vị giác mà còn là lựa chọn tuyệt vời cho những ai tìm kiếm một chế độ ăn uống lành mạnh; giàu chất xơ và ít chất béo."
+  },
+  {
+    "id": "dish_045",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Rau cải ngọt xào",
+      "category": "Món phụ; Món chay; Low-carb",
+      "ingredients": [
+        "Rau cải ngọt",
+        "Dầu thực vật",
+        "Bột canh",
+        "Mì chính"
+      ],
+      "ingredient_ids": [
+        "food_205",
+        "food_065",
+        "food_207",
+        "food_215"
+      ],
+      "calories": 62.0,
+      "protein": 1.1,
+      "carbs": 3.1,
+      "fat": 5.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high_vitamin_a",
+        "low-carb",
+        "low_energy",
+        "món_chay",
+        "món_phụ",
+        "nguồn_chất_xơ"
+      ]
+    },
+    "text": "Rau cải ngọt xào là món ăn đơn giản; nhẹ nhàng nhưng không kém phần bổ dưỡng; thường xuyên xuất hiện trong mâm cơm hàng ngày. Với lượng calo thấp (62 Kcal) và chỉ số carbohydrate thấp; đây là món ăn hỗ trợ hiệu quả cho việc kiểm soát cân nặng và chế độ ăn kiêng. Rau cải ngọt sau khi xào giữ được độ mềm ngọt; cung cấp một lượng đáng kể Beta-caroten (2444 µg) giúp chống oxy hóa và duy trì làn da khỏe mạnh."
+  },
+  {
+    "id": "dish_046",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Rau cải chíp xào nấm",
+      "category": "Món chính; Món chay; High-protein",
+      "ingredients": [
+        "Cải chíp",
+        "Nấm",
+        "Dầu thực vật",
+        "Muối"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_218",
+        "food_200",
+        "food_127"
+      ],
+      "calories": 216.0,
+      "protein": 14.3,
+      "carbs": 13.6,
+      "fat": 11.7,
+      "allergen": [
+        "Nấm (có thể gây dị ứng với một số người)"
+      ],
+      "health_tags": [
+        "giàu_đạm_thực_vật",
+        "heart_health",
+        "high-protein",
+        "high_fiber",
+        "high_iron",
+        "món_chay",
+        "món_chính"
+      ]
+    },
+    "text": "Rau cải chíp xào nấm là sự kết hợp hoàn hảo giữa độ giòn ngọt của cải chíp tươi và vị béo bùi; đậm đà từ nấm. Đây là món ăn lý tưởng cho những người theo chế độ ăn chay nhưng vẫn cần cung cấp hàm lượng protein cao (14.3g) và sắt (12.3mg) dồi dào. Với sự cân bằng dinh dưỡng tuyệt vời và lượng chất xơ dồi dào (9.6g); món ăn không chỉ giúp hỗ trợ tiêu hóa mà còn mang lại hương vị thanh tao; phù hợp cho thực đơn giảm cân hoặc bổ sung dinh dưỡng hàng ngày."
+  },
+  {
+    "id": "dish_047",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Mực xào thập cẩm",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Mực",
+        "Ngô bao tử",
+        "Hành tây",
+        "Cần tây",
+        "Dầu thực vật",
+        "Hạt nêm"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_207",
+        "food_189",
+        "food_240",
+        "food_036",
+        "food_075"
+      ],
+      "calories": 154.0,
+      "protein": 11.3,
+      "carbs": 13.3,
+      "fat": 6.2,
+      "allergen": [
+        "Hải sản (Mực)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_protein",
+        "high_vitamin_c",
+        "món_chính",
+        "nguồn_canxi",
+        "tốt_cho_cơ_bắp"
+      ]
+    },
+    "text": "Mực xào thập cẩm là món ăn vừa ngon miệng vừa bắt mắt với sự kết hợp hài hòa giữa mực tươi giòn sần sật và các loại rau củ thanh mát như ngô bao tử; hành tây; cần tây. Đây là món chính tuyệt vời cho chế độ ăn High-protein khi cung cấp tới 11.3g đạm mà vẫn duy trì lượng chất béo ở mức thấp (6.2g). Với hàm lượng Vitamin C đáng kể (66mg) và các khoáng chất như Canxi; món ăn không chỉ kích thích vị giác bởi hương vị đậm đà; thơm nồng của cần tây mà còn hỗ trợ tăng cường sức đề kháng và phục hồi năng lượng hiệu quả."
+  },
+  {
+    "id": "dish_048",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Mướp đắng xào trứng",
+      "category": "Món chính; Low-carb",
+      "ingredients": [
+        "Mướp đắng",
+        "Trứng gà",
+        "Dầu thực vật",
+        "Bột canh",
+        "Hạt nêm",
+        "Mì chính"
+      ],
+      "ingredient_ids": [
+        "food_205",
+        "food_065",
+        "food_207",
+        "food_241",
+        "food_045"
+      ],
+      "calories": 140.0,
+      "protein": 7.5,
+      "carbs": 5.4,
+      "fat": 10.0,
+      "allergen": [
+        "Trứng"
+      ],
+      "health_tags": [
+        "high_vitamin_a",
+        "hỗ_trợ_thanh_nhiệt",
+        "kiểm_soát_đường_huyết",
+        "low-carb",
+        "món_chính"
+      ]
+    },
+    "text": "Mướp đắng xào trứng là món ăn quen thuộc trong bữa cơm gia đình Việt; nổi bật với sự kết hợp giữa vị đắng thanh đặc trưng của mướp đắng và vị béo ngậy; thơm bùi của trứng gà. Món ăn này không chỉ cung cấp nguồn đạm dồi dào (7.5g) mà còn rất giàu Vitamin A (289 µg) và Vitamin C; hỗ trợ tốt cho thị lực và hệ miễn dịch. Với chỉ số carbohydrate thấp (5.4g); đây là lựa chọn tuyệt vời cho thực đơn Low-carb; giúp thanh nhiệt giải độc và hỗ trợ ổn định đường huyết một cách tự nhiên."
+  },
+  {
+    "id": "dish_049",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Lươn xào sả ớt",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Lươn",
+        "Ớt ngọt",
+        "Dầu thực vật",
+        "Muối",
+        "Sả",
+        "Ớt"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_220",
+        "food_037",
+        "food_243",
+        "food_244",
+        "food_200"
+      ],
+      "calories": 358.0,
+      "protein": 27.7,
+      "carbs": 0.0,
+      "fat": 27.5,
+      "allergen": [
+        "Cá (Lươn)"
+      ],
+      "health_tags": [
+        "bồi_bổ_sức_khỏe",
+        "high-protein",
+        "high_protein",
+        "high_vitamin_a",
+        "món_chính",
+        "tốt_cho_cơ_bắp"
+      ]
+    },
+    "text": "Lươn xào sả ớt là món ăn đậm đà; bổ dưỡng với hương vị đặc trưng từ thịt lươn ngọt mềm quyện cùng vị cay nồng của sả và ớt. Đây là nguồn cung cấp protein dồi dào ($27.7$ g) và đặc biệt giàu Vitamin A ($2700$ $\\mu g$); giúp hỗ trợ thị lực và bồi bổ cơ thể sau khi ốm dậy. Với hàm lượng tinh bột gần như bằng không; món ăn này cực kỳ phù hợp cho những ai cần tăng cường cơ bắp hoặc theo đuổi chế độ ăn High-protein; mang lại giá trị dinh dưỡng cao và năng lượng bền bỉ cho cơ thể."
+  },
+  {
+    "id": "dish_050",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Mực xào dứa",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Mực",
+        "Dứa",
+        "Dầu thực vật",
+        "Muối"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_003",
+        "food_189",
+        "food_200"
+      ],
+      "calories": 203.0,
+      "protein": 14.5,
+      "carbs": 11.1,
+      "fat": 11.1,
+      "allergen": [
+        "Hải sản (Mực)"
+      ],
+      "health_tags": [
+        "digestive_health",
+        "high-protein",
+        "high_protein",
+        "món_chính",
+        "vitamin_c"
+      ]
+    },
+    "text": "Mực xào dứa là món ăn mang hương vị chua ngọt hài hòa; kết hợp giữa mực tươi giòn sần sật và vị chua thanh tự nhiên từ dứa chín. Với hàm lượng protein ấn tượng (14.5g); món ăn này là nguồn cung cấp năng lượng tuyệt vời cho cơ thể mà vẫn đảm bảo sự nhẹ nhàng cho hệ tiêu hóa nhờ enzyme bromelain có trong dứa. Đây là lựa chọn lý tưởng cho thực đơn High-protein; giúp bổ sung Vitamin C (35mg) và các khoáng chất thiết yếu; mang lại sự mới mẻ và kích thích vị giác cho bữa ăn hằng ngày."
+  },
+  {
+    "id": "dish_051",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Lòng gà xào mướp; giá",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Mướp",
+        "Mề gà",
+        "Tim gà",
+        "Gan gà",
+        "Hành lá",
+        "Dầu thực vật",
+        "Bột canh"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_245",
+        "food_246",
+        "food_247",
+        "food_248",
+        "food_091",
+        "food_249"
+      ],
+      "calories": 196.0,
+      "protein": 16.5,
+      "carbs": 9.1,
+      "fat": 10.5,
+      "allergen": [
+        "Nội tạng động vật (Gà)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_iron",
+        "high_vitamin_a",
+        "món_chính",
+        "tốt_cho_máu"
+      ]
+    },
+    "text": "Lòng gà xào mướp; giá là món xào bổ dưỡng với sự kết hợp phong phú từ lòng gà (mề; tim; gan) và vị ngọt thanh; mọng nước của mướp hương cùng giá đỗ. Món ăn này cung cấp hàm lượng protein đáng kể (16.5g) và đặc biệt giàu sắt (8.1mg) cùng Vitamin A (996 µg); giúp bồi bổ cơ thể và hỗ trợ sức khỏe thị lực. Với hương vị đậm đà; thơm mùi hành lá đặc trưng; đây là lựa chọn tuyệt vời cho thực đơn High-protein; vừa mang lại cảm giác ngon miệng vừa cung cấp nhiều vi chất thiết yếu cho sức khỏe."
+  },
+  {
+    "id": "dish_052",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Lòng xào dưa",
+      "category": "Món chính",
+      "ingredients": [
+        "Dưa chua",
+        "Lòng lợn",
+        "Cà chua",
+        "Dầu thực vật",
+        "Mì chính",
+        "Hạt nêm"
+      ],
+      "ingredient_ids": [
+        "food_205",
+        "food_065",
+        "food_207",
+        "food_235",
+        "food_026",
+        "food_250"
+      ],
+      "calories": 240.0,
+      "protein": 6.6,
+      "carbs": 3.7,
+      "fat": 22.1,
+      "allergen": [
+        "Nội tạng động vật"
+      ],
+      "health_tags": [
+        "cung_cấp_lợi_khuẩn_(từ_dưa_chua)",
+        "giàu_chất_béo",
+        "món_chính"
+      ]
+    },
+    "text": "Lòng xào dưa là món ăn dân dã đặc trưng với sự kết hợp thú vị giữa vị chua thanh; giòn rụm của dưa cải muối và độ dai mềm; béo ngậy của lòng lợn. Món ăn cung cấp 240 Kcal năng lượng với điểm nhấn là hàm lượng chất béo dồi dào (22.1 g) và các vi chất như Canxi (77 mg); Kali (182.6 mg). Sự hòa quyện cùng cà chua và gia vị đậm đà không chỉ tạo nên màu sắc hấp dẫn mà còn là món nhắm hoặc món chính đưa cơm; kích thích vị giác hiệu quả trong các bữa ăn gia đình."
+  },
+  {
+    "id": "dish_053",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Vịt rang",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Thịt vịt (cả xương)",
+        "Riềng",
+        "Sả",
+        "Hạt tiêu",
+        "Muối"
+      ],
+      "ingredient_ids": [
+        "food_252",
+        "food_243",
+        "food_200",
+        "food_066",
+        "food_253"
+      ],
+      "calories": 2047.0,
+      "protein": 59.0,
+      "carbs": 1.0,
+      "fat": 201.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_energy",
+        "high_iron",
+        "high_protein",
+        "high_vitamin_a",
+        "món_chính"
+      ]
+    },
+    "text": "Vịt rang là món chính vô cùng đậm đà và giàu dinh dưỡng; nổi bật với hương thơm nồng nàn từ riềng; sả và hạt tiêu thấm đượm trong từng miếng thịt vịt béo ngậy. Món ăn này cung cấp nguồn năng lượng cực kỳ dồi dào (2047 Kcal) cùng lượng protein ấn tượng (59g); rất phù hợp cho những người cần bồi bổ sức khỏe hoặc phục hồi thể lực. Bên cạnh đó; hàm lượng Vitamin A (1377 ug) và sắt (9mg) đáng kể giúp hỗ trợ thị lực và bổ máu; tạo nên một món ăn vừa ngon miệng vừa mang lại giá trị dinh dưỡng cao cho bữa cơm gia đình."
+  },
+  {
+    "id": "dish_054",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Gan xào giá",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Gan lợn",
+        "Giá đỗ",
+        "Hành lá",
+        "Dầu thực vật",
+        "Muối"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_233",
+        "food_041",
+        "food_091",
+        "food_200"
+      ],
+      "calories": 370.0,
+      "protein": 48.9,
+      "carbs": 18.1,
+      "fat": 11.3,
+      "allergen": [
+        "Nội tạng động vật (Gan lợn)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_iron",
+        "món_chính",
+        "siêu_thực_phẩm_giàu_vitamin_a",
+        "tốt_cho_máu"
+      ]
+    },
+    "text": "Gan xào giá là một món ăn bổ dưỡng vượt trội với hàm lượng protein cực cao (48.9g) và là nguồn cung cấp vi chất khổng lồ cho cơ thể. Điểm đặc biệt của món ăn nằm ở lượng Vitamin A dồi dào và sắt; giúp hỗ trợ thị lực và bổ máu cực kỳ hiệu quả. Sự kết hợp giữa gan lợn bùi béo và giá đỗ giòn ngọt; thanh mát không chỉ tạo nên hương vị hấp dẫn mà còn cung cấp một lượng lớn Kali (1156 mg) và Vitamin C (58 mg); giúp tăng cường sức đề kháng và bồi bổ thể lực nhanh chóng."
+  },
+  {
+    "id": "dish_055",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Thịt bò xào rau muống",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Rau muống",
+        "Thịt bò loại 1",
+        "Dầu thực vật",
+        "Bột canh",
+        "Mì chính"
+      ],
+      "ingredient_ids": [
+        "food_205",
+        "food_065",
+        "food_198",
+        "food_222",
+        "food_031"
+      ],
+      "calories": 175.0,
+      "protein": 13.9,
+      "carbs": 5.2,
+      "fat": 11.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_iron",
+        "high_protein",
+        "high_vitamin_a",
+        "món_chính",
+        "tốt_cho_máu"
+      ]
+    },
+    "text": "Thịt bò xào rau muống là món ăn phổ biến và rất được ưa chuộng nhờ sự kết hợp giữa thịt bò mềm ngọt và rau muống giòn tươi. Món ăn cung cấp hàm lượng protein đáng kể (13.9g) cùng lượng sắt dồi dào (4.6mg); rất tốt cho việc bổ máu và phục hồi năng lượng. Bên cạnh đó; hàm lượng Vitamin A (2884 ug) và chất xơ từ rau muống giúp hỗ trợ thị lực và hệ tiêu hóa khỏe mạnh. Đây là lựa chọn hoàn hảo cho một bữa ăn cân bằng dinh dưỡng; ít tinh bột và giàu khoáng chất thiết yếu."
+  },
+  {
+    "id": "dish_056",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Tôm đồng rang",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Tôm đồng",
+        "Đường kính",
+        "Dầu thực vật",
+        "Bột canh"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_111",
+        "food_228",
+        "food_031"
+      ],
+      "calories": 103.0,
+      "protein": 7.4,
+      "carbs": 10.0,
+      "fat": 3.7,
+      "allergen": [
+        "Hải sản (Tôm)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_protein",
+        "món_chính",
+        "nguồn_canxi",
+        "ít_béo"
+      ]
+    },
+    "text": "Tôm đồng rang là món ăn dân dã nhưng vô cùng hấp dẫn với hương vị mặn ngọt hài hòa và lớp vỏ tôm giòn tan đặc trưng. Món ăn này cung cấp 7.4g chất đạm và là nguồn bổ sung Canxi tự nhiên tốt cho sức khỏe xương khớp. Với lượng calo vừa phải (103 Kcal) và hàm lượng chất béo thấp (3.7g); tôm đồng rang không chỉ kích thích vị giác khi ăn kèm với cơm trắng mà còn là lựa chọn lành mạnh cho bữa cơm gia đình hằng ngày."
+  },
+  {
+    "id": "dish_057",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Trứng đúc thịt rán",
+      "category": "Món chính; Ăn sáng",
+      "ingredients": [
+        "Trứng vịt",
+        "Thịt lợn nạc vai",
+        "Dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_028",
+        "food_135"
+      ],
+      "calories": 282.0,
+      "protein": 10.7,
+      "carbs": 0.8,
+      "fat": 26.2,
+      "allergen": [
+        "Trứng"
+      ],
+      "health_tags": [
+        "high_energy",
+        "high_vitamin_a",
+        "món_chính",
+        "nguồn_kali",
+        "ăn_sáng"
+      ]
+    },
+    "text": "Trứng đúc thịt rán là món ăn sáng hoặc món chính phổ biến trong bữa cơm gia đình nhờ hương vị béo ngậy của trứng vịt hòa quyện cùng thịt lợn nạc vai băm nhỏ. Món ăn cung cấp 282 Kcal năng lượng với hàm lượng chất béo khá cao (26.2g) giúp duy trì cảm giác no lâu. Điểm nổi bật về dinh dưỡng của món này là hàm lượng Vitamin A đáng kể (202 ug) và các khoáng chất như Canxi (41mg); Kali (184mg); mang lại sự kết hợp hài hòa giữa vị thơm bùi và giá trị bồi bổ cơ thể tức thì."
+  },
+  {
+    "id": "dish_058",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Thịt lợn ba chỉ rang cháy cạnh",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Thịt ba chỉ",
+        "Đường",
+        "Muối"
+      ],
+      "ingredient_ids": [
+        "food_139",
+        "food_200",
+        "food_228"
+      ],
+      "calories": 798.0,
+      "protein": 50.0,
+      "carbs": 5.0,
+      "fat": 65.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_energy",
+        "high_protein",
+        "món_chính",
+        "nguồn_kali"
+      ]
+    },
+    "text": "Thịt lợn ba chỉ rang cháy cạnh là món ăn truyền thống đậm đà với những miếng thịt ba chỉ được rang vàng ươm; cạnh xém giòn và tỏa mùi thơm đặc trưng từ sự kết hợp của thịt và đường caramelized. Món ăn này cung cấp nguồn năng lượng rất lớn (798 Kcal) và hàm lượng protein cao (50g); hỗ trợ hiệu quả cho việc bồi bổ cơ thể và cung cấp năng lượng cho các hoạt động thể chất. Với sự hòa quyện hoàn hảo giữa vị béo ngậy của mỡ heo và vị ngọt mặn hài hòa; đây là món chính cực kỳ đưa cơm và luôn được ưa chuộng trong các bữa cơm gia đình Việt Nam."
+  },
+  {
+    "id": "dish_059",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Trạch tẩm bột chiên",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Trạch",
+        "Trứng gà",
+        "Bột mỳ",
+        "Bột chiên giòn",
+        "Dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_254",
+        "food_045",
+        "food_214"
+      ],
+      "calories": 886.0,
+      "protein": 62.7,
+      "carbs": 73.1,
+      "fat": 38.1,
+      "allergen": [
+        "Cá",
+        "Trứng",
+        "Gluten (Bột mỳ)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_energy",
+        "món_chính",
+        "nguồn_canxi_dồi_dào",
+        "siêu_giàu_đạm"
+      ]
+    },
+    "text": "Trạch tẩm bột chiên là món ăn hấp dẫn với lớp vỏ ngoài vàng ươm; giòn rụm bao bọc lấy thịt cá trạch ngọt lịm và bùi ngậy bên trong. Đây là một món ăn cung cấp hàm lượng protein cực kỳ ấn tượng (62.7g) và nguồn năng lượng dồi dào (886 Kcal); rất thích hợp để bồi bổ sức khỏe và phục hồi thể lực. Đặc biệt; món ăn này còn mang lại lượng Canxi rất lớn (294.4mg) cùng nhiều vitamin và khoáng chất thiết yếu; tạo nên sự kết hợp hoàn hảo giữa hương vị thơm ngon đặc trưng và giá trị dinh dưỡng vượt trội cho thực đơn gia đình."
+  },
+  {
+    "id": "dish_060",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Tôm sốt cà chua",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Thịt tôm",
+        "Cà chua",
+        "Nước mắm",
+        "Dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_111",
+        "food_026",
+        "food_216"
+      ],
+      "calories": 105.0,
+      "protein": 16.5,
+      "carbs": 3.1,
+      "fat": 2.9,
+      "allergen": [
+        "Hải sản (Tôm)"
+      ],
+      "health_tags": [
+        "heart_health",
+        "high-protein",
+        "high_protein",
+        "món_chính",
+        "nguồn_canxi",
+        "ít_béo"
+      ]
+    },
+    "text": "Tôm sốt cà chua là món chính thơm ngon với sự kết hợp giữa thịt tôm ngọt lịm và sốt cà chua thanh nhẹ; đậm đà. Món ăn này cung cấp hàm lượng protein ấn tượng (16.5g) trong khi lượng chất béo được kiểm soát ở mức rất thấp (2.9g); cực kỳ phù hợp cho những ai đang tìm kiếm thực đơn High-protein lành mạnh. Bên cạnh đó; các vi chất từ cà chua và tôm như Canxi (80mg) và Vitamin C (22mg) giúp hỗ trợ sức khỏe xương khớp và tăng cường hệ miễn dịch cho cơ thể. Đây là lựa chọn tuyệt vời để bổ sung dinh dưỡng mà không gây thừa năng lượng cho bữa ăn hằng ngày."
+  },
+  {
+    "id": "dish_061",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Thịt bò bít tết khoai tây chiên",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Thịt bò thăn",
+        "Khoai tây",
+        "Đường",
+        "Dầu thực vật",
+        "Bột canh"
+      ],
+      "ingredient_ids": [
+        "food_125",
+        "food_006",
+        "food_054",
+        "food_031"
+      ],
+      "calories": 210.0,
+      "protein": 20.0,
+      "carbs": 13.0,
+      "fat": 8.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_protein",
+        "món_chính",
+        "nguồn_kali",
+        "tốt_cho_cơ_bắp"
+      ]
+    },
+    "text": "Thịt bò bít tết khoai tây chiên là món ăn phong cách Âu Á kết hợp; hấp dẫn bởi những miếng thăn bò mềm ngọt được chế biến vừa vặn ăn kèm với khoai tây chiên vàng giòn. Món ăn cung cấp hàm lượng protein chất lượng cao (20.0g) và lượng Kali dồi dào (538mg); hỗ trợ phục hồi cơ bắp và cung cấp năng lượng ổn định cho cơ thể. Với lượng calo vừa phải (210 Kcal) và hàm lượng chất béo được kiểm soát; đây là lựa chọn tuyệt vời cho một bữa ăn giàu dinh dưỡng và ngon miệng."
+  },
+  {
+    "id": "dish_062",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "caramen",
+      "category": "món phụ;",
+      "ingredients": [
+        "trứng",
+        "sữa",
+        "đường"
+      ],
+      "ingredient_ids": [
+        "food_045",
+        "food_042",
+        "food_054"
+      ],
+      "calories": 77.4,
+      "protein": 3.7,
+      "carbs": 9.1,
+      "fat": 2.9,
+      "allergen": [
+        "sữa trứng"
+      ],
+      "health_tags": [
+        "có_chứa_sữa",
+        "có_chứa_trứng",
+        "có_nguồn_gốc_động_vật",
+        "không_phù_hợp_cho_người_ăn_chay",
+        "món_phụ",
+        "món_tráng_miệng_ngọt",
+        "nguồn_canxi",
+        "nguồn_đạm"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_063",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "thạch xanh",
+      "category": "Món phụ",
+      "ingredients": [
+        "bột rau câu"
+      ],
+      "ingredient_ids": [
+        "food_226"
+      ],
+      "calories": 25.42,
+      "protein": 0.52,
+      "carbs": 6.01,
+      "fat": 0.0,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "cholesterol_free",
+        "có_khoáng_chất_vi_lượng",
+        "có_đường_bổ_sung",
+        "low_fat",
+        "món_phụ",
+        "ít_calo",
+        "ít_protein",
+        "ít_vitamin"
+      ]
+    },
+    "text": "Thạch xanh là món tráng miệng dạng thạch có màu sẫm; được làm từ cây Mesona; thường dùng làm topping trong các loại đồ uống châu Á. Ở các quán trà sữa; thạch thường được cắt thành từng khối nhỏ; mang lại cảm giác mát lạnh; dễ trôi và hương vị thảo mộc nhẹ nhàng; rất hợp với trà sữa và nước trái cây. Đây là loại topping ít calo; có tác dụng làm mát; chỉ chứa khoảng 10–15 calo mỗi ounce; trở thành lựa chọn nhẹ nhàng hơn so với trân châu truyền thống."
+  },
+  {
+    "id": "dish_064",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "trân châu đường đen",
+      "category": "tráng miệng",
+      "ingredients": [
+        "bột năng",
+        "đường"
+      ],
+      "ingredient_ids": [
+        "food_183",
+        "food_228"
+      ],
+      "calories": 370.0,
+      "protein": 0.0,
+      "carbs": 0.0,
+      "fat": 0.0,
+      "allergen": [
+        "chứa gluten"
+      ],
+      "health_tags": [
+        "không_vitamin_đáng_kể",
+        "low_fiber",
+        "nguy_cơ_tăng_cân_nếu_dùng_nhiều.",
+        "nhiều_calo",
+        "nhiều_đường",
+        "no_fat",
+        "tráng_miệng",
+        "ít_protein"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_065",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "trân châu trắng",
+      "category": "tráng miệng",
+      "ingredients": [
+        "bột năng",
+        "đường"
+      ],
+      "ingredient_ids": [
+        "food_183",
+        "food_228"
+      ],
+      "calories": 370.0,
+      "protein": 0.0,
+      "carbs": 0.0,
+      "fat": 0.0,
+      "allergen": [
+        "chứa gluten"
+      ],
+      "health_tags": [
+        "không_vitamin_đáng_kể",
+        "low_fiber",
+        "nguy_cơ_tăng_cân_nếu_dùng_nhiều.",
+        "nhiều_calo",
+        "nhiều_đường",
+        "no_fat",
+        "tráng_miệng",
+        "ít_protein"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_066",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Mực trứng chiên",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Mực trứng",
+        "Dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_189"
+      ],
+      "calories": 462.0,
+      "protein": 50.8,
+      "carbs": 9.9,
+      "fat": 24.4,
+      "allergen": [
+        "Hải sản (Mực)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_protein",
+        "high_vitamin_c",
+        "món_chính",
+        "nguồn_kali",
+        "tốt_cho_cơ_bắp"
+      ]
+    },
+    "text": "Mực trứng chiên là món chính vô cùng bổ dưỡng và hấp dẫn với những con mực trứng căng đầy; được chiên vàng thơm phức. Món ăn này là nguồn cung cấp protein cực kỳ dồi dào (50.8g); rất lý tưởng cho những người cần bồi bổ sức khỏe hoặc phát triển cơ bắp. Bên cạnh vị ngọt tự nhiên và độ dai giòn của mực; món ăn còn cung cấp lượng Kali ấn tượng (873.6mg) cùng Vitamin C (15mg); hỗ trợ tốt cho hệ tim mạch và tăng cường sức đề kháng cho cơ thể."
+  },
+  {
+    "id": "dish_067",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Nem rán / Chả giò chiên",
+      "category": "Món chính",
+      "ingredients": [
+        "Thịt lợn nạc vai",
+        "Hành tây",
+        "Bánh đa",
+        "Dầu thực vật",
+        "Miến dong",
+        "Mộc nhĩ",
+        "Hành lá",
+        "Trứng vịt"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_089",
+        "food_036",
+        "food_158",
+        "food_144",
+        "food_028",
+        "food_091",
+        "food_255"
+      ],
+      "calories": 432.1,
+      "protein": 7.8,
+      "carbs": 83.1,
+      "fat": 7.5,
+      "allergen": [
+        "Trứng"
+      ],
+      "health_tags": [
+        "giàu_glucid",
+        "high_energy",
+        "món_chính",
+        "nguồn_kali"
+      ]
+    },
+    "text": "Nem rán hay chả giò chiên là món ăn truyền thống đặc sắc với lớp vỏ bánh đa giòn rụm bao bọc phần nhân thịt lợn; mộc nhĩ; miến và trứng thơm bùi. Món ăn cung cấp 102 Kcal mỗi cái với hàm lượng carbohydrate cao (83.1g); mang lại nguồn năng lượng tức thì và cảm giác ngon miệng khó cưỡng. Sự kết hợp tinh tế của các loại gia vị và rau củ bên trong không chỉ tạo nên hương vị đậm đà mà còn cung cấp các khoáng chất như Kali (88mg) và Canxi (42mg); là lựa chọn yêu thích trong các dịp lễ tết và bữa cơm sum họp gia đình."
+  },
+  {
+    "id": "dish_068",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Khoai tây chiên",
+      "category": "Món phụ",
+      "ingredients": [
+        "Khoai tây",
+        "Dầu",
+        "Bột canh"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_006",
+        "food_031"
+      ],
+      "calories": 164.4,
+      "protein": 1.6,
+      "carbs": 17.0,
+      "fat": 10.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high_energy",
+        "món_phụ",
+        "nguồn_kali"
+      ]
+    },
+    "text": "Khoai tây chiên là món ăn vặt hoặc món phụ được yêu thích trên toàn thế giới với lớp vỏ ngoài vàng ruộm; giòn tan bao bọc phần lõi khoai tây bùi ngậy và mềm mịn bên trong. Món ăn này cung cấp 466 Kcal năng lượng cùng lượng carbohydrate (17g) dồi dào; mang lại cảm giác ngon miệng và nguồn năng lượng tức thì. Với hàm lượng Kali (318.1mg) đáng kể và một ít Vitamin C (8mg); đây là món ăn phổ biến giúp kích thích vị giác; thường được thưởng thức kèm với các loại nước sốt như tương cà hoặc tương ớt trong các bữa ăn nhẹ hay các buổi tụ họp."
+  },
+  {
+    "id": "dish_069",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Chả cá rán",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Cá rô phi",
+        "Dầu thực vật",
+        "Muối"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_163",
+        "food_200"
+      ],
+      "calories": 235.0,
+      "protein": 19.7,
+      "carbs": 0.0,
+      "fat": 17.3,
+      "allergen": [
+        "Cá (Cá rô phi)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_protein",
+        "món_chính",
+        "nguồn_canxi",
+        "ít_glucid"
+      ]
+    },
+    "text": "Chả cá rán là món ăn thơm ngon; hấp dẫn với sự kết hợp từ thịt cá rô phi tươi ngon được quết kỹ; tạo độ dai mịn rồi chiên vàng đều các mặt. Món ăn này cung cấp hàm lượng protein chất lượng cao (19.7g) trong khi gần như không chứa tinh bột (0.0g Glucid); rất phù hợp cho những ai theo đuổi chế độ ăn High-protein hoặc ít carbohydrate. Với lượng calo vừa phải (235 Kcal) và nguồn Canxi đáng kể (50mg); chả cá rán không chỉ mang lại hương vị bùi ngậy; đậm đà mà còn là nguồn cung cấp dinh dưỡng thiết yếu giúp bồi bổ sức khỏe và hỗ trợ hệ xương khớp chắc khỏe cho cả gia đình."
+  },
+  {
+    "id": "dish_070",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Đùi gà rán",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Thịt đùi gà",
+        "Dầu thực vật",
+        "Ngũ vị hương"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_099",
+        "food_217"
+      ],
+      "calories": 251.0,
+      "protein": 24.3,
+      "carbs": 0.9,
+      "fat": 17.4,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_protein",
+        "món_chính",
+        "nguồn_kali",
+        "tốt_cho_cơ_bắp"
+      ]
+    },
+    "text": "Đùi gà rán là món ăn hấp dẫn với phần thịt đùi gà mềm ngọt được chiên vàng ươm và dậy mùi thơm đặc trưng của ngũ vị hương. Món ăn này cung cấp hàm lượng protein chất lượng cao dồi dào (24.3g); rất lý tưởng để bồi bổ sức khỏe và hỗ trợ phát triển cơ bắp. Với lượng calo ổn định (251 Kcal) và hàm lượng carbohydrate cực thấp (0.9g); đây là lựa chọn tuyệt vời cho thực đơn High-protein hoặc những ai đang áp dụng chế độ ăn giảm tinh bột. Ngoài ra; món ăn còn cung cấp các khoáng chất thiết yếu như Kali (208mg) và Sắt (1.6mg); mang lại giá trị dinh dưỡng thiết thực cho bữa ăn hằng ngày."
+  },
+  {
+    "id": "dish_071",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cá thu rán sốt cà chua",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Cá thu",
+        "Cà chua",
+        "Dầu thực vật",
+        "Thìa là",
+        "Muối"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_161",
+        "food_155",
+        "food_200"
+      ],
+      "calories": 511.0,
+      "protein": 45.8,
+      "carbs": 1.4,
+      "fat": 35.8,
+      "allergen": [
+        "Cá (Cá thu)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_calcium",
+        "món_chính",
+        "nguồn_kali_dồi_dào",
+        "siêu_giàu_đạm",
+        "tốt_cho_cơ_bắp"
+      ]
+    },
+    "text": "Cá thu rán sốt cà chua là món chính vô cùng bổ dưỡng; nổi bật với những miếng cá thu chắc thịt; béo ngậy được rán vàng và phủ lớp sốt cà chua đậm đà; thơm mùi thìa là đặc trưng. Món ăn này cung cấp hàm lượng protein cực kỳ ấn tượng (45.8g); rất lý tưởng cho việc phát triển cơ bắp và phục hồi thể lực. Bên cạnh đó; lượng Kali dồi dào (1315.6mg) cùng Canxi (141.6mg) và sắt (3.7mg) giúp hỗ trợ sức khỏe tim mạch và xương khớp. Với sự kết hợp hoàn hảo giữa hương vị thơm ngon và giá trị dinh dưỡng vượt trội; đây là lựa chọn tuyệt vời để nâng cao sức khỏe cho cả gia đình trong bữa cơm hằng ngày."
+  },
+  {
+    "id": "dish_072",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cá trôi rán sốt cà chua",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Cá trôi (cả xương)",
+        "Cà chua",
+        "Hành lá",
+        "Mì chính",
+        "Bột canh",
+        "Dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_205",
+        "food_193",
+        "food_026",
+        "food_091",
+        "food_205",
+        "food_031"
+      ],
+      "calories": 449.0,
+      "protein": 36.5,
+      "carbs": 6.5,
+      "fat": 30.7,
+      "allergen": [
+        "Cá (Cá trôi)"
+      ],
+      "health_tags": [
+        "high-protein",
+        "high_calcium",
+        "high_protein",
+        "món_chính",
+        "nguồn_kali",
+        "tốt_cho_cơ_bắp"
+      ]
+    },
+    "text": "Cá trôi rán sốt cà chua là món ăn đậm đà với sự kết hợp giữa vị ngọt thanh của thịt cá trôi rán vàng và nước sốt cà chua chua ngọt nhuần nhuyễn. Món ăn này cung cấp hàm lượng protein rất cao (36.5g); hỗ trợ hiệu quả cho việc phát triển cơ bắp và phục hồi năng lượng. Bên cạnh đó; các khoáng chất thiết yếu như Canxi (185.1mg) và Kali (370.5mg) từ cả cá và cà chua giúp củng cố hệ xương khớp và tốt cho tim mạch. Với hương vị thơm ngon và màu sắc bắt mắt; đây là món chính giàu dinh dưỡng và rất đưa cơm trong các bữa ăn gia đình."
+  },
+  {
+    "id": "dish_073",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cá rô đồng rán",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Cá rô đồng (nguyên con)",
+        "Gừng",
+        "Thì là",
+        "Hạt tiêu",
+        "Dầu thực vật",
+        "Bột canh"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_256",
+        "food_113",
+        "food_155",
+        "food_066",
+        "food_031"
+      ],
+      "calories": 333.0,
+      "protein": 22.1,
+      "carbs": 2.5,
+      "fat": 26.2,
+      "allergen": [
+        "Cá (Cá rô đồng)"
+      ],
+      "health_tags": [
+        "giàu_beta-caroten",
+        "high-protein",
+        "high_protein",
+        "món_chính",
+        "nguồn_canxi",
+        "tốt_cho_xương_khớp"
+      ]
+    },
+    "text": "Cá rô đồng rán là món ăn dân dã nhưng vô cùng đặc sắc với hương vị thơm ngon; giòn rụm từ những con cá rô đồng được chiên vàng đều. Món ăn này cung cấp hàm lượng protein đáng kể (22.1g) cùng nguồn năng lượng dồi dào (333 Kcal); giúp bồi bổ sức khỏe hiệu quả. Sự kết hợp tinh tế giữa cá tươi cùng các gia vị như gừng; thì là và hạt tiêu không chỉ khử mùi tanh mà còn tạo nên mùi thơm quyến rũ; đồng thời cung cấp các dưỡng chất thiết yếu như Canxi (96mg) và Beta-caroten (573.1 ug); hỗ trợ tốt cho sức khỏe xương khớp và tăng cường thị lực cho cả gia đình."
+  },
+  {
+    "id": "dish_074",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cá rô phi rán",
+      "category": "Món chính; High-protein",
+      "ingredients": [
+        "Cá rô phi (cả xương)",
+        "Rau thìa là",
+        "Dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_065",
+        "food_155",
+        "food_256"
+      ],
+      "calories": 622.0,
+      "protein": 104.8,
+      "carbs": 0.4,
+      "fat": 22.3,
+      "allergen": [
+        "Cá (Cá rô phi)"
+      ],
+      "health_tags": [
+        "giàu_beta-caroten",
+        "high-protein",
+        "high_calcium",
+        "món_chính",
+        "siêu_giàu_đạm",
+        "tốt_cho_cơ_bắp"
+      ]
+    },
+    "text": "Cá rô phi rán là món chính vô cùng bổ dưỡng và thơm ngon với con cá rô phi lớn được rán vàng giòn lớp vỏ ngoài trong khi phần thịt bên trong vẫn giữ được độ ngọt và mềm. Món ăn này cung cấp một lượng protein cực kỳ lớn (104.8g); rất lý tưởng cho những người cần bổ sung dinh dưỡng cao để phát triển cơ bắp và phục hồi thể lực. Bên cạnh đó; món ăn còn là nguồn cung cấp Canxi dồi dào (293.4mg) và Beta-caroten (2850 ug); kết hợp cùng hương thơm của rau thìa là không chỉ mang lại hương vị đậm đà mà còn hỗ trợ tốt cho sức khỏe xương khớp và thị lực."
+  },
+  {
+    "id": "dish_075",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Nộm rau muống",
+      "category": "Salad",
+      "ingredients": [
+        "Rau muống",
+        "Lạc rang",
+        "Chanh",
+        "Đường",
+        "Tỏi",
+        "Ớt",
+        "Nước mắm"
+      ],
+      "ingredient_ids": [
+        "food_040",
+        "food_065",
+        "food_198",
+        "food_038",
+        "food_085",
+        "food_228",
+        "food_040",
+        "food_244",
+        "food_216"
+      ],
+      "calories": 230.0,
+      "protein": 10.8,
+      "carbs": 7.7,
+      "fat": 15.9,
+      "allergen": [
+        "Lạc (Đậu phộng)"
+      ],
+      "health_tags": [
+        "high_calcium",
+        "high_vitamin_c",
+        "nguồn_kali",
+        "salad",
+        "siêu_giàu_beta-caroten"
+      ]
+    },
+    "text": "Nộm rau muống là món salad thanh đạm và giòn mát; đặc trưng bởi sự kết hợp giữa rau muống chần sơ giữ được độ giòn tự nhiên và vị chua cay mặn ngọt hài hòa từ nước trộn. Món ăn này mang lại nguồn dinh dưỡng thực vật vượt trội với hàm lượng Beta-caroten cực cao (13994 ug) và Vitamin C dồi dào (72.9mg); giúp tăng cường sức đề kháng và hỗ trợ thị lực hiệu quả. Bên cạnh đó; sự góp mặt của lạc rang không chỉ tạo thêm độ bùi ngậy mà còn bổ sung chất béo lành mạnh và protein (10.8g); cùng các khoáng chất như Kali (897mg) và Canxi (271mg); biến đây thành một món salad lý tưởng để cân bằng dinh dưỡng và giải nhiệt cho cơ thể."
+  },
+  {
+    "id": "dish_076",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Nộm tai heo thập cẩm",
+      "category": "Salad",
+      "ingredients": [
+        "Tai heo",
+        "Đu đủ",
+        "Cà rốt",
+        "Dưa chuột",
+        "Rau thơm",
+        "Lạc rang",
+        "Gia vị nộm"
+      ],
+      "ingredient_ids": [
+        "food_004",
+        "food_029",
+        "food_071",
+        "food_038",
+        "food_258",
+        "food_131",
+        "food_259",
+        "food_260",
+        "food_261",
+        "food_262",
+        "food_263",
+        "food_264"
+      ],
+      "calories": 505.0,
+      "protein": 44.0,
+      "carbs": 27.0,
+      "fat": 25.0,
+      "allergen": [
+        "Lạc (Đậu phộng)"
+      ],
+      "health_tags": [
+        "giàu_beta-caroten",
+        "high_calcium",
+        "high_protein",
+        "nguồn_kali",
+        "salad"
+      ]
+    },
+    "text": "Nộm tai heo thập cẩm là món khai vị thanh mát; giòn sần sật với sự kết hợp phong phú giữa tai heo luộc thái mỏng và các loại rau củ tươi như đu đủ; cà rốt; dưa chuột. Món ăn này cung cấp hàm lượng protein ấn tượng lên đến 44g và nguồn năng lượng dồi dào 505 Kcal. Điểm nổi bật về dinh dưỡng của món nộm là lượng Beta-caroten rất cao (1505 ug) cùng các khoáng chất thiết yếu như Canxi (317mg); Kali (780mg) và Sắt (10mg). Với hương vị chua ngọt hài hòa; thơm bùi của lạc rang; đây là món ăn không chỉ giúp kích thích vị giác hiệu quả mà còn bổ sung nhiều chất xơ và vitamin quan trọng cho cơ thể."
+  },
+  {
+    "id": "dish_077",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Nộm bò khô",
+      "category": "Salad",
+      "ingredients": [
+        "Nộm rau củ thập cẩm",
+        "Nước chấm pha",
+        "Gan lợn rán",
+        "Bì lợn",
+        "Thịt bò khô",
+        "Bánh tôm",
+        "Lạc rang"
+      ],
+      "ingredient_ids": [
+        "food_233",
+        "food_038",
+        "food_216",
+        "food_237"
+      ],
+      "calories": 239.7,
+      "protein": 14.6,
+      "carbs": 23.0,
+      "fat": 9.8,
+      "allergen": [
+        "Lạc (Đậu phộng)"
+      ],
+      "health_tags": [
+        "giàu_beta-caroten",
+        "high_magnesium",
+        "nguồn_vitamin_a",
+        "salad",
+        "tốt_cho_sức_khỏe"
+      ]
+    },
+    "text": "Nộm bò khô là món salad phổ biến và hấp dẫn với sự kết hợp phong phú giữa đu đủ; cà rốt bào sợi giòn mát cùng các loại topping đậm đà như thịt bò khô; gan lợn rán; bì lợn và bánh tôm. Món ăn này cung cấp 239.7 Kcal năng lượng với hàm lượng protein tốt (14.6g) và lượng tinh bột vừa phải (23.0g). Điểm nổi bật về dinh dưỡng của món nộm là hàm lượng Beta-caroten (1181.3 ug) và Vitamin A (701.7 ug) dồi dào; hỗ trợ tốt cho thị lực và hệ miễn dịch. Với vị chua ngọt hài hòa của nước chấm pha cùng độ bùi ngậy từ lạc rang; đây là món salad giàu khoáng chất như Magie (84.8mg) và Sắt (2.7mg); mang lại trải nghiệm ẩm thực thú vị và bổ dưỡng."
+  },
+  {
+    "id": "dish_078",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Nộm hoa chuối thịt gà",
+      "category": "Salad",
+      "ingredients": [
+        "Hoa chuối",
+        "Thịt gà",
+        "Lạc rang",
+        "Cà rốt",
+        "Rau thơm",
+        "Gia vị nộm"
+      ],
+      "ingredient_ids": [
+        "food_259",
+        "food_260",
+        "food_261",
+        "food_262",
+        "food_263",
+        "food_264"
+      ],
+      "calories": 604.0,
+      "protein": 34.1,
+      "carbs": 50.1,
+      "fat": 29.3,
+      "allergen": [
+        "Lạc (Đậu phộng)"
+      ],
+      "health_tags": [
+        "giàu_beta-caroten",
+        "high_calcium",
+        "high_protein",
+        "nguồn_kali_dồi_dào",
+        "salad"
+      ]
+    },
+    "text": "Nộm hoa chuối thịt gà là món salad truyền thống đầy màu sắc và hương vị; kết hợp giữa hoa chuối giòn sần sật và thịt gà xé mềm ngọt. Món ăn này cung cấp hàm lượng protein ấn tượng (34.1g) cùng nguồn năng lượng dồi dào 604 Kcal. Điểm nổi bật vượt trội về dinh dưỡng của món nộm là lượng Beta-caroten rất cao (3547.1 ug) và Kali cực kỳ dồi dào (1599mg); hỗ trợ tốt cho thị lực và sức khỏe tim mạch. Với sự hòa quyện của các loại rau củ; vị bùi của lạc rang và gia vị chua ngọt hài hòa; đây là món salad giàu chất xơ (6.9g) và khoáng chất; mang lại cảm giác thanh mát và bổ dưỡng cho bữa ăn."
+  },
+  {
+    "id": "dish_079",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Gỏi ngó sen",
+      "category": "Salad",
+      "ingredients": [
+        "Ngó sen",
+        "Tôm",
+        "Thịt heo",
+        "Cà rốt",
+        "Lạc rang",
+        "Rau thơm",
+        "Gia vị trộn gỏi"
+      ],
+      "ingredient_ids": [
+        "food_259",
+        "food_260",
+        "food_261",
+        "food_262",
+        "food_263",
+        "food_264"
+      ],
+      "calories": 615.0,
+      "protein": 35.8,
+      "carbs": 42.4,
+      "fat": 33.8,
+      "allergen": [
+        "Lạc (Đậu phộng)",
+        "Hải sản (Tôm)"
+      ],
+      "health_tags": [
+        "high_calcium",
+        "high_protein",
+        "high_vitamin_c",
+        "nguồn_kali_dồi_dào",
+        "salad"
+      ]
+    },
+    "text": "Gỏi ngó sen là món salad truyền thống thanh mát và giòn rụm; nổi bật với sự kết hợp hài hòa giữa ngó sen trắng ngần; tôm tươi ngọt thịt và thịt heo luộc thái mỏng. Món ăn này cung cấp hàm lượng protein rất cao (35.8g) cùng nguồn năng lượng dồi dào 615 Kcal. Điểm ấn tượng nhất về dinh dưỡng của món gỏi chính là hàm lượng Canxi cực kỳ cao (913mg) và lượng Kali dồi dào (1159mg); hỗ trợ tuyệt vời cho sức khỏe xương khớp và hệ tim mạch. Với sự góp mặt của các loại rau củ; món ăn còn cung cấp lượng Vitamin C đáng kể (90.4mg) và Beta-caroten (1189.5 ug); mang lại hương vị chua ngọt kích thích vị giác đồng thời bổ sung nhiều dưỡng chất thiết yếu cho cơ thể."
+  },
+  {
+    "id": "dish_080",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Gỏi xoài",
+      "category": "Salad",
+      "ingredients": [
+        "Xoài xanh",
+        "Rau thơm",
+        "Ớt",
+        "Gia vị trộn gỏi"
+      ],
+      "ingredient_ids": [
+        "food_259",
+        "food_260",
+        "food_261",
+        "food_262",
+        "food_263",
+        "food_264"
+      ],
+      "calories": 105.0,
+      "protein": 1.0,
+      "carbs": 24.0,
+      "fat": 1.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "giàu_beta-caroten",
+        "high_vitamin_c",
+        "nguồn_kali",
+        "salad",
+        "ít_béo"
+      ]
+    },
+    "text": "Gỏi xoài là món salad thanh mát và kích thích vị giác với sự kết hợp giữa những sợi xoài xanh giòn tan; vị chua đặc trưng hòa quyện cùng nước trộn gỏi cay nồng và hương thơm từ các loại rau gia vị. Món ăn này cung cấp 105 Kcal năng lượng; chủ yếu từ carbohydrate (24g) và rất ít chất béo (1g); cực kỳ phù hợp cho những ai đang tìm kiếm một món ăn nhẹ nhàng; tươi mới. Điểm nổi bật về dinh dưỡng của gỏi xoài là hàm lượng Beta-caroten dồi dào (1207 ug) cùng Vitamin C (45mg); giúp hỗ trợ hệ miễn dịch và chống oxy hóa hiệu quả. Với sự bổ sung các khoáng chất như Kali (189mg) và Canxi (56mg); đây không chỉ là món khai vị hấp dẫn mà còn mang lại giá trị dinh dưỡng thiết thực cho sức khỏe."
+  },
+  {
+    "id": "dish_081",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo tim",
+      "category": "Súp / Cháo",
+      "ingredients": [
+        "Cháo trắng",
+        "Hành phi",
+        "mùi tàu",
+        "Ruốc thịt lợn"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_039"
+      ],
+      "calories": 350.6,
+      "protein": 19.7,
+      "carbs": 31.3,
+      "fat": 16.3,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "giàu_glucid",
+        "high_protein",
+        "nguồn_sắt",
+        "súp_/_cháo",
+        "tốt_cho_sức_khỏe"
+      ]
+    },
+    "text": "Cháo tim là món ăn bổ dưỡng và ấm nóng; kết hợp giữa cháo tim nấu mềm cùng các loại topping như ruốc thịt lợn và hành; mùi tàu thơm đặc trưng. Món ăn này cung cấp 350.6 Kcal năng lượng với hàm lượng protein ấn tượng (19.7g) và carbohydrate dồi dào (31.3g). Điểm nổi bật về dinh dưỡng của món cháo này là hàm lượng Sắt đáng kể (6.1mg) cùng các khoáng chất như Magie (30.5mg) và Kẽm (3.2mg); hỗ trợ tốt cho quá trình bổ máu và tăng cường thể lực. Với hương vị thanh ngọt tự nhiên và sự hòa quyện của các loại rau gia vị; đây là lựa chọn tuyệt vời để bồi bổ sức khỏe cho mọi lứa tuổi."
+  },
+  {
+    "id": "dish_082",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo trai",
+      "category": "Súp / Cháo; ăn sáng",
+      "ingredients": [
+        "Cháo trắng",
+        "Hành phi",
+        "Ruốc thịt lợn",
+        "Rau mùi",
+        "rau răm"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_274",
+        "food_275",
+        "food_054",
+        "food_276",
+        "food_259"
+      ],
+      "calories": 196.8,
+      "protein": 6.9,
+      "carbs": 28.0,
+      "fat": 6.4,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "giàu_glucid",
+        "low_cholesterol",
+        "nguồn_canxi",
+        "súp_/_cháo",
+        "ăn_sáng"
+      ]
+    },
+    "text": "Cháo trai là món ăn sáng hoặc món nhẹ bổ dưỡng; đặc trưng bởi sự kết hợp giữa cháo trai nấu nhừ thanh ngọt cùng các loại topping đậm đà như ruốc thịt lợn và hành phi thơm nồng. Món ăn cung cấp 196.8 Kcal năng lượng với hàm lượng carbohydrate ổn định (28.0g) và lượng chất béo thấp (6.4g). Điểm nổi bật về dinh dưỡng của món cháo này là nguồn Canxi dồi dào (235.4mg) cùng các khoáng chất thiết yếu như Magie (16.8mg) và Sắt (1.5mg); hỗ trợ tốt cho sức khỏe xương khớp. Với sự hòa quyện của rau mùi; rau răm và vị ngọt tự nhiên từ trai; đây là lựa chọn tuyệt vời để bồi bổ cơ thể và cung cấp năng lượng nhẹ nhàng cho ngày mới."
+  },
+  {
+    "id": "dish_083",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo lòng",
+      "category": "Súp / Cháo; ăn sáng",
+      "ingredients": [
+        "Cháo huyết",
+        "Dồi lợn luộc",
+        "Gan lợn luộc",
+        "Dạ dày lợn luộc",
+        "Lòng non luộc",
+        "Hành mùi tàu",
+        "Nước chấm pha",
+        "Hành tây",
+        "Rau thơm ăn kèm"
+      ],
+      "ingredient_ids": [
+        "food_232",
+        "food_233",
+        "food_234",
+        "food_235",
+        "food_259",
+        "food_260",
+        "food_261",
+        "food_262",
+        "food_263",
+        "food_264"
+      ],
+      "calories": 464.7,
+      "protein": 37.4,
+      "carbs": 43.0,
+      "fat": 15.9,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high_iron",
+        "high_protein",
+        "nguồn_magie",
+        "siêu_giàu_vitamin_a",
+        "súp_/_cháo",
+        "ăn_sáng"
+      ]
+    },
+    "text": "Cháo lòng là món ăn truyền thống đậm đà và bổ dưỡng; kết hợp giữa cháo huyết nấu nhừ cùng đa dạng các loại nội tạng lợn luộc như dồi; gan; dạ dày và lòng non. Món ăn này cung cấp nguồn năng lượng dồi dào 464.7 Kcal với hàm lượng protein rất cao (37.4g) và carbohydrate ổn định (43.0g). Điểm nổi bật vượt trội về dinh dưỡng của cháo lòng là hàm lượng Vitamin A cực cao (2424.4 ug) và sắt dồi dào (22.3 mg); hỗ trợ tuyệt vời cho việc bổ máu và tăng cường thị lực. Với sự hòa quyện của hành tây; hành mùi tàu và các loại rau thơm ăn kèm; đây là một bữa ăn giàu khoáng chất như Magie (85.3 mg) và Vitamin C (53.0 mg); mang lại hương vị đặc trưng và giá trị bồi bổ sức khỏe rất lớn."
+  },
+  {
+    "id": "dish_084",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo sườn",
+      "category": "Súp / Cháo; ăn sáng",
+      "ingredients": [
+        "Cháo trắng",
+        "sườn heo",
+        "Bánh quẩy",
+        "Ruốc thịt lợn",
+        "Rau răm",
+        "mùi"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_074",
+        "food_210",
+        "food_274",
+        "food_275",
+        "food_054",
+        "food_259"
+      ],
+      "calories": 199.7,
+      "protein": 7.8,
+      "carbs": 26.7,
+      "fat": 6.9,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "dễ_tiêu_hóa",
+        "giàu_glucid",
+        "nguồn_protein",
+        "súp_/_cháo",
+        "ít_béo",
+        "ăn_sáng"
+      ]
+    },
+    "text": "Cháo sườn là món ăn sáng quen thuộc và ấm bụng; mang hương vị ngọt thanh từ sườn heo ninh nhừ hòa quyện cùng cháo mịn màng. Món ăn này cung cấp 199.7 Kcal năng lượng với hàm lượng carbohydrate ổn định (26.7g) và lượng chất béo thấp (6.9g). Sự kết hợp giữa cháo sườn truyền thống cùng các loại topping như bánh quẩy giòn tan; ruốc thịt lợn đậm đà và rau răm; mùi thơm nồng không chỉ tạo nên một bữa ăn ngon miệng mà còn cung cấp các khoáng chất thiết yếu như Canxi (17.9mg); Magie (8.7mg) và Kẽm (1.0mg). Đây là lựa chọn lý tưởng cho một bữa ăn nhẹ nhàng; giàu dinh dưỡng và rất dễ tiêu hóa cho mọi lứa tuổi."
+  },
+  {
+    "id": "dish_085",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo đậu đen đường",
+      "category": "Súp / Cháo",
+      "ingredients": [
+        "Cháo trắng",
+        "đỗ đen",
+        "Đường kính"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_277",
+        "food_054"
+      ],
+      "calories": 322.0,
+      "protein": 4.9,
+      "carbs": 74.4,
+      "fat": 0.5,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "dễ_tiêu_hóa",
+        "giàu_glucid",
+        "nguồn_canxi",
+        "súp_/_cháo",
+        "ít_béo"
+      ]
+    },
+    "text": "Cháo đậu đen đường là món ăn truyền thống thanh mát và ngọt ngào; được nấu từ đậu đen ninh nhừ cùng cháo sánh mịn; kết hợp với đường kính để tạo nên vị ngọt đậm đà. Món ăn này cung cấp 322.0 Kcal năng lượng; chủ yếu đến từ hàm lượng carbohydrate dồi dào (74.4g); giúp cung cấp năng lượng nhanh chóng cho cơ thể. Với lượng chất béo cực thấp (0.5g) và các khoáng chất thiết yếu như Canxi (29.2mg); Magie (4.8mg) cùng chất béo không bão hòa MUFA+PUFA (0.3g); đây là lựa chọn tuyệt vời để giải nhiệt; bồi bổ sức khỏe và hỗ trợ hệ tiêu hóa hoạt động nhẹ nhàng."
+  },
+  {
+    "id": "dish_086",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo đỗ xanh",
+      "category": "Súp / Cháo",
+      "ingredients": [
+        "Cháo trắng",
+        "đậu đỏ",
+        "Đường đỏ",
+        "Đường trắng"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_136",
+        "food_277"
+      ],
+      "calories": 274.3,
+      "protein": 3.6,
+      "carbs": 63.9,
+      "fat": 0.5,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "dễ_tiêu_hóa",
+        "giàu_glucid",
+        "nguồn_natri",
+        "súp_/_cháo",
+        "ít_béo"
+      ]
+    },
+    "text": "Cháo đỗ xanh là món ăn thanh đạm và ngọt dịu; được nấu từ đậu kết hợp cùng đường đỏ và đường trắng để tạo nên hương vị đậm đà; hấp dẫn. Món ăn này cung cấp 274.3 Kcal năng lượng; chủ yếu đến từ hàm lượng carbohydrate dồi dào (63.9g) giúp cung cấp năng lượng nhanh chóng cho cơ thể. Với lượng chất béo cực thấp (0.5g) và các khoáng chất thiết yếu như Natri (479.6mg); Canxi (24.7mg) và Magie (3.9mg); đây là lựa chọn tuyệt vời để giải nhiệt; bồi bổ sức khỏe hoặc dùng làm món ăn nhẹ dễ tiêu hóa cho mọi lứa tuổi."
+  },
+  {
+    "id": "dish_087",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo lươn cay",
+      "category": "Súp / Cháo",
+      "ingredients": [
+        "Cháo trắng",
+        "Bánh quẩy",
+        "Lươn xào",
+        "Mộc nhĩ xào thịt nạc",
+        "Rau mùi",
+        "Tía tô",
+        "Sa tế"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_210",
+        "food_065",
+        "food_220",
+        "food_037",
+        "food_243",
+        "food_244",
+        "food_200",
+        "food_274",
+        "food_278",
+        "food_029",
+        "food_091",
+        "food_040",
+        "food_216",
+        "food_207",
+        "food_066",
+        "food_200",
+        "food_276"
+      ],
+      "calories": 174.1,
+      "protein": 7.1,
+      "carbs": 29.5,
+      "fat": 3.1,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "dễ_tiêu_hóa",
+        "high_vitamin_a",
+        "siêu_giàu_beta-caroten",
+        "súp_/_cháo",
+        "ít_béo"
+      ]
+    },
+    "text": "Cháo lươn cay là món ăn bổ dưỡng và ấm nồng; nổi bật với sự kết hợp giữa cháo trắng sánh mịn cùng thịt lươn xào đậm đà và mộc nhĩ xào thịt nạc bùi ngậy. Món ăn cung cấp 174.1 Kcal năng lượng với hàm lượng protein thiết yếu (7.1g) và carbohydrate ổn định (29.5g). Điểm ấn tượng nhất về dinh dưỡng của món cháo này là hàm lượng Beta-caroten cực kỳ cao (110.9 mg) và Vitamin A dồi dào (300.4 ug); hỗ trợ tuyệt vời cho thị lực và hệ miễn dịch. Với sự hòa quyện của rau mùi; tía tô thơm nồng cùng vị cay nhẹ từ sa tế và bánh quẩy giòn tan; đây là lựa chọn lý tưởng để bồi bổ sức khỏe và kích thích vị giác hiệu quả."
+  },
+  {
+    "id": "dish_088",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo gà",
+      "category": "Súp / Cháo; ăn sáng",
+      "ingredients": [
+        "Cháo trắng",
+        "Thịt lườn gà luộc",
+        "Mộc nhĩ",
+        "nấm hương xào",
+        "Rau thơm"
+      ],
+      "ingredient_ids": [
+        "food_259",
+        "food_260",
+        "food_261",
+        "food_262",
+        "food_263",
+        "food_264"
+      ],
+      "calories": 375.9,
+      "protein": 26.1,
+      "carbs": 57.6,
+      "fat": 4.6,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "giàu_glucid",
+        "high_magnesium",
+        "high_protein",
+        "nguồn_canxi",
+        "súp_/_cháo",
+        "ăn_sáng"
+      ]
+    },
+    "text": "Cháo gà là món ăn bổ dưỡng và dễ tiêu hóa; kết hợp giữa cháo trắng sánh mịn cùng thịt lườn gà luộc xé phay giàu đạm và mộc nhĩ; nấm hương xào thơm bùi. Món ăn này cung cấp 375.9 Kcal năng lượng với hàm lượng protein ấn tượng (26.1g) và carbohydrate dồi dào (57.6g). Điểm nổi bật về dinh dưỡng của cháo gà là hàm lượng Sắt đáng kể (11.8mg) cùng các khoáng chất thiết yếu như Canxi (129.8mg); Magie (36.3mg) và Kẽm (3.1mg). Với sự hòa quyện của các loại rau thơm tươi mát; đây là lựa chọn tuyệt vời để bồi bổ sức khỏe; hỗ trợ phục hồi cơ thể và cung cấp năng lượng bền bỉ cho ngày mới."
+  },
+  {
+    "id": "dish_089",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Cháo ruốc thịt lợn",
+      "category": "Súp / Cháo; ăn sáng",
+      "ingredients": [
+        "Cháo trắng",
+        "Bánh quẩy",
+        "Ruốc thịt lợn"
+      ],
+      "ingredient_ids": [
+        "food_024",
+        "food_027",
+        "food_028",
+        "food_029",
+        "food_210",
+        "food_274",
+        "food_275",
+        "food_054"
+      ],
+      "calories": 223.6,
+      "protein": 7.7,
+      "carbs": 38.6,
+      "fat": 4.3,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "dễ_tiêu_hóa",
+        "giàu_glucid",
+        "nguồn_kali",
+        "súp_/_cháo",
+        "ít_béo",
+        "ăn_sáng"
+      ]
+    },
+    "text": "Cháo ruốc thịt lợn là món ăn sáng nhẹ nhàng và ấm bụng; kết hợp giữa cháo trắng nấu nhừ sánh mịn cùng ruốc thịt lợn đậm đà và bánh quẩy giòn tan. Món ăn cung cấp 223.6 Kcal năng lượng với hàm lượng carbohydrate dồi dào (38.6g) và lượng chất béo thấp (4.3g). Điểm nổi bật về dinh dưỡng của món cháo này là nguồn Kali ổn định (111.2mg) cùng các khoáng chất thiết yếu như Canxi (24.8mg); Magie (9.0mg) và Kẽm (0.6mg). Với kết cấu mềm mại và hương vị quen thuộc; đây là lựa chọn lý tưởng để cung cấp năng lượng nhanh chóng và hỗ trợ hệ tiêu hóa hoạt động hiệu quả."
+  },
+  {
+    "id": "dish_090",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Ruốc thịt lợn",
+      "category": "Món phụ",
+      "ingredients": [
+        "Thịt lợn",
+        "Xì dầu",
+        "Đường",
+        "Gia vị"
+      ],
+      "ingredient_ids": [
+        "food_274",
+        "food_275",
+        "food_054"
+      ],
+      "calories": 400.0,
+      "protein": 40.0,
+      "carbs": 20.0,
+      "fat": 20.0,
+      "allergen": [
+        "Không có"
+      ],
+      "health_tags": [
+        "high_protein",
+        "món_phụ",
+        "nguồn_kali",
+        "nguồn_sắt",
+        "tiện_lợi"
+      ]
+    },
+    "text": "Ruốc thịt lợn (hay còn gọi là chà bông) là một món ăn phụ phổ biến; được chế biến từ thịt lợn hầm kỹ với hỗn hợp xì dầu; đường và các loại gia vị; sau đó được xé nhỏ và sấy khô cho đến khi tơi xốp. Món ăn này là nguồn cung cấp protein rất cao; với 100g sản phẩm chứa khoảng 40g đạm; giúp hỗ trợ duy trì và phát triển cơ bắp. Bên cạnh đó; ruốc thịt lợn còn cung cấp các khoáng chất thiết yếu như Sắt (2.0mg) giúp bổ máu và Kali (200mg) hỗ trợ chức năng tim mạch. Với hương vị mặn ngọt hài hòa; kết cấu bông xốp đặc trưng và khả năng bảo quản lâu dài; đây là thành phần hoàn hảo để ăn kèm với cháo; xôi hoặc các loại bánh; mang lại sự tiện lợi và dinh dưỡng cho bữa ăn."
+  },
+  {
+    "id": "dish_091",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "thạch dừa",
+      "category": "món phụ",
+      "ingredients": [
+        "cơm dừa",
+        "bột rau câu"
+      ],
+      "ingredient_ids": [
+        "food_226",
+        "food_236"
+      ],
+      "calories": 88.0,
+      "protein": 0.0,
+      "carbs": 17.5,
+      "fat": 0.0,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "cholesterol_free",
+        "giàu_chất_xơ_hòa_tan",
+        "không_gluten",
+        "không_đường_thêm_(nếu_loại_không_đường)",
+        "món_phụ",
+        "phù_hợp_cho_ăn_chay",
+        "thích_hợp_làm_món_tráng_miệng",
+        "thực_phẩm_có_nguồn_gốc_thực_vật",
+        "tốt_cho_tiêu_hóa",
+        "ít_calo"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_092",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "phồng tôm",
+      "category": "món phụ",
+      "ingredients": [
+        "tôm",
+        "tinh bột khoai mì",
+        "muối",
+        "đường",
+        "tiêu",
+        "bột ngọt"
+      ],
+      "ingredient_ids": [
+        "food_111",
+        "food_131",
+        "food_200",
+        "food_054",
+        "food_066",
+        "food_205"
+      ],
+      "calories": 357.0,
+      "protein": 3.57,
+      "carbs": 82.1,
+      "fat": 0.0,
+      "allergen": [
+        "tôm",
+        "hải sản"
+      ],
+      "health_tags": [
+        "chiên_ngập_dầu",
+        "có_tinh_bột",
+        "có_tôm",
+        "high_protein",
+        "không_phù_hợp_cho_người_dị_ứng_hải_sản_có_vỏ",
+        "món_phụ",
+        "nguy_cơ_dị_ứng_hải_sản",
+        "nhiều_calo",
+        "nhiều_muối",
+        "thực_phẩm_chế_biến",
+        "đồ_ăn_vặt"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_093",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "mộc nhĩ xào thịt nạc",
+      "category": "món chính",
+      "ingredients": [
+        "thịt nạc heo",
+        "mộc nhĩ khô",
+        "cà rốt",
+        "hành lá",
+        "tỏi",
+        "nước mắm",
+        "hạt nêm",
+        "tiêu",
+        "muối"
+      ],
+      "ingredient_ids": [
+        "food_274",
+        "food_278",
+        "food_029",
+        "food_091",
+        "food_040",
+        "food_216",
+        "food_207",
+        "food_066",
+        "food_200"
+      ],
+      "calories": 98.0,
+      "protein": 10.7,
+      "carbs": 3.9,
+      "fat": 4.4,
+      "allergen": [
+        "Thịt lợn",
+        "Đậu nành",
+        "Nấm"
+      ],
+      "health_tags": [
+        "dairy_free",
+        "gluten_free",
+        "high_fiber",
+        "high_protein",
+        "kết_hợp_thực_vật_–_động_vật",
+        "món_chính",
+        "nguồn_chất_chống_oxy_hóa",
+        "nguồn_sắt",
+        "nguồn_vitamin_nhóm_b"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_094",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "salad rau củ",
+      "category": "salad",
+      "ingredients": [
+        "cà chua",
+        "dưa chuột",
+        "rau xà lách",
+        "dầu thực vật"
+      ],
+      "ingredient_ids": [
+        "food_026",
+        "food_071",
+        "food_033",
+        "food_065"
+      ],
+      "calories": 181.0,
+      "protein": 2.0,
+      "carbs": 0.0,
+      "fat": 16.0,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "có_chứa_chất_béo_lành_mạnh",
+        "có_nguồn_gốc_thực_vật",
+        "dairy_free",
+        "digestive_health",
+        "giàu_vitamin",
+        "gluten_free",
+        "heart_health",
+        "high_antioxidants",
+        "high_fiber",
+        "salad",
+        "vegetarian_friendly",
+        "ít_calo"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_095",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "nem tai",
+      "category": "salad",
+      "ingredients": [
+        "tai heo",
+        "hành tây"
+      ],
+      "ingredient_ids": [
+        "food_258",
+        "food_036"
+      ],
+      "calories": 216.7,
+      "protein": 28.3,
+      "carbs": 9.0,
+      "fat": 7.5,
+      "allergen": [
+        "thịt heo"
+      ],
+      "health_tags": [
+        "có_chứa_collagen",
+        "có_chứa_gluten",
+        "có_thành_phần_lên_men",
+        "dairy_free",
+        "high_protein",
+        "không_phù_hợp_cho_người_ăn_chay",
+        "món_truyền_thống_việt_nam",
+        "salad",
+        "ít_tinh_bột"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_096",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Xôi xéo",
+      "category": "ăn sáng",
+      "ingredients": [
+        "xôi",
+        "đậu xanh",
+        "hành phi",
+        "ruốc thịt lợn"
+      ],
+      "ingredient_ids": [
+        "food_279",
+        "food_185",
+        "food_039",
+        "food_274",
+        "food_275",
+        "food_054"
+      ],
+      "calories": 420.0,
+      "protein": 12.6,
+      "carbs": 84.3,
+      "fat": 3.6,
+      "allergen": [
+        "thịt heo"
+      ],
+      "health_tags": [
+        "ăn_sáng"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_097",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "xôi",
+      "category": "ăn sáng",
+      "ingredients": [
+        "gạo nếp"
+      ],
+      "ingredient_ids": [
+        "food_279"
+      ],
+      "calories": 97.0,
+      "protein": 2.5862,
+      "carbs": 21.2644,
+      "fat": 0.1724,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "có_nguồn_gốc_thực_vật",
+        "dairy_free",
+        "giàu_năng_lượng",
+        "giàu_tinh_bột",
+        "gluten_free",
+        "low_fat",
+        "thực_phẩm_truyền_thống_châu_á",
+        "tạo_cảm_giác_no_lâu",
+        "vegetarian_friendly",
+        "ăn_sáng"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_098",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "bánh mì thập cẩm",
+      "category": "ăn sáng",
+      "ingredients": [
+        "Bánh mì",
+        "Pate",
+        "Thịt ba chỉ rán",
+        "Ruốc thịt lợn",
+        "Thịt nguội",
+        "Bơ",
+        "Dưa chuột"
+      ],
+      "ingredient_ids": [
+        "food_061",
+        "food_280",
+        "food_139",
+        "food_274",
+        "food_275",
+        "food_054",
+        "food_112",
+        "food_071"
+      ],
+      "calories": 678.0,
+      "protein": 30.6,
+      "carbs": 48.1,
+      "fat": 40.5,
+      "allergen": [
+        "Lúa mì",
+        "Thịt heo",
+        "Trứng",
+        "Sữa",
+        "Đậu nành"
+      ],
+      "health_tags": [
+        "có_chứa_gluten",
+        "có_chứa_sữa",
+        "có_chứa_trứng",
+        "có_chứa_đậu_nành",
+        "giàu_chất_béo",
+        "giàu_năng_lượng",
+        "high_protein",
+        "không_phù_hợp_cho_người_ăn_chay",
+        "món_ăn_truyền_thống_việt_nam",
+        "thịt_chế_biến",
+        "ăn_sáng"
+      ]
+    },
+    "text": ""
+  },
+  {
+    "id": "dish_099",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "Bánh cuốn thịt",
+      "category": "ăn sáng",
+      "ingredients": [
+        "bánh cuốn",
+        "chả lợn",
+        "ruốc thịt lợn",
+        "hành phi",
+        "nước mắm"
+      ],
+      "ingredient_ids": [
+        "food_027",
+        "food_274",
+        "food_275",
+        "food_054",
+        "food_039",
+        "food_216"
+      ],
+      "calories": 493.1,
+      "protein": 13.8,
+      "carbs": 65.0,
+      "fat": 19.8,
+      "allergen": [
+        "Thịt heo",
+        "Cá",
+        "Đậu nành",
+        "Lúa mì"
+      ],
+      "health_tags": [
+        "mon_an_truyen_thong",
+        "high_carb",
+        "low_fat",
+        "animal_protein",
+        "ăn_sáng"
+      ]
+    },
+    "text": ""
+  }
+]
