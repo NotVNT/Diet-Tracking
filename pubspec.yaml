@@ -68,6 +68,7 @@ dependencies:
   uuid: ^4.0.0
   get_it: ^7.6.0
   fl_chart: ^0.68.0
+  diacritic: ^0.1.6
 
 
 # Development dependencies

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../identities/login/login_main_screen.dart';
 import '../../common/language_selector.dart';
 import '../../common/custom_button.dart';
 import '../../services/language_service.dart';
 import '../../l10n/app_localizations.dart';
-import '../../themes/theme_provider.dart';
 import '../../responsive/responsive.dart';
 import 'started_view/started_screen.dart';
 
@@ -29,9 +27,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   int _currentImageIndex = 0;
 
   final List<String> _images = [
-    'assets/welcome_screen/flexitarian-diet-foods_OCES.jpg',
+    'assets/welcome_screen/brand.png',
     'assets/welcome_screen/welcome_screen.png',
-    'assets/welcome_screen/diet.jpg',
+    'assets/welcome_screen/plan_eat.png',
   ];
 
   @override
@@ -120,7 +118,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
     final responsive = ResponsiveHelper.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -139,40 +136,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     child: LanguageSelector(
                       selected: LanguageService.currentLanguage,
                       onChanged: _onLanguageChanged,
-                    ),
-                  ),
-                  responsive.horizontalSpace(8),
-                  // Theme toggle button
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(
-                        responsive.radius(12),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).shadowColor.withValues(alpha: 0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      iconSize: responsive.iconSize(24),
-                      onPressed: () {
-                        themeProvider.toggleTheme();
-                      },
-                      icon: Icon(
-                        themeProvider.isDarkMode
-                            ? Icons.light_mode_rounded
-                            : Icons.dark_mode_rounded,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                      tooltip: themeProvider.isDarkMode
-                          ? 'Chuyển sang chế độ sáng'
-                          : 'Chuyển sang chế độ tối',
                     ),
                   ),
                 ],

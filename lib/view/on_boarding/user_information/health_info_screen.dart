@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
-import '../../../common/app_styles.dart';
-import '../../../common/custom_button.dart';
-import '../../../l10n/app_localizations.dart';
-import '../../../widget/health/add_button.dart';
-import '../../../widget/health/health_text_field.dart';
-import '../../../widget/health/health_card_widget.dart';
-import 'height_selector.dart';
 import '../../../widget/progress_bar/user_progress_bar.dart';
+import '../../../widget/health/health_background.dart';
+import '../../../widget/health/health_header.dart';
+import '../../../widget/health/allergy_selection_card.dart';
+import '../../../widget/health/health_navigation_bar.dart';
+import 'height_selector.dart';
 
 class HealthInfoScreen extends StatefulWidget {
   final AuthService? authService;
@@ -24,8 +22,7 @@ class HealthInfoScreen extends StatefulWidget {
 }
 
 class _HealthInfoScreenState extends State<HealthInfoScreen> {
-  final TextEditingController _allergyCtrl = TextEditingController();
-  final List<String> _allergies = <String>[];
+  List<String> _allergies = <String>[];
   late final LocalStorageService _local;
   AuthService? _auth;
 
@@ -48,138 +45,76 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
   }
 
   @override
-  void dispose() {
-    _allergyCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    const title = 'Dị Ứng Thực Phẩm';
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F6FC),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      body: HealthBackground(
+        child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 4),
-              const ProgressBarWidget(
-                progress: 3 / 8, // Bước 3/8
-              ),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                style: AppStyles.heading1.copyWith(
-                  color: const Color(0xFF0FB5A6),
+              const SizedBox(height: 8),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: ProgressBarWidget(
+                  progress: 3 / 8,
                 ),
-                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 6),
-              Text(
-                'Vui lòng cung cấp thông tin về dị ứng thực phẩm của bạn để chúng tôi có thể hỗ trợ tốt nhất',
-                style: AppStyles.bodySmall,
-                textAlign: TextAlign.center,
+              const SizedBox(height: 20),
+              
+              const HealthHeader(
+                title: 'Dị Ứng Thực Phẩm',
+                subtitle: 'Vui lòng cung cấp thông tin về dị ứng thực phẩm của bạn để chúng tôi có thể hỗ trợ tốt nhất',
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 24),
 
               // Card: Food allergies
-              HealthCardWidget(
-                index: 2,
-                title: 'Dị Ứng Thực Phẩm',
-                description:
-                    'Nhập các món ăn hoặc thực phẩm gây dị ứng nếu có. Điều này giúp đảm bảo an toàn cho bạn.',
-                input: HealthTextField(
-                  controller: _allergyCtrl,
-                  hintText: 'Ví dụ: Hải sản, Đậu phộng, Sữa, Trứng...',
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: AllergySelectionCard(
+                    selectedAllergies: _allergies,
+                    onAllergiesChanged: (newList) {
+                      setState(() {
+                        _allergies = newList;
+                      });
+                    },
+                  ),
                 ),
-                trailingButton: AddButton(
-                  onPressed: () {
-                    final text = _allergyCtrl.text.trim();
-                    if (text.isEmpty) return;
-                    setState(() {
-                      if (!_allergies.contains(text)) {
-                        _allergies.add(text);
-                      }
-                      _allergyCtrl.clear();
-                    });
-                  },
-                ),
-                emptyIcon: Icons.info_outline,
-                emptyText:
-                    'Chưa có dị ứng thực phẩm nào được thêm. Nếu không có, bạn có thể bỏ qua phần này.',
-                items: _allergies,
-                onRemoveItem: (i) => setState(() => _allergies.removeAt(i)),
               ),
 
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x1A000000),
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(14),
-                        onTap: () => Navigator.of(context).maybePop(),
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Color(0xFF2D3A4A),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: CustomButton(
-                      text: AppLocalizations.of(context)?.next ?? 'Tiếp tục',
-                      backgroundColor: const Color(0xFF1F2A37),
-                      onPressed: () async {
-                        final uid = _auth?.currentUser?.uid;
-                        final bool hasAny = _allergies.isNotEmpty;
+              // Bottom Buttons
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: HealthNavigationBar(
+                  onBack: () => Navigator.of(context).maybePop(),
+                  onNext: () async {
+                    final uid = _auth?.currentUser?.uid;
+                    final bool hasAny = _allergies.isNotEmpty;
 
-                        if (uid != null) {
-                          if (hasAny) {
-                            final sanitizedAllergies = _sanitize(_allergies);
-                            await _auth!.updateUserData(uid, {
-                              if (sanitizedAllergies != null)
-                                'bodyInfo.allergies': sanitizedAllergies,
-                            });
-                          }
-                        } else {
-                          if (hasAny) {
-                            await _local.saveGuestData(
-                              allergies: _sanitize(_allergies),
-                            );
-                          }
-                        }
-
-                        if (!mounted) return;
-
-                        // ignore: use_build_context_synchronously
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const HeightSelector(),
-                          ),
+                    if (uid != null) {
+                      if (hasAny) {
+                        final sanitizedAllergies = _sanitize(_allergies);
+                        await _auth!.updateUserData(uid, {
+                          if (sanitizedAllergies != null)
+                            'bodyInfo.allergies': sanitizedAllergies,
+                        });
+                      }
+                    } else {
+                      if (hasAny) {
+                        await _local.saveGuestData(
+                          allergies: _sanitize(_allergies),
                         );
-                      },
-                      width: double.infinity,
-                    ),
-                  ),
-                ],
+                      }
+                    }
+
+                    if (!mounted) return;
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const HeightSelector(),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -188,3 +123,5 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
     );
   }
 }
+
+
