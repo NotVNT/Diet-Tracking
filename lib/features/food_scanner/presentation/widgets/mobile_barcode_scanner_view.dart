@@ -9,10 +9,10 @@ class MobileBarcodeScannerView extends StatefulWidget {
   const MobileBarcodeScannerView({super.key, required this.onBarcodeDetected});
 
   @override
-  State<MobileBarcodeScannerView> createState() => _MobileBarcodeScannerViewState();
+  State<MobileBarcodeScannerView> createState() => MobileBarcodeScannerViewState();
 }
 
-class _MobileBarcodeScannerViewState extends State<MobileBarcodeScannerView> {
+class MobileBarcodeScannerViewState extends State<MobileBarcodeScannerView> {
   late final MobileScannerController _controller;
   bool _handled = false;
 
@@ -52,6 +52,13 @@ class _MobileBarcodeScannerViewState extends State<MobileBarcodeScannerView> {
         break;
       }
     }
+  }
+
+  Future<void> restartScanning() async {
+    _handled = false;
+    try {
+      await _controller.start();
+    } catch (_) {}
   }
 
   @override

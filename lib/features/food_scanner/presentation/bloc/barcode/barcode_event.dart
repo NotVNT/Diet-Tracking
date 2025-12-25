@@ -60,3 +60,8 @@ class SaveBarcodeProductRequested extends BarcodeEvent {
     this.imagePath,
   });
 }
+
+/// Reset barcode scan state (e.g., user cancels confirmation card)
+class BarcodeResetRequested extends BarcodeEvent {
+  const BarcodeResetRequested();
+}

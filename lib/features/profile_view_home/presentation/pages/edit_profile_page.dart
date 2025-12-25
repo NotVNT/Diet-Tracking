@@ -114,8 +114,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     // Validate selectedGoal is in the current goals list
     if (_selectedGoal != null &&
-        !goalOptions
-            .any((option) => option.storageValue == _selectedGoal)) {
+        !goalOptions.any((option) => option.storageValue == _selectedGoal)) {
       _selectedGoal = null;
     }
 
@@ -481,10 +480,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final buildMuscle = loc.editProfileGoalBuildMuscle;
 
     return [
-      _ProfileGoalOption(
-        storageValue: loseWeight,
-        label: loseWeight,
-      ),
+      _ProfileGoalOption(storageValue: loseWeight, label: loseWeight),
       _ProfileGoalOption(
         storageValue: '$loseWeight(keto)',
         label: '$loseWeight (${loc.keto})',
@@ -493,18 +489,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         storageValue: '$loseWeight(lowCarb)',
         label: '$loseWeight (${loc.lowCarbs})',
       ),
-      _ProfileGoalOption(
-        storageValue: gainWeight,
-        label: gainWeight,
-      ),
-      _ProfileGoalOption(
-        storageValue: maintainWeight,
-        label: maintainWeight,
-      ),
-      _ProfileGoalOption(
-        storageValue: buildMuscle,
-        label: buildMuscle,
-      ),
+      _ProfileGoalOption(storageValue: gainWeight, label: gainWeight),
+      _ProfileGoalOption(storageValue: maintainWeight, label: maintainWeight),
+      _ProfileGoalOption(storageValue: buildMuscle, label: buildMuscle),
     ];
   }
 }
@@ -513,8 +500,5 @@ class _ProfileGoalOption {
   final String storageValue;
   final String label;
 
-  const _ProfileGoalOption({
-    required this.storageValue,
-    required this.label,
-  });
+  const _ProfileGoalOption({required this.storageValue, required this.label});
 }
