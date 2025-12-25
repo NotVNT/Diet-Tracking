@@ -29,7 +29,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String? _selectedGoal;
 
   // Goals will be initialized in build method with localization
-  late List<String> _goals;
 
   @override
   void initState() {
@@ -110,15 +109,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     // Initialize goals with localized strings
-    _goals = [
-      AppLocalizations.of(context)!.editProfileGoalLoseWeight,
-      AppLocalizations.of(context)!.editProfileGoalGainWeight,
-      AppLocalizations.of(context)!.editProfileGoalMaintainWeight,
-      AppLocalizations.of(context)!.editProfileGoalBuildMuscle,
-    ];
+    final loc = AppLocalizations.of(context)!;
+    final goalOptions = _buildGoalOptions(loc);
 
     // Validate selectedGoal is in the current goals list
-    if (_selectedGoal != null && !_goals.contains(_selectedGoal)) {
+    if (_selectedGoal != null &&
+        !goalOptions
+            .any((option) => option.storageValue == _selectedGoal)) {
       _selectedGoal = null;
     }
 
@@ -295,7 +292,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               _buildSectionTitle(
                 AppLocalizations.of(context)!.editProfileYourGoal,
               ),
-              _buildGoalDropdown(),
+              _buildGoalDropdown(goalOptions),
               const SizedBox(height: 32),
             ],
           ),
@@ -428,7 +425,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildGoalDropdown() {
+  Widget _buildGoalDropdown(List<_ProfileGoalOption> goalOptions) {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
@@ -462,8 +459,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ),
         hint: Text(AppLocalizations.of(context)!.editProfileSelectGoal),
-        items: _goals.map((goal) {
-          return DropdownMenuItem(value: goal, child: Text(goal));
+        items: goalOptions.map((goal) {
+          return DropdownMenuItem(
+            value: goal.storageValue,
+            child: Text(goal.label),
+          );
         }).toList(),
         onChanged: (value) {
           setState(() {
@@ -473,4 +473,48 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
   }
+
+  List<_ProfileGoalOption> _buildGoalOptions(AppLocalizations loc) {
+    final loseWeight = loc.editProfileGoalLoseWeight;
+    final gainWeight = loc.editProfileGoalGainWeight;
+    final maintainWeight = loc.editProfileGoalMaintainWeight;
+    final buildMuscle = loc.editProfileGoalBuildMuscle;
+
+    return [
+      _ProfileGoalOption(
+        storageValue: loseWeight,
+        label: loseWeight,
+      ),
+      _ProfileGoalOption(
+        storageValue: '$loseWeight(keto)',
+        label: '$loseWeight (${loc.keto})',
+      ),
+      _ProfileGoalOption(
+        storageValue: '$loseWeight(lowCarb)',
+        label: '$loseWeight (${loc.lowCarbs})',
+      ),
+      _ProfileGoalOption(
+        storageValue: gainWeight,
+        label: gainWeight,
+      ),
+      _ProfileGoalOption(
+        storageValue: maintainWeight,
+        label: maintainWeight,
+      ),
+      _ProfileGoalOption(
+        storageValue: buildMuscle,
+        label: buildMuscle,
+      ),
+    ];
+  }
+}
+
+class _ProfileGoalOption {
+  final String storageValue;
+  final String label;
+
+  const _ProfileGoalOption({
+    required this.storageValue,
+    required this.label,
+  });
 }
