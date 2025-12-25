@@ -1,6 +1,4 @@
 import numpy as np
-from googleapiclient.discovery import build
-from googlesearch import search
 from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
 from huggingface_hub import InferenceClient
@@ -270,7 +268,7 @@ def chat_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
     # Define the system message
     system_message = {"role": "system", "content":f"""
         -Bạn là trợ lí dinh dưỡng ảo tiếng việt và trả lời nhẹ nhàng, có thể thêm emoji, trả lời mọi câu hỏi liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống. Hãy từ chối trả lời những câu hỏi không liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống, dị ứng. Câu trả lời không được hơn 1000 kí tự
-        Dưới đây là thông tin của người dùng để bạn hiểu rõ về người dùng hơn, và không được nhắc lại thông tin của người dùng trừ khi họ yêu cầu:[
+        Dưới đây là thông tin của người dùng để bạn hiểu rõ về người dùng hơn, chỉ được nhắc lại thông tin của người dùng trừ khi họ yêu cầu:[
         - Tuổi: {age}
         - Giới tính: {gender}
         - Chiều cao: {height} cm
