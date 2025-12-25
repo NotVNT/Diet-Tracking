@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../common/snackbar_helper.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../services/notification_service.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../record_view_home/presentation/cubit/record_cubit.dart';
 import '../widgets/components/nutrient_color_scheme.dart';
 
@@ -53,12 +54,13 @@ class _AddFoodPageState extends State<AddFoodPage> {
       final fat = double.tryParse(_fatController.text);
 
       await context.read<RecordCubit>().saveFoodRecord(
-            foodName,
-            calories,
-            protein: protein,
-            carbs: carbs,
-            fat: fat,
-          );
+        foodName,
+        calories,
+        protein: protein,
+        carbs: carbs,
+        fat: fat,
+        recordType: RecordType.manual,
+      );
 
       if (mounted) {
         final today = DateFormat('dd/MM/yyyy').format(DateTime.now());
@@ -149,11 +151,14 @@ class _AddFoodPageState extends State<AddFoodPage> {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: theme.colorScheme.onPrimary,
                   textStyle: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 child: Text(l10n.addFoodSaveButton),
               ),
@@ -188,7 +193,9 @@ class _AddFoodPageState extends State<AddFoodPage> {
               )
             : null,
         labelText: label,
-        labelStyle: TextStyle(color: isDarkMode ? Colors.grey[400] : Colors.grey[700]),
+        labelStyle: TextStyle(
+          color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+        ),
         filled: true,
         fillColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
         border: OutlineInputBorder(
@@ -209,4 +216,3 @@ class _AddFoodPageState extends State<AddFoodPage> {
     );
   }
 }
-

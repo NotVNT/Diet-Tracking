@@ -32,6 +32,7 @@ class RecordCubit extends Cubit<RecordState> {
     double? fat,
     String? reason,
     String? nutritionDetails,
+    RecordType recordType = RecordType.manual,
   }) async {
     try {
       if (state is! RecordLoading) {
@@ -45,11 +46,36 @@ class RecordCubit extends Cubit<RecordState> {
         fat: fat,
         reason: reason,
         nutritionDetails: nutritionDetails,
+        recordType: recordType,
       );
       emit(const RecordSuccess('Món ăn đã được ghi nhận thành công!'));
       await loadFoodRecords();
     } catch (e) {
       emit(RecordError('Lỗi khi ghi nhận món ăn: ${e.toString()}'));
+    }
+  }
+
+  Future<void> saveMultipleFoodRecords(List<FoodRecordEntity> records) async {
+    try {
+      if (state is! RecordLoading) {
+        emit(RecordLoading());
+      }
+      for (final record in records) {
+        await _saveFoodRecordUseCase.call(
+          record.foodName,
+          record.calories,
+          protein: record.protein,
+          carbs: record.carbs,
+          fat: record.fat,
+          reason: record.reason,
+          nutritionDetails: record.nutritionDetails,
+          recordType: record.recordType,
+        );
+      }
+      emit(RecordSuccess('Đã thêm ${records.length} món vào danh sách'));
+      await loadFoodRecords();
+    } catch (e) {
+      emit(RecordError('Lỗi khi ghi nhận các món ăn: ${e.toString()}'));
     }
   }
 

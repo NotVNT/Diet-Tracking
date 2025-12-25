@@ -6,6 +6,7 @@ import '../../data/parsers/food_suggestion_parser.dart';
 import '../../../record_view_home/presentation/cubit/record_cubit.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../services/user_avatar_service.dart';
+import '../../../record_view_home/domain/entities/food_record_entity.dart';
 
 /// Widget for displaying chat message bubbles
 class ChatMessageBubble extends StatelessWidget {
@@ -44,10 +45,7 @@ class ChatMessageBubble extends StatelessWidget {
         if (isUser) {
           // Use cached user avatar with graceful fallbacks
           final provider = UserAvatarService.instance.imageProvider;
-          return CircleAvatar(
-            radius: 16,
-            backgroundImage: provider,
-          );
+          return CircleAvatar(radius: 16, backgroundImage: provider);
         }
         // Bot avatar remains an icon with themed background
         return Container(
@@ -57,11 +55,7 @@ class ChatMessageBubble extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
           ),
-          child: const Icon(
-            Icons.smart_toy,
-            color: Colors.white,
-            size: 18,
-          ),
+          child: const Icon(Icons.smart_toy, color: Colors.white, size: 18),
         );
       },
     );
@@ -75,9 +69,9 @@ class ChatMessageBubble extends StatelessWidget {
       builder: (context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: message.isUser 
-            ? Theme.of(context).colorScheme.primary 
-            : Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: message.isUser
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(_borderRadius).copyWith(
             bottomLeft: message.isUser
                 ? const Radius.circular(_borderRadius)
@@ -93,9 +87,9 @@ class ChatMessageBubble extends StatelessWidget {
             Text(
               message.text,
               style: GoogleFonts.inter(
-                color: message.isUser 
-                  ? Colors.white 
-                  : Theme.of(context).colorScheme.onSurface,
+                color: message.isUser
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.onSurface,
                 fontSize: 14,
               ),
             ),
@@ -104,8 +98,8 @@ class ChatMessageBubble extends StatelessWidget {
               _formatTime(message.timestamp, context),
               style: GoogleFonts.inter(
                 color: message.isUser
-                  ? Colors.white.withValues(alpha: 0.7)
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
+                    ? Colors.white.withValues(alpha: 0.7)
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 12,
               ),
             ),
@@ -136,7 +130,6 @@ class ChatMessageBubble extends StatelessWidget {
     }
   }
 
-
   // Build actions for multiple suggestions: per-item save + save all
   Widget _buildAddToRecordsActions(List<FoodSuggestion> suggestions) {
     return Builder(
@@ -151,24 +144,21 @@ class ChatMessageBubble extends StatelessWidget {
                   ElevatedButton.icon(
                     onPressed: () async {
                       final recordCubit = context.read<RecordCubit>();
-                      final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-                      for (final s in suggestions) {
-                        await recordCubit.saveFoodRecord(
-                          s.foodName,
-                          s.calories,
-                          nutritionDetails: s.nutritionDetails,
-                        );
-                      }
-                      if (!context.mounted) return;
-                      scaffoldMessenger.showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            l10n.chatBotAddedAllToList(suggestions.length),
-                          ),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
+                      final records = suggestions
+                          .map(
+                            (s) => FoodRecordEntity(
+                              foodName: s.foodName,
+                              calories: s.calories,
+                              nutritionDetails: s.nutritionDetails,
+                              reason: s.reason,
+                              date: DateTime.now(),
+                              recordType: RecordType.text,
+                            ),
+                          )
+                          .toList();
+
+                      await recordCubit.saveMultipleFoodRecords(records);
                     },
                     icon: const Icon(
                       Icons.playlist_add,
@@ -199,22 +189,17 @@ class ChatMessageBubble extends StatelessWidget {
                 return OutlinedButton(
                   onPressed: () async {
                     final recordCubit = context.read<RecordCubit>();
-                    final scaffoldMessenger = ScaffoldMessenger.of(context);
                     await recordCubit.saveFoodRecord(
                       s.foodName,
                       s.calories,
                       nutritionDetails: s.nutritionDetails,
-                    );
-                    if (!context.mounted) return;
-                    scaffoldMessenger.showSnackBar(
-                      SnackBar(
-                        content: Text(l10n.chatBotAddedToList(s.foodName)),
-                        backgroundColor: Colors.green,
-                      ),
+                      recordType: RecordType.text,
                     );
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     foregroundColor: Theme.of(context).colorScheme.onSurface,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
