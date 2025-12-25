@@ -5,12 +5,11 @@ import 'package:provider/provider.dart';
 import '../../identities/register/register_main_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
+import '../../../services/onboarding_data_sync_service.dart';
 import '../../../features/home_page/presentation/pages/home_page.dart';
 import '../../../features/home_page/di/home_di.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Màn hình xác nhận hoàn thành onboarding
-/// Cho phép người dùng chọn tiếp tục với Guest hoặc đăng ký tài khoản
 class InterfaceConfirmation extends StatefulWidget {
   final int? currentWeightKg;
   final int? goalWeightKg;
@@ -29,6 +28,13 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   // Dependencies
   final LocalStorageService _localStorage = LocalStorageService();
   final AuthService _authService = AuthService();
+  late final OnboardingDataSyncService _onboardingSyncService =
+      OnboardingDataSyncService(
+        localStorage: _localStorage,
+        authService: _authService,
+      );
+
+  static const String _successAssetPath = 'assets/welcome_screen/success.png';
 
   // UI Colors
   Color get _backgroundColor => const Color(0xFFFDF0D7);
@@ -41,23 +47,24 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
   /// Tạo thông điệp động dựa trên mục tiêu cân nặng
   String _buildMotivationalMessage(BuildContext context) {
-    if (widget.currentWeightKg != null && widget.goalWeightKg != null) {
-      final weightDifference = (widget.currentWeightKg! - widget.goalWeightKg!)
-          .abs();
-
-      if (weightDifference == 0) {
-        return AppLocalizations.of(context)?.maintainCurrentWeightIsHealthy ??
-            'Duy trì cân nặng hiện tại là một lựa chọn lành mạnh';
-      }
-
-      final isWeightLoss = widget.goalWeightKg! < widget.currentWeightKg!;
-      return isWeightLoss
-          ? '${AppLocalizations.of(context)?.loseWeightGoalPrefix ?? 'Giảm'} $weightDifference kg ${AppLocalizations.of(context)?.loseWeightGoalSuffix ?? 'là mục tiêu thách thức nhưng hoàn toàn khả thi'}'
-          : '${AppLocalizations.of(context)?.gainWeightGoalPrefix ?? 'Tăng'} $weightDifference kg ${AppLocalizations.of(context)?.gainWeightGoalSuffix ?? 'sẽ giúp bạn đạt trạng thái cân bằng tốt hơn'}';
-    }
-
     return AppLocalizations.of(context)?.setClearGoalsMessage ??
         'Đặt mục tiêu rõ ràng giúp bạn tiến gần hơn mỗi ngày';
+  }
+
+  String _buildPersonalizedLine(BuildContext context) {
+    final current = widget.currentWeightKg;
+    final goal = widget.goalWeightKg;
+    if (current == null || goal == null) return '';
+
+    final diff = (current - goal).abs();
+    if (diff == 0) {
+      return 'Mục tiêu: duy trì cân nặng hiện tại';
+    }
+
+    if (goal < current) {
+      return 'Mục tiêu: giảm $diff kg (từng bước một)';
+    }
+    return 'Mục tiêu: tăng $diff kg (từng bước một)';
   }
 
   /// Chuyển đến màn hình đăng ký với dữ liệu onboarding đã có
@@ -80,42 +87,44 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
       backgroundColor: _backgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 24),
-                _buildMotivationCard(),
-                const SizedBox(height: 36),
-                _buildSuccessIcon(),
-                const SizedBox(height: 28),
-                _buildProgressStats(),
-                const SizedBox(height: 40),
-                _buildActionButtons(),
-                const SizedBox(height: 24),
-                _buildBackButton(),
-                const SizedBox(height: 20),
-              ],
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 520),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildMotivationCard(),
+                  const SizedBox(height: 20),
+                  _buildSuccessIllustration(),
+                  const SizedBox(height: 16),
+                  _buildMotivationMessages(),
+                ],
+              ),
             ),
           ),
         ),
       ),
+      bottomNavigationBar: _buildBottomActionRow(),
     );
   }
 
   /// Xây dựng card động viên với tiêu đề và thông điệp
   Widget _buildMotivationCard() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: _titleColor.withAlpha((255 * 0.06).round()),
+          width: 1,
+        ),
+        boxShadow: const [
           BoxShadow(
-            color: const Color.fromRGBO(0, 0, 0, 0.06),
+            color: Color.fromRGBO(0, 0, 0, 0.06),
             blurRadius: 16,
-            offset: const Offset(0, 6),
+            offset: Offset(0, 6),
           ),
         ],
       ),
@@ -126,7 +135,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
             _getHeadlineText(context),
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(
-              fontSize: 28,
+              fontSize: 30,
               fontWeight: FontWeight.w800,
               color: _titleColor,
             ),
@@ -136,8 +145,8 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
             _buildMotivationalMessage(context),
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(
-              fontSize: 18,
-              height: 1.6,
+              fontSize: 17,
+              height: 1.65,
               color: _titleColor.withAlpha((255 * 0.85).round()),
             ),
           ),
@@ -146,44 +155,100 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
     );
   }
 
-  /// Xây dựng icon thành công
-  Widget _buildSuccessIcon() {
+  Widget _buildSuccessIllustration() {
     return Center(
-      child: Image.asset(
-        'assets/icon/like.png',
-        width: 96,
-        height: 96,
-        fit: BoxFit.contain,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 300),
+        child: Image.asset(_successAssetPath, fit: BoxFit.contain),
       ),
     );
   }
 
-  /// Xây dựng thống kê tiến bộ
-  Widget _buildProgressStats() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          '92%',
-          style: GoogleFonts.inter(
-            fontSize: 40,
-            fontWeight: FontWeight.w800,
-            color: _accentColor,
-          ),
+  Widget _buildMotivationMessages() {
+    final personalized = _buildPersonalizedLine(context);
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha((255 * 0.88).round()),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: _titleColor.withAlpha((255 * 0.06).round()),
+          width: 1,
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            AppLocalizations.of(context)?.userProgressMessage ??
-                'người dùng ghi nhận tiến bộ rõ rệt sau 4 tuần theo kế hoạch',
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Bạn đã sẵn sàng bắt đầu!',
             style: GoogleFonts.inter(
-              fontSize: 18,
-              height: 1.6,
-              color: _titleColor.withAlpha((255 * 0.9).round()),
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: _titleColor,
             ),
           ),
+          const SizedBox(height: 10),
+          Text(
+            'Hãy duy trì thói quen nhỏ mỗi ngày — theo dõi bữa ăn và cân nặng để thấy tiến bộ rõ ràng.',
+            style: GoogleFonts.inter(
+              fontSize: 15,
+              height: 1.6,
+              color: _titleColor.withAlpha((255 * 0.88).round()),
+            ),
+          ),
+          if (personalized.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Text(
+              personalized,
+              style: GoogleFonts.inter(
+                fontSize: 15,
+                height: 1.6,
+                fontWeight: FontWeight.w600,
+                color: _accentColor,
+              ),
+            ),
+          ],
+          const SizedBox(height: 10),
+          Text(
+            'Bạn có thể cập nhật mục tiêu bất cứ lúc nào trong hồ sơ.',
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              height: 1.6,
+              color: _titleColor.withAlpha((255 * 0.75).round()),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Hàng nút cố định phía dưới: Back + CTA (Đăng ký/Tiếp tục)
+  Widget _buildBottomActionRow() {
+    return Container(
+      decoration: BoxDecoration(
+        color: _backgroundColor,
+        boxShadow: const [
+          BoxShadow(
+            color: const Color.fromRGBO(0, 0, 0, 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, -6),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        left: false,
+        right: false,
+        minimum: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+        child: Row(
+          children: [
+            _buildBackButton(),
+            const SizedBox(width: 12),
+            Expanded(child: _buildActionButtons()),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -210,7 +275,6 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   /// Xây dựng nút Đăng ký
   Widget _buildSignupButton() {
     return SizedBox(
-      width: double.infinity,
       height: 64,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -236,7 +300,6 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   /// Nút Tiếp tục dành cho trường hợp đăng nhập bằng Google
   Widget _buildContinueToHomeButton() {
     return SizedBox(
-      width: double.infinity,
       height: 64,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -257,7 +320,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
           try {
             // Lưu thông tin từ localStorage lên Firestore trước khi chuyển trang
-            await _saveOnboardingDataToFirestore();
+            await _onboardingSyncService.syncGuestOnboardingToCurrentUser();
 
             if (!mounted) return;
             Navigator.of(context).pop(); // Đóng loading dialog
@@ -303,94 +366,32 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
   /// Xây dựng nút Back
   Widget _buildBackButton() {
-    return Center(
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          color: _backgroundColor,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromRGBO(0, 0, 0, 0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-          border: Border.all(
-            color: const Color.fromRGBO(0, 0, 0, 0.08),
-            width: 1,
+    return Container(
+      width: 64,
+      height: 64,
+      decoration: BoxDecoration(
+        color: _backgroundColor,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.08),
+            blurRadius: 8,
+            offset: Offset(0, 2),
           ),
+        ],
+        border: Border.all(
+          color: const Color.fromRGBO(0, 0, 0, 0.08),
+          width: 1,
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(18),
-            onTap: () => Navigator.of(context).maybePop(),
-            child: const Icon(Icons.arrow_back, color: Color(0xFF2D3A4A)),
-          ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: () => Navigator.of(context).maybePop(),
+          child: const Icon(Icons.arrow_back, color: Color(0xFF2D3A4A)),
         ),
       ),
     );
-  }
-
-  /// Lưu thông tin onboarding từ localStorage lên Firestore
-  Future<void> _saveOnboardingDataToFirestore() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        return;
-      }
-
-      final hasData = await _localStorage.hasGuestData();
-      if (!hasData) {
-        return;
-      }
-
-      final data = await _localStorage.readGuestData();
-
-      final Map<String, dynamic> update = {};
-
-      // Tạo BodyInfoModel từ dữ liệu guest
-      final bodyInfo = {
-        if (data['heightCm'] != null) 'heightCm': data['heightCm'],
-        if (data['weightKg'] != null) 'weightKg': data['weightKg'],
-        if (data['goalWeightKg'] != null) 'goalWeightKg': data['goalWeightKg'],
-        if (data['allergies'] != null) 'allergies': data['allergies'],
-        if (data['activityLevel'] != null)
-          'activityLevel': data['activityLevel'],
-      };
-
-      if (bodyInfo.isNotEmpty) {
-        update['bodyInfo'] = bodyInfo;
-      }
-
-      if (data['age'] != null) {
-        update['age'] = data['age'];
-      }
-      if (data['gender'] != null && (data['gender'] as String).isNotEmpty) {
-        update['gender'] = data['gender'];
-      }
-      if (data['goal'] != null && (data['goal'] as String).isNotEmpty) {
-        update['goal'] = data['goal'];
-      }
-
-      // Thêm targetDays vào dữ liệu cập nhật
-      final targetDays = await _localStorage.getData('targetDays') as int?;
-      if (targetDays != null) {
-        update['targetDays'] = targetDays;
-      }
-
-      if (update.isEmpty) {
-        return;
-      }
-
-      await _authService.updateUserData(user.uid, update);
-
-      // Xóa dữ liệu guest sau khi lưu thành công
-      await _localStorage.clearGuestData();
-    } catch (e) {
-      // Consider logging the error to a service
-    }
   }
 }

@@ -36,4 +36,13 @@ class WeightUtils {
     if (bmi < 40) return 'Bạn béo phì (độ II)';
     return 'Bạn cần giảm cân nghiêm túc để bảo vệ sức khỏe';
   }
+
+  /// Vietnamese description for Goal BMI category
+  static String goalBmiDescription(double bmi) {
+    if (bmi <= 0) return '—';
+    if (bmi < 18.5) return 'Mục tiêu này hơi thấp (Thiếu cân). Hãy cân nhắc tăng thêm nhé.';
+    if (bmi < 25) return 'Tuyệt vời! Đây là mức cân nặng lý tưởng và khỏe mạnh.';
+    if (bmi < 30) return 'Mục tiêu tốt, nhưng vẫn ở mức thừa cân. Hãy cố gắng thêm chút nữa!';
+    return 'Mục tiêu này vẫn ở mức béo phì. Hãy đặt mục tiêu thấp hơn để bảo vệ sức khỏe.';
+  }
 }

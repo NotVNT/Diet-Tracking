@@ -2,6 +2,12 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+const String _defaultBaseUrl = 'http://192.168.1.140:8000';
+const String _overrideBaseUrl =
+    String.fromEnvironment('CHATBOT_API_BASE_URL', defaultValue: '');
+const bool _useEmulatorHost =
+    bool.fromEnvironment('CHATBOT_USE_EMULATOR_HOST', defaultValue: false);
+
 /// Datasource for Gemini API communication
 class GeminiApiDatasource {
   /// Send message to Gemini API and get response
@@ -10,18 +16,7 @@ class GeminiApiDatasource {
     Map<String, dynamic> contextData,
   ) async {
     try {
-      // Automatically detect platform and use appropriate URL
-      String baseUrl;
-      if (kIsWeb) {
-        // Web platform - use localhost
-        baseUrl = 'http://127.0.0.1:8000';
-      } else if (defaultTargetPlatform == TargetPlatform.android) {
-        // Android emulator - use special IP to access host machine
-        baseUrl = 'http://10.0.2.2:8000';
-      } else {
-        // iOS simulator or other platforms - use localhost
-        baseUrl = 'http://127.0.0.1:8000';
-      }
+      final baseUrl = _resolveBaseUrl();
 
       final url = Uri.parse('$baseUrl/chat');
       // Prepare the API body from the context data
@@ -89,3 +84,13 @@ class GeminiApiDatasource {
     return b.toString();
   }
 }
+
+  String _resolveBaseUrl() {
+    if (_overrideBaseUrl.isNotEmpty) return _overrideBaseUrl;
+
+    if (_useEmulatorHost && !kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      return 'http://10.0.2.2:8000';
+    }
+
+    return _defaultBaseUrl;
+  }

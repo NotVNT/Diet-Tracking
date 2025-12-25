@@ -9,6 +9,7 @@ import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart
 import '../../../database/local_storage_service.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:diet_tracking_project/utils/bmi_calculator.dart';
+import 'package:diet_tracking_project/utils/weight_utils.dart';
 import 'daily_activities_selector.dart';
 import '../../../database/auth_service.dart';
 
@@ -73,7 +74,7 @@ class _GoalWeightSelectorState extends State<GoalWeightSelector> {
     final displayedValue = _isKg ? _goalWeightKg : _goalWeightKg * 2.2046226218;
     final valueText = displayedValue.toStringAsFixed(1);
     final bmi = BmiCalculator.computeBmi(_goalWeightKg, _heightCm);
-    final bmiText = BmiCalculator.bmiDescription(context, bmi);
+    final bmiText = WeightUtils.goalBmiDescription(bmi);
 
     return Scaffold(
       backgroundColor: _pageBg,
