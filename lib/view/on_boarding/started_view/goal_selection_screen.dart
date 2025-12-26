@@ -31,6 +31,7 @@ class _GoalSelectionState extends State<GoalSelection> {
       icon: '📉',
       title: 'loseWeight',
       subOptions: [
+        _GoalItem(icon: '🥗', title: 'normalWeightLoss'),
         _GoalItem(icon: '🥑', title: 'keto'),
         _GoalItem(icon: '🥦', title: 'lowCarb'),
       ],
@@ -88,23 +89,27 @@ class _GoalSelectionState extends State<GoalSelection> {
                 height: 56,
                 child: ElevatedButton(
                   onPressed:
-                      _selectedIndex == null
-                          ? null
-                          : () async {
-                            final mainTitle = _getLocalizedTitle(
-                              context,
-                              _goals[_selectedIndex!].title,
-                            );
-                            var selectedTitle = mainTitle;
+                      (_selectedIndex == null ||
+                          (_goals[_selectedIndex!].subOptions != null &&
+                              _goals[_selectedIndex!].subOptions!.isNotEmpty &&
+                              _selectedSubIndex == null))
+                      ? null
+                      : () async {
+                          final mainTitle = _getLocalizedTitle(
+                            context,
+                            _goals[_selectedIndex!].title,
+                          );
+                          var selectedTitle = mainTitle;
 
-                            if (_selectedSubIndex != null &&
-                                _goals[_selectedIndex!].subOptions != null) {
-                              final subOptionKey = _goals[_selectedIndex!]
-                                  .subOptions![_selectedSubIndex!].title;
-                              selectedTitle = '$mainTitle($subOptionKey)';
-                            }
+                          if (_selectedSubIndex != null &&
+                              _goals[_selectedIndex!].subOptions != null) {
+                            final subOptionKey = _goals[_selectedIndex!]
+                                .subOptions![_selectedSubIndex!]
+                                .title;
+                            selectedTitle = '$mainTitle($subOptionKey)';
+                          }
 
-                            // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
+                          // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
                           debugPrint(
                             'Saving goal to localStorage: $selectedTitle',
                           );
@@ -184,21 +189,19 @@ class _GoalSelectionState extends State<GoalSelection> {
           InkWell(
             borderRadius: BorderRadius.vertical(
               top: const Radius.circular(18),
-              bottom:
-                  (selected && hasSubOptions)
-                      ? Radius.zero
-                      : const Radius.circular(18),
+              bottom: (selected && hasSubOptions)
+                  ? Radius.zero
+                  : const Radius.circular(18),
             ),
-            onTap:
-                () => setState(() {
-                  if (_selectedIndex != index) {
-                    _selectedIndex = index;
-                    _selectedSubIndex = null;
-                  } else {
-                    _selectedIndex = null;
-                    _selectedSubIndex = null;
-                  }
-                }),
+            onTap: () => setState(() {
+              if (_selectedIndex != index) {
+                _selectedIndex = index;
+                _selectedSubIndex = null;
+              } else {
+                _selectedIndex = null;
+                _selectedSubIndex = null;
+              }
+            }),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Row(
@@ -251,15 +254,13 @@ class _GoalSelectionState extends State<GoalSelection> {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 4),
                       decoration: BoxDecoration(
-                        color:
-                            isSubSelected ? Colors.white : Colors.transparent,
+                        color: isSubSelected
+                            ? Colors.white
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
-                        border:
-                            isSubSelected
-                                ? Border.all(
-                                  color: _primary.withValues(alpha: 0.2),
-                                )
-                                : null,
+                        border: isSubSelected
+                            ? Border.all(color: _primary.withValues(alpha: 0.2))
+                            : null,
                       ),
                       child: InkWell(
                         onTap: () {
@@ -317,6 +318,8 @@ class _GoalSelectionState extends State<GoalSelection> {
         return AppLocalizations.of(context)?.gainWeight ?? 'Tăng cân';
       case 'buildMuscle':
         return AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
+      case 'normalWeightLoss':
+        return 'Giảm cân thông thường';
       case 'keto':
         return 'Keto'; // Add localization key if available
       case 'lowCarb':

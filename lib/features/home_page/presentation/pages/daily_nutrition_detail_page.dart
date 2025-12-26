@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
+import '../../../record_view_home/presentation/widgets/record_details_sheet.dart';
 import '../widgets/cards/calorie_goal_card.dart'; // Reusing the existing model
 
 /// A page that displays detailed nutrition information for a specific day.
-class DailyNutritionDetailPage extends StatelessWidget {
+class DailyNutritionDetailPage extends StatefulWidget {
   final DateTime date;
   final List<FoodRecordEntity> foodRecords;
 
@@ -14,16 +17,52 @@ class DailyNutritionDetailPage extends StatelessWidget {
   });
 
   @override
+  State<DailyNutritionDetailPage> createState() =>
+      _DailyNutritionDetailPageState();
+}
+
+class _DailyNutritionDetailPageState extends State<DailyNutritionDetailPage> {
+  double? _targetCalories;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTargetCalories();
+  }
+
+  Future<void> _loadTargetCalories() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('nutrition_plans')
+          .doc('active_plan')
+          .get(const GetOptions(source: Source.server));
+      final data = doc.data();
+      if (data != null && data['targetCalories'] != null) {
+        setState(() {
+          _targetCalories = (data['targetCalories'] as num).toDouble();
+        });
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Failed to load targetCalories: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final nutritionInfo = NutritionInfo.fromRecordsForDate(
-      records: foodRecords,
-      date: date,
-      calorieGoal: 2273, // TODO: Replace with dynamic goal
+      records: widget.foodRecords,
+      date: widget.date,
+      calorieGoal: _targetCalories ?? 0,
     );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chi tiết dinh dưỡng'), // TODO: Add localization
+        title: const Text('Chi tiết dinh dưỡng'), // TODO: Add localization
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
@@ -37,7 +76,10 @@ class DailyNutritionDetailPage extends StatelessWidget {
   }
 
   /// Builds the summary card at the top.
-  Widget _buildSummaryHeader(BuildContext context, NutritionInfo nutritionInfo) {
+  Widget _buildSummaryHeader(
+    BuildContext context,
+    NutritionInfo nutritionInfo,
+  ) {
     return CalorieGoalCard(
       nutritionInfo: nutritionInfo,
       // No navigation from the detail page itself
@@ -47,7 +89,7 @@ class DailyNutritionDetailPage extends StatelessWidget {
 
   /// Builds the list of food items for the day.
   Widget _buildFoodList(BuildContext context) {
-    if (foodRecords.isEmpty) {
+    if (widget.foodRecords.isEmpty) {
       return const Center(
         child: Text('Chưa có dữ liệu cho ngày này.'), // TODO: Localization
       );
@@ -61,7 +103,9 @@ class DailyNutritionDetailPage extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
-        ...foodRecords.map((record) => _buildFoodItem(context, record)).toList(),
+        ...widget.foodRecords
+            .map((record) => _buildFoodItem(context, record))
+            .toList(),
       ],
     );
   }
@@ -74,12 +118,17 @@ class DailyNutritionDetailPage extends StatelessWidget {
         // TODO: Add leading image if available
         title: Text(record.foodName),
         subtitle: Text('${record.calories.round()} kcal'), // TODO: Localization
-        trailing: const Icon(Icons.chevron_right),
         onTap: () {
-          // TODO: Navigate to the specific food record detail if needed
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            builder: (context) => RecordDetailsSheet(record: record),
+          );
         },
       ),
     );
   }
 }
-

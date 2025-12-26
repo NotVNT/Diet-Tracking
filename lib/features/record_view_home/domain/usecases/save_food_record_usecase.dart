@@ -14,6 +14,7 @@ class SaveFoodRecordUseCase {
     double? fat,
     String? reason,
     String? nutritionDetails,
+    RecordType recordType = RecordType.manual,
   }) async {
     final foodRecord = FoodRecordEntity(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -25,7 +26,7 @@ class SaveFoodRecordUseCase {
       fat: fat,
       reason: reason,
       nutritionDetails: nutritionDetails,
-      recordType: RecordType.food, // Explicitly set type for manually added food
+      recordType: recordType,
     );
 
     await _repository.saveFoodRecord(foodRecord);
