@@ -5,6 +5,8 @@ import '../providers/profile_provider.dart';
 import '../../../../model/user.dart';
 import '../../../../common/custom_app_bar.dart';
 import '../../../../common/snackbar_helper.dart';
+import '../widgets/edit_profile_widgets.dart';
+import '../widgets/profile_constants.dart';
 
 /// Page for editing user profile
 class EditProfilePage extends StatefulWidget {
@@ -33,6 +35,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
+    _initForm();
+  }
+
+  void _initForm() {
     final profile = widget.profileProvider.profile;
 
     _fullNameController = TextEditingController(
@@ -158,13 +164,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 8),
 
               // Họ và tên
-              _buildSectionTitle(
-                AppLocalizations.of(context)!.editProfilePersonalInfo,
+              EditProfileSectionTitle(
+                title: AppLocalizations.of(context)!.editProfilePersonalInfo,
               ),
-              _buildTextField(
+              EditProfileTextField(
                 controller: _fullNameController,
                 label: AppLocalizations.of(context)!.editProfileFullName,
                 icon: Icons.person_outline,
+                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return AppLocalizations.of(
@@ -177,11 +184,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 16),
 
               // Tuổi
-              _buildTextField(
+              EditProfileTextField(
                 controller: _ageController,
                 label: AppLocalizations.of(context)!.editProfileAge,
                 icon: Icons.cake_outlined,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return AppLocalizations.of(
@@ -189,7 +197,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     )!.editProfilePleaseEnterAge;
                   }
                   final age = int.tryParse(value.trim());
-                  if (age == null || age < 1 || age > 120) {
+                  if (age == null ||
+                      age < ProfileValidationConstants.minAge ||
+                      age > ProfileValidationConstants.maxAge) {
                     return AppLocalizations.of(context)!.editProfileInvalidAge;
                   }
                   return null;
@@ -198,24 +208,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 16),
 
               // Giới tính
-              _buildSectionTitle(
-                AppLocalizations.of(context)!.editProfileGender,
+              EditProfileSectionTitle(
+                title: AppLocalizations.of(context)!.editProfileGender,
               ),
               Row(
                 children: [
                   Expanded(
-                    child: _buildGenderCard(
+                    child: EditProfileGenderCard(
                       gender: GenderType.male,
                       label: AppLocalizations.of(context)!.editProfileMale,
                       icon: Icons.male,
+                      isSelected: _selectedGender == GenderType.male,
+                      onTap: () {
+                        setState(() {
+                          _selectedGender = GenderType.male;
+                        });
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: _buildGenderCard(
+                    child: EditProfileGenderCard(
                       gender: GenderType.female,
                       label: AppLocalizations.of(context)!.editProfileFemale,
                       icon: Icons.female,
+                      isSelected: _selectedGender == GenderType.female,
+                      onTap: () {
+                        setState(() {
+                          _selectedGender = GenderType.female;
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -223,18 +245,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 24),
 
               // Chiều cao
-              _buildSectionTitle(
-                AppLocalizations.of(context)!.editProfileBodyMetrics,
+              EditProfileSectionTitle(
+                title: AppLocalizations.of(context)!.editProfileBodyMetrics,
               ),
-              _buildTextField(
+              EditProfileTextField(
                 controller: _heightController,
                 label: AppLocalizations.of(context)!.editProfileHeight,
                 icon: Icons.height,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value != null && value.trim().isNotEmpty) {
                     final height = double.tryParse(value.trim());
-                    if (height == null || height < 50 || height > 300) {
+                    if (height == null ||
+                        height < ProfileValidationConstants.minHeight ||
+                        height > ProfileValidationConstants.maxHeight) {
                       return AppLocalizations.of(
                         context,
                       )!.editProfileInvalidHeight;
@@ -246,15 +271,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 16),
 
               // Cân nặng
-              _buildTextField(
+              EditProfileTextField(
                 controller: _weightController,
                 label: AppLocalizations.of(context)!.editProfileWeight,
                 icon: Icons.monitor_weight_outlined,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value != null && value.trim().isNotEmpty) {
                     final weight = double.tryParse(value.trim());
-                    if (weight == null || weight < 20 || weight > 500) {
+                    if (weight == null ||
+                        weight < ProfileValidationConstants.minWeight ||
+                        weight > ProfileValidationConstants.maxWeight) {
                       return AppLocalizations.of(
                         context,
                       )!.editProfileInvalidWeight;
@@ -266,17 +294,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 16),
 
               // Mục tiêu cân nặng
-              _buildTextField(
+              EditProfileTextField(
                 controller: _goalWeightController,
                 label: AppLocalizations.of(context)!.editProfileGoalWeight,
                 icon: Icons.flag_outlined,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
                 validator: (value) {
                   if (value != null && value.trim().isNotEmpty) {
                     final goalWeight = double.tryParse(value.trim());
                     if (goalWeight == null ||
-                        goalWeight < 20 ||
-                        goalWeight > 500) {
+                        goalWeight < ProfileValidationConstants.minWeight ||
+                        goalWeight > ProfileValidationConstants.maxWeight) {
                       return AppLocalizations.of(
                         context,
                       )!.editProfileInvalidGoalWeight;
@@ -288,10 +317,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 24),
 
               // Mục tiêu
-              _buildSectionTitle(
-                AppLocalizations.of(context)!.editProfileYourGoal,
+              EditProfileSectionTitle(
+                title: AppLocalizations.of(context)!.editProfileYourGoal,
               ),
-              _buildGoalDropdown(goalOptions),
+              EditProfileGoalDropdown(
+                value: _selectedGoal,
+                options: goalOptions,
+                hint: AppLocalizations.of(context)!.editProfileSelectGoal,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGoal = value;
+                  });
+                },
+              ),
               const SizedBox(height: 32),
             ],
           ),
@@ -300,205 +338,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    TextInputType? keyboardType,
-    String? Function(String?)? validator,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(
-              context,
-            ).shadowColor.withAlpha((255 * 0.04).toInt()),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        validator: validator,
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: Icon(
-            icon,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: Theme.of(context).cardColor,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGenderCard({
-    required GenderType gender,
-    required String label,
-    required IconData icon,
-  }) {
-    final isSelected = _selectedGender == gender;
-
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedGender = gender;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(
-                  context,
-                ).colorScheme.primary.withAlpha((255 * 0.1).toInt())
-              : Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.outline,
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(
-                context,
-              ).shadowColor.withAlpha((255 * 0.04).toInt()),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              size: 40,
-              color: isSelected
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGoalDropdown(List<_ProfileGoalOption> goalOptions) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(
-              context,
-            ).shadowColor.withAlpha((255 * 0.04).toInt()),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: DropdownButtonFormField<String>(
-        initialValue: _selectedGoal,
-        decoration: InputDecoration(
-          prefixIcon: Icon(
-            Icons.star_outline,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: Theme.of(context).cardColor,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-        ),
-        hint: Text(AppLocalizations.of(context)!.editProfileSelectGoal),
-        items: goalOptions.map((goal) {
-          return DropdownMenuItem(
-            value: goal.storageValue,
-            child: Text(goal.label),
-          );
-        }).toList(),
-        onChanged: (value) {
-          setState(() {
-            _selectedGoal = value;
-          });
-        },
-      ),
-    );
-  }
-
-  List<_ProfileGoalOption> _buildGoalOptions(AppLocalizations loc) {
-    final loseWeight = loc.editProfileGoalLoseWeight;
-    final gainWeight = loc.editProfileGoalGainWeight;
-    final maintainWeight = loc.editProfileGoalMaintainWeight;
-    final buildMuscle = loc.editProfileGoalBuildMuscle;
-
+  List<ProfileGoalOption> _buildGoalOptions(AppLocalizations loc) {
     return [
-      _ProfileGoalOption(storageValue: loseWeight, label: loseWeight),
-      _ProfileGoalOption(
-        storageValue: '$loseWeight(keto)',
-        label: '$loseWeight (${loc.keto})',
+      ProfileGoalOption(
+        storageValue: GoalConstants.loseWeight,
+        label: loc.editProfileGoalLoseWeight,
       ),
-      _ProfileGoalOption(
-        storageValue: '$loseWeight(lowCarb)',
-        label: '$loseWeight (${loc.lowCarbs})',
+      ProfileGoalOption(
+        storageValue: GoalConstants.loseWeightKeto,
+        label: '${loc.editProfileGoalLoseWeight} (${loc.keto})',
       ),
-      _ProfileGoalOption(storageValue: gainWeight, label: gainWeight),
-      _ProfileGoalOption(storageValue: maintainWeight, label: maintainWeight),
-      _ProfileGoalOption(storageValue: buildMuscle, label: buildMuscle),
+      ProfileGoalOption(
+        storageValue: GoalConstants.loseWeightLowCarb,
+        label: '${loc.editProfileGoalLoseWeight} (${loc.lowCarbs})',
+      ),
+      ProfileGoalOption(
+        storageValue: GoalConstants.gainWeight,
+        label: loc.editProfileGoalGainWeight,
+      ),
+      ProfileGoalOption(
+        storageValue: GoalConstants.maintainWeight,
+        label: loc.editProfileGoalMaintainWeight,
+      ),
+      ProfileGoalOption(
+        storageValue: GoalConstants.buildMuscle,
+        label: loc.editProfileGoalBuildMuscle,
+      ),
     ];
   }
-}
-
-class _ProfileGoalOption {
-  final String storageValue;
-  final String label;
-
-  const _ProfileGoalOption({required this.storageValue, required this.label});
 }
