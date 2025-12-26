@@ -10,6 +10,7 @@ class ScannerPreview extends StatelessWidget {
   final bool
   isRealTimeScanning; // Deprecated for barcode (mobile_scanner handles state)
   final ValueChanged<String>? onBarcodeDetected;
+  final Key? barcodeScannerKey;
 
   const ScannerPreview({
     super.key,
@@ -18,6 +19,7 @@ class ScannerPreview extends StatelessWidget {
     this.cameraPreview,
     this.isRealTimeScanning = false,
     this.onBarcodeDetected,
+    this.barcodeScannerKey,
   });
 
   @override
@@ -32,7 +34,10 @@ class ScannerPreview extends StatelessWidget {
       case ScannerActionType.barcode:
         final barcodeCamera = onBarcodeDetected == null
             ? null
-            : MobileBarcodeScannerView(onBarcodeDetected: onBarcodeDetected!);
+            : MobileBarcodeScannerView(
+                key: barcodeScannerKey,
+                onBarcodeDetected: onBarcodeDetected!,
+              );
         return BarcodeModeView(
           hintStyle: overlayTextStyle,
           cameraPreview: barcodeCamera,
