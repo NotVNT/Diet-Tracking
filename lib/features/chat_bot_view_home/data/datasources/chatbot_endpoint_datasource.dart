@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-const String _defaultBaseUrl = 'http://192.168.2.1:8000';
-const String _overrideBaseUrl =
-    String.fromEnvironment('CHATBOT_API_BASE_URL', defaultValue: '');
-const bool _useEmulatorHost =
-    bool.fromEnvironment('CHATBOT_USE_EMULATOR_HOST', defaultValue: false);
+const String _defaultBaseUrl = 'https://ivank04-barcode-server.hf.space';
+const String _overrideBaseUrl = String.fromEnvironment(
+  'CHATBOT_API_BASE_URL',
+  defaultValue: '',
+);
+const bool _useEmulatorHost = bool.fromEnvironment(
+  'CHATBOT_USE_EMULATOR_HOST',
+  defaultValue: false,
+);
 
 /// Datasource for Gemini API communication
 class GeminiApiDatasource {
@@ -57,7 +61,10 @@ class GeminiApiDatasource {
     return prompt.contains('Bạn là chuyên gia dinh dưỡng cá nhân');
   }
 
-  String _composePromptWithUserContext(String prompt, Map<String, dynamic> ctx) {
+  String _composePromptWithUserContext(
+    String prompt,
+    Map<String, dynamic> ctx,
+  ) {
     final b = StringBuffer();
     // Build compact user profile preamble
     final age = ctx['age'];
@@ -85,12 +92,14 @@ class GeminiApiDatasource {
   }
 }
 
-  String _resolveBaseUrl() {
-    if (_overrideBaseUrl.isNotEmpty) return _overrideBaseUrl;
+String _resolveBaseUrl() {
+  if (_overrideBaseUrl.isNotEmpty) return _overrideBaseUrl;
 
-    if (_useEmulatorHost && !kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:8000';
-    }
-
-    return _defaultBaseUrl;
+  if (_useEmulatorHost &&
+      !kIsWeb &&
+      defaultTargetPlatform == TargetPlatform.android) {
+    return 'http://10.0.2.2:8000';
   }
+
+  return _defaultBaseUrl;
+}

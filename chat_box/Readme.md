@@ -8,6 +8,7 @@ Tải thư viện yêu cầu
   
  uvicorn nutrient_regressor:app --host 192.168.1.140 --port 8000 --reload
 
+uvicorn nutrient_regressor:app --host https://ivank04-barcode-server.hf.space --port 8000 --reload
 
 uvicorn barcode:app --host 0.0.0.0 --port 8000 --reload
 tải thư viện uvicorn về, sau đó mở terminal ngay ở mục chat_box, terminal phải có đường mục giống thế này-"(.venv) C:\Users\LENOVO\myfilebro\diet-tracking\chat_box>",
