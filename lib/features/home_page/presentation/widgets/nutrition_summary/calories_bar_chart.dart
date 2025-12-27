@@ -21,6 +21,7 @@ class CaloriesBarChart extends StatelessWidget {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
     final onSurface = theme.colorScheme.onSurface;
+    final onPrimary = theme.colorScheme.onPrimary;
 
     double maxY = 0;
     for (var t in byDay.values) {
@@ -38,10 +39,7 @@ class CaloriesBarChart extends StatelessWidget {
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                 '${rod.toY.round()}\nkcal',
-                const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+                TextStyle(color: onPrimary, fontWeight: FontWeight.bold),
               );
             },
           ),

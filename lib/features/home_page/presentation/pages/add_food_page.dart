@@ -81,16 +81,27 @@ class _AddFoodPageState extends State<AddFoodPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isDarkMode = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.grey[50],
+      backgroundColor: isDarkMode
+          ? const Color(0xFF121212)
+          : colorScheme.surfaceContainerHighest,
       appBar: AppBar(
-        title: Text(l10n.addFoodPageTitle),
+        title: Text(
+          l10n.addFoodPageTitle,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: colorScheme.onSurface,
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: isDarkMode ? Colors.white : Colors.black,
+        backgroundColor: colorScheme.surfaceContainerHighest,
+        foregroundColor: colorScheme.onSurface,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -177,12 +188,13 @@ class _AddFoodPageState extends State<AddFoodPage> {
     String? icon,
   }) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isDarkMode = theme.brightness == Brightness.dark;
 
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
-      style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+      style: TextStyle(color: colorScheme.onSurface),
       decoration: InputDecoration(
         prefixIcon: icon != null
             ? Container(
@@ -193,8 +205,13 @@ class _AddFoodPageState extends State<AddFoodPage> {
               )
             : null,
         labelText: label,
-        labelStyle: TextStyle(
-          color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+        labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+        floatingLabelStyle: TextStyle(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w600,
+        ),
+        hintStyle: TextStyle(
+          color: colorScheme.onSurface.withValues(alpha: 0.55),
         ),
         filled: true,
         fillColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
@@ -206,6 +223,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
         ),
+        errorStyle: TextStyle(color: colorScheme.error),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {

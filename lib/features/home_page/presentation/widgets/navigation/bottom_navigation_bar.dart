@@ -50,7 +50,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     // Pages: 0 Trang chủ, 1 Ghi nhận, 2 Chat bot, 3 Hồ sơ
     // Bottom nav: 0 Home, 1 FAB (empty), 2 Profile
     if (pageIndex == 1 || pageIndex == 2) {
-      return 0; // Show Home as selected when on Record or Chat bot pages
+      return 1; // Select FAB placeholder when on Record/Chat bot pages
     } else if (pageIndex > 2) {
       return 2; // Profile is index 2 in bottom nav
     }
