@@ -37,6 +37,12 @@ class _HomeContentState extends State<HomeContent> {
   late final TextEditingController _searchController;
   double? _targetCalories;
 
+  bool get _isWidgetTest {
+    return WidgetsBinding.instance.runtimeType
+      .toString()
+      .contains('TestWidgetsFlutterBinding');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +60,7 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   Future<void> _loadTargetCalories() async {
+    if (_isWidgetTest) return;
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;

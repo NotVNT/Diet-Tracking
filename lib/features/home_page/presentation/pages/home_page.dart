@@ -29,7 +29,28 @@ import 'nutrition_summary_page.dart';
 /// - Chat bot
 /// - Hồ sơ (Profile)
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    this.pagesBuilder,
+    this.homeContentBuilder,
+    this.scanFoodPageBuilder,
+  });
+
+  /// Optional override for building the tab pages.
+  /// Useful for widget tests to avoid constructing heavy tabs.
+  final List<Widget> Function()? pagesBuilder;
+
+  /// Optional override for building the Home tab content.
+  /// Useful for widget tests to bypass Firebase-dependent HomeContent.
+  final Widget Function({
+    required void Function(DateTime, List<FoodRecordEntity>) onViewReport,
+    required VoidCallback onEmptyTap,
+    required void Function(FoodRecordEntity) onItemTap,
+  })? homeContentBuilder;
+
+  /// Optional override for scan food page.
+  /// Useful for widget tests to avoid plugin-heavy FoodScannerPage.
+  final WidgetBuilder? scanFoodPageBuilder;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -38,6 +59,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final List<Widget> _pages;
 
+  bool get _isWidgetTest {
+    return WidgetsBinding.instance.runtimeType
+      .toString()
+      .contains('TestWidgetsFlutterBinding');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -45,16 +72,24 @@ class _HomePageState extends State<HomePage> {
     context.read<RecordCubit>().loadFoodRecords();
 
     // Prebuild tab pages once and keep them alive to avoid heavy rebuilds
-    final pages = HomePageConfig.getPages();
-    pages[0] = HomeContent(
-      onViewReport: _onViewReport,
-      onEmptyTap: () => _onScanFoodTapped(context.read<HomeProvider>()),
-      onItemTap: (food) => _onPictureTap(food),
-    );
+    final pages = List<Widget>.of((widget.pagesBuilder ?? HomePageConfig.getPages)());
+    final homeBuilder = widget.homeContentBuilder;
+    pages[0] = (homeBuilder != null)
+        ? homeBuilder(
+            onViewReport: _onViewReport,
+            onEmptyTap: () => _onScanFoodTapped(context.read<HomeProvider>()),
+            onItemTap: (food) => _onPictureTap(food),
+          )
+        : HomeContent(
+            onViewReport: _onViewReport,
+            onEmptyTap: () => _onScanFoodTapped(context.read<HomeProvider>()),
+            onItemTap: (food) => _onPictureTap(food),
+          );
     _pages = pages;
 
     // Schedule a one-time water reminder after 30s when user accesses Home
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (_isWidgetTest) return;
       await PermissionService().requestNotificationPermission();
       await LocalNotificationService().scheduleWaterReminderOncePerSession();
     });
@@ -199,7 +234,13 @@ class _HomePageState extends State<HomePage> {
     if (mounted) {
       await Navigator.of(
         context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const FoodScannerPage()));
+      ).push(
+        MaterialPageRoute<void>(
+          builder: (ctx) =>
+              widget.scanFoodPageBuilder?.call(ctx) ??
+              const FoodScannerPage(),
+        ),
+      );
       // Trigger a rebuild to refresh the scanned foods list
       if (mounted) {
         context.read<RecordCubit>().loadFoodRecords();
