@@ -138,13 +138,13 @@ class _NutritionSummaryState extends State<NutritionSummary> {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: const Color.fromRGBO(0, 0, 0, 0.05),
+            color: Color.fromRGBO(0, 0, 0, 0.05),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -185,11 +185,11 @@ class _NutritionSummaryState extends State<NutritionSummary> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: const Color.fromRGBO(0, 0, 0, 0.05),
+            color: Color.fromRGBO(0, 0, 0, 0.05),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -245,11 +245,11 @@ class _NutritionSummaryState extends State<NutritionSummary> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: const Color.fromRGBO(0, 0, 0, 0.05),
+            color: Color.fromRGBO(0, 0, 0, 0.05),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -423,13 +423,13 @@ class _NutritionSummaryState extends State<NutritionSummary> {
   Widget _buildBottomButtons() {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: const Color.fromRGBO(0, 0, 0, 0.05),
+            color: Color.fromRGBO(0, 0, 0, 0.05),
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: Offset(0, -2),
           ),
         ],
       ),
@@ -498,7 +498,10 @@ class _NutritionSummaryState extends State<NutritionSummary> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const InterfaceConfirmation(),
+                        builder: (context) => InterfaceConfirmation(
+                          currentWeightKg: _userInfo?.currentWeightKg.round(),
+                          goalWeightKg: _userInfo?.targetWeightKg.round(),
+                        ),
                       ),
                     );
                   }

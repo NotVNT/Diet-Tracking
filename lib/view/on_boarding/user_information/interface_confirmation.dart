@@ -14,10 +14,24 @@ class InterfaceConfirmation extends StatefulWidget {
   final int? currentWeightKg;
   final int? goalWeightKg;
 
+  /// Testability hooks (defaults preserve production behavior)
+  final LocalStorageService? localStorage;
+  final OnboardingDataSyncService? onboardingSyncService;
+  final Future<void> Function()? syncGuestOnboardingOverride;
+  final bool? isGoogleSignInOverride;
+  final WidgetBuilder? signupBuilder;
+  final WidgetBuilder? homeBuilder;
+
   const InterfaceConfirmation({
     super.key,
     this.currentWeightKg,
     this.goalWeightKg,
+    this.localStorage,
+    this.onboardingSyncService,
+    this.syncGuestOnboardingOverride,
+    this.isGoogleSignInOverride,
+    this.signupBuilder,
+    this.homeBuilder,
   });
 
   @override
@@ -26,15 +40,26 @@ class InterfaceConfirmation extends StatefulWidget {
 
 class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   // Dependencies
-  final LocalStorageService _localStorage = LocalStorageService();
-  final AuthService _authService = AuthService();
-  late final OnboardingDataSyncService _onboardingSyncService =
-      OnboardingDataSyncService(
-        localStorage: _localStorage,
-        authService: _authService,
-      );
+  late final LocalStorageService _localStorage;
+  OnboardingDataSyncService? _onboardingSyncService;
 
   static const String _successAssetPath = 'assets/welcome_screen/success.png';
+
+  bool get _isWidgetTest => const bool.fromEnvironment('FLUTTER_TEST');
+
+  @override
+  void initState() {
+    super.initState();
+    _localStorage = widget.localStorage ?? LocalStorageService();
+  }
+
+  OnboardingDataSyncService _getOnboardingSyncService() {
+    return widget.onboardingSyncService ??
+        (_onboardingSyncService ??= OnboardingDataSyncService(
+          localStorage: _localStorage,
+          authService: AuthService(),
+        ));
+  }
 
   // UI Colors
   Color get _backgroundColor => const Color(0xFFFDF0D7);
@@ -76,9 +101,24 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SignupScreen(preSelectedData: guestData),
+        builder: widget.signupBuilder ??
+            (context) => SignupScreen(preSelectedData: guestData),
       ),
     );
+  }
+
+  bool _safeIsGoogleFromFirebase() {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      return currentUser?.providerData.any((p) => p.providerId == 'google.com') ==
+          true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  TextStyle _interOrDefault(TextStyle fallback, TextStyle googleFonts) {
+    return _isWidgetTest ? fallback : googleFonts;
   }
 
   @override
@@ -134,20 +174,26 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
           Text(
             _getHeadlineText(context),
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 30,
-              fontWeight: FontWeight.w800,
-              color: _titleColor,
+            style: _interOrDefault(
+              const TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+              GoogleFonts.inter(
+                fontSize: 30,
+                fontWeight: FontWeight.w800,
+                color: _titleColor,
+              ),
             ),
           ),
           const SizedBox(height: 10),
           Text(
             _buildMotivationalMessage(context),
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 17,
-              height: 1.65,
-              color: _titleColor.withAlpha((255 * 0.85).round()),
+            style: _interOrDefault(
+              const TextStyle(fontSize: 17, height: 1.65),
+              GoogleFonts.inter(
+                fontSize: 17,
+                height: 1.65,
+                color: _titleColor.withAlpha((255 * 0.85).round()),
+              ),
             ),
           ),
         ],
@@ -182,40 +228,56 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         children: [
           Text(
             'Bạn đã sẵn sàng bắt đầu!',
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: _titleColor,
+            style: _interOrDefault(
+              const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: _titleColor,
+              ),
             ),
           ),
           const SizedBox(height: 10),
           Text(
             'Hãy duy trì thói quen nhỏ mỗi ngày — theo dõi bữa ăn và cân nặng để thấy tiến bộ rõ ràng.',
-            style: GoogleFonts.inter(
-              fontSize: 15,
-              height: 1.6,
-              color: _titleColor.withAlpha((255 * 0.88).round()),
+            style: _interOrDefault(
+              const TextStyle(fontSize: 15, height: 1.6),
+              GoogleFonts.inter(
+                fontSize: 15,
+                height: 1.6,
+                color: _titleColor.withAlpha((255 * 0.88).round()),
+              ),
             ),
           ),
           if (personalized.isNotEmpty) ...[
             const SizedBox(height: 10),
             Text(
               personalized,
-              style: GoogleFonts.inter(
-                fontSize: 15,
-                height: 1.6,
-                fontWeight: FontWeight.w600,
-                color: _accentColor,
+              style: _interOrDefault(
+                const TextStyle(
+                  fontSize: 15,
+                  height: 1.6,
+                  fontWeight: FontWeight.w600,
+                ),
+                GoogleFonts.inter(
+                  fontSize: 15,
+                  height: 1.6,
+                  fontWeight: FontWeight.w600,
+                  color: _accentColor,
+                ),
               ),
             ),
           ],
           const SizedBox(height: 10),
           Text(
             'Bạn có thể cập nhật mục tiêu bất cứ lúc nào trong hồ sơ.',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              height: 1.6,
-              color: _titleColor.withAlpha((255 * 0.75).round()),
+            style: _interOrDefault(
+              const TextStyle(fontSize: 14, height: 1.6),
+              GoogleFonts.inter(
+                fontSize: 14,
+                height: 1.6,
+                color: _titleColor.withAlpha((255 * 0.75).round()),
+              ),
             ),
           ),
         ],
@@ -254,15 +316,8 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
   /// Xây dựng các nút hành động chính
   Widget _buildActionButtons() {
-    User? currentUser;
-    try {
-      currentUser = FirebaseAuth.instance.currentUser;
-    } catch (_) {
-      currentUser = null;
-    }
     final bool isGoogle =
-        currentUser?.providerData.any((p) => p.providerId == 'google.com') ==
-        true;
+        widget.isGoogleSignInOverride ?? _safeIsGoogleFromFirebase();
 
     if (isGoogle) {
       return _buildContinueToHomeButton();
@@ -287,10 +342,13 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         onPressed: _navigateToSignup,
         child: Text(
           AppLocalizations.of(context)?.signUpAccount ?? 'Đăng Ký Tài Khoản',
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: _interOrDefault(
+            const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            GoogleFonts.inter(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -320,7 +378,11 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
 
           try {
             // Lưu thông tin từ localStorage lên Firestore trước khi chuyển trang
-            await _onboardingSyncService.syncGuestOnboardingToCurrentUser();
+            if (widget.syncGuestOnboardingOverride != null) {
+              await widget.syncGuestOnboardingOverride!.call();
+            } else {
+              await _getOnboardingSyncService().syncGuestOnboardingToCurrentUser();
+            }
 
             if (!mounted) return;
             Navigator.of(context).pop(); // Đóng loading dialog
@@ -328,10 +390,11 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => ChangeNotifierProvider(
-                  create: (_) => HomeDI.getHomeProvider(),
-                  child: const HomePage(),
-                ),
+                builder: widget.homeBuilder ??
+                    (context) => ChangeNotifierProvider(
+                      create: (_) => HomeDI.getHomeProvider(),
+                      child: const HomePage(),
+                    ),
               ),
               (route) => false,
             );
@@ -343,10 +406,11 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => ChangeNotifierProvider(
-                  create: (_) => HomeDI.getHomeProvider(),
-                  child: const HomePage(),
-                ),
+                builder: widget.homeBuilder ??
+                    (context) => ChangeNotifierProvider(
+                      create: (_) => HomeDI.getHomeProvider(),
+                      child: const HomePage(),
+                    ),
               ),
               (route) => false,
             );
@@ -354,10 +418,13 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         },
         child: Text(
           AppLocalizations.of(context)?.continueButton ?? 'Tiếp tục',
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: _interOrDefault(
+            const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            GoogleFonts.inter(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
