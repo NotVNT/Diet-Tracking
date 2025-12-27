@@ -101,7 +101,13 @@ void main() {
       expect(sliderTheme.data.thumbColor, accent);
       expect(sliderTheme.data.activeTrackColor, accent);
       expect(sliderTheme.data.inactiveTrackColor, const Color(0xFFE5E7EB));
-      expect(sliderTheme.data.overlayColor, accent.withOpacity(0.08));
+      // Some Flutter versions quantize opacity slightly differently.
+      final overlay = sliderTheme.data.overlayColor;
+      expect(overlay, isNotNull);
+      expect(overlay!.red, accent.red);
+      expect(overlay.green, accent.green);
+      expect(overlay.blue, accent.blue);
+      expect(overlay.opacity, closeTo(0.08, 0.01));
     });
   });
 }

@@ -54,10 +54,16 @@ class LoginController {
 
   /// Xử lý exception chung cho các phương thức đăng nhập
   LoginResult _handleLoginException(dynamic e, String defaultErrorCode) {
-    AppLogger.error('Exception occurred during login', error: e, tag: 'LoginController');
+    AppLogger.error(
+      'Exception occurred during login',
+      error: e,
+      tag: 'LoginController',
+    );
     if (e is AuthException) {
       // Map AuthException codes to LoginErrorCode
-      if (e.code == 'wrong-password' || e.code == 'user-not-found' || e.code == 'invalid-credential') {
+      if (e.code == 'wrong-password' ||
+          e.code == 'user-not-found' ||
+          e.code == 'invalid-credential') {
         return LoginResult.failure(LoginErrorCode.invalidCredentials);
       }
     }
@@ -219,19 +225,13 @@ class LoginResult {
   }
 
   factory LoginResult.failure(String error) {
-    return LoginResult._(
-      isSuccess: false,
-      error: error,
-    );
+    return LoginResult._(isSuccess: false, error: error);
   }
 
   factory LoginResult.cancelled() {
-    return LoginResult._(
-      isSuccess: false,
-      isCancelled: true,
-    );
+    return LoginResult._(isSuccess: false, isCancelled: true);
   }
-  
+
   // Getter for backward compatibility - returns errorCode
   String? get errorCode => error;
 }

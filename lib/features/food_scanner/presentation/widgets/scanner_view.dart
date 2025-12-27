@@ -7,11 +7,14 @@ import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/ca
     as cam_state;
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_bloc.dart';
+import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_event.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_state.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/camera_preview_wrapper.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/scanner_bottom_overlay.dart';
+import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/mobile_barcode_scanner_view.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/scanner_preview.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/scanner_widgets.dart';
+import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/scanned_product_card.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +33,7 @@ class ScannerView extends StatefulWidget {
 
 class _ScannerViewState extends State<ScannerView> {
   ScannerActionType _selectedAction = ScannerActionType.food;
+  final GlobalKey<MobileBarcodeScannerViewState> _barcodeScannerKey = GlobalKey();
 
   List<ScannerActionConfig> _buildActions(AppLocalizations l10n) {
     return [
@@ -92,21 +96,33 @@ class _ScannerViewState extends State<ScannerView> {
                             color: Colors.white,
                             fontSize: 14,
                           ),
+                          barcodeScannerKey: _barcodeScannerKey,
                           cameraPreview: CameraPreviewWrapper(
                             // CameraPreview is used for food/gallery; in barcode mode we render MobileScanner instead.
                             controller: context
                                 .read<cam.CameraBloc>()
                                 .controller,
                             isInitializing: isCameraInitializing,
-                            errorMessage: cameraState is cam_state.CameraError
-                                ? cameraState.errorMessage
-                                : null,
+                            errorMessage:
+                                cameraState is cam_state.CameraError
+                                    ? cameraState.errorMessage
+                                    : null,
                           ),
                           isRealTimeScanning: true,
                           onBarcodeDetected:
                               widget.controller.onMobileBarcodeDetected,
                         ),
                       ),
+                      if (barcodeState is BarcodeResolved)
+                        Positioned(
+                          left: 20,
+                          right: 20,
+                          bottom: 140,
+                          child: ScannedProductCard(
+                            state: barcodeState,
+                            onReset: _handleBarcodeReset,
+                          ),
+                        ),
                       SafeArea(
                         child: Column(
                           children: [
@@ -145,4 +161,15 @@ class _ScannerViewState extends State<ScannerView> {
       ),
     );
   }
+
+
+
+  void _handleBarcodeReset() {
+    context.read<BarcodeBloc>().add(const BarcodeResetRequested());
+    _barcodeScannerKey.currentState?.restartScanning();
+  }
+
+
 }
+
+

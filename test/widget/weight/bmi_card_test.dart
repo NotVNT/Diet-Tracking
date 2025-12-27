@@ -6,39 +6,32 @@ import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:diet_tracking_project/widget/weight/bmi_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+
+// Note: This test previously depended on `mockito`, but the project doesn't
+// include it as a dev_dependency. To keep the test lightweight and avoid
+// additional dependencies, we use small fakes with `noSuchMethod`.
 
 // Mock classes for HttpClient
-class MockHttpClient extends Mock implements HttpClient {
+class MockHttpClient implements HttpClient {
   @override
-  Future<HttpClientRequest> getUrl(Uri url) {
-    return super.noSuchMethod(
-      Invocation.method(#getUrl, [url]),
-      returnValue: Future.value(MockHttpClientRequest()),
-      returnValueForMissingStub: Future.value(MockHttpClientRequest()),
-    );
-  }
+  Future<HttpClientRequest> getUrl(Uri url) async => MockHttpClientRequest();
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class MockHttpClientRequest extends Mock implements HttpClientRequest {
+class MockHttpClientRequest implements HttpClientRequest {
   @override
-  Future<HttpClientResponse> close() {
-    return super.noSuchMethod(
-      Invocation.method(#close, []),
-      returnValue: Future.value(MockHttpClientResponse()),
-      returnValueForMissingStub: Future.value(MockHttpClientResponse()),
-    );
-  }
+  Future<HttpClientResponse> close() async => MockHttpClientResponse();
 
   @override
-  HttpHeaders get headers => super.noSuchMethod(
-    Invocation.getter(#headers),
-    returnValue: MockHttpHeaders(),
-    returnValueForMissingStub: MockHttpHeaders(),
-  );
+  HttpHeaders get headers => MockHttpHeaders();
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class MockHttpClientResponse extends Mock implements HttpClientResponse {
+class MockHttpClientResponse implements HttpClientResponse {
   @override
   int get statusCode => HttpStatus.ok;
 
@@ -59,9 +52,15 @@ class MockHttpClientResponse extends Mock implements HttpClientResponse {
       cancelOnError: cancelOnError,
     );
   }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class MockHttpHeaders extends Mock implements HttpHeaders {}
+class MockHttpHeaders implements HttpHeaders {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
 
 final _dummyFontData = Uint8List.fromList([
   0x00,

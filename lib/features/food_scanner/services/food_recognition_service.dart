@@ -26,7 +26,7 @@ class FoodRecognitionResult {
 class FoodRecognitionService {
   // Server đang chạy tại máy có IP: 192.168.1.140
   // Máy tính và điện thoại phải cùng mạng WiFi
-  static const String baseUrl = 'http://192.168.1.140:8000';
+  static const String baseUrl = 'http://192.168.2.1:8000';
 
   /// Recognize food from an image path. Return null if not recognized.
   Future<FoodRecognitionResult?> recognizeFood(String imagePath) async {

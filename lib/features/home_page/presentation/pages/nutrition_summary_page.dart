@@ -16,23 +16,30 @@ class NutritionSummaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
+    final colorScheme = theme.colorScheme;
+    final primary = colorScheme.primary;
 
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: colorScheme.surfaceContainerHighest,
         appBar: AppBar(
-          title: const Text(
+          backgroundColor: colorScheme.surfaceContainerHighest,
+          foregroundColor: colorScheme.onSurface,
+          surfaceTintColor: Colors.transparent,
+          scrolledUnderElevation: 0,
+          title: Text(
             'Thống kê dinh dưỡng',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
           ),
           centerTitle: true,
           elevation: 0,
           bottom: TabBar(
             labelColor: primary,
-            unselectedLabelColor: theme.colorScheme.onSurface.withValues(
-              alpha: 0.6,
-            ),
+            unselectedLabelColor: colorScheme.onSurface.withValues(alpha: 0.6),
             indicatorColor: primary,
             indicatorWeight: 3,
             labelStyle: const TextStyle(fontWeight: FontWeight.bold),

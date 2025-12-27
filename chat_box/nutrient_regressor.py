@@ -271,7 +271,7 @@ model = timm.create_model("efficientnet_lite0", pretrained=True)
 vision_model = load_feature_extractor(model).to(device)
 regressor = NutrientRegressor(input_dim=1280, output_dim=5).to(device)
 
-regressor.load_state_dict(torch.load("model_weight/nutrient_regressor_weights (1).pth", map_location=device))
+regressor.load_state_dict(torch.load("model_weight/nutrient_regressor_weights (3).pth", map_location=device))
 regressor.eval()
 
 predictor = NutrientPredictor(vision_model, regressor).to(device)

@@ -1,6 +1,4 @@
 import numpy as np
-from googleapiclient.discovery import build
-from googlesearch import search
 from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
 from huggingface_hub import InferenceClient
@@ -67,7 +65,7 @@ from graphrag.vector_stores.lancedb import LanceDBVectorStore
 
 load_dotenv()
 
-INPUT_DIR = "F:/Diet-Tracking/chat_box/graphrag/output"
+INPUT_DIR = "F:\Diet-Tracking\chat_box\graphrag\output"
 LANCEDB_URI = f"{INPUT_DIR}/lancedb"
 
 COMMUNITY_REPORT_TABLE = "community_reports"
@@ -208,11 +206,11 @@ local_context_params = {
     "include_community_rank": False,
     "return_candidate_context": False,
     "embedding_vectorstore_key": EntityVectorStoreKey.ID,  # set this to EntityVectorStoreKey.TITLE if the vectorstore uses entity title as ids
-    "max_tokens": 2_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 5000)
+    "max_tokens": 15_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 5000)
 }
 
 model_params = {
-    "max_tokens": 2_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 1000=1500)
+    "max_tokens": 15_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 1000=1500)
     "temperature": 0.3,
 }
 
@@ -259,9 +257,22 @@ async def local_search(prompt, age, height, weight, allergy, goal, goal_weight, 
             ].
     """
 
-    result = await search_engine.search(user_profile + prompt + "cho 10 món ăn phù hợp với query của người dùng và cho thông tin dinh dưỡng đầy đủ, cho dạng bullet point")
+    json_type = """
+        Trả về dữ liệu theo mẫu sau:
+        {
+            "name": string,
+            "calories": float,
+            "carbs": float,
+            "fat": float,
+            "protein": float
+        }
+"""
+
+    result = await search_engine.search(user_profile + prompt + f"cho 10 món ăn phù hợp với query của người dùng và cho thông tin dinh dưỡng về calories, carb, fat và protein đầy đủ + {json_type}, giải thích ngắn gọn về cách suy luận của bạn")
     # result = await search_engine.search("cho biết thông tin về các chế độ ăn phổ biến trong bảng dữ liệu")
-    return(result.response)
+    json_blocks = re.findall(r'\{.*?\}', result.response, re.DOTALL)
+    foods = [json.loads(block) for block in json_blocks] 
+    return(foods)
 
 # asyncio.run(local_search())
 
@@ -269,7 +280,7 @@ async def local_search(prompt, age, height, weight, allergy, goal, goal_weight, 
 def chat_bot(prompt, conversation_history, age, height, weight, allergy, goal, goal_weight, gender):
     # Define the system message
     system_message = {"role": "system", "content":f"""
-        -Bạn là trợ lí dinh dưỡng ảo tiếng việt và trả lời nhẹ nhàng, có thể thêm emoji, trả lời mọi câu hỏi liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống. Hãy từ chối trả lời những câu hỏi không liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống, dị ứng. Câu trả lời không được hơn 1000 kí tự
+        -Bạn là trợ lí dinh dưỡng ảo tiếng việt và trả lời nhẹ nhàng, có thể thêm emoji, trả lời mọi câu hỏi liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống, dị ứng. Nếu người dùng hỏi những câu hỏi không liên quan đến lĩnh vực của bạn thì nhớ nhắc người dùng là bạn chuyên về dinh dưỡng và sức khỏe là chính. Câu trả lời không được hơn 1000 kí tự
         Dưới đây là thông tin của người dùng để bạn hiểu rõ về người dùng hơn, và không được nhắc lại thông tin của người dùng trừ khi họ yêu cầu:[
         - Tuổi: {age}
         - Giới tính: {gender}
@@ -298,9 +309,9 @@ def chat_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
 
     return bot_response, messages
 
-def more_bot(prompt, conversation_history, age, height, weight, allergy, goal, goal_weight, gender, context):
+def more_bot(prompt, conversation_history, age, height, weight, allergy, goal, goal_weight, gender, food):
     system_message = {"role": "system", "content":f"""
-        -Bạn là trợ lí dinh dưỡng ảo tiếng việt và trả lời nhẹ nhàng, có thể thêm emoji, trả lời mọi câu hỏi liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống với giọng thân thiện. Hãy từ chối trả lời những câu hỏi không liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống. Câu trả lời không được hơn 5000 kí tự
+        -Bạn là trợ lí dinh dưỡng ảo tiếng việt và trả lời nhẹ nhàng, có thể thêm emoji, trả lời mọi câu hỏi liên quan đến ăn uống, dinh dưỡng, sức khỏe, thói quen ăn uống, dị ứng. Nếu người dùng hỏi những câu hỏi không liên quan đến lĩnh vực của bạn thì nhớ nhắc người dùng là bạn chuyên về dinh dưỡng và sức khỏe là chính.
         Dưới đây là thông tin của người dùng để bạn hiểu rõ về người dùng hơn, và không được nhắc lại thông tin của người dùng trừ khi họ yêu cầu:[
         - Tuổi: {age}
         - Giới tính: {gender}
@@ -310,8 +321,7 @@ def more_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
         - Mục tiêu: {goal}
         - Cân nặng mục tiêu: {goal_weight}
         ].
-        -Nếu người dùng hỏi **ngoài chủ đề dinh dưỡng**, hãy **từ chối nhẹ nhàng**, ví dụ:> “Xin lỗi, tôi chỉ hỗ trợ về dinh dưỡng và ăn uống. Bạn có muốn tôi gợi ý món ăn hôm nay không?”.
-        -Dưới đây là thông tin đồ ăn lấy từ database, Hãy chọn ngẫu nhiên 3 món khác nhau mỗi lần trả lời và giải thích ngắn gọn, tránh lặp lại cùng một bộ món ăn trong nhiều lần gợi ý.+ {context}
+        -Dưới đây là thông tin đồ ăn lấy từ database, Hãy chọn ngẫu nhiên 3 món khác nhau mỗi lần trả lời và giải thích ngắn gọn, tránh lặp lại cùng một bộ món ăn trong nhiều lần gợi ý.+ {food}
         -Sau đây là yêu cầu đề xuất món ăn của người dùng, hãy trả lời dưới dạng sau.
         ### 🧾 **Định dạng trả lời chuẩn bắt buộc phải đưa ra cho từng món ăn:**
 
@@ -324,6 +334,8 @@ def more_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
         - Carb: … g
         - Fat: … g
         ⭐,
+
+        -Hãy trả lời người dùng 1 cách thân thiện.
         """}
     messages = list(conversation_history) # Create a mutable copy
 
@@ -393,10 +405,10 @@ async def chatbox(request: ChatRequest):
         return{"reply": response}
     else:
         print(intent)
-        context = await local_search(request.prompt, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender)
-        response, chat_history = more_bot(request.prompt, chat_history, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender, context)
+        food = await local_search(request.prompt, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender)
+        response, chat_history = more_bot(request.prompt, chat_history, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender, food)
 
-        return{"reply":"reasoning with chain of thought" + context + response}
+        return{"reply": response}
         # return{"reply": response}
 
 

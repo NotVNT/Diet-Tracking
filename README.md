@@ -30,3 +30,29 @@ the default `http://127.0.0.1:8000`.
 - For iOS simulators or debugging on the host, the default base URL already points
 	to `127.0.0.1:8000`, so no extra define is necessary unless you bind the server
 	to a different IP.
+
+## Barcode backend (local hoặc remote)
+
+Tính năng barcode gọi Python FastAPI backend (tham khảo `chat_box/barcode.py`) qua 2 endpoint:
+
+- `POST /get_product_info` (form field: `barcode`)
+- `POST /scan_barcode` (multipart form field: `file`)
+
+### Cấu hình URL server barcode
+
+Barcode backend hiện được cấu hình **remote-first**.
+
+Trong Flutter, URL server barcode được lấy từ compile-time define `SERVER_BARCODE_API_URL`.
+
+- Nếu **không** truyền define, app sẽ dùng default remote server.
+- Nếu bạn deploy server khác, hãy truyền define này khi chạy/build.
+
+Ví dụ:
+
+- Chạy app và trỏ tới server remote:
+	`flutter run --dart-define=SERVER_BARCODE_API_URL=https://your-server`
+
+Ghi chú:
+
+- Repo có file `.env` chứa `SERVER_BARCODE_API_URL=...` để bạn lưu URL, nhưng Flutter **không tự đọc `.env`** nếu bạn chưa thêm package kiểu `flutter_dotenv` và gọi load trong `main()`.
+	Hiện tại app đang dùng `--dart-define` để đảm bảo hoạt động trên mọi platform (mobile/web).

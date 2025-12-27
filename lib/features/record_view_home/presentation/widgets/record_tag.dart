@@ -8,22 +8,14 @@ class RecordTag extends StatelessWidget {
 
   final FoodRecordEntity record;
 
-  bool _isBotSuggestion(FoodRecordEntity r) {
-    // Only consider it a bot suggestion if it's explicitly marked as text type
-    // AND has nutrition details. Barcode and food scans should never be bot suggestions.
-    if (r.recordType == RecordType.barcode || r.recordType == RecordType.food) {
-      return false;
-    }
-    return r.recordType == RecordType.text &&
-           (r.nutritionDetails ?? '').trim().isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isBot = _isBotSuggestion(record);
-    final isScanned = record.recordType == RecordType.food ||
+    final isBot = record.recordType == RecordType.text;
+    // Scanned if barcode OR (food type AND has image)
+    final isScanned =
         record.recordType == RecordType.barcode ||
-        ((record.imagePath ?? '').isNotEmpty);
+        (record.recordType == RecordType.food &&
+            (record.imagePath ?? '').isNotEmpty);
 
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context);
@@ -37,6 +29,7 @@ class RecordTag extends StatelessWidget {
       icon = Icons.camera_alt_outlined;
       label = l10n?.sourceTagScanned ?? 'Từ quét ảnh/mã';
     } else {
+      // Default to manual for any other case
       icon = Icons.edit_outlined;
       label = l10n?.sourceTagManual ?? 'Nhập thủ công';
     }
@@ -54,12 +47,13 @@ class RecordTag extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             label,
-            style: AppStyles.bodySmall
-                .copyWith(fontSize: 11, color: colorScheme.onSurface),
+            style: AppStyles.bodySmall.copyWith(
+              fontSize: 11,
+              color: colorScheme.onSurface,
+            ),
           ),
         ],
       ),
     );
   }
 }
-

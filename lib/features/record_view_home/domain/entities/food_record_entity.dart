@@ -1,4 +1,4 @@
-enum RecordType { food, barcode, text } // Thêm enum để phân loại
+enum RecordType { food, barcode, text, manual } // Thêm enum để phân loại
 
 class FoodRecordEntity {
   final String? id;
