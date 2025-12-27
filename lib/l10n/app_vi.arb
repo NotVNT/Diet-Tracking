@@ -52,8 +52,6 @@
   "chatBotStartConversation": "Bắt đầu cuộc trò chuyện...",
   "chatBotEmptyTitle": "Bắt đầu cuộc trò chuyện mới",
   "chatBotEmptySubtitle": "Lịch sử trò chuyện của bạn sẽ được lưu tại đây. Hãy hỏi tôi bất cứ điều gì về kế hoạch ăn kiêng của bạn!",
-  "chatBotChatHistory": "Lịch sử trò chuyện",
-  "chatBotCreateNewChat": "Tạo cuộc trò chuyện mới",
   "start": "Bắt đầu",
   "gender": "Giới tính",
   "weWillUseThisInfo": "Chúng tôi sẽ sử dụng thông tin này để tính toán nhu cầu năng lượng hằng ngày của bạn.",
@@ -142,7 +140,6 @@
   "continueAsGuest": "Tiếp tục với Guest",
   "signUpAccount": "Đăng Ký Tài Khoản",
   "chooseYourLanguage": "Chọn ngôn ngữ của bạn",
-  "apply": "Áp dụng",
   "languageChangedSuccessfully": "Đã thay đổi ngôn ngữ thành công!",
   "languageChangedToVietnamese": "Đã chuyển sang tiếng Việt",
   "languageChangedToEnglish": "Đã chuyển sang tiếng Anh"

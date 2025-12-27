@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:diet_tracking_project/view/identities/register/register_main_screen.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
 import 'package:diet_tracking_project/database/data_migration_service.dart';
+import 'package:diet_tracking_project/database/local_storage_service.dart';
 import 'package:diet_tracking_project/view/identities/register/register_widgets.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
@@ -67,17 +68,17 @@ class _AuthStub extends AuthService {
   }
 }
 
-/// Mock implementation of GuestSyncService for testing
-class _GuestSyncMock implements GuestSyncService {
+/// Stub implementation of DataMigrationService for testing
+class _DataMigrationStub extends DataMigrationService {
   Exception? syncException;
 
-  @override
-  Future<void> syncGuestToUser(String userId) async {
-    if (syncException != null) throw syncException!;
-  }
+  _DataMigrationStub({required AuthService authService})
+      : super(local: LocalStorageService(), auth: authService);
 
   @override
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  Future<void> syncGuestToUser(String uid) async {
+    if (syncException != null) throw syncException!;
+  }
 }
 
 void main() {
@@ -87,7 +88,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -107,7 +108,7 @@ void main() {
           _buildTestWidget(
             SignupScreen(
               authService: _AuthStub(),
-              guestSyncService: _GuestSyncMock(),
+              dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
             ),
           ),
         );
@@ -124,7 +125,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -137,7 +138,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -156,7 +157,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -183,7 +184,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -204,7 +205,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -238,7 +239,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -274,7 +275,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -312,7 +313,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );
@@ -333,7 +334,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
             preSelectedData: preData,
           ),
         ),
@@ -348,7 +349,7 @@ void main() {
         _buildTestWidget(
           SignupScreen(
             authService: _AuthStub(),
-            guestSyncService: _GuestSyncMock(),
+            dataMigrationService: _DataMigrationStub(authService: _AuthStub()),
           ),
         ),
       );

@@ -17,8 +17,6 @@ class NutritionSummary extends StatefulWidget {
 
 class _NutritionSummaryState extends State<NutritionSummary> {
   final LocalStorageService _local = LocalStorageService();
-  final AuthService _authService = AuthService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   UserNutritionInfo? _userInfo;
   NutritionCalculation? _calculation;
@@ -473,11 +471,11 @@ class _NutritionSummaryState extends State<NutritionSummary> {
                 ),
                 onPressed: () async {
                   final planData = _calculation!.toJson();
-                  final user = _auth.currentUser;
+                  final user = FirebaseAuth.instance.currentUser;
 
                   if (user != null) {
                     // Nếu đã đăng nhập, lưu trực tiếp lên Firestore
-                    await _authService.saveNutritionPlan(user.uid, planData);
+                    await AuthService().saveNutritionPlan(user.uid, planData);
                   } else {
                     // Nếu là guest, lưu vào local storage
                     await _local.saveData('nutrition_plan', planData);

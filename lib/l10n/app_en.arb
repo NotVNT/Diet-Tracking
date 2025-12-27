@@ -52,8 +52,6 @@
   "chatBotStartConversation": "Start a conversation...",
   "chatBotEmptyTitle": "Start a new conversation",
   "chatBotEmptySubtitle": "Your chat history will be saved here. Ask me anything about your diet plan!",
-  "chatBotChatHistory": "Chat History",
-  "chatBotCreateNewChat": "Create New Chat",
   "start": "Start",
   "gender": "Gender",
   "weWillUseThisInfo": "We'll use this information to calculate your daily energy needs.",
@@ -142,7 +140,6 @@
   "continueAsGuest": "Continue as Guest",
   "signUpAccount": "Sign Up Account",
   "chooseYourLanguage": "Choose your language",
-  "apply": "Apply",
   "languageChangedSuccessfully": "Language changed successfully!",
   "languageChangedToVietnamese": "Language changed to Vietnamese",
   "languageChangedToEnglish": "Language changed to English"

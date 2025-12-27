@@ -6,7 +6,21 @@ import '../../features/home_page/presentation/pages/home_page.dart';
 import '../../view/on_boarding/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({
+    super.key,
+    this.auth,
+    this.welcomeBuilder,
+    this.homeBuilder,
+  });
+
+  /// Optional auth instance for testing.
+  /// Defaults to `FirebaseAuth.instance`.
+  final FirebaseAuth? auth;
+
+  /// Optional destination builders for testing.
+  /// Defaults to the real app screens.
+  final WidgetBuilder? welcomeBuilder;
+  final WidgetBuilder? homeBuilder;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -47,8 +61,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _goToHome() {
     if (!mounted) return;
-    final user = FirebaseAuth.instance.currentUser;
-    final destination = user == null ? const WelcomeScreen() : const HomePage();
+    final user = (widget.auth ?? FirebaseAuth.instance).currentUser;
+    final destination = user == null
+        ? (widget.welcomeBuilder?.call(context) ?? const WelcomeScreen())
+        : (widget.homeBuilder?.call(context) ?? const HomePage());
     Navigator.of(
       context,
     ).pushReplacement(MaterialPageRoute(builder: (_) => destination));

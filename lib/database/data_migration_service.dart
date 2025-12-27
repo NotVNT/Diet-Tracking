@@ -3,8 +3,12 @@ import 'auth_service.dart';
 import '../model/body_info_model.dart';
 
 class DataMigrationService {
-  final LocalStorageService _local = LocalStorageService();
-  final AuthService _auth = AuthService();
+  final LocalStorageService _local;
+  final AuthService _auth;
+
+  DataMigrationService({LocalStorageService? local, AuthService? auth})
+      : _local = local ?? LocalStorageService(),
+        _auth = auth ?? AuthService();
 
   Future<void> syncGuestToUser(String uid) async {
     final hasData = await _local.hasGuestData();

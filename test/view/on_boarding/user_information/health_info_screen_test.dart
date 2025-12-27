@@ -6,7 +6,6 @@ import 'package:diet_tracking_project/view/on_boarding/user_information/health_i
 import 'package:diet_tracking_project/view/on_boarding/user_information/height_selector.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:diet_tracking_project/database/auth_service.dart';
-import 'package:diet_tracking_project/widget/health/add_button.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
@@ -63,19 +62,17 @@ void main() {
     await tester.pump();
 
     // Tap the add button
-    await tester.tap(find.byType(AddButton));
+    await tester.tap(find.text('+ Thêm'));
     await tester.pump();
 
     // Verify the allergy is added
-    expect(find.text('Peanuts'), findsOneWidget);
-    expect(find.byType(Chip), findsOneWidget);
+    expect(find.text('🍽️ Peanuts'), findsOneWidget);
 
     // Tap the remove icon on the chip
     await tester.tap(find.byIcon(Icons.close));
     await tester.pump();
 
     // Verify the allergy is removed
-    expect(find.text('Peanuts'), findsNothing);
-    expect(find.byType(Chip), findsNothing);
+    expect(find.text('🍽️ Peanuts'), findsNothing);
   });
 }
