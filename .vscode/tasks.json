@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flutter: Test (All)",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["test"],
+      "problemMatcher": [],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Flutter: Test (chat_bot_view_home)",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["test", "test/features/chat_bot_view_home"],
+      "problemMatcher": [],
+      "group": "test"
+    }
+  ]
+}

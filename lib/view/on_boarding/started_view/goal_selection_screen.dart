@@ -319,11 +319,13 @@ class _GoalSelectionState extends State<GoalSelection> {
       case 'buildMuscle':
         return AppLocalizations.of(context)?.buildMuscle ?? 'Tăng cơ';
       case 'normalWeightLoss':
-        return 'Giảm cân thông thường';
+        return AppLocalizations.of(context)?.normalWeightLoss ??
+            'Giảm cân thông thường';
       case 'keto':
-        return 'Keto'; // Add localization key if available
+        return AppLocalizations.of(context)?.keto ?? 'Keto';
       case 'lowCarb':
-        return 'Low Carbs'; // Add localization key if available
+        // Localization key in ARB is `lowCarbs`
+        return AppLocalizations.of(context)?.lowCarbs ?? 'Low Carbs';
       default:
         return key;
     }

@@ -24,8 +24,13 @@ import '../../../../database/local_storage_service.dart';
 /// Profile page with Clean Architecture
 class ProfilePage extends StatefulWidget {
   final ProfileProvider profileProvider;
+  final WidgetBuilder? welcomeScreenBuilder;
 
-  const ProfilePage({super.key, required this.profileProvider});
+  const ProfilePage({
+    super.key,
+    required this.profileProvider,
+    this.welcomeScreenBuilder,
+  });
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -91,7 +96,10 @@ class _ProfilePageState extends State<ProfilePage> {
       // Navigate to Welcome Screen
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+        MaterialPageRoute(
+          builder: widget.welcomeScreenBuilder ??
+              (context) => const WelcomeScreen(),
+        ),
         (route) => false,
       );
 

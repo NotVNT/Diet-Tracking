@@ -55,7 +55,11 @@ void main() {
 
       // Chọn mục tiêu "Lose weight"
       await tester.tap(find.text('Lose weight').first);
-      await tester.pump();
+      await tester.pumpAndSettle();
+
+      // Lose weight có sub-options, cần chọn thêm để bật Next
+      await tester.tap(find.text('Normal weight loss').first);
+      await tester.pumpAndSettle();
 
       // Nút Next đã bật (tránh tap để không điều hướng sang màn dùng Firebase)
       final elevated = tester.widget<ElevatedButton>(

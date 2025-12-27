@@ -266,7 +266,9 @@ void main() {
       );
 
       final Text buttonText = tester.widget<Text>(find.text('Disabled Button'));
-      expect(buttonText.style?.color, AppColors.grey500);
+      final ctx = tester.element(find.byType(CustomButton));
+      final cs = Theme.of(ctx).colorScheme;
+      expect(buttonText.style?.color, cs.onSurface.withValues(alpha: 0.5));
     });
 
     testWidgets('should have correct border radius', (
@@ -336,7 +338,9 @@ void main() {
       );
       final BoxDecoration decoration =
           buttonContainer.decoration as BoxDecoration;
-      expect(decoration.color, AppColors.grey300);
+      final ctx = tester.element(find.byType(CustomButton));
+      final cs = Theme.of(ctx).colorScheme;
+      expect(decoration.color, cs.surfaceContainerHighest);
     });
 
     testWidgets('should handle animation correctly', (

@@ -8,7 +8,7 @@ class AppLogger {
   static void debug(String message, {String? tag}) {
     if (kDebugMode) {
       final logTag = tag ?? _tag;
-      debugPrint('[$logTag] 🔍 $message');
+      debugPrint('[$logTag] $message');
     }
   }
 
@@ -16,7 +16,7 @@ class AppLogger {
   static void info(String message, {String? tag}) {
     if (kDebugMode) {
       final logTag = tag ?? _tag;
-      debugPrint('[$logTag] ℹ️ $message');
+      debugPrint('[$logTag] $message');
     }
   }
 
@@ -24,7 +24,7 @@ class AppLogger {
   static void warning(String message, {String? tag}) {
     if (kDebugMode) {
       final logTag = tag ?? _tag;
-      debugPrint('[$logTag] ⚠️ $message');
+      debugPrint('[$logTag] $message');
     }
   }
 
@@ -32,7 +32,7 @@ class AppLogger {
   static void error(String message, {String? tag, dynamic error, StackTrace? stackTrace}) {
     if (kDebugMode) {
       final logTag = tag ?? _tag;
-      debugPrint('[$logTag] ❌ $message');
+      debugPrint('[$logTag] $message');
       if (error != null) {
         debugPrint('[$logTag] Error: $error');
       }

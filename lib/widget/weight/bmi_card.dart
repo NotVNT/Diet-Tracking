@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'weight_responsive_design.dart';
 
 class BmiCard extends StatelessWidget {
@@ -19,6 +20,8 @@ class BmiCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final r = WeightResponsive.of(context);
     final statusColor = _getBmiColor(bmi);
+    final t = AppLocalizations.of(context);
+    final title = t?.bmiCurrentTitle ?? 'BMI';
 
     return Container(
       width: double.infinity,
@@ -65,7 +68,7 @@ class BmiCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'BMI',
+                      title,
                       style: GoogleFonts.inter(
                         fontSize: r.font(12),
                         fontWeight: FontWeight.w800,

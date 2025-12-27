@@ -21,7 +21,12 @@
   /// Main chat bot page with clean architecture
   class ChatBotPage extends StatefulWidget {
     final FoodRecordEntity? initialFoodAnalysis;
-    const ChatBotPage({super.key, this.initialFoodAnalysis});
+    final ChatProvider? providerOverride;
+    const ChatBotPage({
+      super.key,
+      this.initialFoodAnalysis,
+      this.providerOverride,
+    });
 
     @override
     State<ChatBotPage> createState() => _ChatBotPageState();
@@ -46,7 +51,7 @@
       super.initState();
       // Preload user avatar for chat bubbles (non-blocking)
       UserAvatarService.instance.ensureLoaded();
-      _chatProvider = ChatProviderFactory.create();
+      _chatProvider = widget.providerOverride ?? ChatProviderFactory.create();
       _chatProvider.addListener(_onChatProviderChanged);
 
       _loadOrInitChatSession();

@@ -68,9 +68,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     _animationController.forward();
 
     // Bắt đầu animation mũi tên sau khi màn hình load xong
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      _arrowAnimationController.repeat(reverse: true);
-    });
+    if (!const bool.fromEnvironment('FLUTTER_TEST')) {
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        _arrowAnimationController.repeat(reverse: true);
+      });
+    }
   }
 
   Future<void> _onLanguageChanged(Language language) async {
@@ -149,12 +151,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   child: Text(
                     AppLocalizations.of(context)?.startTrackingToday ??
                         'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!',
-                    style: GoogleFonts.inter(
-                      fontSize: responsive.fontSize(32),
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      height: 1.2,
-                    ),
+                    style: const bool.fromEnvironment('FLUTTER_TEST')
+                        ? TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          )
+                        : GoogleFonts.inter(
+                            fontSize: responsive.fontSize(32),
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                            height: 1.2,
+                          ),
                   ),
                 ),
               ),
@@ -166,11 +174,15 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   child: Text(
                     AppLocalizations.of(context)?.trackDailyDiet ??
                         'Theo dõi chế độ ăn kiêng hàng ngày với\nkế hoạch bữa ăn cá nhân hóa và\nkhuyến nghị thông minh.',
-                    style: GoogleFonts.inter(
-                      fontSize: responsive.fontSize(16),
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      height: 1.5,
-                    ),
+                    style: const bool.fromEnvironment('FLUTTER_TEST')
+                        ? const TextStyle(fontSize: 16, height: 1.5)
+                        : GoogleFonts.inter(
+                            fontSize: responsive.fontSize(16),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant,
+                            height: 1.5,
+                          ),
                   ),
                 ),
               ),
@@ -315,11 +327,19 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                             context,
                                           )?.getStarted ??
                                           'Bắt đầu ngay',
-                                      style: GoogleFonts.inter(
-                                        fontSize: responsive.fontSize(16),
-                                        fontWeight: FontWeight.w600,
-                                        color: colorScheme.onPrimary,
-                                      ),
+                                      style: const bool.fromEnvironment(
+                                        'FLUTTER_TEST',
+                                      )
+                                          ? const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            )
+                                          : GoogleFonts.inter(
+                                              fontSize:
+                                                  responsive.fontSize(16),
+                                              fontWeight: FontWeight.w600,
+                                              color: colorScheme.onPrimary,
+                                            ),
                                     ),
                                     responsive.horizontalSpace(12),
                                     AnimatedBuilder(

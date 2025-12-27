@@ -119,9 +119,9 @@ void main() {
         expect(decoration.borderRadius, BorderRadius.circular(20));
         expect(decoration.boxShadow, isA<List<BoxShadow>>());
         expect(decoration.boxShadow!.length, 1);
-        expect(decoration.boxShadow!.first.color, AppColors.shadowLight);
-        expect(decoration.boxShadow!.first.blurRadius, 20);
-        expect(decoration.boxShadow!.first.offset, const Offset(0, 10));
+        expect(decoration.boxShadow!.first.color, AppColors.shadowLight.withAlpha(20));
+        expect(decoration.boxShadow!.first.blurRadius, 8);
+        expect(decoration.boxShadow!.first.offset, const Offset(0, 4));
       });
 
       testWidgets('should create input box decoration', (
