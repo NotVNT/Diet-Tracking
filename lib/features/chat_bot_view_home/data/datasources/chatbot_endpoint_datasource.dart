@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-const String _defaultBaseUrl = 'https://ivank04-barcode-server.hf.space';
+const String _defaultBaseUrl = ' ';
 const String _overrideBaseUrl = String.fromEnvironment(
   'CHATBOT_API_BASE_URL',
   defaultValue: '',

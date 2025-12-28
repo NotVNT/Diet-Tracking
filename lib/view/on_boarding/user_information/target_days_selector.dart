@@ -95,7 +95,10 @@ class _MainContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<TargetDaysViewModel>();
-    final userInfo = vm.userInfo!;
+    final userInfo = vm.userInfo;
+    if (userInfo == null) {
+      return const SizedBox.shrink();
+    }
     final calculation = vm.calculation;
 
     return Padding(

@@ -5,9 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:diet_tracking_project/view/on_boarding/user_information/nutrition_summary.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
 Widget _buildApp(Widget home) {
-  return MaterialApp(home: home);
+  return MaterialApp(
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    locale: const Locale('vi'),
+    home: home,
+  );
 }
 
 Map<String, dynamic> _validCalculationJson({

@@ -1,3 +1,5 @@
+# add your vlan ipv4 
+https://ivank04-barcode-server.hf.spac
 # diet_tracking_project
 
 [![CI](https://github.com/NotVNT/Diet-Tracking/actions/workflows/ci.yml/badge.svg?branch=testing)](https://github.com/NotVNT/Diet-Tracking/actions/workflows/ci.yml)

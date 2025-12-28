@@ -35,9 +35,9 @@ void main() {
       _buildApp(HealthInfoScreen(authService: _AuthStub())),
     );
 
-    // Verify title and description are present (using hardcoded vietnamese text from the widget)
+    // Verify localized title is present.
     expect(
-      find.text('Dị Ứng Thực Phẩm'),
+      find.text('Food Allergies'),
       findsNWidgets(2),
     ); // Title and Card Title
     expect(find.byType(TextField), findsOneWidget);
@@ -62,17 +62,17 @@ void main() {
     await tester.pump();
 
     // Tap the add button
-    await tester.tap(find.text('+ Thêm'));
+    await tester.tap(find.text('+ Add'));
     await tester.pump();
 
     // Verify the allergy is added
-    expect(find.text('🍽️ Peanuts'), findsOneWidget);
+    expect(find.text('🥜 Peanuts'), findsOneWidget);
 
     // Tap the remove icon on the chip
     await tester.tap(find.byIcon(Icons.close));
     await tester.pump();
 
     // Verify the allergy is removed
-    expect(find.text('🍽️ Peanuts'), findsNothing);
+    expect(find.text('🥜 Peanuts'), findsNothing);
   });
 }

@@ -1,10 +1,14 @@
 import 'package:diet_tracking_project/widget/health/allergy_selection_card.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Widget _wrap(Widget child) {
   return MaterialApp(
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    locale: const Locale('vi'),
     home: Scaffold(
       body: Material(child: child),
     ),
