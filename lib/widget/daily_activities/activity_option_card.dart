@@ -93,7 +93,7 @@ class ActivityOptionCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: const BoxDecoration(
-                    color: const Color(0xFF1F2A37),
+                    color: Color(0xFF1F2A37),
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(16),
                       bottomLeft: Radius.circular(8),
