@@ -46,10 +46,10 @@ class _BackgroundDecoration extends StatelessWidget {
             left: -20,
             child: Transform.rotate(
               angle: -0.5,
-              child: Icon(
+              child: const Icon(
                 Icons.local_pizza,
                 size: 120,
-                color: const Color(0x33FF9800), // Colors.orange.withValues(alpha: 0.2)
+                color: Color(0x33FF9800), // Colors.orange.withValues(alpha: 0.2)
               ),
             ),
           ),
@@ -58,10 +58,10 @@ class _BackgroundDecoration extends StatelessWidget {
             right: -30,
             child: Transform.rotate(
               angle: 0.5,
-              child: Icon(
+              child: const Icon(
                 Icons.icecream,
                 size: 100,
-                color: const Color(0x33E91E63), // Colors.pink.withValues(alpha: 0.2)
+                color: Color(0x33E91E63), // Colors.pink.withValues(alpha: 0.2)
               ),
             ),
           ),
@@ -70,20 +70,22 @@ class _BackgroundDecoration extends StatelessWidget {
             right: 40,
             child: Transform.rotate(
               angle: -0.2,
-              child: Icon(
+              // FIXED: Added const here
+              child: const Icon(
                 Icons.bakery_dining,
                 size: 80,
-                color: const Color(0x33795548), // Colors.brown.withValues(alpha: 0.2)
+                color: Color(0x33795548), // Colors.brown.withValues(alpha: 0.2)
               ),
             ),
           ),
-          Positioned(
+          const Positioned(
             top: 150,
             left: 20,
+            // FIXED: Added const here (and wrapped Positioned in const as well since children are const)
             child: Icon(
               Icons.eco,
               size: 60,
-              color: const Color(0x1A4CAF50), // Colors.green.withValues(alpha: 0.1)
+              color: Color(0x1A4CAF50), // Colors.green.withValues(alpha: 0.1)
             ),
           ),
         ],
