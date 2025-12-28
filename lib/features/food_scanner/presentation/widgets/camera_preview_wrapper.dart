@@ -2,11 +2,13 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../services/camera_controller_facade.dart';
+
 /// CameraPreviewWrapper
 /// - Encapsulates error/loading/preview rendering
 /// - Keeps the aspect ratio correction logic centralized
 class CameraPreviewWrapper extends StatelessWidget {
-  final CameraController? controller;
+  final CameraControllerFacade? controller;
   final bool isInitializing;
   final String? errorMessage;
 
@@ -38,14 +40,15 @@ class CameraPreviewWrapper extends StatelessWidget {
       );
     }
 
-    final ctrl = controller;
-    if (ctrl == null || !ctrl.value.isInitialized) {
+    final facade = controller;
+    final ctrl = facade?.rawController;
+    if (facade == null || ctrl == null || !facade.state.isInitialized) {
       return const SizedBox.shrink();
     }
 
     // Camera sensor usually provides landscape (horizontal), but app uses portrait (vertical).
     // Invert ratio so portrait preview matches captured photo.
-    final previewAspectRatio = ctrl.value.aspectRatio;
+    final previewAspectRatio = facade.state.aspectRatio;
     if (previewAspectRatio <= 0) {
       return const SizedBox.shrink();
     }

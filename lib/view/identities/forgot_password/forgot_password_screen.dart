@@ -10,7 +10,12 @@ import 'forgot_password_ui_helper.dart';
 import 'forgot_password_widgets.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+  final ForgotPasswordController? controller;
+
+  const ForgotPasswordScreen({
+    super.key,
+    this.controller,
+  });
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -31,7 +36,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     super.initState();
     
     // Khởi tạo controller
-    _controller = ForgotPasswordController();
+    _controller = widget.controller ?? ForgotPasswordController();
     
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),

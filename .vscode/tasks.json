@@ -13,6 +13,14 @@
       }
     },
     {
+      "label": "Flutter: Coverage (Sharded)",
+      "type": "shell",
+      "command": "dart",
+      "args": ["run", "tool/coverage_sharded.dart"],
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
       "label": "Flutter: Test (chat_bot_view_home)",
       "type": "shell",
       "command": "flutter",

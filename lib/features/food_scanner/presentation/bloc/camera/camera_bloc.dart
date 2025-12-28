@@ -1,14 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import '../../../domain/usecases/request_camera_permission.dart';
+import '../../../services/camera_adapter.dart';
+import '../../../services/camera_controller_facade.dart';
 import 'camera_event.dart';
 import 'camera_state.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
   final RequestCameraPermission requestPermission;
-  CameraController? _controller;
+  final CameraAdapter cameraAdapter;
+  CameraControllerFacade? _controller;
 
-  CameraBloc({required this.requestPermission}) : super(const CameraInitial()) {
+  CameraBloc({
+    required this.requestPermission,
+    CameraAdapter? cameraAdapter,
+  })  : cameraAdapter = cameraAdapter ?? const DefaultCameraAdapter(),
+        super(const CameraInitial()) {
     on<InitializeCamera>(_onInitializeCamera);
     on<StartImageStream>(_onStartImageStream);
     on<StopImageStream>(_onStopImageStream);
@@ -40,7 +47,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
         await previous.dispose();
       }
 
-      final cameras = await availableCameras();
+      final cameras = await cameraAdapter.availableCameras();
       if (cameras.isEmpty) {
         emit(const CameraError(errorMessage: 'No camera found on device.'));
         emit(const CameraInitializing(isInitializing: false));
@@ -52,7 +59,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
         orElse: () => cameras.first,
       );
 
-      final controller = CameraController(
+      final controller = cameraAdapter.createController(
         back,
         ResolutionPreset.veryHigh,
         enableAudio: false,
@@ -75,8 +82,8 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     Emitter<CameraState> emit,
   ) async {
     final controller = _controller;
-    if (controller == null || !controller.value.isInitialized) return;
-    if (controller.value.isStreamingImages) return;
+    if (controller == null || !controller.state.isInitialized) return;
+    if (controller.state.isStreamingImages) return;
 
     emit(const CameraStreamingState(isStreaming: true));
     await controller.startImageStream((CameraImage image) {
@@ -90,7 +97,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   ) async {
     final controller = _controller;
     if (controller == null) return;
-    if (controller.value.isStreamingImages) {
+    if (controller.state.isStreamingImages) {
       await controller.stopImageStream();
     }
     // After stopping the stream, expose a ready state so the UI can take photos again
@@ -105,7 +112,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     _controller = null;
     if (controller != null) {
       try {
-        if (controller.value.isStreamingImages) {
+        if (controller.state.isStreamingImages) {
           await controller.stopImageStream();
         }
       } catch (_) {}
@@ -123,7 +130,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     emit(CameraFrameAvailable(event.image));
   }
 
-  CameraController? get controller => _controller;
+  CameraControllerFacade? get controller => _controller;
 
   @override
   Future<void> close() async {
@@ -131,7 +138,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
       final c = _controller;
       _controller = null;
       if (c != null) {
-        if (c.value.isStreamingImages) {
+        if (c.state.isStreamingImages) {
           await c.stopImageStream();
         }
         await c.dispose();

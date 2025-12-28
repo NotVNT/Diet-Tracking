@@ -15,40 +15,52 @@ class CameraPermissionService {
   // Track if user has explicitly denied permission in this session
   bool _cameraPermissionDeniedInSession = false;
 
-  Future<bool> requestCameraPermission() async {
+  /// Get current OS camera permission status.
+  ///
+  /// Exposed as a method to make permission flows testable (can be mocked).
+  Future<ph.PermissionStatus> getCameraPermissionStatus() async {
+    return ph.Permission.camera.status;
+  }
+
+  /// Request OS camera permission and return the resulting status.
+  ///
+  /// Exposed as a method to make permission flows testable (can be mocked).
+  Future<ph.PermissionStatus> requestCameraPermissionStatus() async {
     // If already granted in this session, don't show dialog again
     if (_cameraPermissionGrantedInSession) {
-      return true;
+      return ph.PermissionStatus.granted;
     }
 
-    // Request permission from OS
     final status = await ph.Permission.camera.request();
 
     if (status.isGranted || status.isLimited) {
-      // Mark as granted in this session
       _cameraPermissionGrantedInSession = true;
       _cameraPermissionDeniedInSession = false;
-      return true;
+      return status;
     }
 
     if (status.isDenied) {
-      // Mark as denied in this session (dialog will appear next time)
       _cameraPermissionDeniedInSession = true;
-      return false;
+      return status;
     }
 
     if (status.isPermanentlyDenied) {
-      // Permanently denied - don't show dialog again
+      // Permanently denied - don't show dialog again in this session
       _cameraPermissionGrantedInSession = true;
-      return false;
+      return status;
     }
 
-    return false;
+    return status;
+  }
+
+  Future<bool> requestCameraPermission() async {
+    final status = await requestCameraPermissionStatus();
+    return status.isGranted || status.isLimited;
   }
 
   /// Check if camera permission is already granted
   Future<bool> isCameraPermissionGranted() async {
-    final status = await ph.Permission.camera.status;
+    final status = await getCameraPermissionStatus();
     return status.isGranted || status.isLimited;
   }
 

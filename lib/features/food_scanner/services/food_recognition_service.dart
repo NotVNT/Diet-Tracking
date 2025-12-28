@@ -26,12 +26,21 @@ class FoodRecognitionResult {
 class FoodRecognitionService {
   // Server đang chạy tại máy có IP: 192.168.1.140
   // Máy tính và điện thoại phải cùng mạng WiFi
-  static const String baseUrl = 'http://192.168.2.1:8000';
+  static const String defaultBaseUrl = 'http://192.168.2.1:8000';
+
+  final http.Client _client;
+  final String _baseUrl;
+
+  FoodRecognitionService({
+    http.Client? client,
+    String? baseUrl,
+  })  : _client = client ?? http.Client(),
+        _baseUrl = (baseUrl == null || baseUrl.isEmpty) ? defaultBaseUrl : baseUrl;
 
   /// Recognize food from an image path. Return null if not recognized.
   Future<FoodRecognitionResult?> recognizeFood(String imagePath) async {
     try {
-      final uri = Uri.parse('$baseUrl/scan_food');
+      final uri = Uri.parse('$_baseUrl/scan_food');
       final request = http.MultipartRequest('POST', uri);
 
       // Attach file ảnh
@@ -40,7 +49,7 @@ class FoodRecognitionService {
 
       // Gửi request
       debugPrint('Sending image to $uri');
-      final streamedResponse = await request.send().timeout(
+      final streamedResponse = await _client.send(request).timeout(
         const Duration(seconds: 20), // Tăng timeout cho việc upload và xử lý AI
         onTimeout: () {
           throw Exception(

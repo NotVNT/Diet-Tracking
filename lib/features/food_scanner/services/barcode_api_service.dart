@@ -5,6 +5,10 @@ import 'dart:convert';
 import '../data/models/food_scanner_models.dart';
 
 class BarcodeApiService {
+  final http.Client _client;
+
+  BarcodeApiService({http.Client? client}) : _client = client ?? http.Client();
+
   // Default remote barcode server.
   // Override when running/building using:
   //   --dart-define=SERVER_BARCODE_API_URL=https://your-host
@@ -81,7 +85,7 @@ class BarcodeApiService {
         putStr('gender', userData['gender']);
       }
 
-      final response = await http
+      final response = await _client
           .post(uri, body: body)
           .timeout(
             const Duration(seconds: 15),
@@ -142,7 +146,7 @@ class BarcodeApiService {
       final file = await http.MultipartFile.fromPath('file', imagePath);
       request.files.add(file);
 
-      final streamedResponse = await request.send().timeout(
+      final streamedResponse = await _client.send(request).timeout(
         const Duration(seconds: 30),
         onTimeout: () {
           throw Exception('Timeout khi kết nối server barcode');
@@ -190,7 +194,7 @@ class BarcodeApiService {
   Future<bool> checkConnection() async {
     try {
       final baseUrl = _resolveBaseUrl();
-      final response = await http
+      final response = await _client
           .get(Uri.parse('$baseUrl/docs'), headers: {'Accept': 'text/html'})
           .timeout(const Duration(seconds: 5));
 

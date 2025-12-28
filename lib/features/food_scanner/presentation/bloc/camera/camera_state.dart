@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import '../../../services/camera_controller_facade.dart';
 
 abstract class CameraState {
   const CameraState();
@@ -14,7 +15,7 @@ class CameraInitializing extends CameraState {
 }
 
 class CameraReady extends CameraState {
-  final CameraController controller;
+  final CameraControllerFacade controller;
   const CameraReady({required this.controller});
 }
 

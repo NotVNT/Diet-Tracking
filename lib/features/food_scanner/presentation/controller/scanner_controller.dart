@@ -97,10 +97,10 @@ class ScannerController {
       // When a barcode value is detected from the live stream, stop the stream
       // and take a high-resolution picture to attach to the saved record.
       final controller = cameraBloc.controller;
-      if (controller == null || !controller.value.isInitialized) return;
+      if (controller == null || !controller.state.isInitialized) return;
 
       try {
-        if (controller.value.isStreamingImages) {
+        if (controller.state.isStreamingImages) {
           // Stop stream safely before taking a picture
           try {
             await controller.stopImageStream();

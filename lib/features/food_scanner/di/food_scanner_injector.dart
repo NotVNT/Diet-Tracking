@@ -88,13 +88,20 @@ class FoodScannerInjector {
     // Use cases for barcode path
     final scanBarcodeFromImage =
         _scanBarcodeFromImage ?? ScanBarcodeFromImage(barcodeScannerService);
-    final scanBarcodeFromCameraFrame = ScanBarcodeFromCameraFrame(barcodeScannerService);
-    final firestoreDatasource = FirestoreDatasource();
-    final authService = AuthService();
-    final userRepository = UserRepositoryImpl(firestoreDatasource, authService);
+    final scanBarcodeFromCameraFrame =
+        ScanBarcodeFromCameraFrame(barcodeScannerService);
 
-    final getProductInfo =
-        _getBarcodeProductInfo ?? GetBarcodeProductInfo(apiService, userRepository);
+    // Avoid constructing Firebase-backed dependencies when the use case is overridden.
+    // This keeps widget tests hermetic while preserving production behavior.
+    final GetBarcodeProductInfo getProductInfo;
+    if (_getBarcodeProductInfo != null) {
+      getProductInfo = _getBarcodeProductInfo;
+    } else {
+      final firestoreDatasource = FirestoreDatasource();
+      final authService = AuthService();
+      final userRepository = UserRepositoryImpl(firestoreDatasource, authService);
+      getProductInfo = GetBarcodeProductInfo(apiService, userRepository);
+    }
 
     // Blocs
     final foodScanBloc = _prebuiltFoodScanBloc ?? FoodScanBloc(

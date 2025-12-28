@@ -1,4 +1,4 @@
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
 import '../../services/camera_permission_service.dart';
 
 /// Model chứa kết quả của việc yêu cầu quyền camera
@@ -32,10 +32,11 @@ class RequestCameraPermission {
   /// - [errorMessage]: thông báo lỗi (nếu có)
   /// - [isPermanentlyDenied]: true nếu quyền bị từ chối vĩnh viễn
   Future<CameraPermissionResult> call() async {
-    var status = await Permission.camera.status;
+    final status = await _sessionPermissionService.getCameraPermissionStatus();
 
     // Nếu đã có quyền
-    if (status.isGranted || status.isLimited) {
+    if (status == ph.PermissionStatus.granted ||
+        status == ph.PermissionStatus.limited) {
       return CameraPermissionResult(
         hasPermission: true,
         isPermanentlyDenied: false,
@@ -43,7 +44,7 @@ class RequestCameraPermission {
     }
 
     // Nếu quyền bị từ chối vĩnh viễn
-    if (status.isPermanentlyDenied) {
+    if (status == ph.PermissionStatus.permanentlyDenied) {
       return CameraPermissionResult(
         hasPermission: false,
         errorMessage: 'Hãy bật quyền camera trong Cài đặt để tiếp tục quét.',
@@ -52,20 +53,31 @@ class RequestCameraPermission {
     }
 
     // Nếu quyền bị từ chối hoặc bị hạn chế, yêu cầu quyền
-    if (status.isDenied || status.isRestricted) {
-      final hasPermission = await _sessionPermissionService.requestCameraPermission();
-      if (hasPermission) {
+    if (status == ph.PermissionStatus.denied ||
+        status == ph.PermissionStatus.restricted) {
+      final requested =
+          await _sessionPermissionService.requestCameraPermissionStatus();
+      if (requested == ph.PermissionStatus.granted ||
+          requested == ph.PermissionStatus.limited) {
         return CameraPermissionResult(
           hasPermission: true,
           isPermanentlyDenied: false,
         );
-      } else {
+      }
+
+      if (requested == ph.PermissionStatus.permanentlyDenied) {
         return CameraPermissionResult(
           hasPermission: false,
-          errorMessage: 'Ứng dụng cần quyền camera để quét.',
-          isPermanentlyDenied: false,
+          errorMessage: 'Hãy bật quyền camera trong Cài đặt để tiếp tục quét.',
+          isPermanentlyDenied: true,
         );
       }
+
+      return CameraPermissionResult(
+        hasPermission: false,
+        errorMessage: 'Ứng dụng cần quyền camera để quét.',
+        isPermanentlyDenied: false,
+      );
     }
 
     return CameraPermissionResult(
