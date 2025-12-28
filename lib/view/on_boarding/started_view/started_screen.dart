@@ -30,6 +30,12 @@ class _StartScreenState extends State<StartScreen> {
 
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(const AssetImage('assets/welcome_screen/Goal.png'), context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -81,9 +87,12 @@ class _StartScreenState extends State<StartScreen> {
                 ),
                 Expanded(
                   child: Center(
-                    child: Image.asset(
-                      'assets/welcome_screen/Goal.png',
-                      fit: BoxFit.contain,
+                    child: RepaintBoundary(
+                      child: Image.asset(
+                        'assets/welcome_screen/Goal.png',
+                        fit: BoxFit.contain,
+                        gaplessPlayback: true,
+                      ),
                     ),
                   ),
                 ),

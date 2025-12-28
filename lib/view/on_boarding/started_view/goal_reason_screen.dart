@@ -246,7 +246,7 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
   Future<void> _handleNext() async {
     final reasons = _getReasonsForGoal(context);
     final selectedReasons = _selectedIndices
-        .map((i) => _getLocalizedReasonTitle(context, reasons[i].titleKey))
+        .map((i) => _getEnglishReasonTitle(reasons[i].titleKey))
         .toList(growable: false);
 
     // Lưu reasons vào localStorage
@@ -272,6 +272,65 @@ class _GoalReasonScreenState extends State<GoalReasonScreen> {
             ),
       ),
     );
+  }
+
+  String _getEnglishReasonTitle(String key) {
+    switch (key) {
+      // Lose weight reasons
+      case 'improveHealth':
+        return 'Improve health';
+      case 'feelMoreConfident':
+        return 'Feel more confident';
+      case 'fitIntoClothes':
+        return 'Fit into clothes';
+      case 'doctorRecommendation':
+        return 'Doctor recommendation';
+      case 'improveAppearance':
+        return 'Improve appearance';
+      case 'moreEnergy':
+        return 'Have more energy';
+      case 'healthyLifestyle':
+        return 'Healthy lifestyle';
+
+      // Gain weight reasons
+      case 'buildStrength':
+        return 'Build strength';
+      case 'improveAthletics':
+        return 'Improve athletics';
+      case 'lookMoreMuscular':
+        return 'Look more muscular';
+      case 'recoverFromIllness':
+        return 'Recover from illness';
+      case 'increaseAppetite':
+        return 'Increase appetite';
+
+      // Maintain weight reasons
+      case 'stayHealthy':
+        return 'Stay healthy';
+      case 'preventWeightGain':
+        return 'Prevent weight gain';
+      case 'balancedLifestyle':
+        return 'Balanced lifestyle';
+      case 'maintainFitness':
+        return 'Maintain fitness';
+
+      // Build muscle reasons
+      case 'getStronger':
+        return 'Get stronger';
+      case 'improveBodyComposition':
+        return 'Improve body composition';
+      case 'athleticPerformance':
+        return 'Athletic performance';
+      case 'lookToned':
+        return 'Look toned';
+      case 'boostMetabolism':
+        return 'Boost metabolism';
+
+      case 'other':
+        return 'Other';
+      default:
+        return key;
+    }
   }
 
   String _getLocalizedReasonTitle(BuildContext context, String key) {

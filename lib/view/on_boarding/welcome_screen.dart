@@ -70,8 +70,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     // Bắt đầu animation mũi tên sau khi màn hình load xong
     if (!const bool.fromEnvironment('FLUTTER_TEST')) {
       Future.delayed(const Duration(milliseconds: 2000), () {
-        _arrowAnimationController.repeat(reverse: true);
+        if (mounted) {
+          _arrowAnimationController.repeat(reverse: true);
+        }
       });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    for (final image in _images) {
+      precacheImage(AssetImage(image), context);
     }
   }
 
@@ -204,34 +214,37 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             },
                             itemCount: _images.length,
                             itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  _showImageDialog(context, index);
-                                },
-                                child: Container(
-                                  margin: responsive.edgePadding(horizontal: 4),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      responsive.radius(20),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        blurRadius: 20,
-                                        offset: const Offset(0, 10),
+                              return RepaintBoundary(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _showImageDialog(context, index);
+                                  },
+                                  child: Container(
+                                    margin: responsive.edgePadding(horizontal: 4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                        responsive.radius(20),
                                       ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      responsive.radius(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withValues(
+                                            alpha: 0.1,
+                                          ),
+                                          blurRadius: 20,
+                                          offset: const Offset(0, 10),
+                                        ),
+                                      ],
                                     ),
-                                    child: Image.asset(
-                                      _images[index],
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        responsive.radius(20),
+                                      ),
+                                      child: Image.asset(
+                                        _images[index],
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        gaplessPlayback: true,
+                                      ),
                                     ),
                                   ),
                                 ),

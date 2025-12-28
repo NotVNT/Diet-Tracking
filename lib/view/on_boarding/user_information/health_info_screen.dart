@@ -6,6 +6,7 @@ import '../../../widget/health/health_background.dart';
 import '../../../widget/health/health_header.dart';
 import '../../../widget/health/allergy_selection_card.dart';
 import '../../../widget/health/health_navigation_bar.dart';
+import '../../../l10n/app_localizations.dart';
 import 'height_selector.dart';
 
 class HealthInfoScreen extends StatefulWidget {
@@ -58,10 +59,10 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
               ),
               const SizedBox(height: 20),
 
-              const HealthHeader(
-                title: 'Dị Ứng Thực Phẩm',
+              HealthHeader(
+                title: AppLocalizations.of(context)!.foodAllergiesTitle,
                 subtitle:
-                    'Vui lòng cung cấp thông tin về dị ứng thực phẩm của bạn để chúng tôi có thể hỗ trợ tốt nhất',
+                    AppLocalizations.of(context)!.foodAllergiesSubtitle,
               ),
               const SizedBox(height: 24),
 

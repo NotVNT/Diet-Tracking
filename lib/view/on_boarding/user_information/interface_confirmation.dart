@@ -53,6 +53,12 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
     _localStorage = widget.localStorage ?? LocalStorageService();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(const AssetImage(_successAssetPath), context);
+  }
+
   OnboardingDataSyncService _getOnboardingSyncService() {
     return widget.onboardingSyncService ??
         (_onboardingSyncService ??= OnboardingDataSyncService(
@@ -205,7 +211,13 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: 300),
-        child: Image.asset(_successAssetPath, fit: BoxFit.contain),
+        child: RepaintBoundary(
+          child: Image.asset(
+            _successAssetPath,
+            fit: BoxFit.contain,
+            gaplessPlayback: true,
+          ),
+        ),
       ),
     );
   }

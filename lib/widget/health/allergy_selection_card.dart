@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:diacritic/diacritic.dart';
+import '../../l10n/app_localizations.dart';
 import '../../common/app_styles.dart';
 import '../../common/app_colors.dart';
 
@@ -20,62 +21,72 @@ class AllergySelectionCard extends StatefulWidget {
 class _AllergySelectionCardState extends State<AllergySelectionCard> {
   final TextEditingController _allergyCtrl = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  late Map<String, String> _allergyEmojis;
+  late Map<String, String> _normalizedToDisplay;
+  late List<String> _commonAllergies;
 
-  final Map<String, String> _allergyEmojis = {
-    'Hải sản': '🦞',
-    'Sữa': '🥛',
-    'Đậu phộng': '🥜',
-    'Trứng': '🥚',
-    'Lúa mì': '🌾',
-    'Đậu nành': '🫘',
-    'Cá': '🐟',
-    'Các loại hạt': '🌰',
-    'Tôm': '🦐',
-    'Cua': '🦀',
-    'Bò': '🥩',
-    'Gà': '🍗',
-    'Mè': '🌱',
-    'Sò điệp': '🐚',
-    'Ốc': '🐌',
-    'Gluten': '🍞',
-    'Lactose': '🥛',
-    'Mật ong': '🍯',
-    'Dâu tây': '🍓',
-    'Kiwi': '🥝',
-    'Cà chua': '🍅',
-    'Nấm': '🍄',
-    'Rượu/Bia': '🍺',
-    'Chất bảo quản': '🧪',
-    'Phẩm màu': '🎨',
-    'Mù tạt': '🌭',
-    'Cần tây': '🥬',
-    'Hạnh nhân': '🌰',
-    'Hạt điều': '🥜',
-    'Óc chó': '🌰',
-    'Hạt dẻ': '🌰',
-    'Yến mạch': '🥣',
-    'Bắp (Ngô)': '🌽',
-    'Chuối': '🍌',
-    'Dứa (Thơm)': '🍍',
-    'Tỏi': '🧄',
-    'Hành': '🧅',
-    'Sô cô la': '🍫',
-    'Cà phê': '☕',
-  };
-
-  List<String> get _commonAllergies => _allergyEmojis.keys.toList();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final loc = AppLocalizations.of(context)!;
+    _allergyEmojis = {
+      loc.allergySeafood: '🦞',
+      loc.allergyMilk: '🥛',
+      loc.allergyPeanuts: '🥜',
+      loc.allergyEggs: '🥚',
+      loc.allergyWheat: '🌾',
+      loc.allergySoy: '🫘',
+      loc.allergyFish: '🐟',
+      loc.allergyNuts: '🌰',
+      loc.allergyShrimp: '🦐',
+      loc.allergyCrab: '🦀',
+      loc.allergyBeef: '🥩',
+      loc.allergyChicken: '🍗',
+      loc.allergySesame: '🌱',
+      loc.allergyScallops: '🐚',
+      loc.allergySnails: '🐌',
+      loc.allergyGluten: '🍞',
+      loc.allergyLactose: '🥛',
+      loc.allergyHoney: '🍯',
+      loc.allergyStrawberry: '🍓',
+      loc.allergyKiwi: '🥝',
+      loc.allergyTomato: '🍅',
+      loc.allergyMushroom: '🍄',
+      loc.allergyAlcohol: '🍺',
+      loc.allergyPreservatives: '🧪',
+      loc.allergyFoodColoring: '🎨',
+      loc.allergyMustard: '🌭',
+      loc.allergyCelery: '🥬',
+      loc.allergyAlmond: '🌰',
+      loc.allergyCashew: '🥜',
+      loc.allergyWalnut: '🌰',
+      loc.allergyChestnut: '🌰',
+      loc.allergyOats: '🥣',
+      loc.allergyCorn: '🌽',
+      loc.allergyBanana: '🍌',
+      loc.allergyPineapple: '🍍',
+      loc.allergyGarlic: '🧄',
+      loc.allergyOnion: '🧅',
+      loc.allergyChocolate: '🍫',
+      loc.allergyCoffee: '☕',
+    };
+    _commonAllergies = _allergyEmojis.keys.toList();
+    _normalizedToDisplay = {};
+    for (final key in _commonAllergies) {
+      _normalizedToDisplay[removeDiacritics(key).toLowerCase()] = key;
+    }
+  }
 
   String _getEmoji(String allergy) {
     // Try to find exact match
     if (_allergyEmojis.containsKey(allergy)) {
       return _allergyEmojis[allergy]!;
     }
-    // Try to find case-insensitive match
+    // Try to find case-insensitive match using cached map
     final normalized = removeDiacritics(allergy).toLowerCase();
-    for (final entry in _allergyEmojis.entries) {
-      if (removeDiacritics(entry.key).toLowerCase() == normalized) {
-        return entry.value;
-      }
+    final displayKey = _normalizedToDisplay[normalized];
+    if (displayKey != null) {
+      return _allergyEmojis[displayKey]!;
     }
     return '🍽️'; // Default emoji
   }
@@ -96,10 +107,7 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
     );
 
     if (!exists) {
-      final match = _commonAllergies.firstWhere(
-        (e) => removeDiacritics(e).toLowerCase() == normalizedText,
-        orElse: () => text.trim(),
-      );
+      final match = _normalizedToDisplay[normalizedText] ?? text.trim();
 
       final newList = List<String>.from(widget.selectedAllergies)..add(match);
       widget.onAllergiesChanged(newList);
@@ -151,7 +159,7 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Dị Ứng Thực Phẩm',
+                  AppLocalizations.of(context)!.foodAllergiesTitle,
                   style: AppStyles.heading2.copyWith(
                     fontSize: 20,
                     color: AppColors.black,
@@ -162,7 +170,7 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Nhập các món ăn hoặc thực phẩm gây dị ứng nếu có. Điều này giúp đảm bảo an toàn cho bạn.',
+            AppLocalizations.of(context)!.foodAllergiesSubtitle,
             style: AppStyles.bodySmall,
           ),
           const SizedBox(height: 16),
@@ -184,12 +192,9 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                         final normalizedInput = removeDiacritics(
                           textEditingValue.text,
                         ).toLowerCase();
-                        return _commonAllergies.where((String option) {
-                          final normalizedOption = removeDiacritics(
-                            option,
-                          ).toLowerCase();
-                          return normalizedOption.contains(normalizedInput);
-                        });
+                        return _normalizedToDisplay.entries
+                            .where((entry) => entry.key.contains(normalizedInput))
+                            .map((entry) => entry.value);
                       },
                       onSelected: (String selection) {
                         _allergyCtrl.text = selection;
@@ -214,42 +219,44 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                                   constraints: const BoxConstraints(
                                     maxHeight: 200,
                                   ),
-                                  child: ListView.separated(
-                                    padding: EdgeInsets.zero,
-                                    shrinkWrap: true,
-                                    itemCount: options.length,
-                                    separatorBuilder: (context, index) =>
-                                        const Divider(
-                                          height: 1,
-                                          color: AppColors.grey200,
-                                        ),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                          final String option = options
-                                              .elementAt(index);
-                                          return InkWell(
-                                            onTap: () => onSelected(option),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    vertical: 12,
-                                                    horizontal: 16,
-                                                  ),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    _getEmoji(option),
-                                                    style: const TextStyle(
-                                                      fontSize: 18,
+                                  child: RepaintBoundary(
+                                    child: ListView.separated(
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      itemCount: options.length,
+                                      separatorBuilder: (context, index) =>
+                                          const Divider(
+                                            height: 1,
+                                            color: AppColors.grey200,
+                                          ),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                            final String option = options
+                                                .elementAt(index);
+                                            return InkWell(
+                                              onTap: () => onSelected(option),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 12,
+                                                      horizontal: 16,
                                                     ),
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  Text(option),
-                                                ],
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      _getEmoji(option),
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Text(option),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
+                                            );
+                                          },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -273,14 +280,15 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                               child: TextField(
                                 controller: textEditingController,
                                 focusNode: focusNode,
-                                decoration: const InputDecoration(
-                                  hintText: 'Ví dụ: Hải sản...',
+                                decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!
+                                      .foodAllergiesHint,
                                   border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 16,
                                     vertical: 14,
                                   ),
-                                  prefixIcon: Icon(
+                                  prefixIcon: const Icon(
                                     Icons.emoji_food_beverage_outlined,
                                     color: Colors.orange,
                                   ),
@@ -313,14 +321,14 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                   child: InkWell(
                     onTap: () => _addAllergy(_allergyCtrl.text),
                     borderRadius: BorderRadius.circular(12),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 14,
                       ),
                       child: Text(
-                        '+ Thêm',
-                        style: TextStyle(
+                        '+ ${AppLocalizations.of(context)!.add}',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -345,7 +353,7 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Chưa có dị ứng nào',
+                    AppLocalizations.of(context)!.noAllergiesAdded,
                     style: TextStyle(color: Colors.grey[400]),
                   ),
                 ],

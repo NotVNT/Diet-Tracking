@@ -81,41 +81,42 @@ class _AgeSelectorState extends State<AgeSelector> {
                           builder: (context, index) {
                             final age = 12 + index;
                             final isCurrent = age == currentAge;
-                            return AnimatedOpacity(
-                              duration: const Duration(milliseconds: 150),
-                              opacity: isCurrent ? 1 : 0.35,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 10,
-                                ),
-                                decoration: isCurrent
-                                    ? BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(14),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.08,
+                            return RepaintBoundary(
+                              child: AnimatedOpacity(
+                                duration: const Duration(milliseconds: 150),
+                                opacity: isCurrent ? 1 : 0.35,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 10,
+                                  ),
+                                  decoration: isCurrent
+                                      ? BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(14),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withValues(
+                                                alpha: 0.08,
+                                              ),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
                                             ),
-                                            blurRadius: 18,
-                                            offset: const Offset(0, 6),
-                                          ),
-                                        ],
-                                      )
-                                    : null,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '$age',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.w800,
-                                        color: _accent,
-                                      ),
+                                          ],
+                                        )
+                                      : null,
+                                  child: Text(
+                                    '$age',
+                                    style: GoogleFonts.inter(
+                                      fontSize: isCurrent ? 36 : 28,
+                                      fontWeight: isCurrent
+                                          ? FontWeight.w800
+                                          : FontWeight.w500,
+                                      color: isCurrent
+                                          ? _accent
+                                          : _accent.withValues(alpha: 0.4),
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             );

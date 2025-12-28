@@ -24,6 +24,13 @@ class _GenderSelectorState extends State<GenderSelector> {
   Color get _highlight => const Color(0xFFF2C94C);
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(const AssetImage('assets/gender/male.png'), context);
+    precacheImage(const AssetImage('assets/gender/female.png'), context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _bg,
@@ -198,111 +205,114 @@ class _GenderOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedScale(
-        duration: const Duration(milliseconds: 200),
-        scale: selected ? 1.02 : 1.0,
-        child: Container(
-          padding: EdgeInsets.all(selected ? 3 : 0),
-          decoration: BoxDecoration(
-            gradient: selected
-                ? const LinearGradient(
-                    colors: [Color(0xFFFFF1B5), Color(0xFFF7D27D)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                : null,
-            borderRadius: BorderRadius.circular(22),
-          ),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 220),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+    return RepaintBoundary(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedScale(
+          duration: const Duration(milliseconds: 200),
+          scale: selected ? 1.02 : 1.0,
+          child: Container(
+            padding: EdgeInsets.all(selected ? 3 : 0),
             decoration: BoxDecoration(
-              color: selected ? highlight.withValues(alpha: 0.55) : cardColor,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: selected ? 0.12 : 0.06),
-                  blurRadius: selected ? 18 : 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
+              gradient: selected
+                  ? const LinearGradient(
+                      colors: [Color(0xFFFFF1B5), Color(0xFFF7D27D)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : null,
+              borderRadius: BorderRadius.circular(22),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.inter(
-                      color: const Color(0xFF2D3A4A),
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+              decoration: BoxDecoration(
+                color: selected ? highlight.withValues(alpha: 0.55) : cardColor,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: selected ? 0.12 : 0.06),
+                    blurRadius: selected ? 18 : 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: GoogleFonts.inter(
+                        color: const Color(0xFF2D3A4A),
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
-                ),
-                Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, Color(0xFFF4F6F9)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 14,
-                            offset: const Offset(0, 6),
+                  Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Colors.white, Color(0xFFF4F6F9)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                        ],
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 14,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Image.asset(
+                          asset,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.contain,
+                          gaplessPlayback: true,
+                        ),
                       ),
-                      child: Image.asset(
-                        asset,
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    Positioned(
-                      right: -4,
-                      top: -6,
-                      child: AnimatedScale(
-                        duration: const Duration(milliseconds: 200),
-                        scale: selected ? 1.0 : 0.7,
-                        child: AnimatedOpacity(
+                      Positioned(
+                        right: -4,
+                        top: -6,
+                        child: AnimatedScale(
                           duration: const Duration(milliseconds: 200),
-                          opacity: selected ? 1 : 0,
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: checkColor,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.15),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 16,
+                          scale: selected ? 1.0 : 0.7,
+                          child: AnimatedOpacity(
+                            duration: const Duration(milliseconds: 200),
+                            opacity: selected ? 1 : 0,
+                            child: Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: checkColor,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.15),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 16,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

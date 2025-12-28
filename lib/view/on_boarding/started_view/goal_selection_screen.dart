@@ -157,141 +157,143 @@ class _GoalSelectionState extends State<GoalSelection> {
     final bool hasSubOptions =
         item.subOptions != null && item.subOptions!.isNotEmpty;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: selected ? _primary.withValues(alpha: 0.05) : Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 14,
-            offset: const Offset(0, 6),
+    return RepaintBoundary(
+      child: Container(
+        decoration: BoxDecoration(
+          color: selected ? _primary.withValues(alpha: 0.05) : Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
+            ),
+          ],
+          border: Border.all(
+            color: selected ? _primary : Colors.transparent,
+            width: 2,
           ),
-        ],
-        border: Border.all(
-          color: selected ? _primary : Colors.transparent,
-          width: 2,
         ),
-      ),
-      child: Column(
-        children: [
-          InkWell(
-            borderRadius: BorderRadius.vertical(
-              top: const Radius.circular(18),
-              bottom: (selected && hasSubOptions)
-                  ? Radius.zero
-                  : const Radius.circular(18),
-            ),
-            onTap: () => setState(() {
-              if (_selectedIndex != index) {
-                _selectedIndex = index;
-                _selectedSubIndex = null;
-              } else {
-                _selectedIndex = null;
-                _selectedSubIndex = null;
-              }
-            }),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Row(
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      item.icon,
-                      style: const TextStyle(fontSize: 22),
-                    ),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      _getLocalizedTitle(context, item.title),
-                      style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: _accent,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    selected ? Icons.check_circle : Icons.circle_outlined,
-                    color: selected ? _primary : _muted,
-                  ),
-                ],
+        child: Column(
+          children: [
+            InkWell(
+              borderRadius: BorderRadius.vertical(
+                top: const Radius.circular(18),
+                bottom: (selected && hasSubOptions)
+                    ? Radius.zero
+                    : const Radius.circular(18),
               ),
-            ),
-          ),
-          if (selected && hasSubOptions)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: _bg,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: List.generate(item.subOptions!.length, (subIndex) {
-                    final subOption = item.subOptions![subIndex];
-                    final isSubSelected = _selectedSubIndex == subIndex;
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 4),
+              onTap: () => setState(() {
+                if (_selectedIndex != index) {
+                  _selectedIndex = index;
+                  _selectedSubIndex = null;
+                } else {
+                  _selectedIndex = null;
+                  _selectedSubIndex = null;
+                }
+              }),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
-                        color: isSubSelected
-                            ? Colors.white
-                            : Colors.transparent,
+                        color: Colors.black.withValues(alpha: 0.04),
                         borderRadius: BorderRadius.circular(12),
-                        border: isSubSelected
-                            ? Border.all(color: _primary.withValues(alpha: 0.2))
-                            : null,
                       ),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            _selectedSubIndex = subIndex;
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                subOption.icon,
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  _getLocalizedTitle(context, subOption.title),
-                                  style: GoogleFonts.inter(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: isSubSelected ? _primary : _muted,
-                                  ),
-                                ),
-                              ),
-                              if (isSubSelected)
-                                Icon(Icons.check, color: _primary, size: 20),
-                            ],
-                          ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        item.icon,
+                        style: const TextStyle(fontSize: 22),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        _getLocalizedTitle(context, item.title),
+                        style: GoogleFonts.inter(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: _accent,
                         ),
                       ),
-                    );
-                  }),
+                    ),
+                    Icon(
+                      selected ? Icons.check_circle : Icons.circle_outlined,
+                      color: selected ? _primary : _muted,
+                    ),
+                  ],
                 ),
               ),
             ),
-        ],
+            if (selected && hasSubOptions)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: _bg,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: List.generate(item.subOptions!.length, (subIndex) {
+                      final subOption = item.subOptions![subIndex];
+                      final isSubSelected = _selectedSubIndex == subIndex;
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 4),
+                        decoration: BoxDecoration(
+                          color: isSubSelected
+                              ? Colors.white
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                          border: isSubSelected
+                              ? Border.all(color: _primary.withValues(alpha: 0.2))
+                              : null,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _selectedSubIndex = subIndex;
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  subOption.icon,
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    _getLocalizedTitle(context, subOption.title),
+                                    style: GoogleFonts.inter(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: isSubSelected ? _primary : _muted,
+                                    ),
+                                  ),
+                                ),
+                                if (isSubSelected)
+                                  Icon(Icons.check, color: _primary, size: 20),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

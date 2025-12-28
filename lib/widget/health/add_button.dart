@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import '../../common/app_colors.dart';
 import '../../common/app_styles.dart';
 
 class AddButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String label;
-  const AddButton({super.key, required this.onPressed, this.label = 'Thêm'});
+  final String? label;
+  const AddButton({super.key, required this.onPressed, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,10 @@ class AddButton extends StatelessWidget {
           children: [
             const Icon(Icons.add, color: Colors.white, size: 18),
             const SizedBox(width: 6),
-            Text(label, style: AppStyles.buttonText.copyWith(fontSize: 14)),
+            Text(
+              label ?? AppLocalizations.of(context)!.add,
+              style: AppStyles.buttonText.copyWith(fontSize: 14),
+            ),
           ],
         ),
       ),
