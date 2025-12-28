@@ -548,5 +548,136 @@
   "allergyGarlic": "Tỏi",
   "allergyOnion": "Hành",
   "allergyChocolate": "Sô cô la",
-  "allergyCoffee": "Cà phê"
+  "allergyCoffee": "Cà phê",
+  "howActiveAreYou": "Bạn hoạt động tích cực như thế nào mỗi ngày?",
+  "howLongToReachGoal": "Bạn muốn đạt mục tiêu trong bao lâu?",
+  "loseWeightAmount": "Giảm {amount} kg",
+  "@loseWeightAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "gainWeightAmount": "Tăng {amount} kg",
+  "@gainWeightAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "daysSuffix": "{count} ngày",
+  "@daysSuffix": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unhealthyPlanWarning": "Chế độ này có thể không phù hợp với sức khỏe của bạn.",
+  "back": "Quay lại",
+  "weeksApprox": "≈ {weeks} tuần",
+  "@weeksApprox": {
+    "placeholders": {
+      "weeks": {
+        "type": "String"
+      }
+    }
+  },
+  "nutritionInfo": "Thông tin dinh dưỡng",
+  "bmr": "BMR",
+  "tdee": "TDEE",
+  "calPerDay": "{cal} cal/ngày",
+  "@calPerDay": {
+    "placeholders": {
+      "cal": {
+        "type": "String"
+      }
+    }
+  },
+  "targetCalories": "Calories mục tiêu",
+  "dailyAdjustment": "Điều chỉnh mỗi ngày",
+  "calSuffix": "{cal} cal",
+  "@calSuffix": {
+    "placeholders": {
+      "cal": {
+        "type": "String"
+      }
+    }
+  },
+  "safeRange": "Khoảng an toàn",
+  "warningTitle": "Cảnh báo",
+  "recommendationDays": "Khuyến nghị: {days} ngày",
+  "@recommendationDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "yourGoal": "Mục tiêu của bạn",
+  "currentWeight": "Cân nặng hiện tại",
+  "targetWeight": "Cân nặng mục tiêu",
+  "difference": "Chênh lệch",
+  "time": "Thời gian",
+  "daysWeeks": "{days} ngày (≈ {weeks} tuần)",
+  "@daysWeeks": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "weeks": {
+        "type": "String"
+      }
+    }
+  },
+  "warning": "Cảnh báo",
+  "recommendation": "Khuyến nghị",
+  "recommendationDaysWeeks": "Khuyến nghị: {days} ngày (≈ {weeks} tuần)",
+  "@recommendationDaysWeeks": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "weeks": {
+        "type": "String"
+      }
+    }
+  },
+  "planSummary": "Tổng kết kế hoạch",
+  "confirm": "Xác nhận",
+  "understandRisk": "Tôi hiểu rủi ro",
+  "planSavedWarning": "Kế hoạch đã được lưu. Vui lòng tham khảo ý kiến chuyên gia.",
+  "errorLoadingData": "Lỗi khi tải dữ liệu: {error}",
+  "@errorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noCalculationData": "Không tìm thấy dữ liệu tính toán.",
+
+  "interfaceConfirmationReadyToStartTitle": "Bạn đã sẵn sàng bắt đầu!",
+  "interfaceConfirmationKeepHabitsMessage": "Hãy duy trì thói quen nhỏ mỗi ngày — theo dõi bữa ăn và cân nặng để thấy tiến bộ rõ ràng.",
+  "interfaceConfirmationUpdateGoalsAnytimeMessage": "Bạn có thể cập nhật mục tiêu bất cứ lúc nào trong hồ sơ.",
+
+  "interfaceConfirmationGoalMaintain": "Mục tiêu: duy trì cân nặng hiện tại",
+  "interfaceConfirmationGoalLoseKg": "Mục tiêu: giảm {kg} kg (từng bước một)",
+  "@interfaceConfirmationGoalLoseKg": {
+    "placeholders": {
+      "kg": {
+        "type": "int"
+      }
+    }
+  },
+  "interfaceConfirmationGoalGainKg": "Mục tiêu: tăng {kg} kg (từng bước một)",
+  "@interfaceConfirmationGoalGainKg": {
+    "placeholders": {
+      "kg": {
+        "type": "int"
+      }
+    }
+  }
 }

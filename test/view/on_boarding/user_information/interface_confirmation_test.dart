@@ -37,7 +37,7 @@ void main() {
 
       // From app_en.arb
       expect(find.text('You can do it!'), findsOneWidget);
-      expect(find.textContaining('Mục tiêu:'), findsOneWidget);
+      expect(find.textContaining('Goal:'), findsOneWidget);
     });
 
     testWidgets('Tap Đăng Ký Tài Khoản điều hướng SignupScreen', (

@@ -1480,6 +1480,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allergyCoffee => 'Coffee';
 
   @override
+  String get howActiveAreYou => 'How active are you each day?';
+
+  @override
   String get howLongToReachGoal => 'How long do you want to reach your goal?';
 
   @override
@@ -1493,12 +1496,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String daysCount(int count) {
+  String daysSuffix(int count) {
     return '$count days';
   }
 
   @override
-  String approxWeeks(String weeks) {
+  String get unhealthyPlanWarning => 'This plan may not be suitable for your health.';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String weeksApprox(String weeks) {
     return '≈ $weeks weeks';
   }
 
@@ -1509,8 +1518,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tdee => 'TDEE';
 
   @override
-  String caloriesPerDay(String amount) {
-    return '$amount cal/day';
+  String calPerDay(String cal) {
+    return '$cal cal/day';
   }
 
   @override
@@ -1520,40 +1529,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyAdjustment => 'Daily Adjustment';
 
   @override
-  String caloriesUnit(String amount) {
-    return '$amount cal';
+  String calSuffix(String cal) {
+    return '$cal cal';
   }
 
   @override
   String get safeRange => 'Safe Range';
 
   @override
-  String get warning => 'Warning';
+  String get warningTitle => 'Warning';
 
   @override
   String recommendationDays(int days) {
     return 'Recommendation: $days days';
   }
-
-  @override
-  String get unhealthyDietWarning => 'This diet plan may not be suitable for your health.';
-
-  @override
-  String get back => 'Back';
-
-  @override
-  String get missingUserInfo => 'Missing user information. Please go back and fill in all details.';
-
-  @override
-  String errorLoadingData(String error) {
-    return 'Error loading data: $error';
-  }
-
-  @override
-  String get noCalculationData => 'Calculation data not found.';
-
-  @override
-  String get planSummary => 'Plan Summary';
 
   @override
   String get yourGoal => 'Your Goal';
@@ -1568,27 +1557,63 @@ class AppLocalizationsEn extends AppLocalizations {
   String get difference => 'Difference';
 
   @override
-  String get duration => 'Duration';
+  String get time => 'Time';
 
   @override
-  String durationFormat(int days, String weeks) {
+  String daysWeeks(int days, String weeks) {
     return '$days days (≈ $weeks weeks)';
   }
+
+  @override
+  String get warning => 'Warning';
 
   @override
   String get recommendation => 'Recommendation';
 
   @override
-  String recommendationFormat(int days, String weeks) {
+  String recommendationDaysWeeks(int days, String weeks) {
     return 'Recommendation: $days days (≈ $weeks weeks)';
   }
+
+  @override
+  String get planSummary => 'Plan Summary';
 
   @override
   String get confirm => 'Confirm';
 
   @override
-  String get understandRisks => 'I understand the risks';
+  String get understandRisk => 'I understand the risk';
 
   @override
-  String get planSavedMessage => 'Plan saved. Please consult an expert.';
+  String get planSavedWarning => 'Plan saved. Please consult a specialist.';
+
+  @override
+  String errorLoadingData(String error) {
+    return 'Error loading data: $error';
+  }
+
+  @override
+  String get noCalculationData => 'No calculation data found.';
+
+  @override
+  String get interfaceConfirmationReadyToStartTitle => 'You\'re ready to start!';
+
+  @override
+  String get interfaceConfirmationKeepHabitsMessage => 'Keep small habits each day — track meals and weight to see clear progress.';
+
+  @override
+  String get interfaceConfirmationUpdateGoalsAnytimeMessage => 'You can update your goal anytime in your profile.';
+
+  @override
+  String get interfaceConfirmationGoalMaintain => 'Goal: maintain current weight';
+
+  @override
+  String interfaceConfirmationGoalLoseKg(int kg) {
+    return 'Goal: lose $kg kg (step by step)';
+  }
+
+  @override
+  String interfaceConfirmationGoalGainKg(int kg) {
+    return 'Goal: gain $kg kg (step by step)';
+  }
 }

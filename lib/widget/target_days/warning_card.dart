@@ -1,3 +1,4 @@
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -34,7 +35,7 @@ class WarningCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Cảnh báo',
+                  AppLocalizations.of(context)!.warningTitle,
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -51,7 +52,8 @@ class WarningCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Khuyến nghị: $recommendedDays ngày',
+                  AppLocalizations.of(context)!
+                      .recommendationDays(recommendedDays),
                   style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,

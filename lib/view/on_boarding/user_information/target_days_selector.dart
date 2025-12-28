@@ -1,3 +1,4 @@
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -73,7 +74,7 @@ class _ErrorView extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Quay lại'),
+              child: Text(AppLocalizations.of(context)!.back),
             ),
           ],
         ),
@@ -111,7 +112,7 @@ class _MainContent extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'Bạn muốn đạt mục tiêu trong bao lâu?',
+            AppLocalizations.of(context)!.howLongToReachGoal,
             style: GoogleFonts.inter(
               fontSize: 24,
               fontWeight: FontWeight.w800,
@@ -121,8 +122,10 @@ class _MainContent extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             userInfo.isLosingWeight
-                ? 'Giảm ${userInfo.weightDifference.toStringAsFixed(1)} kg'
-                : 'Tăng ${userInfo.weightDifference.toStringAsFixed(1)} kg',
+                ? AppLocalizations.of(context)!.loseWeightAmount(
+                    userInfo.weightDifference.toStringAsFixed(1))
+                : AppLocalizations.of(context)!.gainWeightAmount(
+                    userInfo.weightDifference.toStringAsFixed(1)),
             style: GoogleFonts.inter(
               fontSize: 16,
               color: const Color(0xFF6B7280),
@@ -150,7 +153,7 @@ class _MainContent extends StatelessWidget {
                     if (!calculation.isHealthy)
                       WarningCard(
                         warningMessage: calculation.warningMessage ??
-                            'Chế độ này có thể không phù hợp với sức khỏe của bạn.',
+                            AppLocalizations.of(context)!.unhealthyPlanWarning,
                         recommendedDays: vm.recommendedDays ?? 0,
                       ),
                   ],
@@ -200,7 +203,7 @@ class _QuickOptions extends StatelessWidget {
               ),
             ),
             child: Text(
-              '$days ngày',
+              AppLocalizations.of(context)!.daysSuffix(days),
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -264,7 +267,7 @@ class _BottomButtons extends StatelessWidget {
               ),
               onPressed: () => onNext(),
               child: Text(
-                'Tiếp theo',
+                AppLocalizations.of(context)!.next,
                 style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 16,

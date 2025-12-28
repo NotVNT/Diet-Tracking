@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../model/nutrition_calculation_model.dart';
-import '../../../services/nutrition_calculator_service.dart';
 import '../../../database/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'interface_confirmation.dart';
+import '../../../widget/nutrition_summary/goal_card.dart';
+import '../../../widget/nutrition_summary/nutrition_card.dart';
+import '../../../widget/nutrition_summary/warning_card.dart';
+import '../../../widget/nutrition_summary/recommendation_card.dart';
 
 /// Màn hình tổng kết thông tin dinh dưỡng và cảnh báo
 class NutritionSummary extends StatefulWidget {
@@ -39,7 +43,7 @@ class _NutritionSummaryState extends State<NutritionSummary> {
 
       if (targetDays == null || calculationJson == null) {
         setState(() {
-          _errorMessage = 'Không tìm thấy dữ liệu tính toán.';
+          _errorMessage = AppLocalizations.of(context)!.noCalculationData;
           _isLoading = false;
         });
         return;
@@ -62,7 +66,7 @@ class _NutritionSummaryState extends State<NutritionSummary> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Lỗi khi tải dữ liệu: $e';
+        _errorMessage = AppLocalizations.of(context)!.errorLoadingData(e.toString());
         _isLoading = false;
       });
     }
@@ -99,7 +103,7 @@ class _NutritionSummaryState extends State<NutritionSummary> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Quay lại'),
+              child: Text(AppLocalizations.of(context)!.back),
             ),
           ],
         ),
@@ -117,15 +121,15 @@ class _NutritionSummaryState extends State<NutritionSummary> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildGoalCard(),
+                GoalCard(userInfo: _userInfo!, targetDays: _targetDays!),
                 const SizedBox(height: 16),
-                _buildNutritionCard(),
+                NutritionCard(calculation: _calculation!),
                 const SizedBox(height: 16),
                 if (!_calculation!.isHealthy) ...[
-                  _buildWarningCard(),
+                  WarningCard(calculation: _calculation!),
                   const SizedBox(height: 16),
                 ],
-                _buildRecommendationCard(),
+                RecommendationCard(userInfo: _userInfo!),
               ],
             ),
           ),
@@ -166,253 +170,12 @@ class _NutritionSummaryState extends State<NutritionSummary> {
           const SizedBox(width: 16),
           Expanded(
             child: Text(
-              'Tổng kết kế hoạch',
+              AppLocalizations.of(context)!.planSummary,
               style: GoogleFonts.inter(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFF111827),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGoalCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.05),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                _userInfo!.isLosingWeight
-                    ? Icons.trending_down
-                    : Icons.trending_up,
-                color: const Color(0xFF1F2A37),
-                size: 28,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'Mục tiêu của bạn',
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF111827),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildInfoRow(
-            'Cân nặng hiện tại',
-            '${_userInfo!.currentWeightKg.toStringAsFixed(1)} kg',
-          ),
-          _buildInfoRow(
-            'Cân nặng mục tiêu',
-            '${_userInfo!.targetWeightKg.toStringAsFixed(1)} kg',
-          ),
-          _buildInfoRow(
-            'Chênh lệch',
-            '${_userInfo!.weightDifference.toStringAsFixed(1)} kg',
-            isHighlight: true,
-          ),
-          _buildInfoRow(
-            'Thời gian',
-            '$_targetDays ngày (≈ ${(_targetDays! / 7).toStringAsFixed(1)} tuần)',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNutritionCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.05),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.restaurant_menu,
-                color: Color(0xFF1F2A37),
-                size: 28,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'Thông tin dinh dưỡng',
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF111827),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildInfoRow(
-            'BMR',
-            '${_calculation!.bmr.toStringAsFixed(0)} cal/ngày',
-          ),
-          _buildInfoRow(
-            'TDEE',
-            '${_calculation!.tdee.toStringAsFixed(0)} cal/ngày',
-          ),
-          const Divider(height: 24),
-          _buildInfoRow(
-            'Calories mục tiêu',
-            '${_calculation!.targetCalories.toStringAsFixed(0)} cal/ngày',
-            isHighlight: true,
-          ),
-          _buildInfoRow(
-            'Khoảng an toàn',
-            '${_calculation!.caloriesMin.toStringAsFixed(0)} - ${_calculation!.caloriesMax.toStringAsFixed(0)} cal',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWarningCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFEF2F2),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFEF4444), width: 2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.warning_amber_rounded,
-                color: Color(0xFFEF4444),
-                size: 28,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '⚠️ Cảnh báo',
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFFEF4444),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            _calculation!.warningMessage ??
-                'Chế độ này có thể không phù hợp với sức khỏe của bạn.',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: const Color(0xFF991B1B),
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecommendationCard() {
-    final recommendedDays = NutritionCalculatorService.calculateRecommendedDays(
-      userInfo: _userInfo!,
-    );
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFECFDF5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF10B981), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.lightbulb_outline,
-                color: Color(0xFF10B981),
-                size: 28,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'Khuyến nghị',
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF065F46),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Khuyến nghị: $recommendedDays ngày (≈ ${(recommendedDays / 7).toStringAsFixed(1)} tuần)',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF065F46),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value, {bool isHighlight = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                color: const Color(0xFF6B7280),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Text(
-            value,
-            style: GoogleFonts.inter(
-              fontSize: isHighlight ? 16 : 14,
-              fontWeight: isHighlight ? FontWeight.bold : FontWeight.w600,
-              color: isHighlight
-                  ? const Color(0xFF1F2A37)
-                  : const Color(0xFF374151),
             ),
           ),
         ],
@@ -484,11 +247,11 @@ class _NutritionSummaryState extends State<NutritionSummary> {
                   if (!_calculation!.isHealthy) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
-                            'Kế hoạch đã được lưu. Vui lòng tham khảo ý kiến chuyên gia.',
+                            AppLocalizations.of(context)!.planSavedWarning,
                           ),
-                          backgroundColor: Color(0xFFEF4444),
+                          backgroundColor: const Color(0xFFEF4444),
                         ),
                       );
                     }
@@ -507,7 +270,9 @@ class _NutritionSummaryState extends State<NutritionSummary> {
                   }
                 },
                 child: Text(
-                  _calculation!.isHealthy ? 'Xác nhận' : 'Tôi hiểu rủi ro',
+                  _calculation!.isHealthy
+                      ? AppLocalizations.of(context)!.confirm
+                      : AppLocalizations.of(context)!.understandRisk,
                   style: GoogleFonts.inter(
                     color: Colors.white,
                     fontSize: 16,

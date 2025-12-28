@@ -1,3 +1,4 @@
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -35,7 +36,7 @@ class DaysSliderCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '$selectedDays ngày',
+            AppLocalizations.of(context)!.daysSuffix(selectedDays),
             style: GoogleFonts.inter(
               fontSize: 36,
               fontWeight: FontWeight.bold,
@@ -44,7 +45,8 @@ class DaysSliderCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '≈ ${(selectedDays / 7).toStringAsFixed(1)} tuần',
+            AppLocalizations.of(context)!
+                .weeksApprox((selectedDays / 7).toStringAsFixed(1)),
             style: GoogleFonts.inter(
               fontSize: 14,
               color: const Color(0xFF6B7280),

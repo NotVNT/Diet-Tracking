@@ -1480,6 +1480,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get allergyCoffee => 'Cà phê';
 
   @override
+  String get howActiveAreYou => 'Bạn hoạt động tích cực như thế nào mỗi ngày?';
+
+  @override
   String get howLongToReachGoal => 'Bạn muốn đạt mục tiêu trong bao lâu?';
 
   @override
@@ -1493,12 +1496,18 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String daysCount(int count) {
+  String daysSuffix(int count) {
     return '$count ngày';
   }
 
   @override
-  String approxWeeks(String weeks) {
+  String get unhealthyPlanWarning => 'Chế độ này có thể không phù hợp với sức khỏe của bạn.';
+
+  @override
+  String get back => 'Quay lại';
+
+  @override
+  String weeksApprox(String weeks) {
     return '≈ $weeks tuần';
   }
 
@@ -1509,8 +1518,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tdee => 'TDEE';
 
   @override
-  String caloriesPerDay(String amount) {
-    return '$amount cal/ngày';
+  String calPerDay(String cal) {
+    return '$cal cal/ngày';
   }
 
   @override
@@ -1520,40 +1529,20 @@ class AppLocalizationsVi extends AppLocalizations {
   String get dailyAdjustment => 'Điều chỉnh mỗi ngày';
 
   @override
-  String caloriesUnit(String amount) {
-    return '$amount cal';
+  String calSuffix(String cal) {
+    return '$cal cal';
   }
 
   @override
   String get safeRange => 'Khoảng an toàn';
 
   @override
-  String get warning => 'Cảnh báo';
+  String get warningTitle => 'Cảnh báo';
 
   @override
   String recommendationDays(int days) {
     return 'Khuyến nghị: $days ngày';
   }
-
-  @override
-  String get unhealthyDietWarning => 'Chế độ này có thể không phù hợp với sức khỏe của bạn.';
-
-  @override
-  String get back => 'Quay lại';
-
-  @override
-  String get missingUserInfo => 'Thiếu thông tin người dùng. Vui lòng quay lại và nhập đầy đủ.';
-
-  @override
-  String errorLoadingData(String error) {
-    return 'Lỗi khi tải dữ liệu: $error';
-  }
-
-  @override
-  String get noCalculationData => 'Không tìm thấy dữ liệu tính toán.';
-
-  @override
-  String get planSummary => 'Tổng kết kế hoạch';
 
   @override
   String get yourGoal => 'Mục tiêu của bạn';
@@ -1568,27 +1557,63 @@ class AppLocalizationsVi extends AppLocalizations {
   String get difference => 'Chênh lệch';
 
   @override
-  String get duration => 'Thời gian';
+  String get time => 'Thời gian';
 
   @override
-  String durationFormat(int days, String weeks) {
+  String daysWeeks(int days, String weeks) {
     return '$days ngày (≈ $weeks tuần)';
   }
+
+  @override
+  String get warning => 'Cảnh báo';
 
   @override
   String get recommendation => 'Khuyến nghị';
 
   @override
-  String recommendationFormat(int days, String weeks) {
+  String recommendationDaysWeeks(int days, String weeks) {
     return 'Khuyến nghị: $days ngày (≈ $weeks tuần)';
   }
+
+  @override
+  String get planSummary => 'Tổng kết kế hoạch';
 
   @override
   String get confirm => 'Xác nhận';
 
   @override
-  String get understandRisks => 'Tôi hiểu rủi ro';
+  String get understandRisk => 'Tôi hiểu rủi ro';
 
   @override
-  String get planSavedMessage => 'Kế hoạch đã được lưu. Vui lòng tham khảo ý kiến chuyên gia.';
+  String get planSavedWarning => 'Kế hoạch đã được lưu. Vui lòng tham khảo ý kiến chuyên gia.';
+
+  @override
+  String errorLoadingData(String error) {
+    return 'Lỗi khi tải dữ liệu: $error';
+  }
+
+  @override
+  String get noCalculationData => 'Không tìm thấy dữ liệu tính toán.';
+
+  @override
+  String get interfaceConfirmationReadyToStartTitle => 'Bạn đã sẵn sàng bắt đầu!';
+
+  @override
+  String get interfaceConfirmationKeepHabitsMessage => 'Hãy duy trì thói quen nhỏ mỗi ngày — theo dõi bữa ăn và cân nặng để thấy tiến bộ rõ ràng.';
+
+  @override
+  String get interfaceConfirmationUpdateGoalsAnytimeMessage => 'Bạn có thể cập nhật mục tiêu bất cứ lúc nào trong hồ sơ.';
+
+  @override
+  String get interfaceConfirmationGoalMaintain => 'Mục tiêu: duy trì cân nặng hiện tại';
+
+  @override
+  String interfaceConfirmationGoalLoseKg(int kg) {
+    return 'Mục tiêu: giảm $kg kg (từng bước một)';
+  }
+
+  @override
+  String interfaceConfirmationGoalGainKg(int kg) {
+    return 'Mục tiêu: tăng $kg kg (từng bước một)';
+  }
 }

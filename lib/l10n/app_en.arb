@@ -548,5 +548,136 @@
   "allergyGarlic": "Garlic",
   "allergyOnion": "Onion",
   "allergyChocolate": "Chocolate",
-  "allergyCoffee": "Coffee"
+  "allergyCoffee": "Coffee",
+  "howActiveAreYou": "How active are you each day?",
+  "howLongToReachGoal": "How long do you want to reach your goal?",
+  "loseWeightAmount": "Lose {amount} kg",
+  "@loseWeightAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "gainWeightAmount": "Gain {amount} kg",
+  "@gainWeightAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "daysSuffix": "{count} days",
+  "@daysSuffix": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unhealthyPlanWarning": "This plan may not be suitable for your health.",
+  "back": "Back",
+  "weeksApprox": "≈ {weeks} weeks",
+  "@weeksApprox": {
+    "placeholders": {
+      "weeks": {
+        "type": "String"
+      }
+    }
+  },
+  "nutritionInfo": "Nutrition Information",
+  "bmr": "BMR",
+  "tdee": "TDEE",
+  "calPerDay": "{cal} cal/day",
+  "@calPerDay": {
+    "placeholders": {
+      "cal": {
+        "type": "String"
+      }
+    }
+  },
+  "targetCalories": "Target Calories",
+  "dailyAdjustment": "Daily Adjustment",
+  "calSuffix": "{cal} cal",
+  "@calSuffix": {
+    "placeholders": {
+      "cal": {
+        "type": "String"
+      }
+    }
+  },
+  "safeRange": "Safe Range",
+  "warningTitle": "Warning",
+  "recommendationDays": "Recommendation: {days} days",
+  "@recommendationDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "yourGoal": "Your Goal",
+  "currentWeight": "Current Weight",
+  "targetWeight": "Target Weight",
+  "difference": "Difference",
+  "time": "Time",
+  "daysWeeks": "{days} days (≈ {weeks} weeks)",
+  "@daysWeeks": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "weeks": {
+        "type": "String"
+      }
+    }
+  },
+  "warning": "Warning",
+  "recommendation": "Recommendation",
+  "recommendationDaysWeeks": "Recommendation: {days} days (≈ {weeks} weeks)",
+  "@recommendationDaysWeeks": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "weeks": {
+        "type": "String"
+      }
+    }
+  },
+  "planSummary": "Plan Summary",
+  "confirm": "Confirm",
+  "understandRisk": "I understand the risk",
+  "planSavedWarning": "Plan saved. Please consult a specialist.",
+  "errorLoadingData": "Error loading data: {error}",
+  "@errorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noCalculationData": "No calculation data found.",
+
+  "interfaceConfirmationReadyToStartTitle": "You're ready to start!",
+  "interfaceConfirmationKeepHabitsMessage": "Keep small habits each day — track meals and weight to see clear progress.",
+  "interfaceConfirmationUpdateGoalsAnytimeMessage": "You can update your goal anytime in your profile.",
+
+  "interfaceConfirmationGoalMaintain": "Goal: maintain current weight",
+  "interfaceConfirmationGoalLoseKg": "Goal: lose {kg} kg (step by step)",
+  "@interfaceConfirmationGoalLoseKg": {
+    "placeholders": {
+      "kg": {
+        "type": "int"
+      }
+    }
+  },
+  "interfaceConfirmationGoalGainKg": "Goal: gain {kg} kg (step by step)",
+  "@interfaceConfirmationGoalGainKg": {
+    "placeholders": {
+      "kg": {
+        "type": "int"
+      }
+    }
+  }
 }

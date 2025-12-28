@@ -2,6 +2,7 @@ import 'package:diet_tracking_project/database/local_storage_service.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
 import 'package:diet_tracking_project/view/on_boarding/user_information/target_days_selector.dart';
+import 'package:diet_tracking_project/widget/daily_activities/activity_option_card.dart';
 import 'package:diet_tracking_project/widget/progress_bar/user_progress_bar.dart';
 
 import 'package:flutter/material.dart';
@@ -19,33 +20,36 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
   int? _selectedIndex;
   final LocalStorageService _local = LocalStorageService();
 
-  final List<Map<String, dynamic>> _activityOptions = [
-    {
-      'title': 'Ít vận động',
-      'description': '(Chủ yếu ngồi, ít hoặc không tập thể dục)',
-      'icon': Icons.weekend_outlined,
-    },
-    {
-      'title': 'Vận động nhẹ',
-      'description': '(Tập thể dục/thể thao 1-3 ngày/tuần)',
-      'icon': Icons.directions_walk,
-    },
-    {
-      'title': 'Vận động vừa',
-      'description': '(Tập thể dục/thể thao 3-5 ngày/tuần)',
-      'icon': Icons.directions_run,
-    },
-    {
-      'title': 'Vận động nặng',
-      'description': '(Tập thể dục/thể thao 6-7 ngày/tuần)',
-      'icon': Icons.fitness_center,
-    },
-    {
-      'title': 'Vận động rất nặng',
-      'description': '(Tập thể dục 2 lần/ngày, công việc lao động phổ thông)',
-      'icon': Icons.local_fire_department_outlined,
-    },
-  ];
+  List<Map<String, dynamic>> get _activityOptions {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      {
+        'title': l10n.activityLevelSedentaryTitle,
+        'description': l10n.activityLevelSedentarySubtitle,
+        'icon': Icons.weekend_outlined,
+      },
+      {
+        'title': l10n.activityLevelLightlyActiveTitle,
+        'description': l10n.activityLevelLightlyActiveSubtitle,
+        'icon': Icons.directions_walk,
+      },
+      {
+        'title': l10n.activityLevelModeratelyActiveTitle,
+        'description': l10n.activityLevelModeratelyActiveSubtitle,
+        'icon': Icons.directions_run,
+      },
+      {
+        'title': l10n.activityLevelVeryActiveTitle,
+        'description': l10n.activityLevelVeryActiveSubtitle,
+        'icon': Icons.fitness_center,
+      },
+      {
+        'title': l10n.activityLevelExtraActiveTitle,
+        'description': l10n.activityLevelExtraActiveSubtitle,
+        'icon': Icons.local_fire_department_outlined,
+      },
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +71,7 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Bạn hoạt động tích cực như thế nào mỗi ngày?',
+                AppLocalizations.of(context)!.howActiveAreYou,
                 style: GoogleFonts.inter(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
@@ -79,11 +83,16 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
                   itemCount: _activityOptions.length,
                   itemBuilder: (context, index) {
                     final option = _activityOptions[index];
-                    return _buildActivityOption(
-                      index: index,
+                    return ActivityOptionCard(
                       title: option['title'],
                       description: option['description'],
                       icon: option['icon'],
+                      isSelected: _selectedIndex == index,
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
                     );
                   },
                 ),
@@ -171,103 +180,5 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
     }
   }
 
-  Widget _buildActivityOption({
-    required int index,
-    required String title,
-    required String description,
-    required IconData icon,
-  }) {
-    bool isSelected = _selectedIndex == index;
-    return RepaintBoundary(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        child: Stack(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: isSelected
-                    ? Border.all(color: const Color(0xFF1F2A37), width: 2)
-                    : null,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.05),
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: const Color(0xFF111827),
-                            ),
-                            children: [
-                              TextSpan(
-                                text: title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' $description',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Icon
-                  Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(243, 244, 246, 1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(icon, color: const Color(0xFF374151), size: 28),
-                  ),
-                ],
-              ),
-            ),
-            if (isSelected)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF1F2A37),
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(16),
-                      bottomLeft: Radius.circular(8),
-                    ),
-                  ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
+
 }

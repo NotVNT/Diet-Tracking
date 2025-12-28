@@ -1,3 +1,4 @@
+import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,7 +31,7 @@ class NutritionInfoCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Thông tin dinh dưỡng',
+            AppLocalizations.of(context)!.nutritionInfo,
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -39,28 +40,32 @@ class NutritionInfoCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _InfoRow(
-            label: 'BMR',
-            value: '${calculation.bmr.toStringAsFixed(0)} cal/ngày',
+            label: AppLocalizations.of(context)!.bmr,
+            value: AppLocalizations.of(context)!
+                .calPerDay(calculation.bmr.toStringAsFixed(0)),
           ),
           _InfoRow(
-            label: 'TDEE',
-            value: '${calculation.tdee.toStringAsFixed(0)} cal/ngày',
+            label: AppLocalizations.of(context)!.tdee,
+            value: AppLocalizations.of(context)!
+                .calPerDay(calculation.tdee.toStringAsFixed(0)),
           ),
           const Divider(height: 24),
           _InfoRow(
-            label: 'Calories mục tiêu',
-            value: '${calculation.targetCalories.toStringAsFixed(0)} cal/ngày',
+            label: AppLocalizations.of(context)!.targetCalories,
+            value: AppLocalizations.of(context)!
+                .calPerDay(calculation.targetCalories.toStringAsFixed(0)),
             isHighlight: true,
           ),
           _InfoRow(
-            label: 'Điều chỉnh mỗi ngày',
-            value: '${calculation.dailyCaloriesAdjustment.toStringAsFixed(0)} cal',
+            label: AppLocalizations.of(context)!.dailyAdjustment,
+            value: AppLocalizations.of(context)!.calSuffix(
+                calculation.dailyCaloriesAdjustment.toStringAsFixed(0)),
           ),
           const Divider(height: 24),
           _InfoRow(
-            label: 'Khoảng an toàn',
+            label: AppLocalizations.of(context)!.safeRange,
             value:
-                '${calculation.caloriesMin.toStringAsFixed(0)} - ${calculation.caloriesMax.toStringAsFixed(0)} cal',
+                '${calculation.caloriesMin.toStringAsFixed(0)} - ${AppLocalizations.of(context)!.calSuffix(calculation.caloriesMax.toStringAsFixed(0))}',
           ),
         ],
       ),

@@ -73,29 +73,29 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   Color get _titleColor => const Color(0xFF2D3A4A);
 
   // UI Text
-  String _getHeadlineText(BuildContext context) =>
-      AppLocalizations.of(context)?.youCanDoIt ?? 'Bạn sẽ làm được!';
+    String _getHeadlineText(BuildContext context) =>
+      AppLocalizations.of(context)!.youCanDoIt;
 
   /// Tạo thông điệp động dựa trên mục tiêu cân nặng
   String _buildMotivationalMessage(BuildContext context) {
-    return AppLocalizations.of(context)?.setClearGoalsMessage ??
-        'Đặt mục tiêu rõ ràng giúp bạn tiến gần hơn mỗi ngày';
+    return AppLocalizations.of(context)!.setClearGoalsMessage;
   }
 
   String _buildPersonalizedLine(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final current = widget.currentWeightKg;
     final goal = widget.goalWeightKg;
     if (current == null || goal == null) return '';
 
     final diff = (current - goal).abs();
     if (diff == 0) {
-      return 'Mục tiêu: duy trì cân nặng hiện tại';
+      return l10n.interfaceConfirmationGoalMaintain;
     }
 
     if (goal < current) {
-      return 'Mục tiêu: giảm $diff kg (từng bước một)';
+      return l10n.interfaceConfirmationGoalLoseKg(diff);
     }
-    return 'Mục tiêu: tăng $diff kg (từng bước một)';
+    return l10n.interfaceConfirmationGoalGainKg(diff);
   }
 
   /// Chuyển đến màn hình đăng ký với dữ liệu onboarding đã có
@@ -223,6 +223,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
   }
 
   Widget _buildMotivationMessages() {
+    final l10n = AppLocalizations.of(context)!;
     final personalized = _buildPersonalizedLine(context);
 
     return Container(
@@ -239,7 +240,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Bạn đã sẵn sàng bắt đầu!',
+            l10n.interfaceConfirmationReadyToStartTitle,
             style: _interOrDefault(
               const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
               GoogleFonts.inter(
@@ -251,7 +252,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Hãy duy trì thói quen nhỏ mỗi ngày — theo dõi bữa ăn và cân nặng để thấy tiến bộ rõ ràng.',
+            l10n.interfaceConfirmationKeepHabitsMessage,
             style: _interOrDefault(
               const TextStyle(fontSize: 15, height: 1.6),
               GoogleFonts.inter(
@@ -282,7 +283,7 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
           ],
           const SizedBox(height: 10),
           Text(
-            'Bạn có thể cập nhật mục tiêu bất cứ lúc nào trong hồ sơ.',
+            l10n.interfaceConfirmationUpdateGoalsAnytimeMessage,
             style: _interOrDefault(
               const TextStyle(fontSize: 14, height: 1.6),
               GoogleFonts.inter(
