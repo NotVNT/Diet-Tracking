@@ -47,9 +47,9 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Column(
-            children: const [
+            children: [
               PerformanceUtils.spacer4,
               PerformanceUtils.spacer8,
               PerformanceUtils.spacer12,

@@ -132,34 +132,34 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ResponsiveText(
+              const ResponsiveText(
                 'Display (32sp)',
-                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               rVerticalSpace(8),
-              ResponsiveText(
+              const ResponsiveText(
                 'Title (24sp)',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
               ),
               rVerticalSpace(8),
-              ResponsiveText(
+              const ResponsiveText(
                 'Heading (20sp)',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
               rVerticalSpace(8),
-              ResponsiveText(
+              const ResponsiveText(
                 'Body Large (16sp)',
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16),
               ),
               rVerticalSpace(8),
-              ResponsiveText(
+              const ResponsiveText(
                 'Body (14sp)',
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 14),
               ),
               rVerticalSpace(8),
-              ResponsiveText(
+              const ResponsiveText(
                 'Caption (12sp)',
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 12),
               ),
             ],
           ),
@@ -239,9 +239,9 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
           baseRadius: 12,
           backgroundColor: Theme.of(context).colorScheme.primary,
           onPressed: () {},
-          child: ResponsiveText(
+          child: const ResponsiveText(
             'Large Button (56dp)',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.white,
@@ -255,9 +255,9 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
           baseRadius: 12,
           backgroundColor: Theme.of(context).colorScheme.secondary,
           onPressed: () {},
-          child: ResponsiveText(
+          child: const ResponsiveText(
             'Medium Button (48dp)',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.white,
@@ -271,9 +271,9 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
           baseRadius: 10,
           backgroundColor: Theme.of(context).colorScheme.tertiary,
           onPressed: () {},
-          child: ResponsiveText(
+          child: const ResponsiveText(
             'Small Button (40dp)',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: Colors.white,
@@ -358,9 +358,9 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   rVerticalSpace(4),
-                  ResponsiveText(
+                  const ResponsiveText(
                     'Small\n(16dp)',
-                    style: const TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -373,9 +373,9 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   rVerticalSpace(4),
-                  ResponsiveText(
+                  const ResponsiveText(
                     'Medium\n(24dp)',
-                    style: const TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -388,9 +388,9 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   rVerticalSpace(4),
-                  ResponsiveText(
+                  const ResponsiveText(
                     'Large\n(32dp)',
-                    style: const TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -403,9 +403,9 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> with ResponsiveMixin {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   rVerticalSpace(4),
-                  ResponsiveText(
+                  const ResponsiveText(
                     'XLarge\n(48dp)',
-                    style: const TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10),
                     textAlign: TextAlign.center,
                   ),
                 ],

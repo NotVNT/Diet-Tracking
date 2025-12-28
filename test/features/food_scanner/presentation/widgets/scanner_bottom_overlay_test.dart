@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Finder _captureOuterFinder() {
+  Finder captureOuterFinder() {
     return find.byWidgetPredicate(
       (w) =>
           w is Container &&
@@ -19,7 +19,7 @@ void main() {
   }
 
   testWidgets('ScannerBottomOverlay shows capture button for food', (tester) async {
-    final actions = const [
+    const actions = [
       ScannerActionConfig(
         type: ScannerActionType.food,
         label: 'Food',
@@ -54,11 +54,11 @@ void main() {
     expect(find.text('Barcode'), findsOneWidget);
     expect(find.text('Gallery'), findsOneWidget);
 
-    expect(_captureOuterFinder(), findsOneWidget);
+    expect(captureOuterFinder(), findsOneWidget);
   });
 
   testWidgets('ScannerBottomOverlay hides capture button for barcode', (tester) async {
-    final actions = const [
+    const actions = [
       ScannerActionConfig(
         type: ScannerActionType.food,
         label: 'Food',
@@ -90,6 +90,6 @@ void main() {
     );
 
     // In barcode mode, capture button is not rendered.
-    expect(_captureOuterFinder(), findsNothing);
+    expect(captureOuterFinder(), findsNothing);
   });
 }

@@ -50,7 +50,7 @@ class _FailureController extends ForgotPasswordController {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Widget _localizedApp({
+  Widget localizedApp({
     required Widget home,
     GlobalKey<NavigatorState>? navigatorKey,
     List<NavigatorObserver> observers = const <NavigatorObserver>[],
@@ -65,7 +65,7 @@ void main() {
     );
   }
 
-  Future<void> _finishIntroAnimations(WidgetTester tester) async {
+  Future<void> finishIntroAnimations(WidgetTester tester) async {
     // ForgotPasswordScreen runs a 1200ms entrance animation.
     await tester.pump(const Duration(milliseconds: 1300));
   }
@@ -74,9 +74,9 @@ void main() {
     testWidgets('renders main UI building blocks', (tester) async {
       final controller = ForgotPasswordController();
       await tester.pumpWidget(
-        _localizedApp(home: ForgotPasswordScreen(controller: controller)),
+        localizedApp(home: ForgotPasswordScreen(controller: controller)),
       );
-      await _finishIntroAnimations(tester);
+      await finishIntroAnimations(tester);
 
       expect(find.text('Forgot Password?'), findsOneWidget);
       expect(
@@ -101,7 +101,7 @@ void main() {
     testWidgets('leading back button pops to previous route', (tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(
-        _localizedApp(
+        localizedApp(
           navigatorKey: navigatorKey,
           home: const Scaffold(body: Text('Home')),
         ),
@@ -113,7 +113,7 @@ void main() {
         ),
       );
       await tester.pump();
-      await _finishIntroAnimations(tester);
+      await finishIntroAnimations(tester);
 
       expect(find.byType(ForgotPasswordScreen), findsOneWidget);
       await tester.tap(find.byIcon(Icons.arrow_back));
@@ -126,7 +126,7 @@ void main() {
     testWidgets('Back to Login link pops to previous route', (tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(
-        _localizedApp(
+        localizedApp(
           navigatorKey: navigatorKey,
           home: const Scaffold(body: Text('Home')),
         ),
@@ -138,7 +138,7 @@ void main() {
         ),
       );
       await tester.pump();
-      await _finishIntroAnimations(tester);
+      await finishIntroAnimations(tester);
 
       await tester.tap(find.text('Back to Login'));
       await tester.pumpAndSettle();
@@ -150,9 +150,9 @@ void main() {
     testWidgets('tapping send with validation error shows SnackBar', (tester) async {
       final controller = _ValidationErrorController(ForgotPasswordErrorCode.invalidEmail);
       await tester.pumpWidget(
-        _localizedApp(home: ForgotPasswordScreen(controller: controller)),
+        localizedApp(home: ForgotPasswordScreen(controller: controller)),
       );
-      await _finishIntroAnimations(tester);
+      await finishIntroAnimations(tester);
 
       await tester.tap(find.text('Send Reset Email'));
       await tester.pumpAndSettle();
@@ -167,7 +167,7 @@ void main() {
       final controller = _DelayedSuccessController(delay: const Duration(milliseconds: 80));
 
       await tester.pumpWidget(
-        _localizedApp(
+        localizedApp(
           navigatorKey: navigatorKey,
           home: const Scaffold(body: Text('Home')),
         ),
@@ -177,7 +177,7 @@ void main() {
         MaterialPageRoute(builder: (_) => ForgotPasswordScreen(controller: controller)),
       );
       await tester.pump();
-      await _finishIntroAnimations(tester);
+      await finishIntroAnimations(tester);
 
       await tester.tap(find.text('Send Reset Email'));
       await tester.pump();
@@ -210,9 +210,9 @@ void main() {
         PasswordResetResult.failure(ForgotPasswordErrorCode.tooManyRequests),
       );
       await tester.pumpWidget(
-        _localizedApp(home: ForgotPasswordScreen(controller: controller)),
+        localizedApp(home: ForgotPasswordScreen(controller: controller)),
       );
-      await _finishIntroAnimations(tester);
+      await finishIntroAnimations(tester);
 
       await tester.tap(find.text('Send Reset Email'));
       await tester.pumpAndSettle();

@@ -81,7 +81,7 @@ class LocalStorageService {
   /// Trả về Map với các key tương ứng với từng trường dữ liệu
   Future<Map<String, dynamic>> readGuestData() async {
     final prefs = await _prefs;
-    final goal = prefs.getString(_keyGoal);
+    final goal = _normalizeGuestGoal(prefs.getString(_keyGoal));
     debugPrint('LocalStorageService: Reading goal = $goal');
     return {
       'goal': goal,
@@ -97,6 +97,64 @@ class LocalStorageService {
       'weightReasons': prefs.getStringList(_keyWeightReasons),
       'dietPreference': prefs.getString(_keyDietPreference),
     };
+  }
+
+  /// Normalize persisted goal string to stable backend keys.
+  ///
+  /// On older builds onboarding stored localized strings like:
+  /// - "Giảm cân(normalWeightLoss)"
+  /// - "Giảm cân(keto)"
+  /// - "Giảm cân(lowCarb)"
+  /// or English equivalents.
+  ///
+  /// This migrates them to:
+  /// - lose_weight
+  /// - lose_weight_keto
+  /// - lose_weight_low_carb
+  ///
+  /// and other main goals to:
+  /// - gain_weight, maintain_weight, build_muscle
+  String? _normalizeGuestGoal(String? raw) {
+    if (raw == null) return null;
+    final value = raw.trim();
+    if (value.isEmpty) return null;
+
+    // Already normalized
+    const normalized = {
+      'lose_weight',
+      'lose_weight_keto',
+      'lose_weight_low_carb',
+      'gain_weight',
+      'maintain_weight',
+      'build_muscle',
+    };
+    if (normalized.contains(value)) return value;
+
+    final lower = value.toLowerCase();
+
+    // Legacy lose weight formats
+    final isLoseWeight =
+        lower.startsWith('lose weight') || lower.startsWith('giảm cân');
+    if (isLoseWeight) {
+      if (lower.contains('(keto)')) return 'lose_weight_keto';
+      if (lower.contains('(lowcarb)') ||
+          lower.contains('(low carb)') ||
+          lower.contains('(low_carb)') ||
+          lower.contains('(lowcarbs)')) {
+        return 'lose_weight_low_carb';
+      }
+      // "normalWeightLoss" sub-option or no sub-option => default
+      return 'lose_weight';
+    }
+
+    // Legacy main keys from older UI
+    if (lower == 'gainweight' || lower == 'tăng cân') return 'gain_weight';
+    if (lower == 'maintainweight' || lower == 'duy trì cân nặng') {
+      return 'maintain_weight';
+    }
+    if (lower == 'buildmuscle' || lower == 'tăng cơ') return 'build_muscle';
+
+    return value;
   }
 
   /// Kiểm tra xem có dữ liệu guest nào được lưu không

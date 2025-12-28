@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'goal_reason_screen.dart';
 import '../../../database/local_storage_service.dart';
 import '../../../database/auth_service.dart';
+import '../../../features/profile_view_home/presentation/widgets/profile_constants.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../widget/progress_bar/started_progress_bar.dart';
 
@@ -95,19 +96,7 @@ class _GoalSelectionState extends State<GoalSelection> {
                               _selectedSubIndex == null))
                       ? null
                       : () async {
-                          final mainTitle = _getLocalizedTitle(
-                            context,
-                            _goals[_selectedIndex!].title,
-                          );
-                          var selectedTitle = mainTitle;
-
-                          if (_selectedSubIndex != null &&
-                              _goals[_selectedIndex!].subOptions != null) {
-                            final subOptionKey = _goals[_selectedIndex!]
-                                .subOptions![_selectedSubIndex!]
-                                .title;
-                            selectedTitle = '$mainTitle($subOptionKey)';
-                          }
+                          final selectedTitle = _buildPersistedGoalKey();
 
                           // Lưu goal vào localStorage (luôn lưu để có sẵn cho signup flow)
                           debugPrint(
@@ -328,6 +317,43 @@ class _GoalSelectionState extends State<GoalSelection> {
         return AppLocalizations.of(context)?.lowCarbs ?? 'Low Carbs';
       default:
         return key;
+    }
+  }
+
+  /// Build the goal value that must be persisted.
+  ///
+  /// IMPORTANT: This value is meant for backend/storage and must stay stable
+  /// across locales (do NOT store localized labels).
+  String _buildPersistedGoalKey() {
+    final mainKey = _goals[_selectedIndex!].title;
+    if (mainKey == 'loseWeight') {
+      final subKey =
+          (_selectedSubIndex != null &&
+              _goals[_selectedIndex!].subOptions != null)
+          ? _goals[_selectedIndex!].subOptions![_selectedSubIndex!].title
+          : null;
+
+      switch (subKey) {
+        case 'keto':
+          return GoalConstants.loseWeightKeto;
+        case 'lowCarb':
+          return GoalConstants.loseWeightLowCarb;
+        case 'normalWeightLoss':
+        default:
+          return GoalConstants.loseWeight;
+      }
+    }
+
+    switch (mainKey) {
+      case 'gainWeight':
+        return GoalConstants.gainWeight;
+      case 'maintainWeight':
+        return GoalConstants.maintainWeight;
+      case 'buildMuscle':
+        return GoalConstants.buildMuscle;
+      default:
+        // Fallback: return raw key (still stable, non-localized)
+        return mainKey;
     }
   }
 }

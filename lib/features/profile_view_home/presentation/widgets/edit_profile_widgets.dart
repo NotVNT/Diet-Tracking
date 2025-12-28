@@ -185,7 +185,7 @@ class EditProfileGoalDropdown extends StatelessWidget {
         ],
       ),
       child: DropdownButtonFormField<String>(
-        value: value,
+        initialValue: value,
         decoration: InputDecoration(
           prefixIcon: Icon(
             Icons.star_outline,

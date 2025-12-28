@@ -76,7 +76,7 @@ class ScannedProductCard extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               theme.colorScheme.surface,
-              theme.colorScheme.surfaceVariant,
+              theme.colorScheme.surfaceContainerHighest,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -84,13 +84,13 @@ class ScannedProductCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
+              color: Colors.black.withValues(alpha: 0.25),
               blurRadius: 22,
               offset: const Offset(0, 12),
             ),
           ],
           border: Border.all(
-            color: theme.colorScheme.outline.withOpacity(0.4),
+            color: theme.colorScheme.outline.withValues(alpha: 0.4),
           ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -104,7 +104,7 @@ class ScannedProductCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.12),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -134,7 +134,7 @@ class ScannedProductCard extends StatelessWidget {
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                             color: theme.colorScheme.onSurface
-                                .withOpacity(0.7),
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -145,7 +145,7 @@ class ScannedProductCard extends StatelessWidget {
                   onPressed: onReset,
                   icon: Icon(
                     Icons.close,
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                   tooltip: 'Bỏ qua',
                 )
@@ -157,7 +157,7 @@ class ScannedProductCard extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: 10),
@@ -194,10 +194,9 @@ class ScannedProductCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 OutlinedButton(
                   onPressed: onReset,
-                  child: const Text('Bỏ qua'),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: theme.colorScheme.onSurface.withOpacity(0.4),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -207,6 +206,7 @@ class ScannedProductCard extends StatelessWidget {
                       horizontal: 12,
                     ),
                   ),
+                  child: const Text('Bỏ qua'),
                 ),
               ],
             ),
@@ -246,7 +246,7 @@ class _MacroChip extends StatelessWidget {
       constraints: const BoxConstraints(minWidth: 90),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: accent.withOpacity(0.18),
+        color: accent.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

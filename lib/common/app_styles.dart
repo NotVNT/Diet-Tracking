@@ -58,9 +58,9 @@ class AppStyles {
   );
 
   // Input Styles
-  static InputDecoration get inputDecoration => InputDecoration(
+  static InputDecoration get inputDecoration => const InputDecoration(
     border: InputBorder.none,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
   );
 
   static InputDecoration inputDecorationWithHint(String hint) =>

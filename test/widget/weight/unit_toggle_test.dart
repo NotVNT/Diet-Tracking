@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Widget _wrap(Widget child) => MaterialApp(
+  Widget wrap(Widget child) => MaterialApp(
     home: Scaffold(body: Center(child: child)),
   );
 
-  Future<BoxDecoration?> _decorationForLabel(
+  Future<BoxDecoration?> decorationForLabel(
     WidgetTester tester,
     String label,
   ) async {
@@ -28,7 +28,7 @@ void main() {
   testWidgets('renders both options', (tester) async {
     bool? lastValue;
     await tester.pumpWidget(
-      _wrap(UnitToggle(isKg: true, onChanged: (v) => lastValue = v)),
+      wrap(UnitToggle(isKg: true, onChanged: (v) => lastValue = v)),
     );
 
     expect(find.text('kg'), findsOneWidget);
@@ -40,20 +40,20 @@ void main() {
     tester,
   ) async {
     // isKg = true
-    await tester.pumpWidget(_wrap(UnitToggle(isKg: true, onChanged: (_) {})));
+    await tester.pumpWidget(wrap(UnitToggle(isKg: true, onChanged: (_) {})));
 
-    final kgDecoTrue = await _decorationForLabel(tester, 'kg');
-    final lbDecoTrue = await _decorationForLabel(tester, 'lb');
+    final kgDecoTrue = await decorationForLabel(tester, 'kg');
+    final lbDecoTrue = await decorationForLabel(tester, 'lb');
 
     expect(kgDecoTrue?.color, equals(Colors.black));
     expect(lbDecoTrue?.color, equals(Colors.transparent));
 
     // isKg = false
-    await tester.pumpWidget(_wrap(UnitToggle(isKg: false, onChanged: (_) {})));
+    await tester.pumpWidget(wrap(UnitToggle(isKg: false, onChanged: (_) {})));
     await tester.pumpAndSettle();
 
-    final kgDecoFalse = await _decorationForLabel(tester, 'kg');
-    final lbDecoFalse = await _decorationForLabel(tester, 'lb');
+    final kgDecoFalse = await decorationForLabel(tester, 'kg');
+    final lbDecoFalse = await decorationForLabel(tester, 'lb');
 
     expect(kgDecoFalse?.color, equals(Colors.transparent));
     expect(lbDecoFalse?.color, equals(Colors.black));
@@ -64,7 +64,7 @@ void main() {
   ) async {
     final tappedValues = <bool>[];
     await tester.pumpWidget(
-      _wrap(UnitToggle(isKg: true, onChanged: tappedValues.add)),
+      wrap(UnitToggle(isKg: true, onChanged: tappedValues.add)),
     );
 
     await tester.tap(find.text('lb'));

@@ -119,7 +119,7 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -272,7 +272,7 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF7E57C2).withOpacity(0.3),
+                      color: const Color(0xFF7E57C2).withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),

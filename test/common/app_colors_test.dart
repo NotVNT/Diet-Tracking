@@ -109,16 +109,19 @@ void main() {
 
     group('Color Properties', () {
       test('should have correct opacity values for shadow colors', () {
-        expect(AppColors.shadowLight.opacity, closeTo(0.04, 0.01));
-        expect(AppColors.shadowMedium.opacity, closeTo(0.08, 0.01));
-        expect(AppColors.shadowDark.opacity, closeTo(0.12, 0.01));
+        // New Color component accessors return 0..1 doubles.
+        // Our const colors are ARGB: 0x0A000000, 0x14000000, 0x1F000000.
+        expect(AppColors.shadowLight.a, closeTo(0x0A / 255.0, 0.001));
+        expect(AppColors.shadowMedium.a, closeTo(0x14 / 255.0, 0.001));
+        expect(AppColors.shadowDark.a, closeTo(0x1F / 255.0, 0.001));
       });
 
       test('should have correct color values for status colors', () {
-        expect(AppColors.success.value, 0xFF4CAF50);
-        expect(AppColors.warning.value, 0xFFFF9800);
-        expect(AppColors.error.value, 0xFFF44336);
-        expect(AppColors.info.value, 0xFF2196F3);
+        // Use toARGB32() instead of deprecated .value
+        expect(AppColors.success.toARGB32(), 0xFF4CAF50);
+        expect(AppColors.warning.toARGB32(), 0xFFFF9800);
+        expect(AppColors.error.toARGB32(), 0xFFF44336);
+        expect(AppColors.info.toARGB32(), 0xFF2196F3);
       });
     });
   });

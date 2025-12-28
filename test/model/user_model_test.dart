@@ -5,14 +5,14 @@ import 'package:diet_tracking_project/model/body_info_model.dart';
 void main() {
   group('User model', () {
     test('toJson và fromJson giữ nguyên dữ liệu (các trường đang hỗ trợ)', () {
-      final user = User(
+      const user = User(
         uid: 'u1',
         email: 'a@a.com',
         fullName: 'A',
         phone: '0123',
         gender: GenderType.male,
         age: 24,
-        bodyInfo: const BodyInfoModel(heightCm: 170.5, weightKg: 65.2),
+        bodyInfo: BodyInfoModel(heightCm: 170.5, weightKg: 65.2),
       );
       final json = user.toJson();
       final parsed = User.fromJson(json);
@@ -40,7 +40,7 @@ void main() {
     });
 
     test('copyWith cập nhật trường chọn lọc', () {
-      final user = User(uid: 'u1', fullName: 'A');
+      const user = User(uid: 'u1', fullName: 'A');
       final updated = user.copyWith(
         fullName: 'B',
         bodyInfo: const BodyInfoModel(heightCm: 180),

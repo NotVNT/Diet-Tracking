@@ -94,8 +94,8 @@ void main() {
     });
 
     test('getUserData returns user data when doc exists', () async {
-      final uid = 'test_uid';
-      final userData = app_user.User(
+      const uid = 'test_uid';
+      const userData = app_user.User(
         uid: uid,
         email: 'test@example.com',
         fullName: 'Test User',
@@ -111,7 +111,7 @@ void main() {
     });
 
     test('updateUserData updates data in Firestore', () async {
-      final uid = 'test_uid';
+      const uid = 'test_uid';
       await firestore.collection('users').doc(uid).set({'name': 'Old Name'});
 
       await service.updateUserData(uid, {'name': 'New Name'});
@@ -132,7 +132,7 @@ void main() {
     });
 
     test('saveNutritionPlan saves plan to Firestore', () async {
-      final uid = 'test_uid';
+      const uid = 'test_uid';
       final plan = {'calories': 2000, 'protein': 150};
 
       await service.saveNutritionPlan(uid, plan);
@@ -149,7 +149,7 @@ void main() {
     });
 
     test('getActiveNutritionPlan returns plan if exists', () async {
-      final uid = 'test_uid';
+      const uid = 'test_uid';
       final plan = {'calories': 2000, 'protein': 150};
 
       await firestore

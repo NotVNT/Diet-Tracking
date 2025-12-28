@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Widget _buildTestWidget({
+  Widget buildTestWidget({
     List<String> items = const [],
     void Function(int)? onRemoveItem,
   }) {
@@ -25,7 +25,7 @@ void main() {
   }
 
   testWidgets('Renders basic info and input widgets', (tester) async {
-    await tester.pumpWidget(_buildTestWidget());
+    await tester.pumpWidget(buildTestWidget());
 
     expect(find.text('1'), findsOneWidget);
     expect(find.text('Test Title'), findsOneWidget);
@@ -35,14 +35,14 @@ void main() {
   });
 
   testWidgets('Shows empty state when items list is empty', (tester) async {
-    await tester.pumpWidget(_buildTestWidget());
+    await tester.pumpWidget(buildTestWidget());
 
     expect(find.byIcon(Icons.info), findsOneWidget);
     expect(find.text('No items'), findsOneWidget);
   });
 
   testWidgets('Displays chips when items are provided', (tester) async {
-    await tester.pumpWidget(_buildTestWidget(items: ['Apple', 'Banana']));
+    await tester.pumpWidget(buildTestWidget(items: ['Apple', 'Banana']));
 
     expect(find.text('Apple'), findsOneWidget);
     expect(find.text('Banana'), findsOneWidget);
@@ -51,7 +51,7 @@ void main() {
 
   testWidgets('Calls onRemoveItem when a chip is deleted', (tester) async {
     int? removedIndex;
-    await tester.pumpWidget(_buildTestWidget(
+    await tester.pumpWidget(buildTestWidget(
       items: ['Apple', 'Banana'],
       onRemoveItem: (index) => removedIndex = index,
     ));

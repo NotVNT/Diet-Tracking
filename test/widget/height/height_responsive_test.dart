@@ -56,7 +56,7 @@ void main() {
       final r = await _measureForSize(tester, const Size(320, 568));
       const expectedWs = 320 / 390; // ~0.8205128205
       const expectedHs = 0.80; // clamped
-      final expectedS = (expectedWs + expectedHs) / 2; // ~0.81025641025
+      const expectedS = (expectedWs + expectedHs) / 2; // ~0.81025641025
       expect(r['ws']!, closeTo(expectedWs, 1e-9));
       expect(r['hs']!, closeTo(expectedHs, 1e-9));
       expect(r['s']!, closeTo(expectedS, 1e-9));
@@ -88,9 +88,9 @@ void main() {
       // base 10 -> scaled 10 * 0.8 = 8, but min is 12
       late double minClamped;
       await tester.pumpWidget(
-        MediaQuery(
-          data: const MediaQueryData(size: Size(200, 300)),
-          child: const Directionality(
+        const MediaQuery(
+          data: MediaQueryData(size: Size(200, 300)),
+          child: Directionality(
             textDirection: TextDirection.ltr,
             child: SizedBox.shrink(),
           ),

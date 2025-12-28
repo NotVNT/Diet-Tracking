@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:diet_tracking_project/responsive/responsive_utils.dart';
 
 void main() {
-  Future<void> _withSize(
+  Future<void> withSize(
     WidgetTester tester,
     Size size,
     void Function(BuildContext) body,
@@ -25,7 +25,7 @@ void main() {
 
   group('ResponsiveUtils padding and spacing', () {
     testWidgets('screen/card/list paddings return EdgeInsets', (tester) async {
-      await _withSize(tester, const Size(390, 844), (ctx) {
+      await withSize(tester, const Size(390, 844), (ctx) {
         expect(ResponsiveUtils.screenPadding(ctx), isA<EdgeInsets>());
         expect(ResponsiveUtils.cardPadding(ctx), isA<EdgeInsets>());
         expect(ResponsiveUtils.listItemPadding(ctx), isA<EdgeInsets>());
@@ -36,7 +36,7 @@ void main() {
     });
 
     testWidgets('icon and font sizes > 0', (tester) async {
-      await _withSize(tester, const Size(390, 844), (ctx) {
+      await withSize(tester, const Size(390, 844), (ctx) {
         expect(ResponsiveUtils.iconSizeSmall(ctx) > 0, true);
         expect(ResponsiveUtils.iconSizeMedium(ctx) > 0, true);
         expect(ResponsiveUtils.iconSizeLarge(ctx) > 0, true);
@@ -50,7 +50,7 @@ void main() {
     });
 
     testWidgets('radius helpers return > 0 and circular large', (tester) async {
-      await _withSize(tester, const Size(390, 844), (ctx) {
+      await withSize(tester, const Size(390, 844), (ctx) {
         expect(ResponsiveUtils.radiusSmall(ctx) > 0, true);
         expect(ResponsiveUtils.radiusMedium(ctx) > 0, true);
         expect(ResponsiveUtils.radiusLarge(ctx) > 0, true);
@@ -62,7 +62,7 @@ void main() {
 
   group('ResponsiveUtils dimensions and grid', () {
     testWidgets('avatar sizes are non-zero', (tester) async {
-      await _withSize(tester, const Size(390, 844), (ctx) {
+      await withSize(tester, const Size(390, 844), (ctx) {
         expect(ResponsiveUtils.avatarSizeSmall(ctx).width > 0, true);
         expect(ResponsiveUtils.avatarSizeMedium(ctx).height > 0, true);
         expect(ResponsiveUtils.avatarSizeLarge(ctx).width > 0, true);
@@ -70,27 +70,27 @@ void main() {
     });
 
     testWidgets('gridCrossAxisCount adapts by device', (tester) async {
-      await _withSize(tester, const Size(350, 700), (ctx) {
+      await withSize(tester, const Size(350, 700), (ctx) {
         expect(ResponsiveUtils.gridCrossAxisCount(ctx), 1);
       });
-      await _withSize(tester, const Size(380, 700), (ctx) {
+      await withSize(tester, const Size(380, 700), (ctx) {
         expect(ResponsiveUtils.gridCrossAxisCount(ctx), 2);
       });
-      await _withSize(tester, const Size(700, 1000), (ctx) {
+      await withSize(tester, const Size(700, 1000), (ctx) {
         expect(ResponsiveUtils.gridCrossAxisCount(ctx), 3);
         expect(ResponsiveUtils.gridCrossAxisCount(ctx, phone: 3, tablet: 5), 5);
       });
     });
 
     testWidgets('maxContentWidth and dialogWidth produce sensible values', (tester) async {
-      await _withSize(tester, const Size(390, 844), (ctx) {
+      await withSize(tester, const Size(390, 844), (ctx) {
         expect(ResponsiveUtils.maxContentWidth(ctx) > 0, true);
         expect(ResponsiveUtils.dialogWidth(ctx) > 0, true);
       });
     });
 
     testWidgets('responsiveConstraints returns BoxConstraints', (tester) async {
-      await _withSize(tester, const Size(390, 844), (ctx) {
+      await withSize(tester, const Size(390, 844), (ctx) {
         final c = ResponsiveUtils.responsiveConstraints(ctx, minWidth: 100, maxWidth: 200);
         expect(c.minWidth > 0, true);
         expect(c.maxWidth >= c.minWidth, true);
@@ -98,7 +98,7 @@ void main() {
     });
 
     testWidgets('responsiveTextTheme adjusts font sizes', (tester) async {
-      await _withSize(tester, const Size(390, 844), (ctx) {
+      await withSize(tester, const Size(390, 844), (ctx) {
         final theme = Theme.of(ctx).textTheme;
         final adjusted = ResponsiveUtils.responsiveTextTheme(ctx, theme);
         expect(adjusted.bodyMedium?.fontSize, isNotNull);

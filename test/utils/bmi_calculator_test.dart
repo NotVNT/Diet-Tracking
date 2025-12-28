@@ -18,7 +18,7 @@ void main() {
   });
 
   group('BmiCalculator.bmiDescription', () {
-    Future<String> _desc(WidgetTester tester, double bmi) async {
+    Future<String> desc(WidgetTester tester, double bmi) async {
       late String text;
       await tester.pumpWidget(
         MaterialApp(
@@ -37,11 +37,11 @@ void main() {
     }
 
     testWidgets('returns localized messages for ranges', (tester) async {
-      expect(await _desc(tester, 0), 'Please enter height to calculate BMI.');
-      expect(await _desc(tester, 17), 'You are underweight.');
-      expect(await _desc(tester, 23), 'You have a normal weight.');
-      expect(await _desc(tester, 27), 'You are overweight.');
-      expect(await _desc(tester, 31), 'You need to lose weight seriously to protect your health.');
+      expect(await desc(tester, 0), 'Please enter height to calculate BMI.');
+      expect(await desc(tester, 17), 'You are underweight.');
+      expect(await desc(tester, 23), 'You have a normal weight.');
+      expect(await desc(tester, 27), 'You are overweight.');
+      expect(await desc(tester, 31), 'You need to lose weight seriously to protect your health.');
     });
   });
 }

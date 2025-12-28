@@ -46,7 +46,7 @@ class ScannerDependencyResolver {
       );
     }
 
-    final effectiveInjector = injector ?? FoodScannerInjector();
+    final effectiveInjector = injector ?? const FoodScannerInjector();
     final deps = effectiveInjector.create();
     return ScannerDependencies(
       foodScanBloc: deps.foodScanBloc,

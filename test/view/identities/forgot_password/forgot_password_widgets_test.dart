@@ -6,7 +6,7 @@ import 'package:diet_tracking_project/l10n/app_localizations.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
+  Widget wrap(Widget child, {Locale locale = const Locale('en')}) {
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -19,7 +19,7 @@ void main() {
     testWidgets('shows localized label and hint', (tester) async {
       final controller = TextEditingController();
       await tester.pumpWidget(
-        _wrap(
+        wrap(
           ForgotPasswordEmailField(
             controller: controller,
             isFocused: false,
@@ -36,7 +36,7 @@ void main() {
 
   group('ForgotPasswordInstruction', () {
     testWidgets('shows localized instruction', (tester) async {
-      await tester.pumpWidget(_wrap(const ForgotPasswordInstruction()));
+      await tester.pumpWidget(wrap(const ForgotPasswordInstruction()));
       expect(
         find.text('Enter your email and we\'ll send you instructions to reset your password.'),
         findsOneWidget,
@@ -48,7 +48,7 @@ void main() {
     testWidgets('taps call onTap', (tester) async {
       int tapped = 0;
       await tester.pumpWidget(
-        _wrap(
+        wrap(
           BackToLoginLink(onTap: () => tapped++),
         ),
       );

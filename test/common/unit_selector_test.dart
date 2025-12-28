@@ -296,7 +296,7 @@ void main() {
       });
 
       test('should have exactly two unit systems', () {
-        final units = UnitSystem.values;
+        const units = UnitSystem.values;
         expect(units.length, 2);
       });
     });

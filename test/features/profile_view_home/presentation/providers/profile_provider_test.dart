@@ -37,7 +37,7 @@ void main() {
     });
 
     test('loadProfile success sets profile and clears loading/error', () async {
-      final profile = ProfileEntity(uid: 'u1', displayName: 'Name', email: 'a@b.com');
+      const profile = ProfileEntity(uid: 'u1', displayName: 'Name', email: 'a@b.com');
       when(repository.getUserProfile()).thenAnswer((_) async => profile);
 
       var notifyCount = 0;
@@ -73,7 +73,7 @@ void main() {
     });
 
     test('uploadAvatar success updates profile avatars and clears error', () async {
-      final profile = ProfileEntity(uid: 'u1', displayName: 'Name', email: 'a@b.com');
+      const profile = ProfileEntity(uid: 'u1', displayName: 'Name', email: 'a@b.com');
       when(repository.getUserProfile()).thenAnswer((_) async => profile);
       when(repository.uploadAvatar(any, any)).thenAnswer((_) async => 'https://new');
 
@@ -88,7 +88,7 @@ void main() {
     });
 
     test('uploadAvatar failure sets error and rethrows', () async {
-      final profile = ProfileEntity(uid: 'u1', displayName: 'Name', email: 'a@b.com');
+      const profile = ProfileEntity(uid: 'u1', displayName: 'Name', email: 'a@b.com');
       when(repository.getUserProfile()).thenAnswer((_) async => profile);
       when(repository.uploadAvatar(any, any)).thenThrow(Exception('fail'));
 
@@ -104,7 +104,7 @@ void main() {
     });
 
     test('updateProfile success calls repository and updates local profile', () async {
-      final updated = ProfileEntity(uid: 'u1', displayName: 'New', email: 'a@b.com');
+      const updated = ProfileEntity(uid: 'u1', displayName: 'New', email: 'a@b.com');
       when(repository.updateUserProfile(any)).thenAnswer((_) async {});
 
       await provider.updateProfile(updated);
@@ -117,7 +117,7 @@ void main() {
     });
 
     test('updateProfile failure sets error, stops loading, and rethrows', () async {
-      final updated = ProfileEntity(uid: 'u1', displayName: 'New', email: 'a@b.com');
+      const updated = ProfileEntity(uid: 'u1', displayName: 'New', email: 'a@b.com');
       when(repository.updateUserProfile(any)).thenThrow(Exception('nope'));
 
       await expectLater(provider.updateProfile(updated), throwsA(isA<Exception>()));
@@ -128,7 +128,7 @@ void main() {
     });
 
     test('signOut success clears profile', () async {
-      final profile = ProfileEntity(uid: 'u1', displayName: 'Name', email: 'a@b.com');
+      const profile = ProfileEntity(uid: 'u1', displayName: 'Name', email: 'a@b.com');
       when(repository.getUserProfile()).thenAnswer((_) async => profile);
       when(repository.clearLocalData()).thenAnswer((_) async {});
       when(repository.signOut()).thenAnswer((_) async {});
@@ -156,21 +156,21 @@ void main() {
     });
 
     test('getAvatarImage returns correct fallback by gender', () async {
-      final female = ProfileEntity(
+      const female = ProfileEntity(
         uid: 'u1',
         displayName: 'Name',
         email: 'a@b.com',
         gender: GenderType.female,
       );
 
-      final male = ProfileEntity(
+      const male = ProfileEntity(
         uid: 'u1',
         displayName: 'Name',
         email: 'a@b.com',
         gender: GenderType.male,
       );
 
-      final withUrl = ProfileEntity(
+      const withUrl = ProfileEntity(
         uid: 'u1',
         displayName: 'Name',
         email: 'a@b.com',

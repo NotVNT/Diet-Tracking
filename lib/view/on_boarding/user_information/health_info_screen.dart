@@ -87,6 +87,7 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                 child: HealthNavigationBar(
                   onBack: () => Navigator.of(context).maybePop(),
                   onNext: () async {
+                    final navigator = Navigator.of(context);
                     final uid = _auth?.currentUser?.uid;
                     final bool hasAny = _allergies.isNotEmpty;
 
@@ -108,7 +109,7 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
 
                     if (!mounted) return;
 
-                    Navigator.of(context).push(
+                    navigator.push(
                       MaterialPageRoute(
                         builder: (_) => const HeightSelector(),
                       ),

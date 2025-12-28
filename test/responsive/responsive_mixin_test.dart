@@ -21,7 +21,7 @@ class _MixinProbeState extends State<_MixinProbe> with ResponsiveMixin<_MixinPro
 }
 
 void main() {
-  Future<void> _withSize(WidgetTester tester, Size size, void Function(_MixinProbeState) verify) async {
+  Future<void> withSize(WidgetTester tester, Size size, void Function(_MixinProbeState) verify) async {
     _MixinProbeState? captured;
     await tester.pumpWidget(
       MediaQuery(
@@ -39,7 +39,7 @@ void main() {
 
   group('ResponsiveMixin basics', () {
     testWidgets('helpers return sensible values', (tester) async {
-      await _withSize(tester, const Size(390, 844), (st) {
+      await withSize(tester, const Size(390, 844), (st) {
         expect(st.rWidth(100) > 0, true);
         expect(st.rHeight(50) > 0, true);
         expect(st.rDimension(10) > 0, true);
@@ -59,25 +59,25 @@ void main() {
 
     testWidgets('device type flags are consistent', (tester) async {
       // Small phone
-      await _withSize(tester, const Size(350, 700), (st) {
+      await withSize(tester, const Size(350, 700), (st) {
         expect(st.isSmallPhone, true);
         expect(st.isPhone, false);
         expect(st.isTablet, false);
       });
       // Phone
-      await _withSize(tester, const Size(380, 700), (st) {
+      await withSize(tester, const Size(380, 700), (st) {
         expect(st.isSmallPhone, false);
         expect(st.isPhone, true);
         expect(st.isTablet, false);
       });
       // Tablet
-      await _withSize(tester, const Size(1000, 1200), (st) {
+      await withSize(tester, const Size(1000, 1200), (st) {
         expect(st.isTablet, true);
       });
     });
 
     testWidgets('safe area getters are available', (tester) async {
-      await _withSize(tester, const Size(390, 844), (st) {
+      await withSize(tester, const Size(390, 844), (st) {
         expect(st.topSafeArea, isA<double>());
         expect(st.bottomSafeArea, isA<double>());
       });

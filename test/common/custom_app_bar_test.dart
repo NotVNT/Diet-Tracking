@@ -9,13 +9,13 @@ void main() {
     group('Basic Rendering', () {
       testWidgets('should render with title', (WidgetTester tester) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(
                 title: 'Test Title',
                 showNotificationBell: false,
               ),
-              body: const SizedBox(),
+              body: SizedBox(),
             ),
           ),
         );
@@ -27,10 +27,10 @@ void main() {
         WidgetTester tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(title: 'Test', showNotificationBell: false),
-              body: const SizedBox(),
+              body: SizedBox(),
             ),
           ),
         );
@@ -44,10 +44,10 @@ void main() {
         WidgetTester tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(title: 'Test', showNotificationBell: false),
-              body: const SizedBox(),
+              body: SizedBox(),
             ),
           ),
         );
@@ -60,14 +60,14 @@ void main() {
         WidgetTester tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(
                 title: 'Test',
                 showBackButton: true,
                 showNotificationBell: false,
               ),
-              body: const SizedBox(),
+              body: SizedBox(),
             ),
           ),
         );
@@ -84,14 +84,14 @@ void main() {
         const customColor = Color(0xFF123456);
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(
                 title: 'Test',
                 backgroundColor: customColor,
                 showNotificationBell: false,
               ),
-              body: const SizedBox(),
+              body: SizedBox(),
             ),
           ),
         );
@@ -104,10 +104,10 @@ void main() {
         WidgetTester tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(title: 'Test', showNotificationBell: false),
-              body: const SizedBox(),
+              body: SizedBox(),
             ),
           ),
         );
@@ -167,10 +167,10 @@ void main() {
         WidgetTester tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(title: 'Test', showNotificationBell: false),
-              body: const SizedBox(),
+              body: SizedBox(),
             ),
           ),
         );
@@ -190,10 +190,10 @@ void main() {
             providers: [
               ChangeNotifierProvider(create: (_) => NotificationProvider()),
             ],
-            child: MaterialApp(
+            child: const MaterialApp(
               home: Scaffold(
                 appBar: CustomAppBar(title: 'Test'),
-                body: const SizedBox(),
+                body: SizedBox(),
               ),
             ),
           ),
@@ -211,13 +211,13 @@ void main() {
             providers: [
               ChangeNotifierProvider(create: (_) => NotificationProvider()),
             ],
-            child: MaterialApp(
+            child: const MaterialApp(
               home: Scaffold(
                 appBar: CustomAppBar(
                   title: 'Test',
                   showNotificationBell: false,
                 ),
-                body: const SizedBox(),
+                body: SizedBox(),
               ),
             ),
           ),
@@ -232,13 +232,13 @@ void main() {
         WidgetTester tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(
                 title: 'Styled Title',
                 showNotificationBell: false,
               ),
-              body: const SizedBox(),
+              body: SizedBox(),
             ),
           ),
         );
@@ -253,7 +253,7 @@ void main() {
       testWidgets('should have correct preferred size', (
         WidgetTester tester,
       ) async {
-        final appBar = CustomAppBar(title: 'Test');
+        const appBar = CustomAppBar(title: 'Test');
         expect(appBar.preferredSize, const Size.fromHeight(kToolbarHeight));
       });
     });
@@ -263,14 +263,14 @@ void main() {
         WidgetTester tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               appBar: CustomAppBar(
                 title: 'Integration Test',
                 showBackButton: true,
                 showNotificationBell: false,
               ),
-              body: const Center(child: Text('Body')),
+              body: Center(child: Text('Body')),
             ),
           ),
         );

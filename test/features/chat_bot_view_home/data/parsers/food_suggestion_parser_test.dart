@@ -9,7 +9,7 @@ void main() {
     });
 
     test('extracts single suggestion name + calories (single value)', () {
-      final text = '''
+      const text = '''
 Món ăn gợi ý: Cơm gà
 Calo: 500 kcal
 ''';
@@ -20,7 +20,7 @@ Calo: 500 kcal
     });
 
     test('extracts calories average from range', () {
-      final text = '''
+      const text = '''
 Món ăn đề xuất: Salad ức gà
 Calo: 300 - 500 kcal
 ''';
@@ -31,7 +31,7 @@ Calo: 300 - 500 kcal
     });
 
     test('extracts reason and nutrition section and cleans star bullets', () {
-      final text = '''
+      const text = '''
 Món ăn đề xuất: Bún bò
 Calo: 650 kcal
 **Lý do chọn:**
@@ -52,7 +52,7 @@ Calo: 650 kcal
     });
 
     test('deduplicates by foodName case-insensitively', () {
-      final text = '''
+      const text = '''
 Món ăn đề xuất: Pho
 Calo: 400 kcal
 Món ăn gợi ý: pho

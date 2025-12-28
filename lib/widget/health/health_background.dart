@@ -31,7 +31,7 @@ class HealthBackground extends StatelessWidget {
           child: Transform.rotate(
             angle: -0.5,
             child: Icon(Icons.local_pizza,
-                size: 120, color: Colors.orange.withOpacity(0.2)),
+                size: 120, color: Colors.orange.withValues(alpha: 0.2)),
           ),
         ),
         Positioned(
@@ -40,7 +40,7 @@ class HealthBackground extends StatelessWidget {
           child: Transform.rotate(
             angle: 0.5,
             child: Icon(Icons.icecream,
-                size: 100, color: Colors.pink.withOpacity(0.2)),
+                size: 100, color: Colors.pink.withValues(alpha: 0.2)),
           ),
         ),
         Positioned(
@@ -49,14 +49,14 @@ class HealthBackground extends StatelessWidget {
           child: Transform.rotate(
             angle: -0.2,
             child: Icon(Icons.bakery_dining,
-                size: 80, color: Colors.brown.withOpacity(0.2)),
+                size: 80, color: Colors.brown.withValues(alpha: 0.2)),
           ),
         ),
         Positioned(
           top: 150,
           left: 20,
           child: Icon(Icons.eco,
-              size: 60, color: Colors.green.withOpacity(0.1)),
+      size: 60, color: Colors.green.withValues(alpha: 0.1)),
         ),
         // Content
         child,

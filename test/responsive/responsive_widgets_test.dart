@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:diet_tracking_project/responsive/responsive_widgets.dart';
 
 void main() {
-  Future<void> _withSize(
+  Future<void> withSize(
     WidgetTester tester,
     Size size,
     Widget child,
@@ -22,18 +22,18 @@ void main() {
       const smallKey = Key('small');
 
       // Small phone
-      await _withSize(
+      await withSize(
         tester,
         const Size(350, 700),
-        ResponsiveBuilder(
-          mobile: const SizedBox(key: mobileKey),
-          smallPhone: const SizedBox(key: smallKey),
+        const ResponsiveBuilder(
+          mobile: SizedBox(key: mobileKey),
+          smallPhone: SizedBox(key: smallKey),
         ),
       );
       expect(find.byKey(smallKey), findsOneWidget);
 
       // Phone (fallback to mobile when phone/smallPhone null)
-      await _withSize(
+      await withSize(
         tester,
         const Size(380, 700),
         const ResponsiveBuilder(mobile: SizedBox(key: mobileKey)),
@@ -45,15 +45,15 @@ void main() {
   group('ResponsiveContainer', () {
     testWidgets('applies width/height/padding', (tester) async {
       const cKey = Key('container');
-      await _withSize(
+      await withSize(
         tester,
         const Size(390, 844),
-        ResponsiveContainer(
+        const ResponsiveContainer(
           key: cKey,
           baseWidth: 100,
           baseHeight: 80,
           basePadding: 16,
-          child: const Text('x'),
+          child: Text('x'),
         ),
       );
 
@@ -65,7 +65,7 @@ void main() {
 
   group('ResponsiveText', () {
     testWidgets('applies responsive text style', (tester) async {
-      await _withSize(
+      await withSize(
         tester,
         const Size(390, 844),
         const ResponsiveText('Hello', style: TextStyle(fontSize: 20)),
@@ -78,7 +78,7 @@ void main() {
   group('ResponsiveCard', () {
     testWidgets('renders and handles onTap', (tester) async {
       int tapped = 0;
-      await _withSize(
+      await withSize(
         tester,
         const Size(390, 844),
         ResponsiveCard(
@@ -96,7 +96,7 @@ void main() {
 
   group('ResponsiveIcon', () {
     testWidgets('uses responsive icon size', (tester) async {
-      await _withSize(
+      await withSize(
         tester,
         const Size(390, 844),
         const ResponsiveIcon(Icons.add, baseSize: 24),
@@ -109,7 +109,7 @@ void main() {
   group('ResponsiveButton', () {
     testWidgets('renders and triggers onPressed', (tester) async {
       int pressed = 0;
-      await _withSize(
+      await withSize(
         tester,
         const Size(390, 844),
         ResponsiveButton(
@@ -128,7 +128,7 @@ void main() {
 
   group('ResponsiveSpacer', () {
     testWidgets('produces SizedBox with non-zero dimension', (tester) async {
-      await _withSize(
+      await withSize(
         tester,
         const Size(390, 844),
         const ResponsiveSpacer(baseHeight: 16),
@@ -142,12 +142,12 @@ void main() {
     testWidgets('renders children and adapts crossAxisCount', (tester) async {
       final kids = List<Widget>.generate(4, (i) => Text('Item $i', key: Key('k$i')));
 
-      await _withSize(
+      await withSize(
         tester,
         const Size(390, 844),
         ResponsiveGridView(
-          children: kids,
           shrinkWrap: true,
+          children: kids,
         ),
       );
 

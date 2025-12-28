@@ -64,7 +64,7 @@ void main() {
     const sampleXs = <int>[2, 10, 40, 75];
     for (final x in sampleXs) {
       final pixel = _rgbaAt(rgba, width, x, expectedY);
-      expect(pixel, equals(Color(0xFF8B5CF6).value));
+      expect(pixel, equals(const Color(0xFF8B5CF6).toARGB32()));
     }
   });
 
@@ -94,7 +94,7 @@ void main() {
     const sampleXs = <int>[2, 20, 60, 79];
     for (final x in sampleXs) {
       final pixel = _rgbaAt(rgba, width, x, expectedY);
-      expect(pixel, equals(Color(0xFF8B5CF6).value));
+      expect(pixel, equals(const Color(0xFF8B5CF6).toARGB32()));
     }
   });
 
@@ -122,10 +122,10 @@ void main() {
     // Major ticks at 0, 5, 10 cm -> y = 100, 50, 0 respectively
     // Sample center of the stroke at x=20 for y=50
     final pixelMiddle = _rgbaAt(rgba, width, 20, 50);
-    expect(pixelMiddle, equals(Color(0xFF757575).value)); // Colors.grey[600]
+  expect(pixelMiddle, equals(const Color(0xFF757575).toARGB32())); // Colors.grey[600]
 
     // Sample a minor tick at 1 cm -> y = 90; color should be grey[400]
     final pixelMinor = _rgbaAt(rgba, width, 10, 90);
-    expect(pixelMinor, equals(Color(0xFFBDBDBD).value));
+    expect(pixelMinor, equals(const Color(0xFFBDBDBD).toARGB32()));
   });
 }

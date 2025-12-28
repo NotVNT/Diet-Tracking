@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../lib/common/language_selector.dart';
-import '../../lib/services/language_service.dart';
+import 'package:diet_tracking_project/common/language_selector.dart';
+import 'package:diet_tracking_project/services/language_service.dart';
 
 void main() {
   group('LanguageService Tests', () {
@@ -62,7 +62,7 @@ void main() {
     test('changeLanguage notifies listeners', () async {
       // Arrange
       int callCount = 0;
-      VoidCallback listener = () => callCount++;
+      void listener() => callCount++;
       LanguageService.addLanguageListener(listener);
       SharedPreferences.setMockInitialValues({});
 
@@ -82,8 +82,8 @@ void main() {
         // Arrange
         int callCount1 = 0;
         int callCount2 = 0;
-        VoidCallback listener1 = () => callCount1++;
-        VoidCallback listener2 = () => callCount2++;
+        void listener1() => callCount1++;
+        void listener2() => callCount2++;
 
         // Act
         LanguageService.addLanguageListener(listener1);

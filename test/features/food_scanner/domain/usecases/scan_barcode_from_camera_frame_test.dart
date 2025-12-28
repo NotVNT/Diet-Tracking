@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 
 import 'package:diet_tracking_project/features/food_scanner/domain/entities/barcode_model.dart';
 import 'package:diet_tracking_project/features/food_scanner/domain/usecases/scan_barcode_from_camera_frame.dart';

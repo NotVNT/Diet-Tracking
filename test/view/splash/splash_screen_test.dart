@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:diet_tracking_project/view/splash/splash_screen.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';

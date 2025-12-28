@@ -152,7 +152,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     AppLocalizations.of(context)?.startTrackingToday ??
                         'Bắt đầu theo dõi\nchế độ ăn kiêng của bạn hôm nay!',
                     style: const bool.fromEnvironment('FLUTTER_TEST')
-                        ? TextStyle(
+                        ? const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
                             height: 1.2,

@@ -97,11 +97,11 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(18),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
-                          color: const Color.fromRGBO(0, 0, 0, 0.08),
+                          color: Color.fromRGBO(0, 0, 0, 0.08),
                           blurRadius: 8,
-                          offset: const Offset(0, 2),
+                          offset: Offset(0, 2),
                         ),
                       ],
                       border: Border.all(
@@ -195,11 +195,11 @@ class _DailyActivitiesSelectorState extends State<DailyActivitiesSelector> {
               border: isSelected
                   ? Border.all(color: const Color(0xFF1F2A37), width: 2)
                   : null,
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
-                  color: const Color.fromRGBO(0, 0, 0, 0.05),
+                  color: Color.fromRGBO(0, 0, 0, 0.05),
                   blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),

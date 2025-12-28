@@ -5,7 +5,7 @@ import 'package:diet_tracking_project/widget/progress_bar/started_progress_bar.d
 
 void main() {
   group('StartedProgressBar', () {
-    List<Color?> _segmentColors(
+    List<Color?> segmentColors(
       WidgetTester tester, {
       required Color active,
       required Color inactive,
@@ -53,7 +53,7 @@ void main() {
       );
 
       // 5 segments.
-      final colors = _segmentColors(
+      final colors = segmentColors(
         tester,
         active: active,
         inactive: inactive,
@@ -92,7 +92,7 @@ void main() {
       );
 
       // One active segment, no inter-segment gaps.
-      final colors = _segmentColors(
+      final colors = segmentColors(
         tester,
         active: active,
         inactive: const Color(0x00000000),

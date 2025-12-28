@@ -104,10 +104,13 @@ void main() {
       // Some Flutter versions quantize opacity slightly differently.
       final overlay = sliderTheme.data.overlayColor;
       expect(overlay, isNotNull);
-      expect(overlay!.red, accent.red);
-      expect(overlay.green, accent.green);
-      expect(overlay.blue, accent.blue);
-      expect(overlay.opacity, closeTo(0.08, 0.01));
+    expect((overlay!.r * 255.0).round().clamp(0, 255),
+      (accent.r * 255.0).round().clamp(0, 255));
+    expect((overlay.g * 255.0).round().clamp(0, 255),
+      (accent.g * 255.0).round().clamp(0, 255));
+    expect((overlay.b * 255.0).round().clamp(0, 255),
+      (accent.b * 255.0).round().clamp(0, 255));
+    expect(overlay.a, closeTo(0.08, 0.01));
     });
   });
 }

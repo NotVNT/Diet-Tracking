@@ -148,7 +148,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               child: Text(
                 AppLocalizations.of(context)!.editProfileSave,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),

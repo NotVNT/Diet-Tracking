@@ -71,7 +71,7 @@ void main() {
       bool pressed = false;
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: CustomButton(text: 'No Action Button', onPressed: null),
           ),
@@ -86,9 +86,9 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: const CustomButton(
+            body: CustomButton(
               text: 'Loading Button',
               onPressed: null,
               isLoading: true,
@@ -104,9 +104,9 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: const CustomButton(
+            body: CustomButton(
               text: 'Normal Button',
               onPressed: null,
               isLoading: false,
@@ -254,9 +254,9 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: const CustomButton(
+            body: CustomButton(
               text: 'Disabled Button',
               onPressed: null,
               isEnabled: false,
@@ -319,9 +319,9 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: const CustomButton(
+            body: CustomButton(
               text: 'Disabled Button',
               onPressed: null,
               isEnabled: false,
@@ -383,9 +383,9 @@ void main() {
       const Icon testIcon = Icon(Icons.save);
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: const CustomButton(
+            body: CustomButton(
               text: 'Loading Button',
               onPressed: null,
               icon: testIcon,

@@ -84,7 +84,7 @@ class NutritionUtils {
   /// Tính cân nặng lý tưởng dựa trên chiều cao (công thức Devine)
   static double calculateIdealWeight(double heightCm, String gender) {
     final heightInches = heightCm / 2.54;
-    final baseHeight = 60.0; // 5 feet
+    const baseHeight = 60.0; // 5 feet
 
     if (gender.toLowerCase() == 'nam' || gender.toLowerCase() == 'male') {
       // Nam: 50 kg + 2.3 kg cho mỗi inch trên 5 feet

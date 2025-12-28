@@ -20,7 +20,7 @@ void main() {
     });
 
     test('GetUserProfileUseCase.call returns repository result', () async {
-      final profile = ProfileEntity(uid: 'u1', displayName: 'n', email: 'e');
+      const profile = ProfileEntity(uid: 'u1', displayName: 'n', email: 'e');
       when(repository.getUserProfile()).thenAnswer((_) async => profile);
 
       final useCase = GetUserProfileUseCase(repository);
@@ -43,7 +43,7 @@ void main() {
     });
 
     test('UpdateUserProfileUseCase.call updates repository', () async {
-      final profile = ProfileEntity(uid: 'u1', displayName: 'n', email: 'e');
+      const profile = ProfileEntity(uid: 'u1', displayName: 'n', email: 'e');
       when(repository.updateUserProfile(any)).thenAnswer((_) async {});
 
       final useCase = UpdateUserProfileUseCase(repository);

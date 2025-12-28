@@ -6,7 +6,7 @@ import 'package:diet_tracking_project/l10n/app_localizations.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Widget _wrap(Widget child) => MaterialApp(
+  Widget wrap(Widget child) => MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
@@ -16,7 +16,7 @@ void main() {
   group('EmailInputField', () {
     testWidgets('shows label and hint', (tester) async {
       final c = TextEditingController();
-      await tester.pumpWidget(_wrap(EmailInputField(
+      await tester.pumpWidget(wrap(EmailInputField(
         controller: c,
         isFocused: false,
         onTap: () {},
@@ -30,7 +30,7 @@ void main() {
     testWidgets('toggle visibility icon switches', (tester) async {
       bool visible = false;
       final c = TextEditingController();
-      await tester.pumpWidget(_wrap(StatefulBuilder(builder: (context, setState) {
+      await tester.pumpWidget(wrap(StatefulBuilder(builder: (context, setState) {
         return PasswordInputField(
           controller: c,
           isFocused: false,
@@ -52,7 +52,7 @@ void main() {
   group('ForgotPasswordButton', () {
     testWidgets('invokes onPressed', (tester) async {
       int called = 0;
-      await tester.pumpWidget(_wrap(ForgotPasswordButton(onPressed: () => called++)));
+      await tester.pumpWidget(wrap(ForgotPasswordButton(onPressed: () => called++)));
       await tester.tap(find.byType(TextButton));
       expect(called, 1);
     });
@@ -60,7 +60,7 @@ void main() {
 
   group('OrDivider', () {
     testWidgets('renders divider and text', (tester) async {
-      await tester.pumpWidget(_wrap(const OrDivider()));
+      await tester.pumpWidget(wrap(const OrDivider()));
       expect(find.text('OR login with'), findsOneWidget);
       expect(find.byType(Container), findsWidgets);
     });
@@ -69,7 +69,7 @@ void main() {
   group('NoAccountButton', () {
     testWidgets('invokes onPressed', (tester) async {
       int called = 0;
-      await tester.pumpWidget(_wrap(NoAccountButton(onPressed: () => called++)));
+      await tester.pumpWidget(wrap(NoAccountButton(onPressed: () => called++)));
       await tester.tap(find.byType(TextButton));
       expect(called, 1);
     });

@@ -229,11 +229,11 @@ class _BottomButtons extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
-                color: const Color.fromRGBO(0, 0, 0, 0.08),
+                color: Color.fromRGBO(0, 0, 0, 0.08),
                 blurRadius: 8,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
             border: Border.all(

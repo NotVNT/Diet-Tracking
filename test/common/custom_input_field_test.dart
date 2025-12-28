@@ -39,7 +39,7 @@ void main() {
       testWidgets('should render with all optional parameters', (
         WidgetTester tester,
       ) async {
-        final suffixIcon = const Icon(Icons.visibility);
+        const suffixIcon = Icon(Icons.visibility);
 
         await tester.pumpWidget(
           MaterialApp(

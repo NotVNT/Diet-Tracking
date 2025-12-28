@@ -1,6 +1,34 @@
 # diet_tracking_project
 
+[![CI](https://github.com/NotVNT/Diet-Tracking/actions/workflows/ci.yml/badge.svg?branch=testing)](https://github.com/NotVNT/Diet-Tracking/actions/workflows/ci.yml)
+
 A new Flutter project.
+
+## CI (GitHub Actions)
+
+This repo has a CI workflow in `.github/workflows/ci.yml`.
+
+It runs on every **pull request** and on **push** to `main` and `testing`, and performs:
+
+- `flutter pub get`
+- `flutter analyze --no-fatal-infos`
+- `flutter test`
+
+Optionally (non-blocking):
+
+- Collects coverage using `dart run tool/coverage_sharded.dart`
+- Uploads `coverage/lcov.info` to Codecov if `CODECOV_TOKEN` is configured in repo secrets
+
+### Run the same checks locally
+
+```powershell
+flutter pub get
+flutter analyze --no-fatal-infos
+flutter test
+
+# optional coverage
+dart run tool/coverage_sharded.dart
+```
 
 ## Getting Started
 

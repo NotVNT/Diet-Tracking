@@ -64,5 +64,29 @@ void main() {
       await svc.clearGuestData();
       expect(await svc.hasCompleteGuestOnboarding(), false);
     });
+
+    test(
+      'readGuestData chuẩn hóa goal legacy onboarding (localized) sang goal key',
+      () async {
+        // Legacy format: localized label + (subOptionKey)
+        SharedPreferences.setMockInitialValues({
+          'guest_goal': 'Giảm cân(keto)',
+        });
+
+        final svc = LocalStorageService();
+        final data = await svc.readGuestData();
+        expect(data['goal'], 'lose_weight_keto');
+      },
+    );
+
+    test('readGuestData giữ nguyên goal key đã chuẩn hóa', () async {
+      SharedPreferences.setMockInitialValues({
+        'guest_goal': 'lose_weight_low_carb',
+      });
+
+      final svc = LocalStorageService();
+      final data = await svc.readGuestData();
+      expect(data['goal'], 'lose_weight_low_carb');
+    });
   });
 }

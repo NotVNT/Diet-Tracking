@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Widget _wrap(Widget child) => MaterialApp(
+  Widget wrap(Widget child) => MaterialApp(
     home: Scaffold(body: Center(child: child)),
   );
 
   testWidgets('renders value and unit texts', (tester) async {
     await tester.pumpWidget(
-      _wrap(const WeightDisplay(valueText: '130.5', unit: 'lb')),
+      wrap(const WeightDisplay(valueText: '130.5', unit: 'lb')),
     );
 
     expect(find.text('130.5'), findsOneWidget);
@@ -18,7 +18,7 @@ void main() {
 
   testWidgets('applies correct text styles', (tester) async {
     await tester.pumpWidget(
-      _wrap(const WeightDisplay(valueText: '72.0', unit: 'kg')),
+      wrap(const WeightDisplay(valueText: '72.0', unit: 'kg')),
     );
 
     // Verify value text style

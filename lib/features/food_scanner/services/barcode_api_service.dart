@@ -41,7 +41,7 @@ class BarcodeApiService {
       if (seg.length >= 3 && seg[0] == 'spaces') {
         final owner = seg[1].toLowerCase();
         final space = seg[2].toLowerCase();
-        return 'https://${owner}-${space}.hf.space';
+        return 'https://$owner-$space.hf.space';
       }
     }
 

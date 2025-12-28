@@ -292,9 +292,9 @@ class _InterfaceConfirmationState extends State<InterfaceConfirmation> {
         color: _backgroundColor,
         boxShadow: const [
           BoxShadow(
-            color: const Color.fromRGBO(0, 0, 0, 0.08),
+            color: Color.fromRGBO(0, 0, 0, 0.08),
             blurRadius: 18,
-            offset: const Offset(0, -6),
+            offset: Offset(0, -6),
           ),
         ],
       ),

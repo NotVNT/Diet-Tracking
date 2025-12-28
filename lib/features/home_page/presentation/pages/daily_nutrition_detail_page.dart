@@ -105,7 +105,7 @@ class _DailyNutritionDetailPageState extends State<DailyNutritionDetailPage> {
         const SizedBox(height: 16),
         ...widget.foodRecords
             .map((record) => _buildFoodItem(context, record))
-            .toList(),
+            ,
       ],
     );
   }

@@ -12,10 +12,10 @@ class UnitToggle extends StatelessWidget {
     // Match height selector toggle colors: selected black bg with white text,
     // unselected transparent with dark text inside a light grey capsule.
     final Color capsuleBg = Colors.grey.shade200;
-    final Color selectedBg = Colors.black;
-    final Color selectedText = Colors.white;
-    final Color unselectedBg = Colors.transparent;
-    final Color unselectedText = Colors.black87;
+    const Color selectedBg = Colors.black;
+    const Color selectedText = Colors.white;
+    const Color unselectedBg = Colors.transparent;
+    const Color unselectedText = Colors.black87;
 
     return Container(
       padding: const EdgeInsets.all(4),

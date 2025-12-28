@@ -6,7 +6,7 @@ void main() {
   group('AppConfirmDialog (minimal)', () {
     testWidgets('renders with title and message', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: Center(
               child: AppConfirmDialog(title: 'Title', message: 'Message'),

@@ -6,7 +6,7 @@ import 'package:diet_tracking_project/utils/height_utils.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Widget _wrap(Widget child) {
+  Widget wrap(Widget child) {
     return MaterialApp(home: Scaffold(body: child));
   }
 
@@ -17,7 +17,7 @@ void main() {
     bool? lastIsCm;
 
     await tester.pumpWidget(
-      _wrap(
+      wrap(
         HeightSelectorWidget(
           initialHeight: 172.0,
           onHeightChanged: (h) => lastHeight = h,
@@ -40,7 +40,7 @@ void main() {
       bool? lastIsCm;
 
       await tester.pumpWidget(
-        _wrap(
+        wrap(
           HeightSelectorWidget(
             initialHeight: 172.0,
             onHeightChanged: (_) {},
@@ -70,7 +70,7 @@ void main() {
       double? lastHeight;
 
       await tester.pumpWidget(
-        _wrap(
+        wrap(
           HeightSelectorWidget(
             initialHeight: 172.0,
             onHeightChanged: (h) => lastHeight = h,
@@ -96,7 +96,7 @@ void main() {
       double? lastHeight;
 
       await tester.pumpWidget(
-        _wrap(
+        wrap(
           HeightSelectorWidget(
             initialHeight: 172.0,
             onHeightChanged: (h) => lastHeight = h,

@@ -12,7 +12,7 @@ void main() {
         const testChild = Text('Test Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientBackground(child: testChild)),
           ),
         );
@@ -30,13 +30,13 @@ void main() {
         const customEnd = Alignment.bottomCenter;
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: GradientBackground(
-                child: testChild,
                 colors: customColors,
                 begin: customBegin,
                 end: customEnd,
+                child: testChild,
               ),
             ),
           ),
@@ -54,7 +54,7 @@ void main() {
         const testChild = Text('Test Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientBackground(child: testChild)),
           ),
         );
@@ -72,7 +72,7 @@ void main() {
         const testChild = Text('Test Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientBackground(child: testChild)),
           ),
         );
@@ -94,9 +94,9 @@ void main() {
         const customColors = [Colors.red, Colors.green, Colors.blue];
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
-              body: GradientBackground(child: testChild, colors: customColors),
+              body: GradientBackground(colors: customColors, child: testChild),
             ),
           ),
         );
@@ -115,9 +115,9 @@ void main() {
         const customBegin = Alignment.centerLeft;
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
-              body: GradientBackground(child: testChild, begin: customBegin),
+              body: GradientBackground(begin: customBegin, child: testChild),
             ),
           ),
         );
@@ -136,9 +136,9 @@ void main() {
         const customEnd = Alignment.centerRight;
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
-              body: GradientBackground(child: testChild, end: customEnd),
+              body: GradientBackground(end: customEnd, child: testChild),
             ),
           ),
         );
@@ -159,13 +159,13 @@ void main() {
         const customEnd = Alignment.bottomLeft;
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: GradientBackground(
-                child: testChild,
                 colors: customColors,
                 begin: customBegin,
                 end: customEnd,
+                child: testChild,
               ),
             ),
           ),
@@ -233,7 +233,7 @@ void main() {
         const testChild = Text('Test Card Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientCard(child: testChild)),
           ),
         );
@@ -253,14 +253,14 @@ void main() {
         const customGradientColors = [Colors.blue, Colors.green];
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: GradientCard(
-                child: testChild,
                 padding: customPadding,
                 margin: customMargin,
                 borderRadius: customBorderRadius,
                 gradientColors: customGradientColors,
+                child: testChild,
               ),
             ),
           ),
@@ -279,7 +279,7 @@ void main() {
         const testChild = Text('Test Card Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientCard(child: testChild)),
           ),
         );
@@ -295,7 +295,7 @@ void main() {
         const testChild = Text('Test Card Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientCard(child: testChild)),
           ),
         );
@@ -310,7 +310,7 @@ void main() {
         const testChild = Text('Test Card Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientCard(child: testChild)),
           ),
         );
@@ -327,7 +327,7 @@ void main() {
         const testChild = Text('Test Card Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientCard(child: testChild)),
           ),
         );
@@ -344,7 +344,7 @@ void main() {
         const testChild = Text('Test Card Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(body: GradientCard(child: testChild)),
           ),
         );
@@ -368,9 +368,9 @@ void main() {
         const customPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
-              body: GradientCard(child: testChild, padding: customPadding),
+              body: GradientCard(padding: customPadding, child: testChild),
             ),
           ),
         );
@@ -386,9 +386,9 @@ void main() {
         const customMargin = EdgeInsets.all(16);
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
-              body: GradientCard(child: testChild, margin: customMargin),
+              body: GradientCard(margin: customMargin, child: testChild),
             ),
           ),
         );
@@ -404,11 +404,11 @@ void main() {
         const customBorderRadius = 15.0;
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: GradientCard(
-                child: testChild,
                 borderRadius: customBorderRadius,
+                child: testChild,
               ),
             ),
           ),
@@ -430,11 +430,11 @@ void main() {
         const customGradientColors = [Colors.red, Colors.yellow, Colors.green];
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: GradientCard(
-                child: testChild,
                 gradientColors: customGradientColors,
+                child: testChild,
               ),
             ),
           ),
@@ -457,14 +457,14 @@ void main() {
         const customGradientColors = [Colors.purple, Colors.pink];
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: GradientCard(
-                child: testChild,
                 padding: customPadding,
                 margin: customMargin,
                 borderRadius: customBorderRadius,
                 gradientColors: customGradientColors,
+                child: testChild,
               ),
             ),
           ),
@@ -548,8 +548,8 @@ void main() {
         const testChild = Text('Test Card Child');
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(body: GradientCard(child: testChild, margin: null)),
+          const MaterialApp(
+            home: Scaffold(body: GradientCard(margin: null, child: testChild)),
           ),
         );
 
@@ -563,9 +563,9 @@ void main() {
         const testChild = Text('Test Card Child');
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
-              body: GradientCard(child: testChild, borderRadius: 0.0),
+              body: GradientCard(borderRadius: 0.0, child: testChild),
             ),
           ),
         );
@@ -583,9 +583,9 @@ void main() {
         const twoColors = [Colors.blue, Colors.blue];
 
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
-              body: GradientCard(child: testChild, gradientColors: twoColors),
+              body: GradientCard(gradientColors: twoColors, child: testChild),
             ),
           ),
         );
@@ -603,27 +603,27 @@ void main() {
     testWidgets('should work together in a complex layout', (
       WidgetTester tester,
     ) async {
-      final complexLayout = GradientBackground(
+      const complexLayout = GradientBackground(
         child: Column(
           children: [
-            const Text('App Title', style: TextStyle(fontSize: 32)),
-            const SizedBox(height: 20),
+            Text('App Title', style: TextStyle(fontSize: 32)),
+            SizedBox(height: 20),
             GradientCard(
               child: Column(
                 children: [
-                  const Text('Card 1', style: TextStyle(fontSize: 20)),
-                  const SizedBox(height: 10),
-                  const Text('This is the first card content'),
+                  Text('Card 1', style: TextStyle(fontSize: 20)),
+                  SizedBox(height: 10),
+                  Text('This is the first card content'),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             GradientCard(
               child: Column(
                 children: [
-                  const Text('Card 2', style: TextStyle(fontSize: 20)),
-                  const SizedBox(height: 10),
-                  const Text('This is the second card content'),
+                  Text('Card 2', style: TextStyle(fontSize: 20)),
+                  SizedBox(height: 10),
+                  Text('This is the second card content'),
                 ],
               ),
             ),
@@ -631,7 +631,7 @@ void main() {
         ),
       );
 
-      await tester.pumpWidget(MaterialApp(home: Scaffold(body: complexLayout)));
+      await tester.pumpWidget(const MaterialApp(home: Scaffold(body: complexLayout)));
 
       expect(find.text('App Title'), findsOneWidget);
       expect(find.text('Card 1'), findsOneWidget);

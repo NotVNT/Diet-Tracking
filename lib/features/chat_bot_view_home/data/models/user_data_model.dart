@@ -39,7 +39,7 @@ class UserDataModel extends UserDataEntity {
     // goal
     final String goal = (requireType<String>(userData['goal'], 'goal')).trim();
     if (goal.isEmpty) {
-      throw FormatException('Field "goal" must be a non-empty string');
+      throw const FormatException('Field "goal" must be a non-empty string');
     }
 
     // gender (optional)
@@ -79,7 +79,7 @@ class UserDataModel extends UserDataEntity {
       allergies = <String>[];
     } else if (allergyDyn is List) {
       if (!allergyDyn.every((e) => e is String)) {
-        throw FormatException('All items in bodyInfo.allergies must be String');
+        throw const FormatException('All items in bodyInfo.allergies must be String');
       }
       allergies = allergyDyn
           .cast<String>()
@@ -94,17 +94,17 @@ class UserDataModel extends UserDataEntity {
 
     // Basic range validations (optional but helpful)
     if (age < 0 || age > 120) {
-      throw FormatException('age out of range (0-120)');
+      throw const FormatException('age out of range (0-120)');
     }
     if (height < 30 || height > 300) {
-      throw FormatException('bodyInfo.heightCm out of range (30-300)');
+      throw const FormatException('bodyInfo.heightCm out of range (30-300)');
     }
     if (weight < 2 || weight > 500) {
-      throw FormatException('bodyInfo.weightKg out of range (2-500)');
+      throw const FormatException('bodyInfo.weightKg out of range (2-500)');
     }
 
     // Join lists for model fields
-    final String disease = ''; // medicalConditions no longer used
+    const String disease = ''; // medicalConditions no longer used
     final String allergy = allergies.join(', ');
 
     return UserDataModel(

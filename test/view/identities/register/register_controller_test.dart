@@ -368,7 +368,7 @@ void main() {
     });
 
     test('signUp trả về failure khi email đã được sử dụng', () async {
-      authStub.signUpException = AuthException(
+      authStub.signUpException = const AuthException(
         'Email already in use',
         'email-already-in-use',
       );
@@ -384,7 +384,7 @@ void main() {
     });
 
     test('signUp trả về failure khi mật khẩu yếu', () async {
-      authStub.signUpException = AuthException(
+      authStub.signUpException = const AuthException(
         'Password is weak',
         'weak-password',
       );
