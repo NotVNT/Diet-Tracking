@@ -77,7 +77,15 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
       final product = await getBarcodeProductInfo(barcodeValue);
       emit(BarcodeResolved(product, imagePath: event.imagePath));
     } catch (e) {
-      emit(const BarcodeError('Error retrieving barcode details'));
+      // Preserve user-friendly message for product-not-found errors.
+      final msg = e.toString().toLowerCase();
+      if (msg.contains('không tìm thấy') ||
+          msg.contains('not found') ||
+          msg.contains('details not found')) {
+        emit(const BarcodeError('Không tìm thấy sản phẩm'));
+      } else {
+        emit(const BarcodeError('Không tìm thấy sản phẩm'));
+      }
     }
   }
 
@@ -91,7 +99,14 @@ class BarcodeBloc extends Bloc<BarcodeEvent, BarcodeState> {
       final product = await getBarcodeProductInfo(barcodeValue);
       emit(BarcodeResolved(product, imagePath: event.imagePath));
     } catch (e) {
-      emit(const BarcodeError('Error retrieving barcode details'));
+      final msg = e.toString().toLowerCase();
+      if (msg.contains('không tìm thấy') ||
+          msg.contains('not found') ||
+          msg.contains('details not found')) {
+        emit(const BarcodeError('Không tìm thấy sản phẩm'));
+      } else {
+        emit(const BarcodeError('Không tìm thấy sản phẩm'));
+      }
     }
   }
 

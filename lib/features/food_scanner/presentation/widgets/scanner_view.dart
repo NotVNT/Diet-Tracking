@@ -34,6 +34,7 @@ class ScannerView extends StatefulWidget {
 class _ScannerViewState extends State<ScannerView> {
   ScannerActionType _selectedAction = ScannerActionType.food;
   final GlobalKey<MobileBarcodeScannerViewState> _barcodeScannerKey = GlobalKey();
+  BarcodeState? _prevBarcodeState;
 
   List<ScannerActionConfig> _buildActions(AppLocalizations l10n) {
     return [
@@ -75,6 +76,16 @@ class _ScannerViewState extends State<ScannerView> {
             builder: (context, foodScanState) {
               return BlocBuilder<BarcodeBloc, BarcodeState>(
                 builder: (context, barcodeState) {
+                  // If a barcode scan fails (e.g. product not found), restart the
+                  // barcode camera so users can scan again immediately.
+                  final prev = _prevBarcodeState;
+                  _prevBarcodeState = barcodeState;
+                  if (prev is BarcodeUploading && barcodeState is BarcodeError) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _barcodeScannerKey.currentState?.restartScanning();
+                    });
+                  }
+
                   final isUploading =
                       foodScanState is FoodScanUploading ||
                       barcodeState is BarcodeUploading;
