@@ -9,8 +9,6 @@ import 'package:diet_tracking_project/features/chat_bot_view_home/presentation/w
 import 'package:diet_tracking_project/features/chat_bot_view_home/presentation/widgets/messages_area.dart';
 import 'package:diet_tracking_project/features/chat_bot_view_home/presentation/widgets/chat_input_area.dart';
 import 'package:diet_tracking_project/features/chat_bot_view_home/domain/entities/chat_session_entity.dart';
-import 'package:diet_tracking_project/features/chat_bot_view_home/domain/usecases/send_message_usecase.dart';
-import 'package:diet_tracking_project/features/chat_bot_view_home/domain/usecases/validate_message_usecase.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:diet_tracking_project/view/notification/notification_provider.dart';
 
