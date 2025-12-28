@@ -22,7 +22,8 @@ class ScannedProductCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.colorScheme.brightness == Brightness.dark;
     final String title = product.productName ?? 'Unknown product';
-    final String subtitle = (product.brands != null && product.brands!.isNotEmpty)
+    final String subtitle =
+        (product.brands != null && product.brands!.isNotEmpty)
         ? product.brands!.trim()
         : '';
     final String calories = _formatCalories(product.calories);
@@ -133,8 +134,9 @@ class ScannedProductCard extends StatelessWidget {
                           style: GoogleFonts.inter(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.7),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                         ),
                       ],
@@ -148,7 +150,7 @@ class ScannedProductCard extends StatelessWidget {
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                   tooltip: 'Bỏ qua',
-                )
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -161,11 +163,7 @@ class ScannedProductCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Wrap(
-              spacing: 10,
-              runSpacing: 8,
-              children: macroChips,
-            ),
+            Wrap(spacing: 10, runSpacing: 8, children: macroChips),
             const SizedBox(height: 18),
             Row(
               children: [
@@ -173,11 +171,11 @@ class ScannedProductCard extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: () {
                       context.read<BarcodeBloc>().add(
-                            SaveBarcodeProductRequested(
-                              product,
-                              imagePath: state.imagePath,
-                            ),
-                          );
+                        SaveBarcodeProductRequested(
+                          product,
+                          imagePath: state.imagePath,
+                        ),
+                      );
                     },
                     icon: const Icon(Icons.check_circle_outline),
                     label: const Text('Ghi nhận thực phẩm'),
@@ -185,9 +183,7 @@ class ScannedProductCard extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 14,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                   ),
                 ),
@@ -252,10 +248,7 @@ class _MacroChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            emoji,
-            style: const TextStyle(fontSize: 16),
-          ),
+          Text(emoji, style: const TextStyle(fontSize: 16)),
           const SizedBox(width: 6),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,16 +256,16 @@ class _MacroChip extends StatelessWidget {
               Text(
                 label,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               Text(
                 value,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                    ),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                ),
               ),
             ],
           ),

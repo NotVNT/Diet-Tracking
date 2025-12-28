@@ -91,15 +91,16 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
     final normalizedText = removeDiacritics(text).toLowerCase();
     if (normalizedText.isEmpty) return;
 
-    final exists = widget.selectedAllergies.any((e) =>
-        removeDiacritics(e).toLowerCase() == normalizedText);
+    final exists = widget.selectedAllergies.any(
+      (e) => removeDiacritics(e).toLowerCase() == normalizedText,
+    );
 
     if (!exists) {
       final match = _commonAllergies.firstWhere(
         (e) => removeDiacritics(e).toLowerCase() == normalizedText,
         orElse: () => text.trim(),
       );
-      
+
       final newList = List<String>.from(widget.selectedAllergies)..add(match);
       widget.onAllergiesChanged(newList);
     }
@@ -107,7 +108,8 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
   }
 
   void _removeAllergy(String allergy) {
-    final newList = List<String>.from(widget.selectedAllergies)..remove(allergy);
+    final newList = List<String>.from(widget.selectedAllergies)
+      ..remove(allergy);
     widget.onAllergiesChanged(newList);
   }
 
@@ -164,7 +166,7 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
             style: AppStyles.bodySmall,
           ),
           const SizedBox(height: 16),
-          
+
           // Input Row
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,11 +181,13 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                         if (textEditingValue.text.isEmpty) {
                           return const Iterable<String>.empty();
                         }
-                        final normalizedInput =
-                            removeDiacritics(textEditingValue.text).toLowerCase();
+                        final normalizedInput = removeDiacritics(
+                          textEditingValue.text,
+                        ).toLowerCase();
                         return _commonAllergies.where((String option) {
-                          final normalizedOption =
-                              removeDiacritics(option).toLowerCase();
+                          final normalizedOption = removeDiacritics(
+                            option,
+                          ).toLowerCase();
                           return normalizedOption.contains(normalizedInput);
                         });
                       },
@@ -193,72 +197,98 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                           TextPosition(offset: _allergyCtrl.text.length),
                         );
                       },
-                      optionsViewBuilder: (BuildContext context,
-                          AutocompleteOnSelected<String> onSelected,
-                          Iterable<String> options) {
-                        return Align(
-                          alignment: Alignment.topLeft,
-                          child: Material(
-                            elevation: 4.0,
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white,
-                            child: Container(
-                              width: constraints.maxWidth,
-                              constraints: const BoxConstraints(maxHeight: 200),
-                              child: ListView.separated(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                itemCount: options.length,
-                                separatorBuilder: (context, index) =>
-                                    const Divider(height: 1, color: AppColors.grey200),
-                                itemBuilder: (BuildContext context, int index) {
-                                  final String option = options.elementAt(index);
-                                  return InkWell(
-                                    onTap: () => onSelected(option),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 16),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            _getEmoji(option),
-                                            style: const TextStyle(fontSize: 18),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(option),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
+                      optionsViewBuilder:
+                          (
+                            BuildContext context,
+                            AutocompleteOnSelected<String> onSelected,
+                            Iterable<String> options,
+                          ) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 4.0,
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white,
+                                child: Container(
+                                  width: constraints.maxWidth,
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 200,
+                                  ),
+                                  child: ListView.separated(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    itemCount: options.length,
+                                    separatorBuilder: (context, index) =>
+                                        const Divider(
+                                          height: 1,
+                                          color: AppColors.grey200,
+                                        ),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                          final String option = options
+                                              .elementAt(index);
+                                          return InkWell(
+                                            onTap: () => onSelected(option),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 12,
+                                                    horizontal: 16,
+                                                  ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    _getEmoji(option),
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(option),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                      fieldViewBuilder: (BuildContext context,
-                          TextEditingController textEditingController,
-                          FocusNode focusNode,
-                          VoidCallback onFieldSubmitted) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F5),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: const Color(0xFFE0E0E0)),
-                          ),
-                          child: TextField(
-                            controller: textEditingController,
-                            focusNode: focusNode,
-                            decoration: const InputDecoration(
-                              hintText: 'Ví dụ: Hải sản...',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                              prefixIcon: Icon(Icons.emoji_food_beverage_outlined, color: Colors.orange),
-                            ),
-                            onSubmitted: (value) => _addAllergy(value),
-                          ),
-                        );
-                      },
+                            );
+                          },
+                      fieldViewBuilder:
+                          (
+                            BuildContext context,
+                            TextEditingController textEditingController,
+                            FocusNode focusNode,
+                            VoidCallback onFieldSubmitted,
+                          ) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF5F5F5),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: const Color(0xFFE0E0E0),
+                                ),
+                              ),
+                              child: TextField(
+                                controller: textEditingController,
+                                focusNode: focusNode,
+                                decoration: const InputDecoration(
+                                  hintText: 'Ví dụ: Hải sản...',
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 14,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.emoji_food_beverage_outlined,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                                onSubmitted: (value) => _addAllergy(value),
+                              ),
+                            );
+                          },
                     );
                   },
                 ),
@@ -284,7 +314,10 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
                     onTap: () => _addAllergy(_allergyCtrl.text),
                     borderRadius: BorderRadius.circular(12),
                     child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                       child: Text(
                         '+ Thêm',
                         style: TextStyle(
@@ -298,14 +331,18 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           if (widget.selectedAllergies.isEmpty)
             Center(
               child: Column(
                 children: [
-                  Icon(Icons.no_food_outlined, size: 48, color: Colors.grey[300]),
+                  Icon(
+                    Icons.no_food_outlined,
+                    size: 48,
+                    color: Colors.grey[300],
+                  ),
                   const SizedBox(height: 8),
                   Text(
                     'Chưa có dị ứng nào',
@@ -320,7 +357,10 @@ class _AllergySelectionCardState extends State<AllergySelectionCard> {
               runSpacing: 8,
               children: widget.selectedAllergies.map((allergy) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFE0B2),
                     borderRadius: BorderRadius.circular(20),

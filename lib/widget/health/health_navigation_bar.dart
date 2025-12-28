@@ -40,7 +40,7 @@ class HealthNavigationBar extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 16),
-        
+
         // Next Button
         Expanded(
           child: Container(

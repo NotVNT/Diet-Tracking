@@ -32,7 +32,9 @@ class SearchFilterBar extends StatelessWidget {
           child: Container(
             height: responsive.height(48),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.3,
+              ),
               borderRadius: BorderRadius.circular(responsive.radius(12)),
             ),
             child: TextField(
@@ -43,7 +45,8 @@ class SearchFilterBar extends StatelessWidget {
                 color: theme.colorScheme.onSurface,
               ),
               decoration: InputDecoration(
-                hintText: hintText ?? localizations?.searchHintText ?? 'Tìm kiếm',
+                hintText:
+                    hintText ?? localizations?.searchHintText ?? 'Tìm kiếm',
                 hintStyle: TextStyle(
                   fontSize: responsive.fontSize(14),
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),

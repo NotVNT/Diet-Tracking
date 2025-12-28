@@ -54,15 +54,14 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
               const SizedBox(height: 8),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: ProgressBarWidget(
-                  progress: 3 / 8,
-                ),
+                child: ProgressBarWidget(progress: 3 / 8),
               ),
               const SizedBox(height: 20),
-              
+
               const HealthHeader(
                 title: 'Dị Ứng Thực Phẩm',
-                subtitle: 'Vui lòng cung cấp thông tin về dị ứng thực phẩm của bạn để chúng tôi có thể hỗ trợ tốt nhất',
+                subtitle:
+                    'Vui lòng cung cấp thông tin về dị ứng thực phẩm của bạn để chúng tôi có thể hỗ trợ tốt nhất',
               ),
               const SizedBox(height: 24),
 
@@ -110,9 +109,7 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
                     if (!mounted) return;
 
                     navigator.push(
-                      MaterialPageRoute(
-                        builder: (_) => const HeightSelector(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const HeightSelector()),
                     );
                   },
                 ),
@@ -124,5 +121,3 @@ class _HealthInfoScreenState extends State<HealthInfoScreen> {
     );
   }
 }
-
-

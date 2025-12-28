@@ -47,13 +47,15 @@ class EmptyStateCard extends StatelessWidget {
           style: TextStyle(
             fontSize: responsive.fontSize(14),
             fontWeight: FontWeight.w400,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.65),
           ),
         ),
         if (footer != null) ...[
           SizedBox(height: responsive.height(12)),
           footer!,
-        ]
+        ],
       ],
     );
 
@@ -63,7 +65,9 @@ class EmptyStateCard extends StatelessWidget {
     );
 
     return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: minHeight ?? responsive.height(120)),
+      constraints: BoxConstraints(
+        minHeight: minHeight ?? responsive.height(120),
+      ),
       child: InkWell(
         borderRadius: BorderRadius.circular(responsive.radius(16)),
         onTap: onTap,
@@ -72,7 +76,9 @@ class EmptyStateCard extends StatelessWidget {
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(responsive.radius(16)),
             border: Border.all(
-              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+              color: Theme.of(
+                context,
+              ).colorScheme.outline.withValues(alpha: 0.2),
             ),
           ),
           child: child,
@@ -81,4 +87,3 @@ class EmptyStateCard extends StatelessWidget {
     );
   }
 }
-

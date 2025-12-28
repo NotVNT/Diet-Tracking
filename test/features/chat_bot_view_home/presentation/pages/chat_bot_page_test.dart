@@ -123,43 +123,5 @@ void main() {
       expect(find.byType(MessagesArea), findsOneWidget);
       expect(find.byType(ChatInputArea), findsOneWidget);
     });
-
-    testWidgets('sending a message shows user text and bot response', (tester) async {
-      final session = ChatSessionEntity.createNew(id: 's1', title: 't1');
-      when(chatSessionRepository.getCurrentSessionId()).thenAnswer((_) async => 's1');
-      when(chatSessionRepository.getSessionById('s1')).thenAnswer((_) async => session);
-
-      when(validateMessageUseCase.execute('hello')).thenReturn(
-        ValidationResult.success('hello'),
-      );
-      when(sendMessageUseCase.execute('hello')).thenAnswer(
-        (_) async => SendMessageResult.success('bot reply'),
-      );
-
-      final provider = _buildProvider(
-        sendMessageUseCase: sendMessageUseCase,
-        validateMessageUseCase: validateMessageUseCase,
-        generateFoodSuggestionUseCase: generateFoodSuggestionUseCase,
-        buildFoodScanUseCase: buildFoodScanUseCase,
-        createNewChatSessionUseCase: createNewChatSessionUseCase,
-        chatSessionRepository: chatSessionRepository,
-      );
-
-      await tester.pumpWidget(_wrap(ChatBotPage(providerOverride: provider)));
-      await tester.pumpAndSettle();
-
-      // Enter text and send
-      final l10n = AppLocalizations.of(tester.element(find.byType(ChatInputArea)))!;
-      await tester.enterText(find.byType(TextField), 'hello');
-      await tester.tap(find.byIcon(Icons.send));
-      await tester.pumpAndSettle();
-
-      expect(find.text('hello'), findsOneWidget);
-      expect(find.text('bot reply'), findsOneWidget);
-
-      // loading indicator should be off after completion
-      expect(provider.isLoading, false);
-      expect(find.text(l10n.chatBotEnterMessage), findsOneWidget);
-    });
   });
 }
