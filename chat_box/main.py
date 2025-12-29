@@ -34,14 +34,15 @@ client = OpenAI(
 
 def intent_classification(text):
 
-    messages = [ {"role": "system", "content": """ Bạn là bộ phân loại intent. - Nếu câu hỏi yêu cầu dữ liệu cụ thể từ dataset (ví dụ: calories, protein, allergen, health_tags, thành phần dinh dưỡng, số liệu, "đề xuất món ăn", "cho món ăn phù hơp", "Gợi ý món ăn", "Xin ý tưởng món ăn", "cơm sườn có bao nhiêu calo") → GraphRAG. - Nếu câu hỏi chỉ mang tính hội thoại chung về thực phẩm, món ăn, sức khỏe (ví dụ: "táo có tốt cho sức khỏe không", "ăn nhiều cơm có béo không", "tại sao dị ứng cá không được ăn hải sản", "Ăn chuối mỗi ngày có lợi gì?", "Bỏ bữa sáng có hại sức khỏe không?") → Chatbot. Không cần giải thích thêm"""}, {"role": "user", "content": text} ]
+    messages = [ { "role": "system", "content": """ Bạn là bộ phân loại intent. - Nếu câu hỏi yêu cầu dữ liệu cụ thể từ dataset chứa thông tin thực phẩm và nguyên liệu (ví dụ: calories, protein, allergen, health_tags, thành phần dinh dưỡng, đề xuất món ăn, cho món ăn phù hợp, Gợi ý món ăn, Xin ý tưởng món ăn, cơm sườn có bao nhiêu calo) → Trả về đúng chữ: GraphRAG - Nếu câu hỏi chỉ mang tính hội thoại chung → Trả về đúng chữ: Chatbot - Không được trả lời thêm bất kỳ giải thích nào khác. """ }, 
+     {"role": "user", "content": text} ]
 
     completion = client.chat.completions.create(
-        model="Qwen/Qwen3-4B-Instruct-2507",
+        model="openai/gpt-oss-20b:groq",
         messages=messages,
     )
 
-    return(completion.choices[0].message.content)
+    return(completion.choices[0].message.content.strip())
 
 import os
 from dotenv import load_dotenv
@@ -65,7 +66,7 @@ from graphrag.vector_stores.lancedb import LanceDBVectorStore
 
 load_dotenv()
 
-INPUT_DIR = "F:\Diet-Tracking\chat_box\graphrag\output"
+INPUT_DIR = "C:/Users/LENOVO/myfilebro/diet-tracking/chat_box/graphrag/output"
 LANCEDB_URI = f"{INPUT_DIR}/lancedb"
 
 COMMUNITY_REPORT_TABLE = "community_reports"
@@ -132,7 +133,7 @@ chat_config = LanguageModelConfig(
     api_key=api_key,
     type=ModelType.Chat,
     model_provider="openai",
-    model="Qwen/Qwen3-4B-Instruct-2507",
+    model="openai/gpt-oss-20b:groq",
     api_base = "https://router.huggingface.co/v1",
     model_supports_json = "true",
     concurrent_requests = 1, # Rất quan trọng: HF API miễn phí sẽ khóa bạn nếu gọi nhanh
@@ -199,19 +200,19 @@ local_context_params = {
     "community_prop": 0.1,
     "conversation_history_max_turns": 5,
     "conversation_history_user_turns_only": True,
-    "top_k_mapped_entities": 20,
-    "top_k_relationships": 20,
+    "top_k_mapped_entities": 10,
+    "top_k_relationships": 10,
     "include_entity_rank": True,
     "include_relationship_weight": True,
     "include_community_rank": False,
     "return_candidate_context": False,
     "embedding_vectorstore_key": EntityVectorStoreKey.ID,  # set this to EntityVectorStoreKey.TITLE if the vectorstore uses entity title as ids
-    "max_tokens": 15_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 5000)
+    "max_tokens": 2000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 5000)
 }
 
 model_params = {
-    "max_tokens": 15_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 1000=1500)
-    "temperature": 0.3,
+    "max_tokens": 2000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 1000=1500)
+    "temperature": 0.1,
 }
 
 search_engine = LocalSearch(
@@ -298,7 +299,7 @@ def chat_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
     messages.append({"role": "user", "content": prompt})
 
     completion = client.chat.completions.create(
-        model="Qwen/Qwen3-4B-Instruct-2507",
+        model="meta-llama/Llama-3.1-8B-Instruct",
         messages=messages,
     )
 
@@ -343,7 +344,7 @@ def more_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
     messages.append(system_message)
     messages.append({"role": "user", "content": prompt})
     completion = client.chat.completions.create(
-        model="Qwen/Qwen3-4B-Instruct-2507",
+        model="meta-llama/Llama-3.1-8B-Instruct",
         messages=messages,
     )
 
@@ -401,11 +402,11 @@ async def chatbox(request: ChatRequest):
     global chat_history
     
     intent = intent_classification(request.prompt)
+    print(intent)
     if(intent.lower() == "chatbot"):
         response, chat_history = chat_bot(request.prompt, chat_history, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender)
         return{"reply": response}
     else:
-        print(intent)
         food = await local_search(request.prompt, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender)
         response, chat_history = more_bot(request.prompt, chat_history, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender, food)
 
@@ -442,4 +443,4 @@ async def chatbox(request: ChatRequest):
     return{"reply": chat_history[-1]['content']}
         
 if __name__ == "__main__":
-    print(extract_tags("món ăn giảm cân giành con người bị dị ứng cá"))
+    local_search("quả táo có bao nhiêu calo", 18, 171, 70, "không có", "giảm cân", 65, "nam")
