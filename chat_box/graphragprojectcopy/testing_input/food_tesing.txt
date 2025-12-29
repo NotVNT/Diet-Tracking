@@ -1,0 +1,62 @@
+[
+{
+    "id": "food_023",
+    "type": "food",
+    "metadata": {
+      "name_vi": "sườn lợn sống",
+      "name_en": "pork rib chop, raw",
+      "category": "thịt",
+      "weight_grams": 113.0,
+      "calories": 186.0,
+      "protein": 20.3,
+      "carbs": 0.0,
+      "fat": 11.0,
+      "vitamins": [
+        "vitamin_a",
+        "vitamin_c",
+        "vitamin_d",
+        "vitamin_e",
+        "vitamin_k",
+        "thiamin",
+        "riboflavin",
+        "niacin",
+        "vitamin_b6",
+        "vitamin_b12",
+        "folate_dfe",
+        "biotin",
+        "pantothenic_acid",
+        "choline"
+      ],
+      "minerals": [
+        "iron",
+        "zinc",
+        "copper",
+        "iodine",
+        "calcium",
+        "selenium",
+        "magnesium",
+        "manganese",
+        "potassium",
+        "phosphorus",
+        "chromium",
+        "molybdenum",
+        "chlorine",
+        "sodium"
+      ],
+      "allergen": [
+        "red_meat"
+      ],
+      "health_tags": [
+        "chất_béo_vừa_phải",
+        "giàu_dinh_dưỡng",
+        "giàu_đạm",
+        "high_cholesterol",
+        "keto_friendly",
+        "low_sugar",
+        "paleo_friendly",
+        "ít_carbohydrate"
+      ]
+    },
+    "text": "Miếng sườn heo (pork rib chop) là phần thịt có xương được cắt từ đoạn xương sườn của thăn heo, đặc trưng bởi phần xương “Frenched” lộ ra khỏi phần thịt. Miếng thịt này có lượng mỡ vân (marbling) khá dồi dào, giúp tăng hương vị và độ mềm khi nấu, dù nó chứa nhiều chất béo hơn so với các phần nạc hơn như thăn heo (tenderloin). Đây là nguồn cung cấp protein chất lượng cao, vitamin nhóm B và kẽm. Sườn heo thường được chế biến bằng cách nướng, áp chảo hoặc quay, và việc nấu chín đến 145°F (63°C) là rất quan trọng để đảm bảo an toàn thực phẩm."
+  }
+]

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "dish_001",
+    "type": "dish",
+    "metadata": {
+      "dish_name": "cơm sườn",
+      "category": "món chính ",
+      "ingredients": [
+        "sườn lợn",
+        "gạo tẻ",
+        "dưa chuột",
+        "cà chua"
+      ],
+      "ingredient_ids": [
+        "food_023",
+        "food_024",
+        "food_025",
+        "food_026"
+      ],
+      "calories": 616.0,
+      "protein": 14.5,
+      "carbs": 93.0,
+      "fat": 16.2,
+      "allergen": [
+        "không có"
+      ],
+      "health_tags": [
+        "chứa_khoáng_chất:_canxi",
+        "contains_cholesterol",
+        "giàu_vitamin_c_và_beta-caroten",
+        "high_energy",
+        "hàm_lượng_carbohydrate_cao",
+        "hàm_lượng_chất_xơ_thấp",
+        "hàm_lượng_protein_vừa_phải",
+        "kali",
+        "kẽm",
+        "món_chính",
+        "sắt"
+      ]
+    },
+    "text": ""
+  }
+]

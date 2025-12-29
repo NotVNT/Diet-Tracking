@@ -66,7 +66,7 @@ from graphrag.vector_stores.lancedb import LanceDBVectorStore
 
 load_dotenv()
 
-INPUT_DIR = "C:/Users/LENOVO/myfilebro/diet-tracking/chat_box/graphrag/output"
+INPUT_DIR = "C:/Users/LENOVO/myfilebro/diet-tracking/chat_box/graphragprojectcopy/output"
 LANCEDB_URI = f"{INPUT_DIR}/lancedb"
 
 COMMUNITY_REPORT_TABLE = "community_reports"
