@@ -33,7 +33,8 @@ class ScannerView extends StatefulWidget {
 
 class _ScannerViewState extends State<ScannerView> {
   ScannerActionType _selectedAction = ScannerActionType.food;
-  final GlobalKey<MobileBarcodeScannerViewState> _barcodeScannerKey = GlobalKey();
+  final GlobalKey<MobileBarcodeScannerViewState> _barcodeScannerKey =
+      GlobalKey();
   BarcodeState? _prevBarcodeState;
 
   List<ScannerActionConfig> _buildActions(AppLocalizations l10n) {
@@ -80,7 +81,8 @@ class _ScannerViewState extends State<ScannerView> {
                   // barcode camera so users can scan again immediately.
                   final prev = _prevBarcodeState;
                   _prevBarcodeState = barcodeState;
-                  if (prev is BarcodeUploading && barcodeState is BarcodeError) {
+                  if (prev is BarcodeUploading &&
+                      barcodeState is BarcodeError) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       _barcodeScannerKey.currentState?.restartScanning();
                     });
@@ -114,10 +116,9 @@ class _ScannerViewState extends State<ScannerView> {
                                 .read<cam.CameraBloc>()
                                 .controller,
                             isInitializing: isCameraInitializing,
-                            errorMessage:
-                                cameraState is cam_state.CameraError
-                                    ? cameraState.errorMessage
-                                    : null,
+                            errorMessage: cameraState is cam_state.CameraError
+                                ? cameraState.errorMessage
+                                : null,
                           ),
                           isRealTimeScanning: true,
                           onBarcodeDetected:
@@ -173,14 +174,8 @@ class _ScannerViewState extends State<ScannerView> {
     );
   }
 
-
-
   void _handleBarcodeReset() {
     context.read<BarcodeBloc>().add(const BarcodeResetRequested());
     _barcodeScannerKey.currentState?.restartScanning();
   }
-
-
 }
-
-
