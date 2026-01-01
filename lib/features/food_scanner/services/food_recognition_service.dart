@@ -7,7 +7,10 @@ import 'package:flutter/foundation.dart';
 /// You can replace the stub with a real on-device model or call your API.
 class FoodRecognitionResult {
   final String name;
+  /// Backward-compatible: average calories if available.
   final double? calories;
+  /// Preferred: calorie range estimate (min, max).
+  final List<int>? caloriesRange;
   final String? description;
   final double? protein;
   final double? carbs;
@@ -16,6 +19,7 @@ class FoodRecognitionResult {
   FoodRecognitionResult({
     required this.name,
     this.calories,
+    this.caloriesRange,
     this.description,
     this.protein,
     this.carbs,
@@ -26,7 +30,7 @@ class FoodRecognitionResult {
 class FoodRecognitionService {
   // Server đang chạy tại máy có IP: 192.168.1.140
   // Máy tính và điện thoại phải cùng mạng WiFi
-  static const String defaultBaseUrl = 'http://192.168.2.1:8000';
+  static const String defaultBaseUrl = 'http://192.168.1.140:8000';
 
   final http.Client _client;
   final String _baseUrl;
@@ -65,21 +69,31 @@ class FoodRecognitionService {
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as Map<String, dynamic>;
-        final predictions = jsonData['predictions'] as Map<String, dynamic>?;
+        // New contract (preferred): {"calories_range": [min, max] | null}
+        final dynamic rangeRaw = jsonData['calories_range'];
 
-        if (predictions == null) {
-          debugPrint('Predictions key not found in response');
+        List<int>? range;
+        if (rangeRaw is List && rangeRaw.length == 2) {
+          final a = rangeRaw[0];
+          final b = rangeRaw[1];
+          if (a is num && b is num) {
+            range = [a.round(), b.round()];
+          }
+        }
+
+        if (range == null) {
+          debugPrint('calories_range not found or invalid in response');
           return null;
         }
 
+        final avg = (range[0] + range[1]) / 2.0;
+
         return FoodRecognitionResult(
-          name: 'Thông tin món ăn', // Tên tạm thời
-          calories: (predictions['total_calories'] as num?)?.toDouble(),
-          protein: (predictions['total_protein'] as num?)?.toDouble(),
-          carbs: (predictions['total_carb'] as num?)?.toDouble(),
-          fat: (predictions['total_fat'] as num?)?.toDouble(),
-          // Cung cấp một mô tả ngắn gọn, chung chung
-          description: 'Thông tin dinh dưỡng được phân tích từ ảnh.',
+          name: 'Ước tính calories',
+          calories: avg,
+          caloriesRange: range,
+          description:
+              'Khoảng calories ước tính: ${range[0]} - ${range[1]} kcal.',
         );
       } else {
         return null;

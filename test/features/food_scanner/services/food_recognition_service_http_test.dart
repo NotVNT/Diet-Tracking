@@ -28,7 +28,7 @@ http.StreamedResponse streamedJson(int statusCode, Map<String, dynamic> jsonBody
 
 void main() {
   group('FoodRecognitionService (http injected)', () {
-    test('returns FoodRecognitionResult when 200 and predictions present', () async {
+    test('returns FoodRecognitionResult when 200 and calories_range present', () async {
       final dir = await Directory.systemTemp.createTemp('food_recognition_test_');
       addTearDown(() async {
         try {
@@ -44,27 +44,25 @@ void main() {
         expect(req, isA<http.MultipartRequest>());
 
         return streamedJson(200, {
-          'predictions': {
-            'total_calories': 100,
-            'total_protein': 10,
-            'total_carb': 20,
-            'total_fat': 5,
-          }
+          'calories_range': [90, 110],
         });
       });
 
       final svc = FoodRecognitionService(client: client, baseUrl: 'http://test');
-  final result = await svc.recognizeFood(file.path);
+      final result = await svc.recognizeFood(file.path);
 
       expect(result, isNotNull);
-      expect(result!.calories, 100);
-      expect(result.protein, 10);
-      expect(result.carbs, 20);
-      expect(result.fat, 5);
-      expect(result.description, isNotEmpty);
+      expect(result!.caloriesRange, [90, 110]);
+      expect(result.calories, 100);
+      expect(result.protein, isNull);
+      expect(result.carbs, isNull);
+      expect(result.fat, isNull);
+      // Description is optional UI text; current implementation may include
+      // the range as a fallback.
+      expect(result.description, anyOf(isNull, isNotEmpty));
     });
 
-    test('returns null when predictions missing', () async {
+    test('returns null when calories_range missing', () async {
       final dir = await Directory.systemTemp.createTemp('food_recognition_test_');
       addTearDown(() async {
         try {

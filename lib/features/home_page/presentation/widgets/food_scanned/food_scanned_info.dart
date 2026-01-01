@@ -32,9 +32,32 @@ class FoodScannedInfo extends StatelessWidget {
     return name;
   }
 
+  /// Try to extract a displayed calorie range from the record's detail text.
+  ///
+  /// We keep `record.calories` as a numeric value for daily totals, but when the
+  /// backend provides a range we want to show it as "min - max kcal" in the
+  /// scanned item UI.
+  String? _tryExtractCalorieRangeLabel() {
+    final raw = (record.nutritionDetails ?? '').trim();
+    if (raw.isEmpty) return null;
+
+    // Examples we support:
+    // - "🔥 Calories (ước tính): 450 - 600 kcal"
+    // - "Khoảng calories ước tính: 450 - 600 kcal"
+    // - "Calories: Khoảng (450) - (600) kcal" (best-effort)
+    final m = RegExp(
+      r'(?:calo(?:ries)?)[^\d]{0,20}(\d{2,5})\s*[-–]\s*(\d{2,5})\s*k?cal',
+      caseSensitive: false,
+    ).firstMatch(raw);
+    if (m == null) return null;
+    return '${m.group(1)} - ${m.group(2)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bool hasAnyMacro =
+        record.protein != null || record.carbs != null || record.fat != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +90,7 @@ class FoodScannedInfo extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              '${(approxForBotSuggestion && (record.nutritionDetails?.trim().isNotEmpty == true)) ? "~" : ""}${record.calories.toStringAsFixed(0)} ${caloriesSuffix ?? 'kcal'}',
+              _buildCaloriesLabel(),
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: emphasizeCalories
                     ? FontWeight.w700
@@ -76,7 +99,7 @@ class FoodScannedInfo extends StatelessWidget {
             ),
           ],
         ),
-        if (showMacros) ...[
+        if (showMacros && hasAnyMacro) ...[
           const SizedBox(height: 6),
           Row(
             children: [
@@ -104,6 +127,20 @@ class FoodScannedInfo extends StatelessWidget {
   String _formatGram(double? value) {
     if (value == null) return 'N/A g';
     return '${value.toStringAsFixed(0)} g';
+  }
+
+  String _buildCaloriesLabel() {
+    final range = _tryExtractCalorieRangeLabel();
+    if (range != null) {
+      return '$range ${caloriesSuffix ?? 'kcal'}';
+    }
+
+    // Default: show numeric calories.
+    final prefix =
+        (approxForBotSuggestion && (record.nutritionDetails?.trim().isNotEmpty == true))
+            ? '~'
+            : '';
+    return '$prefix${record.calories.toStringAsFixed(0)} ${caloriesSuffix ?? 'kcal'}';
   }
 }
 

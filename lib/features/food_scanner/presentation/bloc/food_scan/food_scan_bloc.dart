@@ -40,9 +40,13 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState> {
       final String? foodName = recognition?.name;
       final double? calories = recognition?.calories;
 
+      // Build a more useful description for the new "calorie range" flow.
       String description = '';
       if (recognition != null) {
-        if (recognition.calories != null) {
+        final range = recognition.caloriesRange;
+        if (range != null && range.length == 2) {
+          description += '🔥 Calories (ước tính): ${range[0]} - ${range[1]} kcal\n';
+        } else if (recognition.calories != null) {
           description +=
               '🔥 Calories: ${recognition.calories!.toStringAsFixed(0)} kcal\n';
         }
@@ -58,14 +62,16 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState> {
         scanType: ScanType.food,
         foodName: foodName,
         calories: calories,
-        description: recognition?.description,
+        description: description.isEmpty ? recognition?.description : description.trim(),
         protein: recognition?.protein,
         carbs: recognition?.carbs,
         fat: recognition?.fat,
       );
 
       emit(
-        FoodScanSuccess('Food saved${foodName != null ? ': $foodName' : ''}'),
+        FoodScanSuccess(
+          'Đã phân tích ảnh${foodName != null ? ': $foodName' : ''}',
+        ),
       );
     } catch (e) {
       emit(const FoodScanError('Could not process image. Please try again.'));
