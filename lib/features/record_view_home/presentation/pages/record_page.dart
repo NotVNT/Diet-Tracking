@@ -11,6 +11,7 @@ import '../widgets/food_record_list.dart';
 import '../widgets/filter_button.dart';
 import '../widgets/filter_sheet.dart';
 import '../widgets/search_bar.dart' as record_widgets;
+import '../../../../utils/bottom_sheet_utils.dart';
 
 class RecordPage extends StatelessWidget {
   const RecordPage({super.key});
@@ -66,13 +67,10 @@ class RecordPage extends StatelessWidget {
                           trailing: FilterButton(
                             highlighted: cubit.hasActiveFilters,
                             onPressed: () {
-                              showModalBottomSheet(
+                              showCustomBottomSheet(
                                 context: context,
                                 isScrollControlled: false,
                                 useSafeArea: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                                ),
                                 builder: (_) => DraggableScrollableSheet(
                                   initialChildSize: 0.5,
                                   minChildSize: 0.3,

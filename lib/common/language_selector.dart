@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/bottom_sheet_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../l10n/app_localizations.dart';
 
@@ -58,9 +59,8 @@ class LanguageSelector extends StatelessWidget {
 
   void _openLanguageSheet(BuildContext context) {
     Language tempSelection = selected;
-    showModalBottomSheet(
+    showCustomBottomSheet(
       context: context,
-      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         return DraggableScrollableSheet(

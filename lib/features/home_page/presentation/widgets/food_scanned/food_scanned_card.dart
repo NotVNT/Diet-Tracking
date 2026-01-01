@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../utils/bottom_sheet_utils.dart';
 import '../shared/plus_button.dart';
 import 'food_scanned_info.dart';
 import '../shared/options_menu_for_plus_button.dart';
@@ -100,11 +101,9 @@ class FoodScannedCard extends StatelessWidget {
 
   void _showMoreOptions(BuildContext context) {
     final responsive = ResponsiveHelper.of(context);
-    showModalBottomSheet(
+    showCustomBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
+      isScrollControlled: false,
       builder: (bottomSheetContext) => MoreOptionsMenu(
         scannedFood: foodRecord,
         responsive: responsive,

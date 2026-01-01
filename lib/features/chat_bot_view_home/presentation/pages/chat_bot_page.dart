@@ -12,6 +12,7 @@
   import '../../../../l10n/app_localizations.dart';
   import '../../../../common/snackbar_helper.dart';
   import '../../../../services/user_avatar_service.dart';
+  import '../../../../utils/bottom_sheet_utils.dart';
 
   import '../../../record_view_home/domain/entities/food_record_entity.dart';
 
@@ -19,7 +20,7 @@
 
 
   /// Main chat bot page with clean architecture
-  class ChatBotPage extends StatefulWidget {
+class ChatBotPage extends StatefulWidget {
     final FoodRecordEntity? initialFoodAnalysis;
     final ChatProvider? providerOverride;
     const ChatBotPage({
@@ -166,13 +167,9 @@
 
     /// Handles chat history action: show bottom sheet of last 5 sessions, allow delete
     void _onChatHistory() {
-      showModalBottomSheet(
+      showCustomBottomSheet(
         context: context,
         backgroundColor: Theme.of(context).colorScheme.surface,
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        ),
         builder: (ctx) {
           return ChatHistory(
             onSelectSession: (id) async {

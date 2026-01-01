@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../record_view_home/presentation/widgets/record_details_sheet.dart';
 import '../widgets/cards/calorie_goal_card.dart'; // Reusing the existing model
+import '../../../../utils/bottom_sheet_utils.dart';
 
 /// A page that displays detailed nutrition information for a specific day.
 class DailyNutritionDetailPage extends StatefulWidget {
@@ -119,12 +120,8 @@ class _DailyNutritionDetailPageState extends State<DailyNutritionDetailPage> {
         title: Text(record.foodName),
         subtitle: Text('${record.calories.round()} kcal'), // TODO: Localization
         onTap: () {
-          showModalBottomSheet(
+          showCustomBottomSheet(
             context: context,
-            isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
             builder: (context) => RecordDetailsSheet(record: record),
           );
         },

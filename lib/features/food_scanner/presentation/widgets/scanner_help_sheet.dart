@@ -1,5 +1,6 @@
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import '../../../../utils/bottom_sheet_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ScannerHelpSheet extends StatelessWidget {
@@ -54,9 +55,10 @@ class ScannerHelpSheet extends StatelessWidget {
   }
 
   static void show(BuildContext context) {
-    showModalBottomSheet<void>(
+    showCustomBottomSheet<void>(
       context: context,
       backgroundColor: Colors.black,
+      isScrollControlled: false,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
