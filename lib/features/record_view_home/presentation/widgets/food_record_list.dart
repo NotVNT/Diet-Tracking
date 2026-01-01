@@ -11,6 +11,7 @@ import '../cubit/record_cubit.dart';
 import '../cubit/record_state.dart';
 
 import 'record_details_sheet.dart';
+import '../../../../utils/bottom_sheet_utils.dart';
 import 'record_tag.dart';
 
 
@@ -92,14 +93,8 @@ class FoodRecordList extends StatelessWidget {
                 ),
                 child: ListTile(
                   onTap: () {
-                    showModalBottomSheet(
+                    showCustomBottomSheet(
                       context: context,
-                      isScrollControlled: true,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(16),
-                        ),
-                      ),
                       builder: (ctx) {
                         return RecordDetailsSheet(record: record);
                       },

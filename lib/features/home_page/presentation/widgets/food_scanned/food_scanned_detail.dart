@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
+import '../../../../../utils/bottom_sheet_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../l10n/app_localizations.dart';
@@ -106,12 +107,10 @@ class ScannedFoodDetailPage extends StatelessWidget {
   }
 
   void _showMoreOptions(BuildContext context, ResponsiveHelper responsive) {
-    showModalBottomSheet(
+    showCustomBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
+      isScrollControlled: false,
       builder: (bottomSheetContext) => MoreOptionsMenu(
         scannedFood: scannedFood,
         responsive: responsive,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/bottom_sheet_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Supported units
@@ -81,9 +82,8 @@ class UnitSelector extends StatelessWidget {
 
   void _openUnitSheet(BuildContext context) {
     UnitSystem tempSelection = selected;
-    showModalBottomSheet(
+    showCustomBottomSheet(
       context: context,
-      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         return StatefulBuilder(

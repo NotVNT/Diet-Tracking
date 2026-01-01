@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../l10n/app_localizations.dart';
-
+import '../../../../../utils/bottom_sheet_utils.dart';
 
 /// Custom floating action button with action buttons
 class CustomFloatingActionButton extends StatelessWidget {
@@ -40,9 +40,10 @@ class CustomFloatingActionButton extends StatelessWidget {
     BuildContext context,
     AppLocalizations? localizations,
   ) {
-    showModalBottomSheet(
+    showCustomBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: false,
       builder: (BuildContext context) {
         return GestureDetector(
           onTap: () => Navigator.pop(context),
