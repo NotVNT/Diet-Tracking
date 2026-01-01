@@ -6,7 +6,7 @@ Tải thư viện yêu cầu
   pip install -r requirements.txt
 
   
- uvicorn nutrient_regressor:app --host 192.168.1.140 --port 8000 --reload
+uvicorn nutrient_regressor:app --host 192.168.1.140 --port 8000 --reload
 
 uvicorn nutrient_regressor:app --host https://ivank04-barcode-server.hf.space --port 8000 --reload
 
