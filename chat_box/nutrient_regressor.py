@@ -198,5 +198,6 @@ async def scan_food(file: UploadFile = File(...)):
     cal_range = synthesize_dish(dish, DISH_DB, INGREDIENT_DB)
     print(cal_range)
     return {
+            "dish_name": vlm_output["dish"],
             "calories_range": cal_range,
             }
