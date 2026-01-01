@@ -9,10 +9,31 @@ class RecordDetailsSheet extends StatelessWidget {
 
   final FoodRecordEntity record;
 
+  String _filteredNutritionDetails(String raw) {
+    // The scanner flow already shows the calorie range in the header.
+    // Remove the redundant sentence to avoid duplicate UI lines.
+    final lines = raw
+        .split(RegExp(r'\r?\n'))
+        .map((e) => e.trimRight())
+        .where((e) => e.trim().isNotEmpty)
+        .toList();
+
+    final filtered = lines
+        .where(
+          (l) =>
+              !l.toLowerCase().startsWith('khoảng calories ước tính:'),
+        )
+        .toList();
+
+    return filtered.join('\n');
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
+    final rawDetails = (record.nutritionDetails ?? '').trim();
+    final details = _filteredNutritionDetails(rawDetails);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -38,7 +59,7 @@ class RecordDetailsSheet extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            if ((record.nutritionDetails ?? '').trim().isNotEmpty) ...[
+            if (details.isNotEmpty) ...[
               Text(
                 l10n?.nutritionInfo ?? 'Thông tin dinh dưỡng',
                 style: AppStyles.heading2.copyWith(
@@ -48,7 +69,7 @@ class RecordDetailsSheet extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                record.nutritionDetails!.trim(),
+                details,
                 style: AppStyles.bodyMedium.copyWith(
                   color: colorScheme.onSurface,
                 ),

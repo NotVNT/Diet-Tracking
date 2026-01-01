@@ -92,8 +92,7 @@ class FoodRecognitionService {
           name: 'Ước tính calories',
           calories: avg,
           caloriesRange: range,
-          description:
-              'Khoảng calories ước tính: ${range[0]} - ${range[1]} kcal.',
+          description: null,
         );
       } else {
         return null;
