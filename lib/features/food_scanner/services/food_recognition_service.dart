@@ -69,6 +69,10 @@ class FoodRecognitionService {
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as Map<String, dynamic>;
+        // New field from server: dish name.
+        final String dishName = (jsonData['dish_name'] ?? jsonData['dishName'] ?? '')
+            .toString()
+            .trim();
         // New contract (preferred): {"calories_range": [min, max] | null}
         final dynamic rangeRaw = jsonData['calories_range'];
 
@@ -89,7 +93,8 @@ class FoodRecognitionService {
         final avg = (range[0] + range[1]) / 2.0;
 
         return FoodRecognitionResult(
-          name: 'Ước tính calories',
+          // Prefer dish name if server provides it, otherwise keep old label.
+          name: dishName.isNotEmpty ? dishName : 'Ước tính calories',
           calories: avg,
           caloriesRange: range,
           description: null,
