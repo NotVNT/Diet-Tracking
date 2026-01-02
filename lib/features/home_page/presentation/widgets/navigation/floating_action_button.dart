@@ -107,24 +107,6 @@ class CustomFloatingActionButton extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                // Row 3: Report
-                Row(
-                  children: [
-                    Expanded(
-                      child: _ActionButton(
-                        icon: Icons.bar_chart,
-                        label: localizations?.bottomNavReport ?? 'Report',
-                        onTap: () {
-                          Navigator.pop(context);
-                          onReportSelected();
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Spacer(),
-                  ],
-                ),
                 const SizedBox(height: 90),
               ],
             ),
