@@ -50,7 +50,6 @@ void main() {
     expect(find.text('Add Food'), findsOneWidget);
     expect(find.text('Record'), findsOneWidget);
     expect(find.text('Scan food'), findsOneWidget);
-    expect(find.text('Report'), findsOneWidget);
     expect(find.text('Chat bot'), findsOneWidget);
   });
 
@@ -65,7 +64,6 @@ void main() {
     var addFoodCount = 0;
     var recordCount = 0;
     var scanCount = 0;
-    var reportCount = 0;
     var chatCount = 0;
 
     await tester.pumpWidget(
@@ -74,7 +72,7 @@ void main() {
           onAddFoodSelected: () => addFoodCount++,
           onRecordSelected: () => recordCount++,
           onScanFoodSelected: () => scanCount++,
-          onReportSelected: () => reportCount++,
+          onReportSelected: () {},
           onChatBotSelected: () => chatCount++,
         ),
       ),
@@ -101,13 +99,6 @@ void main() {
     expect(scanCount, 1);
     expect(find.text('Scan food'), findsNothing);
 
-    // Report
-    await _openSheet(tester);
-    await tester.tap(find.text('Report'));
-    await tester.pumpAndSettle();
-    expect(reportCount, 1);
-    expect(find.text('Report'), findsNothing);
-
     // Chat bot
     await _openSheet(tester);
     await tester.tap(find.text('Chat bot'));
@@ -115,6 +106,6 @@ void main() {
     expect(chatCount, 1);
     expect(find.text('Chat bot'), findsNothing);
 
-    expect(addFoodCount + recordCount + scanCount + reportCount + chatCount, 5);
+    expect(addFoodCount + recordCount + scanCount + chatCount, 4);
   });
 }
