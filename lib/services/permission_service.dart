@@ -38,6 +38,12 @@ class PermissionService {
     return status.isGranted || status.isLimited;
   }
 
+  /// Request microphone permission
+  Future<bool> requestMicrophonePermission() async {
+    final status = await ph.Permission.microphone.request();
+    return status.isGranted || status.isLimited;
+  }
+
   /// Open app settings to allow user to manually grant permission
   Future<bool> openAppSettings() async {
     return await ph.openAppSettings();
