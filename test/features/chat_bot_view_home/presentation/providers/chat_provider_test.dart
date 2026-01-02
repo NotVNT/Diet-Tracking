@@ -143,6 +143,53 @@ void main() {
       expect(provider.messages.last.text, err);
     });
 
+  test('sendMessage: creating new chat cancels in-flight request from old session', () async {
+      // Start with session s1
+      final session1 = ChatSessionEntity.createNew(id: 's1');
+      when(createNewChatSessionUseCase.execute()).thenAnswer((_) async => session1);
+      await provider.createNewChatSession();
+
+      when(validateMessageUseCase.execute(any)).thenReturn(
+        ValidationResult.success('hello'),
+      );
+
+      // Make sendMessage async + controllable
+      final completer = Completer<SendMessageResult>();
+      when(sendMessageUseCase.execute('hello')).thenAnswer((_) => completer.future);
+      when(sendMessageUseCase.execute(
+        any,
+        extraContext: anyNamed('extraContext'),
+      )).thenAnswer((_) async => SendMessageResult.success('unused'));
+
+      final pending = provider.sendMessage('hello');
+      expect(provider.currentSession!.id, 's1');
+
+      // While waiting, user creates a new session s2
+      final session2 = ChatSessionEntity.createNew(id: 's2');
+      when(createNewChatSessionUseCase.execute()).thenAnswer((_) async => session2);
+      await provider.createNewChatSession();
+      expect(provider.currentSession!.id, 's2');
+
+      // Now the old response returns
+      completer.complete(SendMessageResult.success('reply-from-s1'));
+      final err = await pending;
+
+      // Late response should not leak into s2 and should be cancelled (not saved)
+      expect(err, isNull);
+      expect(provider.currentSession!.id, 's2');
+      expect(provider.messages.where((m) => m.text == 'reply-from-s1'), isEmpty);
+
+      // Ensure we never saved a bot reply for s1 after cancellation.
+      final savedSessions = verify(
+        chatSessionRepository.saveSession(captureAny),
+      ).captured.whereType<ChatSessionEntity>().toList();
+      final s1Saves = savedSessions.where((s) => s.id == 's1').toList();
+      if (s1Saves.isNotEmpty) {
+        final lastS1 = s1Saves.last;
+        expect(lastS1.messages.any((m) => m.text == 'reply-from-s1'), isFalse);
+      }
+    });
+
     test('initOrLoadRecentSession loads local current session id first', () async {
       final session = ChatSessionEntity.createNew(id: 's1');
       when(chatSessionRepository.getCurrentSessionId()).thenAnswer((_) async => 's1');
