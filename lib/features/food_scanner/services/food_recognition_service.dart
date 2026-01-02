@@ -30,7 +30,7 @@ class FoodRecognitionResult {
 class FoodRecognitionService {
   // Server đang chạy tại máy có IP: 192.168.1.140
   // Máy tính và điện thoại phải cùng mạng WiFi
-  static const String defaultBaseUrl = 'http://192.168.1.140:8000';
+  static const String defaultBaseUrl = 'http://192.168.2.3:8000';
 
   final http.Client _client;
   final String _baseUrl;
