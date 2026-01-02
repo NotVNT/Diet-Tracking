@@ -32,9 +32,10 @@ class ChatProvider extends ChangeNotifier {
   ChatSessionEntity? _currentSession;
   // Tracks concurrent async operations per session so loading UI is scoped.
   final Map<String, int> _busyCountBySession = {};
-  // When user starts a new chat (or switches chat), we cancel pending requests
-  // of the previous session so its in-flight response is ignored.
-  final Set<String> _cancelledSessionIds = {};
+  // In-flight request generation per session. When user starts/switches chat,
+  // we bump generation of the previous session so any late response for the
+  // previous generation is ignored. This does NOT block future sends.
+  final Map<String, int> _requestGenerationBySession = {};
   bool _isNewSessionUnsaved = false; // Track if the session is temporary
 
   // Getters
@@ -44,12 +45,17 @@ class ChatProvider extends ChangeNotifier {
     if (id == null) return false;
     return (_busyCountBySession[id] ?? 0) > 0;
   }
+
   ChatSessionEntity? get currentSession => _currentSession;
   String get currentSessionTitle =>
       _currentSession?.title ?? 'Cuộc trò chuyện mới';
 
-  bool _isSessionCancelled(String sessionId) =>
-      _cancelledSessionIds.contains(sessionId);
+  int _getGeneration(String sessionId) =>
+      _requestGenerationBySession[sessionId] ?? 0;
+
+  void _bumpGeneration(String sessionId) {
+    _requestGenerationBySession[sessionId] = _getGeneration(sessionId) + 1;
+  }
 
   /// Send a regular message
   Future<String?> sendMessage(String message) async {
@@ -79,7 +85,9 @@ class ChatProvider extends ChangeNotifier {
       ),
     );
 
-  _setLoading(true, originSessionId);
+    final int originGeneration = _getGeneration(originSessionId);
+
+    _setLoading(true, originSessionId);
 
     try {
       // Send message and get response
@@ -87,28 +95,23 @@ class ChatProvider extends ChangeNotifier {
         validation.validMessage!,
       );
 
-      // If user created/switch to another chat while waiting, ignore.
-      if (_isSessionCancelled(originSessionId)) {
+      // If user created/switched chat while waiting, ignore.
+      if (_getGeneration(originSessionId) != originGeneration) {
         return null;
       }
 
       if (result.isSuccess) {
-        await _appendBotMessageToSession(
-          originSessionId,
-          result.response!,
-        );
+        await _appendBotMessageToSession(originSessionId, result.response!);
         return null; // Success
       } else {
-        await _appendBotMessageToSession(
-          originSessionId,
-          result.error!,
-        );
+        await _appendBotMessageToSession(originSessionId, result.error!);
         return result.error;
       }
     } catch (e) {
       // Hide technical error details from users
-      const errorMessage = 'Không thể gửi tin nhắn. Vui lòng kiểm tra kết nối và thử lại.';
-      if (!_isSessionCancelled(originSessionId)) {
+      const errorMessage =
+          'Không thể gửi tin nhắn. Vui lòng kiểm tra kết nối và thử lại.';
+      if (_getGeneration(originSessionId) == originGeneration) {
         await _appendBotMessageToSession(originSessionId, errorMessage);
       }
       return errorMessage;
@@ -145,7 +148,9 @@ class ChatProvider extends ChangeNotifier {
       ChatMessageEntity(text: userMsg, isUser: true, timestamp: DateTime.now()),
     );
 
-  _setLoading(true, originSessionId);
+    final int originGeneration = _getGeneration(originSessionId);
+
+    _setLoading(true, originSessionId);
 
     try {
       final prompt = _buildFoodScanAnalysisPromptUseCase.execute(record);
@@ -168,7 +173,8 @@ class ChatProvider extends ChangeNotifier {
         extraContext: extraContext,
       );
 
-      if (_isSessionCancelled(originSessionId)) {
+      // If user created/switched chat while waiting, ignore.
+      if (_getGeneration(originSessionId) != originGeneration) {
         return;
       }
       if (result.isSuccess) {
@@ -180,7 +186,7 @@ class ChatProvider extends ChangeNotifier {
         );
       }
     } catch (e) {
-      if (!_isSessionCancelled(originSessionId)) {
+      if (_getGeneration(originSessionId) == originGeneration) {
         await _appendBotMessageToSession(
           originSessionId,
           'Không thể phân tích sản phẩm. Vui lòng thử lại.',
@@ -255,9 +261,14 @@ class ChatProvider extends ChangeNotifier {
   Future<void> createNewChatSession() async {
     final previousId = _currentSession?.id;
     _currentSession = await _createNewChatSessionUseCase.execute();
-    _isNewSessionUnsaved = true; 
+    _isNewSessionUnsaved = true;
     if (previousId != null) {
       _cancelSession(previousId);
+    }
+    // Ensure new session can send messages immediately (not affected by old cancels)
+    final newId = _currentSession?.id;
+    if (newId != null) {
+      _requestGenerationBySession.putIfAbsent(newId, () => 0);
     }
     notifyListeners();
   }
@@ -289,7 +300,8 @@ class ChatProvider extends ChangeNotifier {
     try {
       // Try local current session id first
       String? sessionId = await _chatSessionRepository.getCurrentSessionId();
-      sessionId ??= await _chatSessionRepository.getMostRecentSessionIdFromCloud();
+      sessionId ??= await _chatSessionRepository
+          .getMostRecentSessionIdFromCloud();
 
       if (sessionId != null) {
         final session = await _chatSessionRepository.getSessionById(sessionId);
@@ -349,7 +361,8 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void _cancelSession(String sessionId) {
-    _cancelledSessionIds.add(sessionId);
+    // Cancel only current in-flight requests for this session.
+    _bumpGeneration(sessionId);
     _busyCountBySession.remove(sessionId);
   }
 
