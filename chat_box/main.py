@@ -299,7 +299,7 @@ def chat_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
     messages.append({"role": "user", "content": prompt})
 
     completion = client.chat.completions.create(
-        model="meta-llama/Llama-3.1-8B-Instruct",
+        model="openai/gpt-oss-20b:groq",
         messages=messages,
     )
 
