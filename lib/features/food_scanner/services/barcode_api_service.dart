@@ -12,7 +12,7 @@ class BarcodeApiService {
   // Default remote barcode server.
   // Override when running/building using:
   //   --dart-define=SERVER_BARCODE_API_URL=https://your-host
-  static const String _defaultBaseUrl = 'http://192.168.1.140:8000';
+  static const String _defaultBaseUrl = 'https://ivank04-barcode-server.hf.space';
 
   static const String _overrideBaseUrl = String.fromEnvironment(
     'SERVER_BARCODE_API_URL',
