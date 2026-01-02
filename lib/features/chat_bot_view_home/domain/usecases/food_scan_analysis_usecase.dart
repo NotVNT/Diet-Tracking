@@ -7,7 +7,7 @@ class BuildFoodScanAnalysisPromptUseCase {
     buf.writeln('Bạn là chuyên gia dinh dưỡng cá nhân.');
     buf.writeln('Nhiệm vụ: đánh giá mức độ phù hợp của sản phẩm thực phẩm dưới đây với hồ sơ sức khỏe và mục tiêu của người dùng.');
     buf.writeln('Hãy trả lời NGẮN GỌN và rõ ràng theo cấu trúc:');
-    buf.writeln('- Kết luận: Safe to eat | Use with caution | Not recommended');
+    buf.writeln('- Kết luận: Phù hợp | Cân nhắc | Không khuyên dùng');
     buf.writeln('- Lý do chính (gạch đầu dòng)');
     buf.writeln('- Lưu ý dị ứng/kiêng kỵ nếu có');
     buf.writeln('- Mẹo thay thế lành mạnh (nếu cần)');
