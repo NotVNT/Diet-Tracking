@@ -97,6 +97,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatBotSessionDeleted => 'Session deleted';
 
   @override
+  String get chatBotUploadVideo => 'Upload Video';
+
+  @override
+  String get chatBotUploadVideoSubtitle => 'Analyze food from video';
+
+  @override
+  String get chatBotAnalyze => 'Analyze';
+
+  @override
+  String get chatBotCancel => 'Cancel';
+
+  @override
   String get chatBotHistoryEmpty => 'No chat history yet';
 
   @override
@@ -1616,4 +1628,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String interfaceConfirmationGoalGainKg(int kg) {
     return 'Goal: gain $kg kg (step by step)';
   }
+
+  @override
+  String get permissionMicrophoneRequired => 'Microphone permission is required to upload video with audio.';
+
+  @override
+  String get videoDurationError => 'Video must be between 3 and 60 seconds.';
+
+  @override
+  String get videoSizeError => 'Video is too large. Please choose a video under 50MB.';
 }

@@ -97,6 +97,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotSessionDeleted => 'Đã xóa cuộc trò chuyện';
 
   @override
+  String get chatBotUploadVideo => 'Tải lên video';
+
+  @override
+  String get chatBotUploadVideoSubtitle => 'Phân tích món ăn từ video';
+
+  @override
+  String get chatBotAnalyze => 'Phân tích';
+
+  @override
+  String get chatBotCancel => 'Hủy';
+
+  @override
   String get chatBotHistoryEmpty => 'Chưa có lịch sử trò chuyện';
 
   @override
@@ -1616,4 +1628,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String interfaceConfirmationGoalGainKg(int kg) {
     return 'Mục tiêu: tăng $kg kg (từng bước một)';
   }
+
+  @override
+  String get permissionMicrophoneRequired => 'Cần quyền truy cập micro để tải lên video có âm thanh.';
+
+  @override
+  String get videoDurationError => 'Video phải có độ dài từ 3 đến 60 giây.';
+
+  @override
+  String get videoSizeError => 'Video quá lớn. Vui lòng chọn video dưới 50MB.';
 }

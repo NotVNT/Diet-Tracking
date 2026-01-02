@@ -48,6 +48,10 @@
     }
   },
   "chatBotSessionDeleted": "Đã xóa cuộc trò chuyện",
+  "chatBotUploadVideo": "Tải lên video",
+  "chatBotUploadVideoSubtitle": "Phân tích món ăn từ video",
+  "chatBotAnalyze": "Phân tích",
+  "chatBotCancel": "Hủy",
   "chatBotHistoryEmpty": "Chưa có lịch sử trò chuyện",
   "chatBotStartConversation": "Bắt đầu cuộc trò chuyện...",
   "chatBotEmptyTitle": "Bắt đầu cuộc trò chuyện mới",

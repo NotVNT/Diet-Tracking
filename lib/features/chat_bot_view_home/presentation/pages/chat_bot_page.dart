@@ -1,5 +1,8 @@
   import 'package:flutter/material.dart';
-  import '../providers/chat_provider_factory.dart';
+import 'package:image_picker/image_picker.dart';
+import '../widgets/video_preview_dialog.dart';
+import '../providers/chat_provider_factory.dart';
+import '../widgets/video_recording.dart';
   import '../providers/chat_provider.dart';
   import '../widgets/messages_area.dart';
   import '../widgets/chat_input_area.dart';
@@ -114,6 +117,7 @@ class ChatBotPage extends StatefulWidget {
             ChatSettingsMenu(
               onCreateNewChat: _onCreateNewChat,
               onChatHistory: _onChatHistory,
+              onUploadVideo: _onUploadVideo,
             ),
           ],
         ),
@@ -156,6 +160,34 @@ class ChatBotPage extends StatefulWidget {
     }
 
     // Event Handlers
+
+    /// Handles upload video action
+    void _onUploadVideo() async {
+      // Navigate to custom video recording page
+      final XFile? video = await Navigator.of(context).push<XFile>(
+        MaterialPageRoute(
+          builder: (context) => const VideoRecording(),
+        ),
+      );
+      
+      if (video != null) {
+        if (!mounted) return;
+
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => VideoPreviewDialog(
+            videoFile: video,
+            onCancel: () => Navigator.of(context).pop(),
+            onAnalyze: () {
+              Navigator.of(context).pop();
+              // TODO: Implement actual video analysis logic
+              SnackBarHelper.showSuccess(context, "Đang phân tích video...");
+            },
+          ),
+        );
+      }
+    }
 
     /// Handles create new chat action
     void _onCreateNewChat() async {
