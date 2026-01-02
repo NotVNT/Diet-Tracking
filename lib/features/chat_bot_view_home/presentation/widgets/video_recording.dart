@@ -16,6 +16,8 @@ class VideoRecording extends StatefulWidget {
 
 class _VideoRecordingPageState extends State<VideoRecording> with WidgetsBindingObserver {
   CameraController? _controller;
+  List<CameraDescription> _cameras = [];
+  int _selectedCameraIndex = 0;
   bool _isCameraInitialized = false;
   bool _isRecording = false;
   Timer? _timer;
@@ -84,9 +86,14 @@ class _VideoRecordingPageState extends State<VideoRecording> with WidgetsBinding
       return;
     }
 
-    // Use the first camera (usually back camera)
+    _cameras = cameras;
+    // Use the first camera (usually back camera) or the previously selected one
+    _initializeCameraController(cameras[_selectedCameraIndex]);
+  }
+
+  Future<void> _initializeCameraController(CameraDescription cameraDescription) async {
     final controller = CameraController(
-      cameras.first,
+      cameraDescription,
       ResolutionPreset.high,
       enableAudio: true,
     );
@@ -104,6 +111,13 @@ class _VideoRecordingPageState extends State<VideoRecording> with WidgetsBinding
         SnackBarHelper.showError(context, 'Lỗi khởi tạo camera: $e');
       }
     }
+  }
+
+  Future<void> _switchCamera() async {
+    if (_cameras.length < 2) return;
+
+    _selectedCameraIndex = (_selectedCameraIndex + 1) % _cameras.length;
+    await _initializeCameraController(_cameras[_selectedCameraIndex]);
   }
 
   Future<void> _startRecording() async {
@@ -229,6 +243,25 @@ class _VideoRecordingPageState extends State<VideoRecording> with WidgetsBinding
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
+
+          // Switch Camera Button
+          if (_cameras.length > 1 && !_isRecording)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16,
+              right: 16,
+              child: Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.flip_camera_ios_outlined, color: Colors.white, size: 30),
+                    onPressed: _switchCamera,
+                  ),
+                  const Text(
+                    'Chuyển đổi',
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
 
           // Timer
           if (_isRecording)

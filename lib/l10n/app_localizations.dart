@@ -3244,24 +3244,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Goal: gain {kg} kg (step by step)'**
   String interfaceConfirmationGoalGainKg(int kg);
-
-  /// No description provided for @permissionMicrophoneRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Microphone permission is required to upload video with audio.'**
-  String get permissionMicrophoneRequired;
-
-  /// No description provided for @videoDurationError.
-  ///
-  /// In en, this message translates to:
-  /// **'Video must be between 3 and 60 seconds.'**
-  String get videoDurationError;
-
-  /// No description provided for @videoSizeError.
-  ///
-  /// In en, this message translates to:
-  /// **'Video is too large. Please choose a video under 50MB.'**
-  String get videoSizeError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -80,7 +80,7 @@ class CustomFloatingActionButton extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                // Row 2: Scan Food & Report
+                // Row 2: Scan Food & Chat Bot
                 Row(
                   children: [
                     Expanded(
@@ -97,24 +97,6 @@ class CustomFloatingActionButton extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _ActionButton(
-                        icon: Icons.assessment_outlined,
-                        label: localizations?.bottomNavReport ?? 'Báo cáo',
-                        onTap: () {
-                          Navigator.pop(context);
-                          onReportSelected();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                // Row 3: Chat Bot (centered)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: (MediaQuery.of(context).size.width - 32 - 12) / 2, // (Total width - padding - spacing) / 2
-                      child: _ActionButton(
                         icon: Icons.chat_bubble_outline,
                         label: localizations?.bottomNavChatBot ?? 'Chat bot',
                         onTap: () {
@@ -123,6 +105,24 @@ class CustomFloatingActionButton extends StatelessWidget {
                         },
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Row 3: Report
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ActionButton(
+                        icon: Icons.bar_chart,
+                        label: localizations?.bottomNavReport ?? 'Report',
+                        onTap: () {
+                          Navigator.pop(context);
+                          onReportSelected();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Spacer(),
                   ],
                 ),
                 const SizedBox(height: 90),
