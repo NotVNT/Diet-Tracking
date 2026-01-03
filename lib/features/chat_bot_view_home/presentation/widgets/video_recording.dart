@@ -142,6 +142,7 @@ class _VideoRecordingPageState extends State<VideoRecording> with WidgetsBinding
         }
       });
     } catch (e) {
+      if (!mounted) return;
       SnackBarHelper.showError(context, 'Lỗi khi bắt đầu quay: $e');
     }
   }
