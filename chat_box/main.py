@@ -38,7 +38,7 @@ def intent_classification(text):
      {"role": "user", "content": text} ]
 
     completion = client.chat.completions.create(
-        model="openai/gpt-oss-20b:groq",
+        model="Qwen/Qwen2.5-7B-Instruct",
         messages=messages,
     )
 
@@ -133,7 +133,7 @@ chat_config = LanguageModelConfig(
     api_key=api_key,
     type=ModelType.Chat,
     model_provider="openai",
-    model="openai/gpt-oss-20b:groq",
+    model="Qwen/Qwen2.5-7B-Instruct",
     api_base = "https://router.huggingface.co/v1",
     model_supports_json = "true",
     concurrent_requests = 1, # Rất quan trọng: HF API miễn phí sẽ khóa bạn nếu gọi nhanh
@@ -207,11 +207,11 @@ local_context_params = {
     "include_community_rank": False,
     "return_candidate_context": False,
     "embedding_vectorstore_key": EntityVectorStoreKey.ID,  # set this to EntityVectorStoreKey.TITLE if the vectorstore uses entity title as ids
-    "max_tokens": 15_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 5000)
+    "max_tokens": 8_200,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 5000)
 }
 
 model_params = {
-    "max_tokens": 15_000,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 1000=1500)
+    "max_tokens": 8_200,  # change this based on the token limit you have on your model (if you are using a model with 8k limit, a good setting could be 1000=1500)
     "temperature": 0.3,
 }
 
@@ -269,7 +269,7 @@ async def local_search(prompt, age, height, weight, allergy, goal, goal_weight, 
         }
 """
 
-    result = await search_engine.search(user_profile + prompt + f"cho 10 món ăn phù hợp với query của người dùng và cho thông tin dinh dưỡng về calories, carb, fat và protein đầy đủ + {json_type}, giải thích ngắn gọn về cách suy luận của bạn")
+    result = await search_engine.search(user_profile + prompt + f"cho 10 món ăn phù hợp với query của người dùng và cho thông tin dinh dưỡng về calories, carb, fat và protein đầy đủ + {json_type}, không cần phải giải thích gì thêm")
     # result = await search_engine.search("cho biết thông tin về các chế độ ăn phổ biến trong bảng dữ liệu")
     json_blocks = re.findall(r'\{.*?\}', result.response, re.DOTALL)
     foods = [json.loads(block) for block in json_blocks] 
@@ -299,7 +299,7 @@ def chat_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
     messages.append({"role": "user", "content": prompt})
 
     completion = client.chat.completions.create(
-        model="openai/gpt-oss-20b:groq",
+        model="Qwen/Qwen2.5-7B-Instruct",
         messages=messages,
     )
 
@@ -2474,7 +2474,7 @@ def more_bot(prompt, conversation_history, age, height, weight, allergy, goal, g
     messages.append(system_message)
     messages.append({"role": "user", "content": prompt})
     completion = client.chat.completions.create(
-        model="openai/gpt-oss-20b:groq",
+        model="Qwen/Qwen2.5-7B-Instruct",
         messages=messages,
     )
 
@@ -2542,36 +2542,6 @@ async def chatbox(request: ChatRequest):
         response, chat_history = more_bot(request.prompt, chat_history, request.age, request.height, request.weight, request.allergy, request.goal, request.goal_weight, request.gender, food)
 
         return{"reply": response}
-        # return{"reply": response}
-
-
-
-
-
-    chat_history = [
-        {"role": "system",
-        "content": build_system_prompt()}
-    ]
-
-    content = build_user_prompt(request.age, request.height, request.weight, request.allergy, request.goal, request.prompt, request.goal_weight, request.gender)
-
-    chat_history.append(
-        {"role": "user",
-         "content": content}
-    )
-
-    max_iterations = 2
-    iteration_count = 0
-    while iteration_count < max_iterations:
-        iteration_count += 1
-        resp = call_llm(chat_history)
-        if resp.choices[0].message.tool_calls:
-            chat_history.append(get_tool_response(resp))
-        else:
-            break
-    if iteration_count >= max_iterations:
-        print("Warning: Maximum iterations reached")
-    return{"reply": chat_history[-1]['content']}
         
 if __name__ == "__main__":
     print(extract_tags("món ăn giảm cân giành con người bị dị ứng cá"))

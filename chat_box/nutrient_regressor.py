@@ -110,35 +110,39 @@ def food_classification(img_64):
     response = client.chat.completions.create(
     model="Qwen/Qwen2.5-VL-7B-Instruct:hyperbolic",
     messages=[
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": (
-                        "Nhìn vào bức ảnh và xác định món ăn.\n"
-                        "Trả về dạng JSON, không giải thích gì hơn.\n\n"
-                        "Dạng JSON:\n"
-                        "```json\n"
-                        "{\n"
-                        '  "dish": "...",\n'
-                        '  "ingredients": ["...", "..."],\n'
-                        '  "confidence": "high | medium | low"\n'
-                        "}\n"
-                        ""
-                    )
-                },
-                {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": f"data:image/jpeg;base64,{img}"
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": (
+                            "Look at the picture and identify the dish.\n"
+                            "⚠️ If the picture contains multiple dishes, a plate with mixed food, "
+                            "or if the picture is not food, DO NOT guess.\n"
+                            "In those cases, return JSON with dish='uncertain' and message='Please retake the photo with only one clear dish.'\n\n"
+                            "JSON format:\n"
+                            "```json\n"
+                            "{\n"
+                            '  "dish": "...",\n'
+                            '  "ingredients": ["...", "..."],\n'
+                            '  "confidence": "high | medium | low",\n'
+                            '  "message": "..." \n'
+                            "}\n"
+                                "```"
+                            )
+
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{img}"
+                        }
                     }
-                }
-            ]
-        }
-    ],
-    max_tokens=300,
-)
+                ]
+            }
+        ],
+        max_tokens=300,
+    )
 
     return(response.choices[0].message.content)
 
@@ -181,23 +185,26 @@ async def scan_food(file: UploadFile = File(...)):
     
 
     vlm_output = json.loads(vlm_json_string.strip('```json\n').strip('\n```'))
-    normalize_text(vlm_output["dish"])
-    query = normalize_text(vlm_output["dish"])
-    query_emb = embedder.encode([query], normalize_embeddings=True)
-    sims = dish_embeddings @ query_emb[0]
-
-    best_idx = int(np.argmax(sims))
-    best_score = float(sims[best_idx])
-
-    if best_score < 0.6:
-        matched_dish = None
+    if(vlm_output["dish"].lower() == "uncertain"):
+        return {"reply": vlm_output["message"]}
     else:
-        matched_dish = dish_keys[best_idx]
+        normalize_text(vlm_output["dish"])
+        query = normalize_text(vlm_output["dish"])
+        query_emb = embedder.encode([query], normalize_embeddings=True)
+        sims = dish_embeddings @ query_emb[0]
 
-    dish = matched_dish
-    cal_range = synthesize_dish(dish, DISH_DB, INGREDIENT_DB)
-    print(cal_range)
-    return {
-            "dish_name": vlm_output["dish"],
-            "calories_range": cal_range,
-            }
+        best_idx = int(np.argmax(sims))
+        best_score = float(sims[best_idx])
+
+        if best_score < 0.6:
+            matched_dish = None
+        else:
+            matched_dish = dish_keys[best_idx]
+
+        dish = matched_dish
+        cal_range = synthesize_dish(dish, DISH_DB, INGREDIENT_DB)
+        print(cal_range)
+        return {
+                "dish_name": vlm_output["dish"],
+                "calories_range": cal_range,
+                }
