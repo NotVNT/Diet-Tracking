@@ -18,6 +18,9 @@ class BarcodeProduct {
   final String barcode;
   final String? productName;
   final String? brands;
+
+  /// Bot evaluation/remark returned by barcode server.
+  final String? botResponse;
   final double? calories;
   final double? protein;
   final double? carbohydrates;
@@ -29,6 +32,7 @@ class BarcodeProduct {
     required this.barcode,
     this.productName,
     this.brands,
+    this.botResponse,
     this.calories,
     this.protein,
     this.carbohydrates,
@@ -50,6 +54,7 @@ class BarcodeProduct {
       barcode: json['barcode'] as String? ?? '',
       productName: product['product_name'] as String?,
       brands: product['brands'] as String?,
+      botResponse: (json['response'] ?? json['bot_response'])?.toString(),
       calories: _parseDouble(nutriments?['energy-kcal']),
       protein: _parseDouble(nutriments?['proteins']),
       carbohydrates: _parseDouble(nutriments?['carbohydrates']),
@@ -76,6 +81,7 @@ class BarcodeProduct {
       'barcode': barcode,
       'productName': productName,
       'brands': brands,
+      'botResponse': botResponse,
       'calories': calories,
       'protein': protein,
       'carbohydrates': carbohydrates,

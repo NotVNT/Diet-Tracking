@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../l10n/app_localizations.dart';
 
 /// Widget for chat input area with text field and send button
@@ -49,14 +48,14 @@ class ChatInputArea extends StatelessWidget {
         ),
         child: TextField(
           controller: messageController,
-          style: GoogleFonts.inter(
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
           decoration: InputDecoration(
             hintText: l10n.chatBotEnterMessage,
-            hintStyle: GoogleFonts.inter(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+            hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,

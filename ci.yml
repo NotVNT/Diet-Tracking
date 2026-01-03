@@ -5,8 +5,7 @@ on:
   push:
     branches:
       - dev
-      - testing
-      - hotfix21
+      - check2 
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -109,6 +108,5 @@ jobs:
         uses: codecov/codecov-action@v5
         continue-on-error: true
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage/lcov.info
           fail_ci_if_error: false

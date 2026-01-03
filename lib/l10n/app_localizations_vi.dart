@@ -97,6 +97,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatBotSessionDeleted => 'Đã xóa cuộc trò chuyện';
 
   @override
+  String get chatBotUploadVideo => 'Tải lên video';
+
+  @override
+  String get chatBotUploadVideoSubtitle => 'Phân tích món ăn từ video';
+
+  @override
+  String get chatBotAnalyze => 'Phân tích';
+
+  @override
+  String get chatBotCancel => 'Hủy';
+
+  @override
   String get chatBotHistoryEmpty => 'Chưa có lịch sử trò chuyện';
 
   @override

@@ -59,6 +59,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(_wrapWithApp(const LoginScreen()));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Forgot password?'));
       await tester.pumpAndSettle();
       expect(find.byType(ForgotPasswordScreen), findsOneWidget);
@@ -68,6 +69,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(_wrapWithApp(const LoginScreen()));
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.text("I don't have an account"));
       await tester.tap(find.text("I don't have an account"));
       await tester.pumpAndSettle();
@@ -78,6 +80,8 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(_wrapWithApp(const LoginScreen()));
+      await tester.pumpAndSettle(); // Wait for animations to complete
+      await tester.ensureVisible(find.widgetWithText(CustomButton, 'Login'));
       await tester.tap(find.widgetWithText(CustomButton, 'Login'));
       await tester.pump(); // Let snackbar animation run
       expect(find.text('Please enter email'), findsOneWidget);

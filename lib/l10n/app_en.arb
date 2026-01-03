@@ -48,6 +48,10 @@
     }
   },
   "chatBotSessionDeleted": "Session deleted",
+  "chatBotUploadVideo": "Upload Video",
+  "chatBotUploadVideoSubtitle": "Analyze food from video",
+  "chatBotAnalyze": "Analyze",
+  "chatBotCancel": "Cancel",
   "chatBotHistoryEmpty": "No chat history yet",
   "chatBotStartConversation": "Start a conversation...",
   "chatBotEmptyTitle": "Start a new conversation",
