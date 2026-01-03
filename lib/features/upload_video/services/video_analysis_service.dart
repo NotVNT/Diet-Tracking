@@ -17,7 +17,7 @@ class VideoAnalysisResult {
 /// - multipart/form-data field name: `file`
 /// - response: {"recipe": "..."}
 class VideoAnalysisService {
-  static const String defaultBaseUrl = 'http://192.168.1.140:8002';
+  static const String defaultBaseUrl = 'http://192.168.2.3:8002';
 
   final http.Client _client;
   final String _baseUrl;

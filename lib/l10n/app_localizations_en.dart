@@ -1628,4 +1628,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String interfaceConfirmationGoalGainKg(int kg) {
     return 'Goal: gain $kg kg (step by step)';
   }
+
+  @override
+  String get videoProcessingTitle => 'Video Processing';
+
+  @override
+  String get videoPermissionWarning => 'Camera and Microphone permissions are required to record video.';
+
+  @override
+  String videoPickError(String error) {
+    return 'Error picking video: $error';
+  }
+
+  @override
+  String get videoUploadButton => 'Upload Video';
+
+  @override
+  String get analysisVideo => 'Analyze Video';
+
+  @override
+  String get videoAnalysisTitle => 'Analysis from bot';
+
+  @override
+  String videoAnalysisError(String error) {
+    return 'Error analyzing video: $error';
+  }
+
+  @override
+  String get videoNoData => 'No analysis data available.';
 }

@@ -3244,6 +3244,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Goal: gain {kg} kg (step by step)'**
   String interfaceConfirmationGoalGainKg(int kg);
+
+  /// No description provided for @videoProcessingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Video Processing'**
+  String get videoProcessingTitle;
+
+  /// No description provided for @videoPermissionWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera and Microphone permissions are required to record video.'**
+  String get videoPermissionWarning;
+
+  /// No description provided for @videoPickError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error picking video: {error}'**
+  String videoPickError(String error);
+
+  /// No description provided for @videoUploadButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Video'**
+  String get videoUploadButton;
+
+  /// No description provided for @analysisVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze Video'**
+  String get analysisVideo;
+
+  /// No description provided for @videoAnalysisTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis from bot'**
+  String get videoAnalysisTitle;
+
+  /// No description provided for @videoAnalysisError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error analyzing video: {error}'**
+  String videoAnalysisError(String error);
+
+  /// No description provided for @videoNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'No analysis data available.'**
+  String get videoNoData;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

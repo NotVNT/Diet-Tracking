@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:diet_tracking_project/features/chat_bot_view_home/presentation/widgets/video_recording.dart';
+import 'package:diet_tracking_project/features/upload_video/presentation/widgets/video_recording.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
 void main() {
