@@ -5,7 +5,9 @@ kích hoạt môi trường
 Tải thư viện yêu cầu
   pip install -r requirements.txt
 
+uvicorn vid_to_recipe:app --host 192.168.1.140 --port 8002 --reload
   
+  uvicorn main:app --host 192.168.1.140 --port 8001 --reload
 uvicorn nutrient_regressor:app --host 192.168.1.140 --port 8000 --reload
 
 uvicorn nutrient_regressor:app --host https://ivank04-barcode-server.hf.space --port 8000 --reload

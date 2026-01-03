@@ -156,18 +156,28 @@ async def upload_video(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, tmp)
         tmp_path = tmp.name  # đường dẫn file tạm
 
-    descriptions = extract_frames(tmp_path, interval_sec=3)
+    try:
+        descriptions = extract_frames(tmp_path, interval_sec=3)
 
-    steps = group_actions(descriptions, gap=3)
+        steps = group_actions(descriptions, gap=3)
 
-    # summarize
-    all_steps_text = "\n".join(
-        [f"Bước {i}: {summarize_step(step['descs'])}" for i, step in enumerate(steps, 1)]
-    )
+        # summarize
+        all_steps_text = "\n".join(
+            [
+                f"Bước {i}: {summarize_step(step['descs'])}"
+                for i, step in enumerate(steps, 1)
+            ]
+        )
 
-    recipe = generate_recipe(all_steps_text)
+        recipe = generate_recipe(all_steps_text)
 
-    return {
-        "recipe": recipe
-    }
+        return {
+            "recipe": recipe
+        }
+    finally:
+        try:
+            os.remove(tmp_path)
+        except Exception:
+            # ignore cleanup failures
+            pass
 
