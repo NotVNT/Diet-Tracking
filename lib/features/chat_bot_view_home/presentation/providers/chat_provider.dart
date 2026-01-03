@@ -46,6 +46,14 @@ class ChatProvider extends ChangeNotifier {
     return (_busyCountBySession[id] ?? 0) > 0;
   }
 
+  /// Mark a session as busy/idle (to show the in-chat typing/analyzing bubble).
+  ///
+  /// This is used for non-chat API calls (e.g. video analysis) that should still
+  /// show the same "Đang phân tích…" indicator.
+  void setSessionBusy(String sessionId, bool busy) {
+    _setLoading(busy, sessionId);
+  }
+
   ChatSessionEntity? get currentSession => _currentSession;
   String get currentSessionTitle =>
       _currentSession?.title ?? 'Cuộc trò chuyện mới';
@@ -230,6 +238,17 @@ class ChatProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error appending message to session $sessionId: $e');
     }
+  }
+
+  /// Append a local bot message (no API call) to a specific session.
+  ///
+  /// Useful for features where the response comes from a non-chat endpoint
+  /// (e.g. video->recipe) but we still want to store and display it like a bot reply.
+  Future<void> appendLocalBotMessageForSession({
+    required String sessionId,
+    required String text,
+  }) async {
+    await _appendBotMessageToSession(sessionId, text);
   }
 
   void _addMessage(ChatMessageEntity message) {
