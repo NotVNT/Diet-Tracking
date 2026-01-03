@@ -18,8 +18,8 @@ import '../../../../services/notification_service.dart';
 import '../../../../services/permission_service.dart';
 import '../widgets/layout/home_content.dart';
 import 'daily_nutrition_detail_page.dart';
-import 'add_food_page.dart';
 import 'nutrition_summary_page.dart';
+import '../../../upload_video/presentation/pages/video_processing_page.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                         onScanFoodSelected: () =>
                             _onScanFoodTapped(homeProvider),
                         onReportSelected: () => _onReportTapped(),
-                        onAddFoodSelected: () => _navigateToAddFood(),
+                        onUploadVideoSelected: () => _navigateToVideoUpload(),
                       ),
                     );
                   },
@@ -249,13 +249,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Handle report action
-  void _navigateToAddFood() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => const AddFoodPage()));
-  }
-
-  /// Handle report action
   void _onReportTapped() {
     final selectedDate = context.read<HomeProvider>().selectedDate;
     final state = context.read<RecordCubit>().state;
@@ -269,6 +262,14 @@ class _HomePageState extends State<HomePage> {
           selectedDate: selectedDate,
           allRecords: allRecords,
         ),
+      ),
+    );
+  }
+
+  void _navigateToVideoUpload() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const VideoProcessingPage(),
       ),
     );
   }

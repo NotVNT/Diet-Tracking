@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../responsive/responsive.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../../pages/add_food_page.dart';
 import '../components/calorie_ring.dart';
 import '../components/nutrient_item.dart';
 import '../../../../record_view_home/domain/entities/food_record_entity.dart';
@@ -125,6 +126,40 @@ class CalorieGoalCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.tonalIcon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AddFoodPage(),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.add, size: responsive.iconSize(18)),
+                          label: Text(
+                            l10n?.addFoodPageTitle ?? 'Thêm món',
+                            style: TextStyle(
+                              fontSize: responsive.fontSize(13),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: FilledButton.styleFrom(
+                            visualDensity: VisualDensity.compact,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: responsive.width(12),
+                              vertical: responsive.height(8),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                responsive.radius(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: responsive.height(12)),
                       NutrientItem(
                         title: (l10n?.nutrientProtein ?? 'Protein'),
                         valueText: '${nutritionInfo.consumed.protein.round()}g',

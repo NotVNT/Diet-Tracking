@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:diet_tracking_project/features/chat_bot_view_home/services/video_analysis_service.dart';
+import 'package:diet_tracking_project/features/upload_video/services/video_analysis_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';

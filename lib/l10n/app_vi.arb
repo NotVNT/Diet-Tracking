@@ -682,5 +682,27 @@
         "type": "int"
       }
     }
-  }
+  },
+  "videoProcessingTitle": "Xử lý Video",
+  "videoPermissionWarning": "Cần quyền truy cập Camera và Microphone để quay video.",
+  "videoPickError": "Lỗi khi chọn video: {error}",
+  "@videoPickError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "videoUploadButton": "Tải video lên",
+  "analysisVideo": "Phân tích video",
+  "videoAnalysisTitle": "Phân tích từ bot",
+  "videoAnalysisError": "Lỗi khi phân tích video: {error}",
+  "@videoAnalysisError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "videoNoData": "Chưa có dữ liệu phân tích."
 }

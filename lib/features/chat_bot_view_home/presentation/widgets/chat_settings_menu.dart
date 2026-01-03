@@ -6,13 +6,11 @@ import '../../../../l10n/app_localizations.dart';
 class ChatSettingsMenu extends StatelessWidget {
   final VoidCallback? onCreateNewChat;
   final VoidCallback? onChatHistory;
-  final VoidCallback? onUploadVideo;
 
   const ChatSettingsMenu({
     super.key,
     this.onCreateNewChat,
     this.onChatHistory,
-    this.onUploadVideo,
   });
 
   @override
@@ -45,14 +43,6 @@ class ChatSettingsMenu extends StatelessWidget {
         const PopupMenuDivider(),
         _buildMenuItem(
           context: context,
-          value: 'upload_video',
-          icon: Icons.video_library_outlined,
-          title: l10n.chatBotUploadVideo,
-          subtitle: l10n.chatBotUploadVideoSubtitle,
-        ),
-        const PopupMenuDivider(),
-        _buildMenuItem(
-          context: context,
           value: 'chat_history',
           icon: Icons.history_outlined,
           title: l10n.chatBotChatHistory,
@@ -63,9 +53,6 @@ class ChatSettingsMenu extends StatelessWidget {
         switch (value) {
           case 'new_chat':
             onCreateNewChat?.call();
-            break;
-          case 'upload_video':
-            onUploadVideo?.call();
             break;
           case 'chat_history':
             onChatHistory?.call();
