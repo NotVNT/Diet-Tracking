@@ -22,8 +22,9 @@ void main() {
     mockNotificationProvider = MockNotificationProvider();
     
     // Mock permission handler
-    const MethodChannel('flutter.baseflow.com/permissions/methods')
-        .setMockMethodCallHandler((MethodCall methodCall) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      const MethodChannel('flutter.baseflow.com/permissions/methods'),
+      (MethodCall methodCall) async {
       if (methodCall.method == 'checkPermissionStatus') {
         return 1; // granted
       }
@@ -38,8 +39,10 @@ void main() {
   });
 
   tearDown(() {
-    const MethodChannel('flutter.baseflow.com/permissions/methods')
-        .setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      const MethodChannel('flutter.baseflow.com/permissions/methods'),
+      null,
+    );
   });
 
   Widget createWidgetUnderTest() {

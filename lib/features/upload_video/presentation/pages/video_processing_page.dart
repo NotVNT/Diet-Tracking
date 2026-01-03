@@ -72,6 +72,8 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
       return;
     }
 
+    if (!mounted) return;
+
     try {
       final XFile? video = await Navigator.push(
         context,
