@@ -36,7 +36,7 @@ def is_this_stuff_good(weight, goal, disease, allergy, product_name, nutriments,
     Carbs: {carbs},
     Fat: {fat},
 
-    Hãy cho người dùng biết sản phẩm này có hợp với người dùng hay không, nói ngắn gọn, không dài dòng và không cần hỏi thêm người dùng.
+    Hãy cho người dùng biết sản phẩm này có hợp với người dùng hay không, nói ngắn gọn, không dài dòng và không cần hỏi thêm người dùng. Giới hạn 100 kí tự.
 """}
     
     messages = []
