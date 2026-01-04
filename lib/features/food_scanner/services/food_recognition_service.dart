@@ -75,33 +75,41 @@ class FoodRecognitionService {
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as Map<String, dynamic>;
-        // New field from server: dish name.
-        final String dishName =
-            (jsonData['dish_name'] ?? jsonData['dishName'] ?? '')
-                .toString()
-                .trim();
-        // New contract (preferred): {"calories_range": [min, max] | null}
+
+        // Server sometimes omits or malforms dish_name, so ignore it to avoid crashes.
+        const fallbackName = 'Thông tin món ăn';
+
+        // Preferred: {"calories_range": [min, max] | null}
         final dynamic rangeRaw = jsonData['calories_range'];
 
         List<int>? range;
         if (rangeRaw is List && rangeRaw.length == 2) {
           final a = rangeRaw[0];
           final b = rangeRaw[1];
-          if (a is num && b is num) {
-            range = [a.round(), b.round()];
+
+          int? n1;
+          int? n2;
+          if (a is num) n1 = a.round();
+          if (b is num) n2 = b.round();
+          if (n1 == null && a is String) n1 = num.tryParse(a)?.round();
+          if (n2 == null && b is String) n2 = num.tryParse(b)?.round();
+
+          if (n1 != null && n2 != null) {
+            range = [n1, n2];
           }
         }
 
-        if (range == null) {
-          debugPrint('calories_range not found or invalid in response');
-          return null;
+        double? avg;
+        if (range != null) {
+          avg = (range[0] + range[1]) / 2.0;
         }
 
-        final avg = (range[0] + range[1]) / 2.0;
+        if (range == null) {
+          debugPrint('calories_range not found or invalid in response; still returning fallback result');
+        }
 
         return FoodRecognitionResult(
-          // Prefer dish name if server provides it, otherwise keep old label.
-          name: dishName.isNotEmpty ? dishName : 'Ước tính calories',
+          name: fallbackName,
           calories: avg,
           caloriesRange: range,
           description: null,

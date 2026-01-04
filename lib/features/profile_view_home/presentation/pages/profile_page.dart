@@ -88,13 +88,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _handleSignOut() async {
     try {
-  await widget.profileProvider.signOut();
-  await _localStorage.clearGuestData();
+      await widget.profileProvider.signOut();
+      await _localStorage.clearGuestData();
 
       // Đặt lại tab về Trang chủ sau khi đăng xuất
       try {
         if (mounted) {
-          await context.read<HomeProvider>().setCurrentIndex(HomePageConfig.homeIndex);
+          await context.read<HomeProvider>().setCurrentIndex(
+            HomePageConfig.homeIndex,
+          );
         }
       } catch (_) {
         // nếu không có HomeProvider trong context thì bỏ qua
@@ -109,8 +111,8 @@ class _ProfilePageState extends State<ProfilePage> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: widget.welcomeScreenBuilder ??
-              (context) => const WelcomeScreen(),
+          builder:
+              widget.welcomeScreenBuilder ?? (context) => const WelcomeScreen(),
         ),
         (route) => false,
       );
