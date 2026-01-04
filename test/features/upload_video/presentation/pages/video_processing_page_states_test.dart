@@ -1,5 +1,6 @@
 import 'package:diet_tracking_project/features/upload_video/presentation/cubit/video_analysis_cubit.dart';
 import 'package:diet_tracking_project/features/upload_video/presentation/pages/video_processing_page.dart';
+import 'package:diet_tracking_project/features/upload_video/presentation/widgets/analysis_result_display.dart';
 import 'package:diet_tracking_project/features/upload_video/services/video_analysis_service.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,10 @@ void main() {
   await cubit.analyzeVideo(XFile('test.mp4'));
   await tester.pumpAndSettle(const Duration(milliseconds: 200));
 
-    expect(find.text('My recipe'), findsOneWidget);
+    final displayFinder = find.byType(AnalysisResultDisplay);
+    expect(displayFinder, findsOneWidget);
+    final displayWidget = tester.widget<AnalysisResultDisplay>(displayFinder);
+    expect(displayWidget.text, 'My recipe');
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();

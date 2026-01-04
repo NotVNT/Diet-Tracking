@@ -18,7 +18,7 @@ class VideoAnalysisResult {
 /// - response: {"recipe": "..."}
 class VideoAnalysisService {
   // Mặc định trỏ tới server uvicorn đang chạy
-  static const String defaultBaseUrl = 'http://192.168.1.140:8002';
+  static const String defaultBaseUrl = 'https://ivank04-vid-to-recipe-server.hf.space';
 
   final http.Client _client;
   final String _baseUrl;

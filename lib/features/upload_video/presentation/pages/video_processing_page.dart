@@ -12,6 +12,7 @@ import '../../../../services/permission_service.dart';
 import '../../services/video_analysis_service.dart';
 import '../cubit/video_analysis_cubit.dart';
 import '../cubit/video_analysis_state.dart';
+import '../widgets/analysis_result_display.dart';
 import '../widgets/video_preview_widget.dart';
 import '../widgets/video_recording.dart';
 
@@ -116,16 +117,9 @@ class _VideoProcessingViewState extends State<VideoProcessingView> {
                       ),
                     );
                   } else if (state is VideoAnalysisAnalyzing) {
-                    return Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        VideoPreviewWidget(
-                          videoFile: state.video,
-                          onClear: () =>
-                              context.read<VideoAnalysisCubit>().reset(),
-                        ),
-                        const Center(child: CircularProgressIndicator()),
-                      ],
+                    return VideoPreviewWidget(
+                      videoFile: state.video,
+                      onClear: () => context.read<VideoAnalysisCubit>().reset(),
                     );
                   } else if (state is VideoAnalysisSuccess) {
                     return VideoPreviewWidget(
@@ -181,9 +175,8 @@ class _VideoProcessingViewState extends State<VideoProcessingView> {
                           );
                         } else if (state is VideoAnalysisSuccess) {
                           return SingleChildScrollView(
-                            child: Text(
-                              state.recipe,
-                              style: const TextStyle(fontSize: 16),
+                            child: AnalysisResultDisplay(
+                              text: state.recipe,
                             ),
                           );
                         } else if (state is VideoAnalysisFailure) {
