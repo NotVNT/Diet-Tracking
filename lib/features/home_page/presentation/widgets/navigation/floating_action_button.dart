@@ -8,7 +8,7 @@ class CustomFloatingActionButton extends StatelessWidget {
   final VoidCallback onChatBotSelected;
   final VoidCallback onScanFoodSelected;
   final VoidCallback onReportSelected;
-  final VoidCallback onAddFoodSelected;
+  final VoidCallback onUploadVideoSelected;
 
   const CustomFloatingActionButton({
     super.key,
@@ -16,7 +16,7 @@ class CustomFloatingActionButton extends StatelessWidget {
     required this.onChatBotSelected,
     required this.onScanFoodSelected,
     required this.onReportSelected,
-    required this.onAddFoodSelected,
+    required this.onUploadVideoSelected,
   });
 
   @override
@@ -53,16 +53,16 @@ class CustomFloatingActionButton extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Row 1: Add Food & Record
+                // Row 1: Upload Video & Record
                 Row(
                   children: [
                     Expanded(
                       child: _ActionButton(
-                        icon: Icons.add_box_outlined,
-                        label: localizations?.bottomNavAddFood ?? 'Thêm món ăn',
+                        icon: Icons.video_call,
+                        label: localizations?.analysisVideo ?? 'Phân tích video',
                         onTap: () {
                           Navigator.pop(context);
-                          onAddFoodSelected();
+                          onUploadVideoSelected();
                         },
                       ),
                     ),
@@ -80,7 +80,7 @@ class CustomFloatingActionButton extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                // Row 2: Scan Food & Report
+                // Row 2: Scan Food & Chat Bot
                 Row(
                   children: [
                     Expanded(
@@ -96,24 +96,6 @@ class CustomFloatingActionButton extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: _ActionButton(
-                        icon: Icons.assessment_outlined,
-                        label: localizations?.bottomNavReport ?? 'Báo cáo',
-                        onTap: () {
-                          Navigator.pop(context);
-                          onReportSelected();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                // Row 3: Chat Bot (centered)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: (MediaQuery.of(context).size.width - 32 - 12) / 2, // (Total width - padding - spacing) / 2
                       child: _ActionButton(
                         icon: Icons.chat_bubble_outline,
                         label: localizations?.bottomNavChatBot ?? 'Chat bot',

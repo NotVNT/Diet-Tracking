@@ -1,5 +1,5 @@
   import 'package:flutter/material.dart';
-  import '../providers/chat_provider_factory.dart';
+import '../providers/chat_provider_factory.dart';
   import '../providers/chat_provider.dart';
   import '../widgets/messages_area.dart';
   import '../widgets/chat_input_area.dart';
@@ -46,6 +46,7 @@ class ChatBotPage extends StatefulWidget {
 
     // Chat provider instance
     late final ChatProvider _chatProvider;
+
 
     @override
     void initState() {

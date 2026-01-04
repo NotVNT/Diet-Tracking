@@ -11,7 +11,6 @@ class ChatSettingsMenu extends StatelessWidget {
     super.key,
     this.onCreateNewChat,
     this.onChatHistory,
-    
   });
 
   @override

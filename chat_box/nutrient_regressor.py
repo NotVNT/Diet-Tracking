@@ -256,8 +256,8 @@ def good_or_bad(allergy, food_name):
 
 def food_classification(img_64):
     response = client.chat.completions.create(
-        model="Qwen/Qwen2.5-VL-7B-Instruct:hyperbolic",
-        messages=[
+    model="Qwen/Qwen2.5-VL-7B-Instruct:hyperbolic",
+    messages=[
             {
                 "role": "user",
                 "content": [

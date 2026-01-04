@@ -3,18 +3,18 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 
 import 'package:camera/camera.dart';
 import 'package:diet_tracking_project/features/food_scanner/domain/usecases/request_camera_permission.dart';
-import 'package:diet_tracking_project/features/food_scanner/services/camera_permission_service.dart';
+import 'package:diet_tracking_project/services/permission_service.dart';
 import 'package:diet_tracking_project/features/food_scanner/services/camera_adapter.dart';
-import 'package:diet_tracking_project/features/food_scanner/services/camera_controller_facade.dart';
+import 'package:diet_tracking_project/widget/camera/camera_controller_facade.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_event.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_state.dart';
 
-class FakeCameraPermissionService implements CameraPermissionService {
+class FakePermissionService implements PermissionService {
   ph.PermissionStatus status;
   ph.PermissionStatus requested;
 
-  FakeCameraPermissionService({
+  FakePermissionService({
     required this.status,
     required this.requested,
   });
@@ -23,7 +23,10 @@ class FakeCameraPermissionService implements CameraPermissionService {
   Future<ph.PermissionStatus> getCameraPermissionStatus() async => status;
 
   @override
-  Future<ph.PermissionStatus> requestCameraPermissionStatus() async => requested;
+  Future<ph.PermissionStatus> requestCameraPermissionStatus({
+    bool useSessionCache = false,
+  }) async =>
+      requested;
 
   @override
   Future<bool> requestCameraPermission() async {
@@ -48,6 +51,19 @@ class FakeCameraPermissionService implements CameraPermissionService {
         'cameraPermissionGrantedInSession': false,
         'cameraPermissionDeniedInSession': false,
       };
+
+  @override
+  Future<bool> requestNotificationPermission() async => false;
+
+  @override
+  Future<bool> isNotificationPermissionGranted() async => false;
+
+  @override
+  Future<bool> requestMicrophonePermission() async => false;
+
+  @override
+  Future<ph.PermissionStatus> requestMicrophonePermissionStatus() async =>
+      ph.PermissionStatus.denied;
 }
 
 class FakeCameraAdapter extends CameraAdapter {
@@ -134,7 +150,7 @@ class FakeCameraControllerFacade implements CameraControllerFacade {
 void main() {
   group('CameraBloc (no real camera)', () {
     test('InitializeCamera emits initializing -> error -> initializing(false) when permission denied', () async {
-      final service = FakeCameraPermissionService(
+      final service = FakePermissionService(
         status: ph.PermissionStatus.denied,
         requested: ph.PermissionStatus.denied,
       );
@@ -156,7 +172,7 @@ void main() {
     });
 
     test('InitializeCamera emits no-camera error when permission granted but device has no cameras', () async {
-      final service = FakeCameraPermissionService(
+      final service = FakePermissionService(
         status: ph.PermissionStatus.granted,
         requested: ph.PermissionStatus.granted,
       );
@@ -183,7 +199,7 @@ void main() {
     });
 
     test('InitializeCamera success + Start/StopImageStream emits streaming then ready (with fake controller)', () async {
-      final service = FakeCameraPermissionService(
+      final service = FakePermissionService(
         status: ph.PermissionStatus.granted,
         requested: ph.PermissionStatus.granted,
       );
@@ -229,7 +245,7 @@ void main() {
     });
 
     test('InitializeCamera emits error when adapter throws', () async {
-      final service = FakeCameraPermissionService(
+      final service = FakePermissionService(
         status: ph.PermissionStatus.granted,
         requested: ph.PermissionStatus.granted,
       );
@@ -256,7 +272,7 @@ void main() {
     });
 
     test('InitializeCamera success emits CameraReady with same controller facade instance', () async {
-      final service = FakeCameraPermissionService(
+      final service = FakePermissionService(
         status: ph.PermissionStatus.granted,
         requested: ph.PermissionStatus.granted,
       );
@@ -287,7 +303,7 @@ void main() {
     });
 
     test('ReleaseCamera emits CameraInitial even when controller is null', () async {
-      final service = FakeCameraPermissionService(
+      final service = FakePermissionService(
         status: ph.PermissionStatus.denied,
         requested: ph.PermissionStatus.denied,
       );

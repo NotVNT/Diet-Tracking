@@ -259,59 +259,5 @@ void main() {
     await recordCubit.close();
   });
 
-  testWidgets('flow: FAB -> Report navigates to NutritionSummaryPage', (tester) async {
-    configureLargeViewport(tester);
 
-    final homeRepo = MockHomeRepository();
-    final homeUsecase = MockGetHomeInfoUseCase();
-    final permission = MockPermissionService();
-    final notifications = MockLocalNotificationService();
-
-    when(homeUsecase()).thenAnswer((_) async => HomeInfo(currentIndex: 0));
-    when(permission.isNotificationPermissionGranted()).thenAnswer((_) async => true);
-
-    final homeProvider = HomeProvider(
-      getHomeInfoUseCase: homeUsecase,
-      repository: homeRepo,
-      permissionService: permission,
-      notificationService: notifications,
-    );
-
-    // Not-today prevents the guided arrow from appearing.
-    final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    homeProvider.setSelectedDate(yesterday);
-
-    final recordRepo = MockFoodRecordRepository();
-    when(recordRepo.getFoodRecords()).thenAnswer((_) async => []);
-    when(recordRepo.saveFoodRecord(any)).thenAnswer((_) async {});
-    when(recordRepo.deleteFoodRecord(any)).thenAnswer((_) async {});
-    final recordCubit = _buildRecordCubit(recordRepo);
-
-    final page = HomePage(
-      pagesBuilder: () => const [
-        SizedBox(key: ValueKey('home-tab')),
-        SizedBox(key: ValueKey('record-tab')),
-        SizedBox(key: ValueKey('chat-tab')),
-        SizedBox(key: ValueKey('profile-tab')),
-      ],
-      homeContentBuilder: ({required onViewReport, required onEmptyTap, required onItemTap}) {
-        return const SizedBox(key: ValueKey('home-tab'));
-      },
-    );
-
-    await tester.pumpWidget(_wrap(homeProvider: homeProvider, recordCubit: recordCubit, child: page));
-    await tester.pumpAndSettle();
-
-    // Open action sheet and select Report.
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Report'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Thống kê dinh dưỡng'), findsOneWidget);
-    expect(find.text('Tuần này'), findsOneWidget);
-    expect(find.text('Tháng này'), findsOneWidget);
-
-    await recordCubit.close();
-  });
 }

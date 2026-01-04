@@ -4,11 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:diet_tracking_project/features/home_page/presentation/widgets/navigation/floating_action_button.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 
-Widget _wrap(Widget child) {
+Widget _wrap(Widget child, {ThemeMode themeMode = ThemeMode.light}) {
   return MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     locale: const Locale('en'),
+    themeMode: themeMode,
+    theme: ThemeData.light(),
+    darkTheme: ThemeData.dark(),
     home: Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: child,
@@ -36,22 +39,21 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         CustomFloatingActionButton(
-          onAddFoodSelected: () {},
           onRecordSelected: () {},
           onScanFoodSelected: () {},
           onReportSelected: () {},
           onChatBotSelected: () {},
+          onUploadVideoSelected: () {},
         ),
       ),
     );
 
     await _openSheet(tester);
 
-    expect(find.text('Add Food'), findsOneWidget);
     expect(find.text('Record'), findsOneWidget);
     expect(find.text('Scan food'), findsOneWidget);
-    expect(find.text('Report'), findsOneWidget);
     expect(find.text('Chat bot'), findsOneWidget);
+    expect(find.text('Analyze Video'), findsOneWidget);
   });
 
   testWidgets('tapping each action triggers the correct callback and dismisses sheet', (tester) async {
@@ -62,30 +64,29 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    var addFoodCount = 0;
     var recordCount = 0;
     var scanCount = 0;
-    var reportCount = 0;
     var chatCount = 0;
+    var uploadVideoCount = 0;
 
     await tester.pumpWidget(
       _wrap(
         CustomFloatingActionButton(
-          onAddFoodSelected: () => addFoodCount++,
           onRecordSelected: () => recordCount++,
           onScanFoodSelected: () => scanCount++,
-          onReportSelected: () => reportCount++,
+          onReportSelected: () {},
           onChatBotSelected: () => chatCount++,
+          onUploadVideoSelected: () => uploadVideoCount++,
         ),
       ),
     );
 
-    // Add Food
+    // Upload Video
     await _openSheet(tester);
-    await tester.tap(find.text('Add Food'));
+    await tester.tap(find.text('Analyze Video'));
     await tester.pumpAndSettle();
-    expect(addFoodCount, 1);
-    expect(find.text('Add Food'), findsNothing);
+    expect(uploadVideoCount, 1);
+    expect(find.text('Analyze Video'), findsNothing);
 
     // Record
     await _openSheet(tester);
@@ -101,13 +102,6 @@ void main() {
     expect(scanCount, 1);
     expect(find.text('Scan food'), findsNothing);
 
-    // Report
-    await _openSheet(tester);
-    await tester.tap(find.text('Report'));
-    await tester.pumpAndSettle();
-    expect(reportCount, 1);
-    expect(find.text('Report'), findsNothing);
-
     // Chat bot
     await _openSheet(tester);
     await tester.tap(find.text('Chat bot'));
@@ -115,6 +109,35 @@ void main() {
     expect(chatCount, 1);
     expect(find.text('Chat bot'), findsNothing);
 
-    expect(addFoodCount + recordCount + scanCount + reportCount + chatCount, 5);
+    expect(recordCount + scanCount + chatCount + uploadVideoCount, 4);
+  });
+
+  testWidgets('renders correctly in dark mode', (tester) async {
+    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      _wrap(
+        CustomFloatingActionButton(
+          onRecordSelected: () {},
+          onScanFoodSelected: () {},
+          onReportSelected: () {},
+          onChatBotSelected: () {},
+          onUploadVideoSelected: () {},
+        ),
+        themeMode: ThemeMode.dark,
+      ),
+    );
+
+    await _openSheet(tester);
+
+    expect(find.text('Record'), findsOneWidget);
+    expect(find.text('Scan food'), findsOneWidget);
+    expect(find.text('Chat bot'), findsOneWidget);
+    expect(find.text('Analyze Video'), findsOneWidget);
   });
 }

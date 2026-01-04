@@ -30,6 +30,7 @@ class ScannedProductCard extends StatelessWidget {
     final String protein = _formatMacro(product.protein);
     final String carbs = _formatMacro(product.carbohydrates);
     final String fat = _formatMacro(product.fat);
+    final String botResponse = (product.botResponse ?? '').trim();
 
     final macroChips = [
       _MacroChip(
@@ -96,41 +97,31 @@ class ScannedProductCard extends StatelessWidget {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    NutrientColorScheme.getEmoji(NutrientType.calorie),
-                    style: const TextStyle(fontSize: 22),
-                  ),
-                ),
-                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         title,
                         maxLines: 2,
+                        textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.inter(
                           fontSize: 19,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                       if (subtitle.isNotEmpty) ...[
                         const SizedBox(height: 2),
                         Text(
                           subtitle,
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
@@ -143,19 +134,12 @@ class ScannedProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: onReset,
-                  icon: Icon(
-                    Icons.close,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                  tooltip: 'Bỏ qua',
-                ),
               ],
             ),
             const SizedBox(height: 16),
             Text(
               'Calories & macros',
+              textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -163,7 +147,48 @@ class ScannedProductCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Wrap(spacing: 10, runSpacing: 8, children: macroChips),
+            Wrap(
+              spacing: 10,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
+              children: macroChips,
+            ),
+            if (botResponse.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.18),
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        botResponse,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          height: 1.35,
+                          fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.85,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 18),
             Row(
               children: [

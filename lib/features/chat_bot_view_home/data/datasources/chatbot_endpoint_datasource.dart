@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-const String _defaultBaseUrl = 'http://127.0.0.1:8000';
+const String _defaultBaseUrl = 'http://192.168.2.3:8001';
 const String _overrideBaseUrl = String.fromEnvironment(
   'CHATBOT_API_BASE_URL',
   defaultValue: '',

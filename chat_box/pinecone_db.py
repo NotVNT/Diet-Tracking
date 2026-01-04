@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-PINECONE_API_KEY = os.getenv("pcsk_5vFAvq_QCVDvAYQ7kxvD4xaN9t2s2Grm2NGVXMWHi12hJvtPyFmryNbcCMfM5kEzUUjZW6")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY_FOR_CHATBOX")
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 index_name = "nutrition-db"

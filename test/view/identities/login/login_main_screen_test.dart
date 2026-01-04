@@ -59,6 +59,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(_wrapWithApp(const LoginScreen()));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Forgot password?'));
       await tester.pumpAndSettle();
       expect(find.byType(ForgotPasswordScreen), findsOneWidget);
@@ -68,6 +69,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(_wrapWithApp(const LoginScreen()));
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.text("I don't have an account"));
       await tester.tap(find.text("I don't have an account"));
       await tester.pumpAndSettle();
@@ -77,8 +79,18 @@ void main() {
     testWidgets('login button with empty fields shows error snackbar', (
       tester,
     ) async {
+      tester.view.physicalSize = const Size(1080, 2340); // Taller screen
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
       await tester.pumpWidget(_wrapWithApp(const LoginScreen()));
-      await tester.tap(find.widgetWithText(CustomButton, 'Login'));
+      await tester.pump(const Duration(milliseconds: 1300));
+      await tester.pumpAndSettle(); // Wait for animations to complete
+
+      final loginButton = find.widgetWithText(CustomButton, 'Login');
+      await tester.ensureVisible(loginButton);
+      await tester.pumpAndSettle();
+      await tester.tap(loginButton, warnIfMissed: false);
       await tester.pump(); // Let snackbar animation run
       expect(find.text('Please enter email'), findsOneWidget);
     });

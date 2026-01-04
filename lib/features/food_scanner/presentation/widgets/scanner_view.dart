@@ -9,7 +9,7 @@ import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/fo
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/barcode/barcode_event.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/food_scan/food_scan_state.dart';
-import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/camera_preview_wrapper.dart';
+import 'package:diet_tracking_project/widget/camera/camera_preview_wrapper.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/scanner_bottom_overlay.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/mobile_barcode_scanner_view.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/scanner_preview.dart';

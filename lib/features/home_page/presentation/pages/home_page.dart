@@ -5,12 +5,12 @@ import '../../../../l10n/app_localizations.dart';
 import '../providers/home_provider.dart';
 import '../widgets/navigation/floating_action_button.dart';
 import '../widgets/navigation/bottom_navigation_bar.dart';
+import '../widgets/navigation/home_navigation_handlers.dart';
 import '../widgets/shared/guided_fab.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../record_view_home/domain/entities/food_record_entity.dart';
 import '../../../record_view_home/presentation/cubit/record_cubit.dart';
 import '../../../record_view_home/presentation/cubit/record_state.dart';
-import '../../../food_scanner/presentation/pages/food_scanner_page.dart';
 import '../widgets/food_scanned/food_scanned_detail.dart';
 import '../../../../config/home_page_config.dart';
 import '../../../../common/snackbar_helper.dart';
@@ -18,8 +18,7 @@ import '../../../../services/notification_service.dart';
 import '../../../../services/permission_service.dart';
 import '../widgets/layout/home_content.dart';
 import 'daily_nutrition_detail_page.dart';
-import 'add_food_page.dart';
-import 'nutrition_summary_page.dart';
+import '../../../upload_video/presentation/pages/video_processing_page.dart';
 
 /// Main home page with bottom navigation
 ///
@@ -46,7 +45,8 @@ class HomePage extends StatefulWidget {
     required void Function(DateTime, List<FoodRecordEntity>) onViewReport,
     required VoidCallback onEmptyTap,
     required void Function(FoodRecordEntity) onItemTap,
-  })? homeContentBuilder;
+  })?
+  homeContentBuilder;
 
   /// Optional override for scan food page.
   /// Useful for widget tests to avoid plugin-heavy FoodScannerPage.
@@ -60,9 +60,9 @@ class _HomePageState extends State<HomePage> {
   late final List<Widget> _pages;
 
   bool get _isWidgetTest {
-    return WidgetsBinding.instance.runtimeType
-      .toString()
-      .contains('TestWidgetsFlutterBinding');
+    return WidgetsBinding.instance.runtimeType.toString().contains(
+      'TestWidgetsFlutterBinding',
+    );
   }
 
   @override
@@ -72,7 +72,9 @@ class _HomePageState extends State<HomePage> {
     context.read<RecordCubit>().loadFoodRecords();
 
     // Prebuild tab pages once and keep them alive to avoid heavy rebuilds
-    final pages = List<Widget>.of((widget.pagesBuilder ?? HomePageConfig.getPages)());
+    final pages = List<Widget>.of(
+      (widget.pagesBuilder ?? HomePageConfig.getPages)(),
+    );
     final homeBuilder = widget.homeContentBuilder;
     pages[0] = (homeBuilder != null)
         ? homeBuilder(
@@ -175,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                         onScanFoodSelected: () =>
                             _onScanFoodTapped(homeProvider),
                         onReportSelected: () => _onReportTapped(),
-                        onAddFoodSelected: () => _navigateToAddFood(),
+                        onUploadVideoSelected: () => _navigateToVideoUpload(),
                       ),
                     );
                   },
@@ -193,95 +195,72 @@ class _HomePageState extends State<HomePage> {
 
   /// Navigate to record page
   void _navigateToRecord(HomeProvider provider) {
-    provider.setCurrentIndex(HomePageConfig.recordIndex);
+    HomeNavigationHandlers.navigateToRecord(context);
   }
 
   /// Navigate to chat bot page
   void _navigateToChatBot(HomeProvider provider) {
-    provider.setCurrentIndex(HomePageConfig.chatBotIndex);
+    HomeNavigationHandlers.navigateToChatBot(context);
   }
 
   /// Handle scan food action - Request camera permission first
   void _onScanFoodTapped(HomeProvider homeProvider) async {
-    // Only allow scanning for today
-    final bool isTodaySelected = DateUtils.isSameDay(
-      homeProvider.selectedDate,
-      DateTime.now(),
-    );
-    if (!isTodaySelected) {
-      SnackBarHelper.showInfo(
-        context,
-        'Bạn chỉ có thể quét món ăn cho ngày hôm nay.',
+    // Keep test override behavior: if a scanFoodPageBuilder is provided,
+    // route to that builder instead of the default FoodScannerPage.
+    final builder = widget.scanFoodPageBuilder;
+    if (builder != null) {
+      final homeProviderFromContext = context.read<HomeProvider>();
+      final bool isTodaySelected = DateUtils.isSameDay(
+        homeProviderFromContext.selectedDate,
+        DateTime.now(),
       );
-      return;
-    }
+      if (!isTodaySelected) {
+        SnackBarHelper.showInfo(
+          context,
+          'Bạn chỉ có thể quét món ăn cho ngày hôm nay.',
+        );
+        return;
+      }
 
-    final hasPermission = await homeProvider.requestCameraPermission();
-
-    if (!hasPermission) {
-      if (mounted) {
+      final hasPermission = await homeProviderFromContext
+          .requestCameraPermission();
+      if (!hasPermission) {
+        if (!mounted) return;
         final localizations = AppLocalizations.of(context);
         SnackBarHelper.showWarning(
           context,
           localizations?.permissionCameraRequired ??
               'Vui lòng cấp quyền truy cập máy ảnh để sử dụng tính năng này.',
         );
+        return;
+      }
+
+      if (!mounted) return;
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: builder));
+      if (mounted) {
+        context.read<RecordCubit>().loadFoodRecords();
       }
       return;
     }
 
-    // Permission granted, navigate to FoodScannerPage
-    if (mounted) {
-      await Navigator.of(
-        context,
-      ).push(
-        MaterialPageRoute<void>(
-          builder: (ctx) =>
-              widget.scanFoodPageBuilder?.call(ctx) ??
-              const FoodScannerPage(),
-        ),
-      );
-      // Trigger a rebuild to refresh the scanned foods list
-      if (mounted) {
-        context.read<RecordCubit>().loadFoodRecords();
-      }
-    }
-  }
-
-  /// Handle report action
-  void _navigateToAddFood() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => const AddFoodPage()));
+    await HomeNavigationHandlers.navigateToScanFood(context);
   }
 
   /// Handle report action
   void _onReportTapped() {
-    final selectedDate = context.read<HomeProvider>().selectedDate;
-    final state = context.read<RecordCubit>().state;
-    List<FoodRecordEntity> allRecords = [];
-    if (state is RecordListLoaded) {
-      allRecords = state.records;
-    }
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => NutritionSummaryPage(
-          selectedDate: selectedDate,
-          allRecords: allRecords,
-        ),
-      ),
-    );
+    HomeNavigationHandlers.navigateToReport(context);
+  }
+
+  void _navigateToVideoUpload() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const VideoProcessingPage()));
   }
 
   /// Handle bottom navigation tap
   void _onBottomNavTap(HomeProvider provider, int index) {
-    if (!HomePageConfig.isValidIndex(index)) return;
-
-    // Bảo đảm tab Ghi nhận luôn hiển thị dữ liệu mới nhất
-    if (index == HomePageConfig.recordIndex) {
-      context.read<RecordCubit>().loadFoodRecords();
-    }
-
-    provider.setCurrentIndex(index);
+    HomeNavigationHandlers.onBottomNavTap(context, index);
   }
 }

@@ -48,6 +48,10 @@
     }
   },
   "chatBotSessionDeleted": "Session deleted",
+  "chatBotUploadVideo": "Upload Video",
+  "chatBotUploadVideoSubtitle": "Analyze food from video",
+  "chatBotAnalyze": "Analyze",
+  "chatBotCancel": "Cancel",
   "chatBotHistoryEmpty": "No chat history yet",
   "chatBotStartConversation": "Start a conversation...",
   "chatBotEmptyTitle": "Start a new conversation",
@@ -400,6 +404,7 @@
   "bottomNavChatBot": "Chat bot",
   "bottomNavProfile": "Profile",
   "bottomNavScanFood": "Scan food",
+
   "bottomNavReport": "Report",
   "searchHint": "Search",
 
@@ -678,5 +683,27 @@
         "type": "int"
       }
     }
-  }
+  },
+  "videoProcessingTitle": "Video Processing",
+  "videoPermissionWarning": "Camera and Microphone permissions are required to record video.",
+  "videoPickError": "Error picking video: {error}",
+  "@videoPickError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "videoUploadButton": "Upload Video",
+  "analysisVideo": "Analyze Video",
+  "videoAnalysisTitle": "Analysis from bot",
+  "videoAnalysisError": "Error analyzing video: {error}",
+  "@videoAnalysisError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "videoNoData": "No analysis data available."
 }
