@@ -4,6 +4,7 @@ import base64
 from PIL import Image
 from io import BytesIO
 import base64
+from fastapi import FastAPI, UploadFile, File, Form, Body
 from openai import OpenAI
 from dotenv import load_dotenv
 import tempfile
@@ -27,6 +28,72 @@ def encode_image(path):
     buf = BytesIO()
     img.save(buf, format="JPEG")
     return base64.b64encode(buf.getvalue()).decode()
+
+def classify_frame(image_path):
+    image_b64 = encode_image(image_path)
+    completion = client.chat.completions.create(
+        model="Qwen/Qwen2.5-VL-7B-Instruct:hyperbolic",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Is this image showing a dish or food? Answer only 'yes' or 'no'."
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{image_b64}"
+                        }
+                    }
+                ]
+            }
+        ],
+        max_tokens=5,
+        temperature=0.0,
+    )
+    return completion.choices[0].message.content.strip().lower()
+
+
+def check_video_relevance(video_path, num_check=5):
+    """
+    Kiểm tra vài frame đầu để xác định video có liên quan đến đồ ăn không.
+    video_path: đường dẫn đến video
+    num_check: số frame đầu cần kiểm tra
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        cap = cv2.VideoCapture(video_path)
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        frame_interval = int(fps * 3)  # extract every 1 second for checking
+
+        frame_idx = 0
+        saved = 0
+        results = []
+
+        while cap.isOpened() and saved < num_check:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            if frame_idx % frame_interval == 0:
+                timestamp = int(frame_idx / fps)
+                filename = os.path.join(temp_dir, f"frame_{timestamp:06d}.jpg")
+                cv2.imwrite(filename, frame)
+                res = classify_frame(filename)  # trả về 'yes' hoặc 'no'
+                results.append(res)
+                saved += 1
+
+            frame_idx += 1
+
+        cap.release()
+
+        # Nếu đa số frame đầu là 'no' → dừng
+        if results.count("yes") == 0:
+            return {"status": "unsupported", "reason": "Video không liên quan đến đồ ăn"}
+        else:
+            return {"status": "ok", "reason": "Video có liên quan đến đồ ăn"}
+
 
 def describe_frame(image_path):
     image_b64 = encode_image(image_path)
@@ -131,14 +198,17 @@ def summarize_step(descs):
     # Nối tất cả các hành động trong list thành một string
     return " ".join(descs)   # hoặc " → ".join(descs) nếu muốn có dấu mũi tên
 
-def generate_recipe(steps):
+def generate_recipe(steps, goal, allergy):
     """
     steps: list các string mô tả hành động đã summarize
     Trả về: recipe step-by-step từ LLM
     """
     # Tạo prompt từ danh sách bước
-    prompt = "Hãy biến các mô tả sau thành hướng dẫn nấu ăn step-by-step bằng tiếng Việt:\n" + "\n\nHướng dẫn:" + steps
-
+    prompt = (
+      f"Mình có thông tin sau: mục tiêu {goal}, dị ứng: {allergy}"  
+      "Hãy biến các mô tả sau thành hướng dẫn nấu ăn step-by-step bằng tiếng Việt:\n" 
+      "và điều chỉnh công thức nếu cần để phù hợp với mình" + "\n\nHướng dẫn:" + steps
+    )
     # Gọi LLM
     completion = client.chat.completions.create(
         model="Qwen/Qwen2.5-7B-Instruct",
@@ -150,23 +220,25 @@ def generate_recipe(steps):
     return completion.choices[0].message.content
 
 @app.post("/upload-video/")
-async def upload_video(file: UploadFile = File(...)):
+async def upload_video(file: UploadFile = File(...),
+                       goal: str | None = Form(None),
+                       allergy: str | None = Form(None)):
     # tạo file tạm để lưu video
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
         shutil.copyfileobj(file.file, tmp)
         tmp_path = tmp.name  # đường dẫn file tạm
 
-    try:
+    relevance = check_video_relevance(tmp_path)
+    if(relevance["status"] == "unsupported"):
+        return {"reply": relevance["reason"]}
+    else:
         descriptions = extract_frames(tmp_path, interval_sec=3)
 
         steps = group_actions(descriptions, gap=3)
 
         # summarize
         all_steps_text = "\n".join(
-            [
-                f"Bước {i}: {summarize_step(step['descs'])}"
-                for i, step in enumerate(steps, 1)
-            ]
+            [f"Bước {i}: {summarize_step(step['descs'])}" for i, step in enumerate(steps, 1)]
         )
 
         recipe = generate_recipe(all_steps_text)
@@ -174,10 +246,4 @@ async def upload_video(file: UploadFile = File(...)):
         return {
             "recipe": recipe
         }
-    finally:
-        try:
-            os.remove(tmp_path)
-        except Exception:
-            # ignore cleanup failures
-            pass
 
