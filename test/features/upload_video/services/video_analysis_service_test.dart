@@ -33,5 +33,85 @@ void main() {
 
       expect(result.recipe, 'Bước 1: ...');
     });
+
+    test('throws when server responds with non-200', () async {
+      final client = MockClient((request) async {
+        return http.Response('oops', 500);
+      });
+
+      final service = VideoAnalysisService(
+        client: client,
+        baseUrl: 'http://example.com',
+      );
+
+      expect(
+        () => service.analyzeVideoBytes(bytes: const [1, 2, 3]),
+        throwsA(
+          predicate((e) => e.toString().contains('API Error: 500')),
+        ),
+      );
+    });
+
+    test('throws when response is not valid JSON', () async {
+      final client = MockClient((request) async {
+        return http.Response(
+          'not-json',
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      });
+
+      final service = VideoAnalysisService(
+        client: client,
+        baseUrl: 'http://example.com',
+      );
+
+      expect(
+        () => service.analyzeVideoBytes(bytes: const [1, 2, 3]),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('throws when response JSON is not a map', () async {
+      final client = MockClient((request) async {
+        return http.Response(
+          jsonEncode([1, 2, 3]),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      });
+
+      final service = VideoAnalysisService(
+        client: client,
+        baseUrl: 'http://example.com',
+      );
+
+      expect(
+        () => service.analyzeVideoBytes(bytes: const [1, 2, 3]),
+        throwsA(predicate((e) => e.toString().contains('Invalid response format'))),
+      );
+    });
+
+    test('throws when recipe is empty', () async {
+      final client = MockClient((request) async {
+        return http.Response(
+          jsonEncode({'recipe': '   '}),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      });
+
+      final service = VideoAnalysisService(
+        client: client,
+        baseUrl: 'http://example.com',
+      );
+
+      expect(
+        () => service.analyzeVideoBytes(bytes: const [1, 2, 3]),
+        throwsA(
+          predicate((e) => e.toString().contains('Không có công thức')),
+        ),
+      );
+    });
   });
 }

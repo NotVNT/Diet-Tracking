@@ -61,19 +61,20 @@ class _VideoProcessingViewState extends State<VideoProcessingView> {
 
     if (!context.mounted) return;
 
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final cubit = context.read<VideoAnalysisCubit>();
+
     try {
-      final XFile? video = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const VideoRecording()),
+      final XFile? video = await navigator.push<XFile?>(
+        MaterialPageRoute(builder: (_) => const VideoRecording()),
       );
 
-      if (video != null && context.mounted) {
-        context.read<VideoAnalysisCubit>().analyzeVideo(video);
+      if (video != null) {
+        cubit.analyzeVideo(video);
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 

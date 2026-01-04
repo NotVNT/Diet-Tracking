@@ -79,10 +79,18 @@ void main() {
     testWidgets('login button with empty fields shows error snackbar', (
       tester,
     ) async {
+      tester.view.physicalSize = const Size(1080, 2340); // Taller screen
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
       await tester.pumpWidget(_wrapWithApp(const LoginScreen()));
+      await tester.pump(const Duration(milliseconds: 1300));
       await tester.pumpAndSettle(); // Wait for animations to complete
-      await tester.ensureVisible(find.widgetWithText(CustomButton, 'Login'));
-      await tester.tap(find.widgetWithText(CustomButton, 'Login'));
+
+      final loginButton = find.widgetWithText(CustomButton, 'Login');
+      await tester.ensureVisible(loginButton);
+      await tester.pumpAndSettle();
+      await tester.tap(loginButton, warnIfMissed: false);
       await tester.pump(); // Let snackbar animation run
       expect(find.text('Please enter email'), findsOneWidget);
     });

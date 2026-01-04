@@ -12,13 +12,11 @@ import 'package:diet_tracking_project/features/food_scanner/presentation/widgets
 import 'package:diet_tracking_project/features/food_scanner/presentation/widgets/scanner_help_sheet.dart';
 import 'package:diet_tracking_project/features/food_scanner/services/barcode_api_service.dart';
 import 'package:diet_tracking_project/features/food_scanner/services/barcode_scanner_service.dart';
-import 'package:diet_tracking_project/features/food_scanner/services/camera_permission_service.dart';
 import 'package:diet_tracking_project/features/food_scanner/services/food_recognition_service.dart';
 import 'package:diet_tracking_project/l10n/app_localizations.dart';
 import 'package:diet_tracking_project/model/nutrition_calculation_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:permission_handler/permission_handler.dart' as ph;
 
 class FakeScannedFoodRepository implements ScannedFoodRepository {
   @override
@@ -80,32 +78,6 @@ class FakeGetBarcodeProductInfo extends GetBarcodeProductInfo {
 class FakeFoodRecognitionService implements FoodRecognitionService {
   @override
   Future<FoodRecognitionResult?> recognizeFood(String imagePath) async => null;
-}
-
-class FakeCameraPermissionService implements CameraPermissionService {
-  @override
-  Future<bool> isCameraPermissionGranted() async => false;
-
-  @override
-  Map<String, bool> getSessionState() => const {
-        'cameraPermissionGrantedInSession': false,
-        'cameraPermissionDeniedInSession': false,
-      };
-
-  @override
-  Future<ph.PermissionStatus> getCameraPermissionStatus() async => ph.PermissionStatus.denied;
-
-  @override
-  Future<bool> openAppSettings() async => false;
-
-  @override
-  Future<bool> requestCameraPermission() async => false;
-
-  @override
-  Future<ph.PermissionStatus> requestCameraPermissionStatus() async => ph.PermissionStatus.denied;
-
-  @override
-  void resetSessionState() {}
 }
 
 Widget _wrap(Widget child) {
