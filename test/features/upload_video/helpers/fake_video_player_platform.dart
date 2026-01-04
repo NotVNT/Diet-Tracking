@@ -45,6 +45,11 @@ class FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   }
 
   @override
+  Widget buildView(int textureId) {
+    return const SizedBox.shrink();
+  }
+
+  @override
   Future<void> play(int textureId) async {
     _eventControllers[textureId]?.add(
       VideoEvent(
@@ -84,4 +89,7 @@ class FakeVideoPlayerPlatform extends VideoPlayerPlatform {
 
   @override
   Future<Duration> getPosition(int textureId) async => Duration.zero;
+
+  @override
+  Future<void> setMixWithOthers(bool mixWithOthers) async {}
 }

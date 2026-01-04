@@ -13,20 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:diet_tracking_project/features/home_page/presentation/providers/home_provider.dart';
 import 'package:diet_tracking_project/view/notification/notification_provider.dart';
 
-import '../../mocks.dart';
-
 import '../../helpers/fake_video_player_platform.dart';
-
-class MockVideoAnalysisService extends Mock implements VideoAnalysisService {
-  @override
-  Future<VideoAnalysisResult> analyzeVideo(String videoPath) {
-    return super.noSuchMethod(
-      Invocation.method(#analyzeVideo, [videoPath]),
-      returnValue: Future.value(const VideoAnalysisResult(recipe: '')),
-      returnValueForMissingStub: Future.value(const VideoAnalysisResult(recipe: '')),
-    );
-  }
-}
+import '../../mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -55,19 +43,26 @@ void main() {
 
   testWidgets('VideoProcessingView shows recipe text on success', (tester) async {
     final service = MockVideoAnalysisService();
-    when(service.analyzeVideo('test.mp4')).thenAnswer(
-      (_) async => const VideoAnalysisResult(recipe: 'My recipe'),
+    final userRepo = MockUserRepository();
+    when(userRepo.getCurrentUserData()).thenAnswer((_) async => null);
+    when(service.analyzeVideo('test.mp4', goal: anyNamed('goal'), allergy: anyNamed('allergy')))
+        .thenAnswer((_) async => const VideoAnalysisResult(recipe: 'My recipe'));
+
+    await tester.pumpWidget(
+      wrap(
+        BlocProvider<VideoAnalysisCubit>(
+          create: (_) => VideoAnalysisCubit(service: service, userRepository: userRepo),
+          child: const VideoProcessingView(),
+        ),
+      ),
     );
+  await tester.pumpAndSettle();
 
-    await tester.pumpWidget(wrap(VideoProcessingPage(service: service)));
-    await tester.pump();
+  final element = tester.element(find.byType(VideoProcessingView));
+  final cubit = BlocProvider.of<VideoAnalysisCubit>(element);
 
-    final element = tester.element(find.byType(VideoProcessingView));
-    final cubit = BlocProvider.of<VideoAnalysisCubit>(element);
-
-    await cubit.analyzeVideo(XFile('test.mp4'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+  await cubit.analyzeVideo(XFile('test.mp4'));
+  await tester.pumpAndSettle(const Duration(milliseconds: 200));
 
     expect(find.text('My recipe'), findsOneWidget);
 
@@ -77,17 +72,26 @@ void main() {
 
   testWidgets('VideoProcessingView shows error message on failure', (tester) async {
     final service = MockVideoAnalysisService();
-    when(service.analyzeVideo('test.mp4')).thenThrow(Exception('boom'));
+    final userRepo = MockUserRepository();
+    when(userRepo.getCurrentUserData()).thenAnswer((_) async => null);
+    when(service.analyzeVideo('test.mp4', goal: anyNamed('goal'), allergy: anyNamed('allergy')))
+        .thenThrow(Exception('boom'));
 
-    await tester.pumpWidget(wrap(VideoProcessingPage(service: service)));
-    await tester.pump();
+    await tester.pumpWidget(
+      wrap(
+        BlocProvider<VideoAnalysisCubit>(
+          create: (_) => VideoAnalysisCubit(service: service, userRepository: userRepo),
+          child: const VideoProcessingView(),
+        ),
+      ),
+    );
+  await tester.pumpAndSettle();
 
-    final element = tester.element(find.byType(VideoProcessingView));
-    final cubit = BlocProvider.of<VideoAnalysisCubit>(element);
+  final element = tester.element(find.byType(VideoProcessingView));
+  final cubit = BlocProvider.of<VideoAnalysisCubit>(element);
 
-    await cubit.analyzeVideo(XFile('test.mp4'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+  await cubit.analyzeVideo(XFile('test.mp4'));
+  await tester.pumpAndSettle(const Duration(milliseconds: 200));
 
     expect(find.textContaining('boom'), findsOneWidget);
 
