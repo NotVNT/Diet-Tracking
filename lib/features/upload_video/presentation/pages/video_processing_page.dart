@@ -40,7 +40,6 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
     _service = widget.service ?? VideoAnalysisService();
   }
 
-  
   XFile? _videoFile;
   VideoPlayerController? _videoController;
   String? _recipeInstructions;
@@ -60,12 +59,16 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
 
     if (cameraStatus.isDenied || microphoneStatus.isDenied) {
       if (mounted) {
-        SnackBarHelper.showWarning(context, AppLocalizations.of(context)!.videoPermissionWarning);
+        SnackBarHelper.showWarning(
+          context,
+          AppLocalizations.of(context)!.videoPermissionWarning,
+        );
       }
       return;
     }
 
-    if (cameraStatus.isPermanentlyDenied || microphoneStatus.isPermanentlyDenied) {
+    if (cameraStatus.isPermanentlyDenied ||
+        microphoneStatus.isPermanentlyDenied) {
       if (mounted) {
         openAppSettings();
       }
@@ -79,14 +82,16 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
         context,
         MaterialPageRoute(builder: (context) => const VideoRecording()),
       );
-      
+
       if (video != null) {
         await _initializeVideo(video);
         _analyzeVideo(video);
       }
     } catch (e) {
       setState(() {
-        _errorMessage = AppLocalizations.of(context)!.videoPickError(e.toString());
+        _errorMessage = AppLocalizations.of(
+          context,
+        )!.videoPickError(e.toString());
       });
     }
   }
@@ -115,7 +120,9 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = AppLocalizations.of(context)!.videoAnalysisError(e.toString());
+        _errorMessage = AppLocalizations.of(
+          context,
+        )!.videoAnalysisError(e.toString());
       });
     } finally {
       setState(() {
@@ -186,15 +193,26 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
                   ? Center(
                       child: ElevatedButton.icon(
                         onPressed: _pickVideo,
-                        label: Text(AppLocalizations.of(context)!.videoUploadButton),
+                        label: Text(
+                          AppLocalizations.of(context)!.videoUploadButton,
+                        ),
                       ),
                     )
-                  : _videoController != null && _videoController!.value.isInitialized
-                      ? AspectRatio(
-                          aspectRatio: _videoController!.value.aspectRatio,
+                  : _videoController != null &&
+                        _videoController!.value.isInitialized
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: _videoController!.value.size.width,
+                          height: _videoController!.value.size.height,
                           child: VideoPlayer(_videoController!),
-                        )
-                      : const Center(child: CircularProgressIndicator()),
+                        ),
+                      ),
+                    )
+                  : const Center(child: CircularProgressIndicator()),
             ),
           ),
           const Divider(height: 3, thickness: 5),
@@ -209,13 +227,21 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.videoAnalysisTitle,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   if (_isAnalyzing)
                     const Center(child: CircularProgressIndicator())
                   else if (_errorMessage != null)
-                    Text(_errorMessage!, style: TextStyle(color: Theme.of(context).colorScheme.error))
+                    Text(
+                      _errorMessage!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    )
                   else if (_recipeInstructions != null)
                     Expanded(
                       child: SingleChildScrollView(

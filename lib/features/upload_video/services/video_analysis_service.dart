@@ -17,16 +17,17 @@ class VideoAnalysisResult {
 /// - multipart/form-data field name: `file`
 /// - response: {"recipe": "..."}
 class VideoAnalysisService {
-  static const String defaultBaseUrl = 'http://192.168.2.3:8002';
+  // Mặc định trỏ tới server uvicorn đang chạy
+  static const String defaultBaseUrl = 'http://192.168.1.140:8002';
 
   final http.Client _client;
   final String _baseUrl;
 
   VideoAnalysisService({http.Client? client, String? baseUrl})
-      : _client = client ?? http.Client(),
-        _baseUrl = (baseUrl == null || baseUrl.isEmpty)
-            ? defaultBaseUrl
-            : baseUrl;
+    : _client = client ?? http.Client(),
+      _baseUrl = (baseUrl == null || baseUrl.isEmpty)
+          ? defaultBaseUrl
+          : baseUrl;
 
   /// Analyze a video from a local file path.
   Future<VideoAnalysisResult> analyzeVideo(String videoPath) async {
@@ -58,12 +59,16 @@ class VideoAnalysisService {
 
     debugPrint('Sending video to $uri');
 
-    final streamedResponse = await _client.send(request).timeout(
-      const Duration(seconds: 120),
-      onTimeout: () {
-        throw Exception('Timeout when connecting to the video analysis server');
-      },
-    );
+    final streamedResponse = await _client
+        .send(request)
+        .timeout(
+          const Duration(seconds: 120),
+          onTimeout: () {
+            throw Exception(
+              'Timeout when connecting to the video analysis server',
+            );
+          },
+        );
 
     final response = await http.Response.fromStream(streamedResponse);
     debugPrint('Video analysis status: ${response.statusCode}');
