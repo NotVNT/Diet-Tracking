@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:video_player/video_player.dart';
+import '../../../../widget/camera/camera_controller_facade.dart';
+import '../../../../widget/camera/camera_preview_wrapper.dart';
 import '../../../../common/snackbar_helper.dart';
+import '../../../../services/permission_service.dart';
 
 class VideoRecording extends StatefulWidget {
   const VideoRecording({super.key});
@@ -57,21 +60,27 @@ class _VideoRecordingPageState extends State<VideoRecording> with WidgetsBinding
   }
 
   Future<void> _initializeCamera() async {
-    // Request permissions first
-    final cameraStatus = await Permission.camera.request();
-    final microphoneStatus = await Permission.microphone.request();
+    // Request permissions first (unified PermissionService)
+    final permissionService = PermissionService();
+    final cameraStatus = await permissionService.requestCameraPermissionStatus();
+    final microphoneStatus =
+        await permissionService.requestMicrophonePermissionStatus();
 
     if (cameraStatus.isDenied || microphoneStatus.isDenied) {
       if (mounted) {
         Navigator.of(context).pop();
-        SnackBarHelper.showWarning(context, 'Cần quyền truy cập Camera và Microphone để quay video.');
+        SnackBarHelper.showWarning(
+          context,
+          'Cần quyền truy cập Camera và Microphone để quay video.',
+        );
       }
       return;
     }
 
-    if (cameraStatus.isPermanentlyDenied || microphoneStatus.isPermanentlyDenied) {
+    if (cameraStatus == ph.PermissionStatus.permanentlyDenied ||
+        microphoneStatus == ph.PermissionStatus.permanentlyDenied) {
+      await permissionService.openAppSettings();
       if (mounted) {
-        openAppSettings();
         Navigator.of(context).pop();
       }
       return;
@@ -231,8 +240,10 @@ class _VideoRecordingPageState extends State<VideoRecording> with WidgetsBinding
       body: Stack(
         children: [
           // Camera Preview
-          Center(
-            child: CameraPreview(_controller!),
+          CameraPreviewWrapper(
+            controller: RealCameraControllerFacade(_controller!),
+            isInitializing: !_isCameraInitialized,
+            errorMessage: null,
           ),
 
           // Close Button

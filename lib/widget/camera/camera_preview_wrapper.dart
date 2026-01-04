@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../services/camera_controller_facade.dart';
+import 'camera_controller_facade.dart';
 
 /// CameraPreviewWrapper
 /// - Encapsulates error/loading/preview rendering

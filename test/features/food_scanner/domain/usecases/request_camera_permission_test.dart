@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
 import 'package:diet_tracking_project/features/food_scanner/domain/usecases/request_camera_permission.dart';
-import 'package:diet_tracking_project/features/food_scanner/services/camera_permission_service.dart';
+import 'package:diet_tracking_project/services/permission_service.dart';
 
-class FakeCameraPermissionService implements CameraPermissionService {
+class FakeCameraPermissionService implements PermissionService {
   ph.PermissionStatus status = ph.PermissionStatus.denied;
   ph.PermissionStatus requested = ph.PermissionStatus.denied;
 
@@ -12,7 +12,7 @@ class FakeCameraPermissionService implements CameraPermissionService {
   Future<ph.PermissionStatus> getCameraPermissionStatus() async => status;
 
   @override
-  Future<ph.PermissionStatus> requestCameraPermissionStatus() async => requested;
+  Future<ph.PermissionStatus> requestCameraPermissionStatus({bool useSessionCache = false}) async => requested;
 
   @override
   Future<bool> requestCameraPermission() async {
@@ -37,6 +37,19 @@ class FakeCameraPermissionService implements CameraPermissionService {
         'cameraPermissionGrantedInSession': false,
         'cameraPermissionDeniedInSession': false,
       };
+
+  // Unused by these tests
+  @override
+  Future<bool> requestNotificationPermission() async => false;
+
+  @override
+  Future<bool> isNotificationPermissionGranted() async => false;
+
+  @override
+  Future<bool> requestMicrophonePermission() async => false;
+
+  @override
+  Future<ph.PermissionStatus> requestMicrophonePermissionStatus() async => ph.PermissionStatus.denied;
 }
 
 void main() {

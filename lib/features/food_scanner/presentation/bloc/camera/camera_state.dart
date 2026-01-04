@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import '../../../services/camera_controller_facade.dart';
+import '../../../../../widget/camera/camera_controller_facade.dart';
 
 abstract class CameraState {
   const CameraState();

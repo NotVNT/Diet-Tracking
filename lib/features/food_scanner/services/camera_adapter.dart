@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart' as cam;
 
-import 'camera_controller_facade.dart';
+import '../../../widget/camera/camera_controller_facade.dart';
 
 abstract class CameraAdapter {
   const CameraAdapter();

@@ -1,5 +1,5 @@
 import 'package:permission_handler/permission_handler.dart' as ph;
-import '../../services/camera_permission_service.dart';
+import '../../../../services/permission_service.dart';
 
 /// Model chứa kết quả của việc yêu cầu quyền camera
 class CameraPermissionResult {
@@ -21,9 +21,9 @@ class CameraPermissionResult {
 /// - Yêu cầu quyền camera từ hệ thống
 /// - Trả về kết quả và thông báo lỗi nếu cần
 class RequestCameraPermission {
-  final CameraPermissionService _sessionPermissionService;
+  final PermissionService _permissionService;
 
-  RequestCameraPermission(this._sessionPermissionService);
+  RequestCameraPermission(this._permissionService);
 
   /// Yêu cầu quyền camera
   ///
@@ -32,7 +32,7 @@ class RequestCameraPermission {
   /// - [errorMessage]: thông báo lỗi (nếu có)
   /// - [isPermanentlyDenied]: true nếu quyền bị từ chối vĩnh viễn
   Future<CameraPermissionResult> call() async {
-    final status = await _sessionPermissionService.getCameraPermissionStatus();
+    final status = await _permissionService.getCameraPermissionStatus();
 
     // Nếu đã có quyền
     if (status == ph.PermissionStatus.granted ||
@@ -56,7 +56,7 @@ class RequestCameraPermission {
     if (status == ph.PermissionStatus.denied ||
         status == ph.PermissionStatus.restricted) {
       final requested =
-          await _sessionPermissionService.requestCameraPermissionStatus();
+          await _permissionService.requestCameraPermissionStatus(useSessionCache: true);
       if (requested == ph.PermissionStatus.granted ||
           requested == ph.PermissionStatus.limited) {
         return CameraPermissionResult(

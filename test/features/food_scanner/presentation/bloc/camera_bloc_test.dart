@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:diet_tracking_project/features/food_scanner/domain/usecases/request_camera_permission.dart';
 import 'package:diet_tracking_project/features/food_scanner/services/camera_permission_service.dart';
 import 'package:diet_tracking_project/features/food_scanner/services/camera_adapter.dart';
-import 'package:diet_tracking_project/features/food_scanner/services/camera_controller_facade.dart';
+import 'package:diet_tracking_project/widget/camera/camera_controller_facade.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_bloc.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_event.dart';
 import 'package:diet_tracking_project/features/food_scanner/presentation/bloc/camera/camera_state.dart';

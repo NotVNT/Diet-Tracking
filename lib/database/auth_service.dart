@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/user.dart' as app_user;
 import '../model/body_info_model.dart';
 import '../model/nutrition_calculation_model.dart';
-import '../features/food_scanner/services/camera_permission_service.dart';
+import '../services/permission_service.dart';
 import 'exceptions.dart';
 import 'local_storage_service.dart';
 
@@ -93,7 +93,7 @@ class AuthService {
   Future<void> signOut() async {
     await _auth.signOut();
     // Reset session permission state when user logs out
-    CameraPermissionService().resetSessionState();
+    PermissionService().resetSessionState();
     // Xóa dữ liệu guest khi đăng xuất
     try {
       final LocalStorageService localStorage = LocalStorageService();

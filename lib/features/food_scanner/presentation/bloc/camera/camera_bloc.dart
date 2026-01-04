@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import '../../../domain/usecases/request_camera_permission.dart';
 import '../../../services/camera_adapter.dart';
-import '../../../services/camera_controller_facade.dart';
+import '../../../../../widget/camera/camera_controller_facade.dart';
 import 'camera_event.dart';
 import 'camera_state.dart';
 

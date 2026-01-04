@@ -1,64 +1,50 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
-
+import 'package:permission_handler/permission_handler.dart' as ph;
 import '../../../../common/custom_app_bar.dart';
 import '../../../../common/snackbar_helper.dart';
-import '../../../../config/home_page_config.dart';
-import '../../../../features/food_scanner/presentation/pages/food_scanner_page.dart';
-import '../../../../features/home_page/presentation/pages/nutrition_summary_page.dart';
-import '../../../../features/home_page/presentation/providers/home_provider.dart';
 import '../../../../features/home_page/presentation/widgets/navigation/bottom_navigation_bar.dart';
 import '../../../../features/home_page/presentation/widgets/navigation/floating_action_button.dart';
-import '../../../../features/record_view_home/domain/entities/food_record_entity.dart';
-import '../../../../features/record_view_home/presentation/cubit/record_cubit.dart';
-import '../../../../features/record_view_home/presentation/cubit/record_state.dart';
+import '../../../../features/home_page/presentation/widgets/navigation/home_navigation_handlers.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../services/permission_service.dart';
 import '../../services/video_analysis_service.dart';
+import '../cubit/video_analysis_cubit.dart';
+import '../cubit/video_analysis_state.dart';
+import '../widgets/video_preview_widget.dart';
 import '../widgets/video_recording.dart';
 
-class VideoProcessingPage extends StatefulWidget {
+class VideoProcessingPage extends StatelessWidget {
   final VideoAnalysisService? service;
-
   const VideoProcessingPage({super.key, this.service});
 
   @override
-  State<VideoProcessingPage> createState() => _VideoProcessingPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => VideoAnalysisCubit(service: service),
+      child: const VideoProcessingView(),
+    );
+  }
 }
 
-class _VideoProcessingPageState extends State<VideoProcessingPage> {
-  late final VideoAnalysisService _service;
+class VideoProcessingView extends StatefulWidget {
+  const VideoProcessingView({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    _service = widget.service ?? VideoAnalysisService();
-  }
+  State<VideoProcessingView> createState() => _VideoProcessingViewState();
+}
 
-  XFile? _videoFile;
-  VideoPlayerController? _videoController;
-  String? _recipeInstructions;
-  bool _isAnalyzing = false;
-  String? _errorMessage;
-
-  @override
-  void dispose() {
-    _videoController?.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickVideo() async {
-    // Request permissions
-    final cameraStatus = await Permission.camera.request();
-    final microphoneStatus = await Permission.microphone.request();
+class _VideoProcessingViewState extends State<VideoProcessingView> {
+  Future<void> _pickVideo(BuildContext context) async {
+    final permissionService = PermissionService();
+    final cameraStatus = await permissionService
+        .requestCameraPermissionStatus();
+    final microphoneStatus = await permissionService
+        .requestMicrophonePermissionStatus();
 
     if (cameraStatus.isDenied || microphoneStatus.isDenied) {
-      if (mounted) {
+      if (context.mounted) {
         SnackBarHelper.showWarning(
           context,
           AppLocalizations.of(context)!.videoPermissionWarning,
@@ -67,15 +53,13 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
       return;
     }
 
-    if (cameraStatus.isPermanentlyDenied ||
-        microphoneStatus.isPermanentlyDenied) {
-      if (mounted) {
-        openAppSettings();
-      }
+    if (cameraStatus == ph.PermissionStatus.permanentlyDenied ||
+        microphoneStatus == ph.PermissionStatus.permanentlyDenied) {
+      await permissionService.openAppSettings();
       return;
     }
 
-    if (!mounted) return;
+    if (!context.mounted) return;
 
     try {
       final XFile? video = await Navigator.push(
@@ -83,95 +67,24 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
         MaterialPageRoute(builder: (context) => const VideoRecording()),
       );
 
-      if (video != null) {
-        await _initializeVideo(video);
-        _analyzeVideo(video);
+      if (video != null && context.mounted) {
+        context.read<VideoAnalysisCubit>().analyzeVideo(video);
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = AppLocalizations.of(
-          context,
-        )!.videoPickError(e.toString());
-      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     }
-  }
-
-  Future<void> _initializeVideo(XFile video) async {
-    _videoController?.dispose();
-    _videoController = VideoPlayerController.file(File(video.path));
-    await _videoController!.initialize();
-    setState(() {
-      _videoFile = video;
-      _errorMessage = null;
-      _recipeInstructions = null;
-    });
-    _videoController!.play();
-  }
-
-  Future<void> _analyzeVideo(XFile video) async {
-    setState(() {
-      _isAnalyzing = true;
-    });
-
-    try {
-      final result = await _service.analyzeVideo(video.path);
-      setState(() {
-        _recipeInstructions = result.recipe;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = AppLocalizations.of(
-          context,
-        )!.videoAnalysisError(e.toString());
-      });
-    } finally {
-      setState(() {
-        _isAnalyzing = false;
-      });
-    }
-  }
-
-  void _navigateToRecord() {
-    context.read<HomeProvider>().setCurrentIndex(HomePageConfig.recordIndex);
-    Navigator.of(context).pop();
-  }
-
-  void _navigateToChatBot() {
-    context.read<HomeProvider>().setCurrentIndex(HomePageConfig.chatBotIndex);
-    Navigator.of(context).pop();
-  }
-
-  void _navigateToScanFood() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const FoodScannerPage()),
-    );
-  }
-
-  void _navigateToReport() {
-    final state = context.read<RecordCubit>().state;
-    List<FoodRecordEntity> allRecords = [];
-    if (state is RecordListLoaded) {
-      allRecords = state.records;
-    }
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => NutritionSummaryPage(
-          selectedDate: context.read<HomeProvider>().selectedDate,
-          allRecords: allRecords,
-        ),
-      ),
-    );
   }
 
   void _onBottomNavTap(int index) {
-    final provider = context.read<HomeProvider>();
-    if (index == 0) {
-      provider.setCurrentIndex(HomePageConfig.homeIndex);
-      Navigator.of(context).pop();
-    } else if (index == 3) {
-      provider.setCurrentIndex(HomePageConfig.profileIndex);
-      Navigator.of(context).pop();
-    }
+    // This page is pushed on top of HomePage. When user taps a tab,
+    // update HomeProvider and pop back to the main shell.
+    HomeNavigationHandlers.onBottomNavTap(
+      context,
+      index,
+      popCurrentRoute: true,
+    );
   }
 
   @override
@@ -183,40 +96,64 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
       ),
       body: Column(
         children: [
-          // Phần gửi video (Video Upload Section)
+          // Video Upload Section
           Expanded(
             flex: 2,
             child: Container(
               width: double.infinity,
               color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              child: _videoFile == null
-                  ? Center(
+              child: BlocBuilder<VideoAnalysisCubit, VideoAnalysisState>(
+                builder: (context, state) {
+                  if (state is VideoAnalysisInitial) {
+                    return Center(
                       child: ElevatedButton.icon(
-                        onPressed: _pickVideo,
+                        onPressed: () => _pickVideo(context),
                         label: Text(
                           AppLocalizations.of(context)!.videoUploadButton,
                         ),
                       ),
-                    )
-                  : _videoController != null &&
-                        _videoController!.value.isInitialized
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: _videoController!.value.size.width,
-                          height: _videoController!.value.size.height,
-                          child: VideoPlayer(_videoController!),
+                    );
+                  } else if (state is VideoAnalysisAnalyzing) {
+                    return Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        VideoPreviewWidget(
+                          videoFile: state.video,
+                          onClear: () =>
+                              context.read<VideoAnalysisCubit>().reset(),
+                        ),
+                        const Center(child: CircularProgressIndicator()),
+                      ],
+                    );
+                  } else if (state is VideoAnalysisSuccess) {
+                    return VideoPreviewWidget(
+                      videoFile: state.video,
+                      onClear: () => context.read<VideoAnalysisCubit>().reset(),
+                    );
+                  } else if (state is VideoAnalysisFailure) {
+                    if (state.video != null) {
+                      return VideoPreviewWidget(
+                        videoFile: state.video!,
+                        onClear: () =>
+                            context.read<VideoAnalysisCubit>().reset(),
+                      );
+                    }
+                    return Center(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _pickVideo(context),
+                        label: Text(
+                          AppLocalizations.of(context)!.videoUploadButton,
                         ),
                       ),
-                    )
-                  : const Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ),
           const Divider(height: 3, thickness: 5),
-          // Hiện ra các bước hướng dẫn từ con thị giác (Instructions Section)
+          // Instructions Section
           Expanded(
             flex: 3,
             child: Container(
@@ -233,26 +170,32 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  if (_isAnalyzing)
-                    const Center(child: CircularProgressIndicator())
-                  else if (_errorMessage != null)
-                    Text(
-                      _errorMessage!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    )
-                  else if (_recipeInstructions != null)
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Text(
-                          _recipeInstructions!,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    )
-                  else
-                    Text(AppLocalizations.of(context)!.videoNoData),
+                  Expanded(
+                    child: BlocBuilder<VideoAnalysisCubit, VideoAnalysisState>(
+                      builder: (context, state) {
+                        if (state is VideoAnalysisAnalyzing) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is VideoAnalysisSuccess) {
+                          return SingleChildScrollView(
+                            child: Text(
+                              state.recipe,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          );
+                        } else if (state is VideoAnalysisFailure) {
+                          return Text(
+                            state.message,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          );
+                        }
+                        return Text(AppLocalizations.of(context)!.videoNoData);
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -260,10 +203,20 @@ class _VideoProcessingPageState extends State<VideoProcessingPage> {
         ],
       ),
       floatingActionButton: CustomFloatingActionButton(
-        onRecordSelected: _navigateToRecord,
-        onChatBotSelected: _navigateToChatBot,
-        onScanFoodSelected: _navigateToScanFood,
-        onReportSelected: _navigateToReport,
+        onRecordSelected: () => HomeNavigationHandlers.navigateToRecord(
+          context,
+          popCurrentRoute: true,
+        ),
+        onChatBotSelected: () => HomeNavigationHandlers.navigateToChatBot(
+          context,
+          popCurrentRoute: true,
+        ),
+        onScanFoodSelected: () => HomeNavigationHandlers.navigateToScanFood(
+          context,
+          replaceCurrentRoute: true,
+        ),
+        onReportSelected: () =>
+            HomeNavigationHandlers.navigateToReport(context),
         onUploadVideoSelected: () {},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
