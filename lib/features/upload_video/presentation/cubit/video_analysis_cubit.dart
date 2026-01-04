@@ -14,10 +14,11 @@ class VideoAnalysisCubit extends Cubit<VideoAnalysisState> {
   VideoAnalysisCubit({
     VideoAnalysisService? service,
     UserRepository? userRepository,
-  })  : _service = service ?? VideoAnalysisService(),
-        _userRepository = userRepository ??
-            UserRepositoryImpl(FirestoreDatasource(), AuthService()),
-        super(VideoAnalysisInitial());
+  }) : _service = service ?? VideoAnalysisService(),
+       _userRepository =
+           userRepository ??
+           UserRepositoryImpl(FirestoreDatasource(), AuthService()),
+       super(VideoAnalysisInitial());
 
   Future<void> analyzeVideo(
     XFile video, {
@@ -31,7 +32,10 @@ class VideoAnalysisCubit extends Cubit<VideoAnalysisState> {
       String? effectiveGoal = goal;
       String? effectiveAllergy = allergy;
 
-      if ((goal == null || goal.isEmpty || allergy == null || allergy.isEmpty) &&
+      if ((goal == null ||
+              goal.isEmpty ||
+              allergy == null ||
+              allergy.isEmpty) &&
           _userRepository != null) {
         try {
           final userData = await _userRepository.getCurrentUserData();

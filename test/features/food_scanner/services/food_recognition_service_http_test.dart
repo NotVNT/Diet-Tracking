@@ -62,7 +62,7 @@ void main() {
       expect(result.description, anyOf(isNull, isNotEmpty));
     });
 
-    test('returns null when calories_range missing', () async {
+  test('still returns result when calories_range missing', () async {
       final dir = await Directory.systemTemp.createTemp('food_recognition_test_');
       addTearDown(() async {
         try {
@@ -76,7 +76,9 @@ void main() {
       final svc = FoodRecognitionService(client: client, baseUrl: 'http://test');
 
       final result = await svc.recognizeFood(file.path);
-      expect(result, isNull);
+      expect(result, isNotNull);
+      expect(result!.caloriesRange, isNull);
+      expect(result.calories, isNull);
     });
 
     test('returns null when statusCode != 200', () async {

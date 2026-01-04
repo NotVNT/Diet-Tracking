@@ -5,21 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
 
-class MockVideoAnalysisService extends Mock implements VideoAnalysisService {
-  @override
-  Future<VideoAnalysisResult> analyzeVideo(String videoPath) {
-    return super.noSuchMethod(
-      Invocation.method(#analyzeVideo, [videoPath]),
-      returnValue: Future.value(const VideoAnalysisResult(recipe: '')),
-      returnValueForMissingStub: Future.value(const VideoAnalysisResult(recipe: '')),
-    );
-  }
-}
+import '../../mocks.dart';
 
 void main() {
   group('VideoAnalysisCubit', () {
     test('initial state is VideoAnalysisInitial', () {
-      final cubit = VideoAnalysisCubit(service: MockVideoAnalysisService());
+      final cubit = VideoAnalysisCubit(
+        service: MockVideoAnalysisService(),
+        userRepository: MockUserRepository(),
+      );
       addTearDown(cubit.close);
 
       expect(cubit.state, isA<VideoAnalysisInitial>());
@@ -27,11 +21,12 @@ void main() {
 
     test('analyzeVideo emits analyzing -> success', () async {
       final service = MockVideoAnalysisService();
-      when(service.analyzeVideo('test.mp4')).thenAnswer(
-        (_) async => const VideoAnalysisResult(recipe: 'Recipe text'),
-      );
+      final userRepo = MockUserRepository();
+      when(userRepo.getCurrentUserData()).thenAnswer((_) async => null);
+      when(service.analyzeVideo('test.mp4', goal: anyNamed('goal'), allergy: anyNamed('allergy')))
+          .thenAnswer((_) async => const VideoAnalysisResult(recipe: 'Recipe text'));
 
-      final cubit = VideoAnalysisCubit(service: service);
+      final cubit = VideoAnalysisCubit(service: service, userRepository: userRepo);
       addTearDown(cubit.close);
 
       final video = XFile('test.mp4');
@@ -49,14 +44,18 @@ void main() {
       await cubit.analyzeVideo(video);
       await states;
 
-      verify(service.analyzeVideo(video.path)).called(1);
+    verify(service.analyzeVideo(video.path,
+      goal: anyNamed('goal'), allergy: anyNamed('allergy'))).called(1);
     });
 
     test('analyzeVideo emits analyzing -> failure (keeps video)', () async {
-      final service = MockVideoAnalysisService();
-      when(service.analyzeVideo('test.mp4')).thenThrow(Exception('boom'));
+    final service = MockVideoAnalysisService();
+    final userRepo = MockUserRepository();
+    when(userRepo.getCurrentUserData()).thenAnswer((_) async => null);
+    when(service.analyzeVideo('test.mp4', goal: anyNamed('goal'), allergy: anyNamed('allergy')))
+      .thenThrow(Exception('boom'));
 
-      final cubit = VideoAnalysisCubit(service: service);
+    final cubit = VideoAnalysisCubit(service: service, userRepository: userRepo);
       addTearDown(cubit.close);
 
       final video = XFile('test.mp4');
@@ -74,16 +73,18 @@ void main() {
       await cubit.analyzeVideo(video);
       await states;
 
-      verify(service.analyzeVideo(video.path)).called(1);
+    verify(service.analyzeVideo(video.path,
+      goal: anyNamed('goal'), allergy: anyNamed('allergy'))).called(1);
     });
 
     test('reset emits VideoAnalysisInitial', () async {
       final service = MockVideoAnalysisService();
-      when(service.analyzeVideo('test.mp4')).thenAnswer(
-        (_) async => const VideoAnalysisResult(recipe: 'Recipe text'),
-      );
+      final userRepo = MockUserRepository();
+      when(userRepo.getCurrentUserData()).thenAnswer((_) async => null);
+      when(service.analyzeVideo('test.mp4', goal: anyNamed('goal'), allergy: anyNamed('allergy')))
+          .thenAnswer((_) async => const VideoAnalysisResult(recipe: 'Recipe text'));
 
-      final cubit = VideoAnalysisCubit(service: service);
+      final cubit = VideoAnalysisCubit(service: service, userRepository: userRepo);
       addTearDown(cubit.close);
 
       await cubit.analyzeVideo(XFile('test.mp4'));
