@@ -105,7 +105,9 @@ class FoodRecognitionService {
         }
 
         if (range == null) {
-          debugPrint('calories_range not found or invalid in response; still returning fallback result');
+          debugPrint(
+            'calories_range not found or invalid in response; still returning fallback result',
+          );
         }
 
         return FoodRecognitionResult(

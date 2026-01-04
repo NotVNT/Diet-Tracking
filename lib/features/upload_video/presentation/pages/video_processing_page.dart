@@ -71,6 +71,7 @@ class _VideoProcessingViewState extends State<VideoProcessingView> {
       );
 
       if (video != null) {
+        // Goal/allergy will be fetched from user profile inside the cubit
         cubit.analyzeVideo(video);
       }
     } catch (e) {

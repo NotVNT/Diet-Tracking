@@ -30,12 +30,23 @@ class VideoAnalysisService {
           : baseUrl;
 
   /// Analyze a video from a local file path.
-  Future<VideoAnalysisResult> analyzeVideo(String videoPath) async {
+  Future<VideoAnalysisResult> analyzeVideo(
+    String videoPath, {
+    String? goal,
+    String? allergy,
+  }) async {
     final uri = Uri.parse('$_baseUrl/upload-video/');
     final request = http.MultipartRequest('POST', uri);
 
     final file = await http.MultipartFile.fromPath('file', videoPath);
     request.files.add(file);
+
+    if (goal != null) {
+      request.fields['goal'] = goal;
+    }
+    if (allergy != null) {
+      request.fields['allergy'] = allergy;
+    }
 
     return _send(request);
   }
@@ -44,12 +55,21 @@ class VideoAnalysisService {
   Future<VideoAnalysisResult> analyzeVideoBytes({
     required List<int> bytes,
     String filename = 'video.mp4',
+    String? goal,
+    String? allergy,
   }) async {
     final uri = Uri.parse('$_baseUrl/upload-video/');
     final request = http.MultipartRequest('POST', uri);
     request.files.add(
       http.MultipartFile.fromBytes('file', bytes, filename: filename),
     );
+
+    if (goal != null) {
+      request.fields['goal'] = goal;
+    }
+    if (allergy != null) {
+      request.fields['allergy'] = allergy;
+    }
 
     return _send(request);
   }

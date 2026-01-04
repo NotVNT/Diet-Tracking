@@ -65,7 +65,7 @@ def check_video_relevance(video_path, num_check=5):
     with tempfile.TemporaryDirectory() as temp_dir:
         cap = cv2.VideoCapture(video_path)
         fps = cap.get(cv2.CAP_PROP_FPS)
-        frame_interval = int(fps * 3)  # extract every 1 second for checking
+        frame_interval = int(fps * 2)  # extract every 1 second for checking
 
         frame_idx = 0
         saved = 0
@@ -204,10 +204,13 @@ def generate_recipe(steps, goal, allergy):
     Trả về: recipe step-by-step từ LLM
     """
     # Tạo prompt từ danh sách bước
+    goal_text = goal if goal else "không rõ mục tiêu"
+    allergy_text = allergy if allergy else "không có dị ứng"
+
     prompt = (
-      f"Mình có thông tin sau: mục tiêu {goal}, dị ứng: {allergy}"  
-      "Hãy biến các mô tả sau thành hướng dẫn nấu ăn step-by-step bằng tiếng Việt:\n" 
-      "và điều chỉnh công thức nếu cần để phù hợp với mình" + "\n\nHướng dẫn:" + steps
+        f"Mình có thông tin sau: mục tiêu {goal_text}, dị ứng: {allergy_text}. "
+        "Hãy biến các mô tả sau thành hướng dẫn nấu ăn step-by-step bằng tiếng Việt, "
+        "và điều chỉnh công thức nếu cần để phù hợp với mình.\n\nHướng dẫn:" + steps
     )
     # Gọi LLM
     completion = client.chat.completions.create(
@@ -241,7 +244,7 @@ async def upload_video(file: UploadFile = File(...),
             [f"Bước {i}: {summarize_step(step['descs'])}" for i, step in enumerate(steps, 1)]
         )
 
-        recipe = generate_recipe(all_steps_text)
+        recipe = generate_recipe(all_steps_text, goal, allergy)
 
         return {
             "recipe": recipe
