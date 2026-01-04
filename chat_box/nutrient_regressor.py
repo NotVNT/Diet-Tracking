@@ -95,7 +95,7 @@ DISH_DB = {
     "grilled_pork_with_vermicelli": {  # bún thịt nướng
         "alias": ["bún thịt nướng", "bun thit nuong"],
         "ingredients": {
-            "rice_noodles": (150, 250),
+"rice_noodles": (150, 250),
             "pork": (120, 200),
             "vegetables": (50, 100),
             "broth": (200, 300)
@@ -200,7 +200,7 @@ DISH_DB = {
             "tofu_skin": (50, 100),
             "vegetables": (100, 200),
             "broth": (300, 500)
-        },
+},
         "optional": ["oil", "sauce"]
     },
     "fried_fish_with_garlic" : {  # Cá chiên tỏi
@@ -256,8 +256,8 @@ def good_or_bad(allergy, food_name):
 
 def food_classification(img_64):
     response = client.chat.completions.create(
-    model="Qwen/Qwen2.5-VL-7B-Instruct:hyperbolic",
-    messages=[
+        model="Qwen/Qwen2.5-VL-7B-Instruct:hyperbolic",
+        messages=[
             {
                 "role": "user",
                 "content": [
@@ -284,7 +284,7 @@ def food_classification(img_64):
                         "image_url": {
                             "url": f"data:image/jpeg;base64,{img_64}"
                         }
-                    }
+}
                 ]
             }
         ],
@@ -346,7 +346,7 @@ async def scan_food(file: UploadFile = File(...),
         best_idx = int(np.argmax(sims))
         best_score = float(sims[best_idx])
 
-        if best_score < 0.6:
+        if best_score < 0.2:
             matched_dish = None
         else:
             matched_dish = dish_keys[best_idx]
@@ -355,12 +355,14 @@ async def scan_food(file: UploadFile = File(...),
         cal_range = synthesize_dish(dish, DISH_DB, INGREDIENT_DB)
         print(cal_range)
         if(flag.lower() == "có"):
+            print(vlm_output["dish"])
             return {
                     # "dish_name": vlm_output["dish"],
                     "calories_range": cal_range,
                     "warning": "none"
                     }
         else:
+            print(vlm_output["dish"])
             return {
                     # "dish_name": vlm_output["dish"],
                     "calories_range": cal_range,
