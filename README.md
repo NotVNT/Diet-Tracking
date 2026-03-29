@@ -1,25 +1,101 @@
-# add your vlan ipv4 
-https://ivank04-barcode-server.hf.space
-# diet_tracking_project
+# Diet Tracking
 
 [![CI](https://github.com/NotVNT/Diet-Tracking/actions/workflows/ci.yml/badge.svg?branch=testing)](https://github.com/NotVNT/Diet-Tracking/actions/workflows/ci.yml)
 
-A new Flutter project.
+A Flutter application for nutrition tracking, meal planning, and an integrated diet assistant chatbot.
 
-## CI (GitHub Actions)
+## Overview
 
-This repo has a CI workflow in `.github/workflows/ci.yml`.
+This repository contains two main parts:
 
-It runs on every **pull request** and on **push** to `main` and `testing`, and performs:
+- **Flutter app** in the root project (`lib/`, `test/`, `assets/`, ...).
+- **Python backend for chatbot/barcode** in `chat_box/` (FastAPI + ML models).
+
+## Key Features
+
+- Nutrition and diet goal tracking.
+- Chatbot-assisted meal suggestions.
+- Barcode scanning for product information.
+- Multi-platform support: Android, iOS, Web, and Desktop (based on current Flutter setup).
+
+## Environment Requirements
+
+### Flutter
+
+- Flutter SDK (latest stable recommended).
+- Dart SDK (bundled with Flutter).
+- Android Studio / Xcode (for mobile builds).
+
+### Python backend (optional, for local chat/barcode services)
+
+- Python 3.10+.
+- Packages listed in `chat_box/requirements.txt`.
+
+## Quick Setup
+
+### 1) Install Flutter dependencies
+
+```powershell
+flutter pub get
+```
+
+### 2) (Optional) Install Python backend dependencies
+
+```powershell
+cd chat_box
+pip install -r requirements.txt
+```
+
+## Run the Flutter App
+
+```powershell
+flutter run
+```
+
+If you need to pass backend URLs at compile time:
+
+```powershell
+flutter run --dart-define=CHAT_BOT_API_URL=http://127.0.0.1:8000 --dart-define=SERVER_BARCODE_API_URL=https://your-server
+```
+
+## Run the Local Chatbot Backend
+
+From the `chat_box/` directory:
+
+```powershell
+uvicorn nutrient_regressor:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Default chatbot/barcode endpoints used by the app:
+
+- `POST /get_product_info` (form field: `barcode`)
+- `POST /scan_barcode` (multipart form field: `file`)
+
+### URL Mapping by Runtime Environment
+
+- Android Emulator: use `http://10.0.2.2:8000`
+- iOS Simulator / host machine: usually `http://127.0.0.1:8000`
+
+Android Emulator example:
+
+```powershell
+flutter run -d emulator --dart-define=CHAT_BOT_API_URL=http://10.0.2.2:8000
+```
+
+## CI & Quality Checks
+
+The CI workflow is defined in `ci.yml` and runs on pull requests and configured branch pushes.
+
+Main steps:
 
 - `flutter pub get`
 - `flutter analyze --no-fatal-infos`
 - `flutter test`
 
-Optionally (non-blocking):
+Coverage (optional, non-blocking in CI):
 
-- Collects coverage using `dart run tool/coverage_sharded.dart`
-- Uploads `coverage/lcov.info` to Codecov if `CODECOV_TOKEN` is configured in repo secrets
+- `dart run tool/coverage_sharded.dart`
+- Outputs coverage to `coverage/lcov.info`
 
 ### Run the same checks locally
 
@@ -27,62 +103,31 @@ Optionally (non-blocking):
 flutter pub get
 flutter analyze --no-fatal-infos
 flutter test
-
-# optional coverage
 dart run tool/coverage_sharded.dart
 ```
 
-## Getting Started
+## Main Folder Structure
 
-This project is a starting point for a Flutter application.
+```text
+lib/            Flutter source code
+test/           Unit/widget/integration tests
+assets/         Images, icons, and static assets
+chat_box/       Python backend for chatbot/barcode
+tool/           Utility scripts (for example, sharded coverage)
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Configuration Notes
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- `SERVER_BARCODE_API_URL` is currently handled via `--dart-define` (remote-first approach).
+- The `.env` file is reference-only. Flutter does not load `.env` automatically unless you add and initialize an env-loading package at runtime.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Quick Troubleshooting
 
-## Local chat backend
+- Cannot reach backend from emulator: verify host mapping (`10.0.2.2` for Android Emulator).
+- Flutter package issues: run `flutter clean` then `flutter pub get`.
+- Python dependency issues: verify Python version and reinstall from `requirements.txt`.
 
-The diet assistant chat requires a running FastAPI backend (see `chat_box/`) and uses
-`CHAT_BOT_API_URL` (via `ApiClientConfig`) to resolve the HTTP host/port. Define this
-with `--dart-define` whenever your emulator or device needs a different address from
-the default `http://127.0.0.1:8000`.
+## References
 
-- Start the backend exposing a reachable interface, for example:
-	`uvicorn nutrient_regressor:app --host 0.0.0.0 --port 8000 --reload`.
-	Binding to `0.0.0.0` allows emulators and other hosts to reach the service.
-- For the Android emulator, access the host machine through `http://10.0.2.2:8000`:
-	`flutter run -d emulator --dart-define=CHAT_BOT_API_URL=http://10.0.2.2:8000`.
-- For iOS simulators or debugging on the host, the default base URL already points
-	to `127.0.0.1:8000`, so no extra define is necessary unless you bind the server
-	to a different IP.
-
-## Barcode backend (local hoặc remote)
-
-Tính năng barcode gọi Python FastAPI backend (tham khảo `chat_box/barcode.py`) qua 2 endpoint:
-
-- `POST /get_product_info` (form field: `barcode`)
-- `POST /scan_barcode` (multipart form field: `file`)
-
-### Cấu hình URL server barcode
-
-Barcode backend hiện được cấu hình **remote-first**.
-
-Trong Flutter, URL server barcode được lấy từ compile-time define `SERVER_BARCODE_API_URL`.
-
-- Nếu **không** truyền define, app sẽ dùng default remote server.
-- Nếu bạn deploy server khác, hãy truyền define này khi chạy/build.
-
-Ví dụ:
-
-- Chạy app và trỏ tới server remote:
-	`flutter run --dart-define=SERVER_BARCODE_API_URL=https://your-server`
-
-Ghi chú:
-
-- Repo có file `.env` chứa `SERVER_BARCODE_API_URL=...` để bạn lưu URL, nhưng Flutter **không tự đọc `.env`** nếu bạn chưa thêm package kiểu `flutter_dotenv` và gọi load trong `main()`.
-	Hiện tại app đang dùng `--dart-define` để đảm bảo hoạt động trên mọi platform (mobile/web).
+- [Flutter docs](https://docs.flutter.dev/)
+- [FastAPI docs](https://fastapi.tiangolo.com/)
